@@ -1,0 +1,42 @@
+HOW TO USE PICTURES FOR PLAYERS:
+
+1) Go to the directory where your PBEMBBxx.EXE program is located.
+2) Create a subdirectory 'roster'. 
+3) Put the pictures you want to use in the subdirectory 'roster'. 
+ALL PICTURES HAVE TO BE IN THIS SUBDIRECTORY. The tool looks for them over here.
+  Please note that the version 2.3beta and later allow for the pictures to be
+  organized in subdirectories.  So if your jpgs are in roster than the source
+  would be for example: amazonblitzer.jpg ... if this was in an Amazon subdirectory
+  under the 'roster' directory then the source would be: Amazon/amazonblitzer.jpg
+4) Add the pictures in your team-html:
+Open your team-html in NOTEPAD or a html-editor. Go to the bottom of your html-file
+(usually just before the </BODY> and </HTML> tag).
+Here you add the following:
+
+Team Pictures
+<IMG SRC="picture1.jpg">
+<IMG SRC="picture2.jpg">
+...  (as many pictures as you need)
+Team Pictures End
+
+You need to add a <IMG> tag for every player on your roster, in the same order as in
+your roster. If you have an empty roster slot, add a picture for that as well! It
+won't be used in the program, but you don't want to mess up the order of the next
+pictures.
+5) Save your team-html.
+6) Start a new game, using the new team-html.
+7) If you send the new game to your opponent, remember to send your player pictures
+to him as well. He should put them in his 'roster' subdirectory. Of course you 
+need to send the pictures only once, at the start of your game.
+
+Other HTML extras:
+
+TEAM LOGO SRC="picture1.jpg"
+
+TEAM FIELD SRC="field1.jpg"
+
+TEAM COLOR=######
+
+Please note custom logos and fields MUST be stored in the /roster directory to work!
+
+
