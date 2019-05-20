@@ -1,0 +1,245 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{A2F041B7-39A9-45CF-A8C1-CB4A18653D42}</ProjectGuid>
+        <MainSource>pbembb25.dpr</MainSource>
+        <Base>True</Base>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <TargetedPlatforms>1</TargetedPlatforms>
+        <AppType>Application</AppType>
+        <FrameworkType>VCL</FrameworkType>
+        <ProjectVersion>18.6</ProjectVersion>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
+        <Base_Win32>true</Base_Win32>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Release' or '$(Cfg_1)'!=''">
+        <Cfg_1>true</Cfg_1>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_1)'=='true') or '$(Cfg_1_Win32)'!=''">
+        <Cfg_1_Win32>true</Cfg_1_Win32>
+        <CfgParent>Cfg_1</CfgParent>
+        <Cfg_1>true</Cfg_1>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Config)'=='Debug' or '$(Cfg_2)'!=''">
+        <Cfg_2>true</Cfg_2>
+        <CfgParent>Base</CfgParent>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base)'!=''">
+        <DCC_E>false</DCC_E>
+        <DCC_F>false</DCC_F>
+        <DCC_K>false</DCC_K>
+        <DCC_N>true</DCC_N>
+        <DCC_S>false</DCC_S>
+        <DCC_ImageBase>00400000</DCC_ImageBase>
+        <DCC_DebugInformation>1</DCC_DebugInformation>
+        <DCC_SymbolReferenceInfo>1</DCC_SymbolReferenceInfo>
+        <SanitizedProjectName>pbembb25</SanitizedProjectName>
+        <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;System.Win;$(DCC_Namespace)</DCC_Namespace>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Base_Win32)'!=''">
+        <DCC_Namespace>Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
+        <BT_BuildType>Debug</BT_BuildType>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
+        <Icon_MainIcon>pbembb25_Icon.ico</Icon_MainIcon>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
+        <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1)'!=''">
+        <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <DCC_DebugInformation>0</DCC_DebugInformation>
+        <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
+        <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2)'!=''">
+        <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+        <DCC_Optimize>false</DCC_Optimize>
+        <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
+    </PropertyGroup>
+    <ItemGroup>
+        <DelphiCompile Include="$(MainSource)">
+            <MainSource>MainSource</MainSource>
+        </DelphiCompile>
+        <DCCReference Include="unitSettings.pas">
+            <Form>frmSettings</Form>
+        </DCCReference>
+        <DCCReference Include="bbunit.pas">
+            <Form>Bloodbowl</Form>
+        </DCCReference>
+        <DCCReference Include="bbalg.pas">
+            <Form>modAlg</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="unitLog.pas">
+            <Form>frmLog</Form>
+        </DCCReference>
+        <DCCReference Include="unitRoster.pas">
+            <Form>frmRoster</Form>
+        </DCCReference>
+        <DCCReference Include="unitAbout.pas">
+            <Form>frmAbout</Form>
+        </DCCReference>
+        <DCCReference Include="unitArmourRoll.pas">
+            <Form>frmArmourRoll</Form>
+        </DCCReference>
+        <DCCReference Include="unitCards.pas">
+            <Form>frmCards</Form>
+        </DCCReference>
+        <DCCReference Include="unitNotes.pas">
+            <Form>frmNotes</Form>
+        </DCCReference>
+        <DCCReference Include="unitLogControl.pas">
+            <Form>frmLogControl</Form>
+        </DCCReference>
+        <DCCReference Include="unitDodgeRoll.pas">
+            <Form>frmDodgeRoll</Form>
+        </DCCReference>
+        <DCCReference Include="unitPlayerStatsChange.pas">
+            <Form>frmPlayerStatsChange</Form>
+        </DCCReference>
+        <DCCReference Include="unitThrowIn.pas">
+            <Form>frmThrowIn</Form>
+        </DCCReference>
+        <DCCReference Include="unitWelcome.pas">
+            <Form>frmWelcome</Form>
+        </DCCReference>
+        <DCCReference Include="unitPlayer.pas">
+            <Form>modPlayer</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="unitPlayAction.pas">
+            <Form>modPlayAction</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="unitTurnChange.pas">
+            <Form>modTurnChange</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="unitExtern.pas">
+            <Form>modExtern</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="unitMarker.pas">
+            <Form>modMarker</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="unitBall.pas">
+            <Form>modBall</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="unitTeam.pas">
+            <Form>modTeam</Form>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="unitPregame.pas"/>
+        <DCCReference Include="unitFanFactor.pas">
+            <Form>frmFanFactor</Form>
+        </DCCReference>
+        <DCCReference Include="unitCheckFile.pas"/>
+        <DCCReference Include="unitField.pas"/>
+        <DCCReference Include="unitRandom.pas"/>
+        <DCCReference Include="unitPass.pas">
+            <Form>frmPass</Form>
+        </DCCReference>
+        <DCCReference Include="unitLanding.pas">
+            <Form>frmLanding</Form>
+        </DCCReference>
+        <DCCReference Include="unitPickUp.pas">
+            <Form>frmPickUp</Form>
+        </DCCReference>
+        <DCCReference Include="unitAddPlayer.pas">
+            <Form>frmAddPlayer</Form>
+        </DCCReference>
+        <DCCReference Include="unitPostgameSeq.pas">
+            <Form>frmPostgame</Form>
+        </DCCReference>
+        <DCCReference Include="unitHandicapTable.pas">
+            <Form>frmHandicapTable</Form>
+        </DCCReference>
+        <DCCReference Include="unitSkillRoll.pas">
+            <Form>frmSkillRolls</Form>
+        </DCCReference>
+        <DCCReference Include="unitGFI.pas">
+            <Form>frmGFI</Form>
+        </DCCReference>
+        <DCCReference Include="unitThrowTeamMate.pas">
+            <Form>frmTTM</Form>
+        </DCCReference>
+        <DCCReference Include="unitCatch.pas">
+            <Form>frmCatch</Form>
+        </DCCReference>
+        <DCCReference Include="unitKick.pas">
+            <Form>frmKick</Form>
+        </DCCReference>
+        <DCCReference Include="unitMessage.pas">
+            <Form>frmMessage</Form>
+        </DCCReference>
+        <DCCReference Include="unitMachineID.pas">
+            <Form>MachID</Form>
+        </DCCReference>
+        <DCCReference Include="unitLanguage.pas"/>
+        <DCCReference Include="unitThrowStuff.pas">
+            <Form>frmThrowStuff</Form>
+        </DCCReference>
+        <DCCReference Include="unitCatchStuff.pas">
+            <Form>frmCatchStuff</Form>
+        </DCCReference>
+        <BuildConfiguration Include="Debug">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Base">
+            <Key>Base</Key>
+        </BuildConfiguration>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_1</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Delphi.Personality>
+                <Source>
+                    <Source Name="MainSource">pbembb25.dpr</Source>
+                </Source>
+            </Delphi.Personality>
+            <Platforms>
+                <Platform value="Win32">True</Platform>
+            </Platforms>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
+</Project>

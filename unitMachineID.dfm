@@ -1,10 +1,10 @@
 object MachID: TMachID
   Left = 494
   Top = 188
-  Width = 224
-  Height = 178
   BorderIcons = [biSystemMenu]
   Caption = 'GetIp Demo'
+  ClientHeight = 139
+  ClientWidth = 208
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

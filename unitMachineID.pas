@@ -29,7 +29,7 @@ uses bbunit;
 procedure GetIPList(const List: TStrings);
 var
   WSAData: TWSAData;
-  HostName: array[0..255] of Char;
+  HostName: PAnsiChar;
   HostInfo: PHostEnt;
   InAddr: ^PInAddr;
 begin

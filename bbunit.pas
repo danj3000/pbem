@@ -1561,28 +1561,40 @@ begin
 end;
 
 procedure TBloodbowl.EnterButtonClick(Sender: TObject);
-var p, q, r, av, armod, injmod, refroll, refpos: integer;
-    eye: boolean;
-    s: string;
+var
+  setAbbrLocal: string;
+  p, q, r, av, armod, injmod, refroll, refpos: Integer;
+  eye: Boolean;
+  s: string;
 begin
-  if comment.Text <> '' then begin
-    if comment.Text[1] = '*' then begin
-      p := Pos('arm', comment.Text);
-      if p > 0 then begin
-        if CanWriteToLog then begin
+  if comment.text <> '' then
+  begin
+    if comment.text[1] = '*' then
+    begin
+      p := Pos('arm', comment.text);
+      if p > 0 then
+      begin
+        if CanWriteToLog then
+        begin
           armod := 0;
           injmod := 0;
-          av := FVal(copy(comment.Text, p+3, 2));
-          q := Pos('+', copy(comment.Text, p+4, length(comment.Text)));
-          if q > 0 then begin
-            armod := FVal(copy(comment.Text, p+q+4, 2));
-            r := Pos('+', copy(comment.Text, p+q+5, length(comment.Text)));
-            if r > 0 then begin
-              injmod := FVal(copy(comment.Text, p+q+r+5, 2));
-            end else begin
-              r := Pos('&', copy(comment.Text, p+q+5, length(comment.Text)));
-              if r > 0 then begin
-                injmod := - FVal(copy(comment.Text, p+q+r+5, 2));
+          av := FVal(Copy(comment.text, p + 3, 2));
+          q := Pos('+', Copy(comment.text, p + 4, length(comment.text)));
+          if q > 0 then
+          begin
+            armod := FVal(Copy(comment.text, p + q + 4, 2));
+            r := Pos('+', Copy(comment.text, p + q + 5, length(comment.text)));
+            if r > 0 then
+            begin
+              injmod := FVal(Copy(comment.text, p + q + r + 5, 2));
+            end
+            else
+            begin
+              r := Pos('&', Copy(comment.text, p + q + 5,
+                length(comment.text)));
+              if r > 0 then
+              begin
+                injmod := -FVal(Copy(comment.text, p + q + r + 5, 2));
               end;
             end;
           end;
@@ -1591,66 +1603,91 @@ begin
           AddLog(ArmourRollToText(s));
         end;
       end;
-      p := Pos('inj', comment.Text);
-      if p > 0 then begin
-        if CanWriteToLog then begin
+      p := Pos('inj', comment.text);
+      if p > 0 then
+      begin
+        if CanWriteToLog then
+        begin
           injmod := 0;
-          r := Pos('+', copy(comment.Text, p+3, length(comment.Text)));
-          if r > 0 then begin
-            injmod := FVal(copy(comment.Text, p+r+3, 2));
-          end else begin
-            r := Pos('&', copy(comment.Text, p+3,length(comment.Text)));
-            if r > 0 then begin
-              injmod := - FVal(copy(comment.Text, p+r+3, 2));
+          r := Pos('+', Copy(comment.text, p + 3, length(comment.text)));
+          if r > 0 then
+          begin
+            injmod := FVal(Copy(comment.text, p + r + 3, 2));
+          end
+          else
+          begin
+            r := Pos('&', Copy(comment.text, p + 3, length(comment.text)));
+            if r > 0 then
+            begin
+              injmod := -FVal(Copy(comment.text, p + r + 3, 2));
             end;
-            if injmod = -7 then injmod := -1;
-            if injmod = -8 then injmod := 0;
-            if injmod = -9 then injmod := 1;
+            if injmod = -7 then
+              injmod := -1;
+            if injmod = -8 then
+              injmod := 0;
+            if injmod = -9 then
+              injmod := 1;
           end;
           s := InjuryRoll(injmod);
           LogWrite('z' + s);
           AddLog(InjuryRollToText(s));
         end;
       end;
-      p := Pos('foul', comment.Text);
-      if p > 0 then begin
-        if CanWriteToLog then begin
+      p := Pos('foul', comment.text);
+      if p > 0 then
+      begin
+        if CanWriteToLog then
+        begin
           armod := 0;
           injmod := 0;
-          av := FVal(copy(comment.Text, p+4, 2));
-          q := Pos('+', copy(comment.Text, p+5, length(comment.Text)));
-          if q > 0 then begin
-            armod := FVal(copy(comment.Text, p+q+5, 2));
-            r := Pos('+', copy(comment.Text, p+q+6, length(comment.Text)));
-            if r > 0 then begin
-              injmod := FVal(copy(comment.Text, p+q+r+6, 2));
-            end else begin
-              r := Pos('&', copy(comment.Text, p+q+6, length(comment.Text)));
-              if r > 0 then begin
-                injmod := - FVal(copy(comment.Text, p+q+r+6, 2));
+          av := FVal(Copy(comment.text, p + 4, 2));
+          q := Pos('+', Copy(comment.text, p + 5, length(comment.text)));
+          if q > 0 then
+          begin
+            armod := FVal(Copy(comment.text, p + q + 5, 2));
+            r := Pos('+', Copy(comment.text, p + q + 6, length(comment.text)));
+            if r > 0 then
+            begin
+              injmod := FVal(Copy(comment.text, p + q + r + 6, 2));
+            end
+            else
+            begin
+              r := Pos('&', Copy(comment.text, p + q + 6,
+                length(comment.text)));
+              if r > 0 then
+              begin
+                injmod := -FVal(Copy(comment.text, p + q + r + 6, 2));
               end;
             end;
           end;
           eye := (Pos('IGMEOY', comment.text) > 0);
           s := Chr(av + 48) + FoulRoll(av, armod, injmod, eye);
           LogWrite('^' + s);
-          {RONALD: CHANGE HERE: Use PlayAction instead of copying the code}
+          { RONALD: CHANGE HERE: Use PlayAction instead of copying the code }
           PlayActionFoulRoll('^' + s, 1);
         end;
       end;
-      p := Pos('c@rds', comment.Text);
-      if p > 0 then begin
+      p := Pos('c@rds', comment.text);
+      if p > 0 then
+      begin
         ShowCards(2);
-        p := FVal(Copy(comment.Text, p+5, 1));
-        if DrawNewCards then begin
+        p := FVal(Copy(comment.text, p + 5, 1));
+        if DrawNewCards then
+        begin
           s := 'Ç';
-          if CanWriteToLog then begin
-            LogWrite(s + Chr(p+48) + plcards[p]);
+          if CanWriteToLog then
+          begin
+            LogWrite(s + Chr(p + 48) + plcards[p]);
             q := 3;
             s := '';
-            while q < length(plcards[p]) do begin
+            while q < length(plcards[p]) do
+            begin
+              setAbbrLocal := setabbr[r][1];
               for r := 1 to numset do
-                if plcards[p][q] = setabbr[r][1] then s := s + setabbr[r] + ' ';
+                if plcards[p][q] = setAbbrLocal then
+                begin
+                  s := s + setabbr[r] + ' ';
+                end;
               q := q + 2;
             end;
             if p = 0 then
@@ -1661,46 +1698,69 @@ begin
             s := s + '(cards from ' + frmSettings.txtCardsIniFile.text + ')';
             AddLog(Trim(s));
           end;
-        end else begin
+        end
+        else
+        begin
           s := '>';
-          if CanWriteToLog then begin
-            LogWrite(s + Chr(p+48) + plcards[p]);
+          if CanWriteToLog then
+          begin
+            LogWrite(s + Chr(p + 48) + plcards[p]);
             q := length(plcards[p]) - 1;
             s := 'Extra Card for ' + ffcl[p] + ':';
-            for r := 1 to numset do
-              if plcards[p][q] = setabbr[r][1] then s := s + ' ' + setabbr[r];
+            for r := 1 to numset do    begin
+              setAbbrLocal := setabbr[r][1];
+              if plcards[p][q] = setAbbrLocal then
+                s := s + ' ' + setabbr[r];
+            end;
             s := s + '(cards from ' + frmSettings.txtCardsIniFile.text + ')';
             AddLog(s);
           end;
         end;
       end;
-      p := Pos('throwin', comment.Text);
-      if p > 0 then begin
-        s := 'i' + Copy(comment.Text, p + 8, 3);
-        if CanWriteToLog then begin
+      p := Pos('throwin', comment.text);
+      if p > 0 then
+      begin
+        s := 'i' + Copy(comment.text, p + 8, 3);
+        if CanWriteToLog then
+        begin
           LogWrite(s);
           AddLog(TranslateThrowIn(s));
         end;
       end;
-    end else if comment.Text[1] = '!' then begin
-      s := Trim(Copy(comment.Text, 2, length(comment.text)));
-      if CanWriteToLog then begin
+    end
+    else if comment.text[1] = '!' then
+    begin
+      s := Trim(Copy(comment.text, 2, length(comment.text)));
+      if CanWriteToLog then
+      begin
         LogWrite(Chr(252) + s + Chr(255));
         AddNote(s);
         AddLog('Note: "' + s + '"');
       end;
-    end else begin
-      if SpeakLabel.caption[1] = 'H' then s := Chr(253) else s := Chr(254);
-      if CanWriteToLog then begin
-        LogWrite(s + comment.Text + Chr(255));
-        if SpeakLabel.caption[1] = 'H' then s := ffcl[0] else s := ffcl[1];
+    end
+    else
+    begin
+      if SpeakLabel.caption[1] = 'H' then
+        s := Chr(253)
+      else
+        s := Chr(254);
+      if CanWriteToLog then
+      begin
+        LogWrite(s + comment.text + Chr(255));
+        if SpeakLabel.caption[1] = 'H' then
+          s := ffcl[0]
+        else
+          s := ffcl[1];
         AddLog(s + ': "' + comment.text + '"');
       end;
     end;
-    comment.Text := '';
-  end else begin
+    comment.text := '';
+  end
+  else
+  begin
     p := FVal(frmLogControl.logcounter.text);
-    if p <> logcount then GotoEntry(p);
+    if p <> logcount then
+      GotoEntry(p);
   end;
 end;
 
@@ -3643,7 +3703,7 @@ procedure TBloodbowl.StartHalfSBClick(Sender: TObject);
 begin
   if CanWriteToLog then begin
     PrepareStartHalf;
-  end;  
+  end;
 end;
 
 procedure ShowPassBlockRanges(p, q: integer);
@@ -4100,7 +4160,7 @@ begin
                    (player[curteam,curplayer].status <> 10) and
                    (player[curteam,curplayer].status <> 11) then done := 1;
                 if (curplayer=UsedPlayers[1]) or (curplayer=UsedPlayers[2]) or
-                  (curplayer=UsedPlayers[3]) or (curplayer=UsedPlayers[4]) 
+                  (curplayer=UsedPlayers[3]) or (curplayer=UsedPlayers[4])
                   then done := 0;
               end;
               UsedPlayers[f] := curplayer;
@@ -4943,7 +5003,7 @@ var pplace, qplace, g, t, u, v, w, ploc, qloc, Zteam, Zplayer: integer;
     s, s2: string;
 begin
   if (wiz[curmove].color = colorarray[curmove, 0, 0]) and
-  (team[curmove].wiz=1) 
+  (team[curmove].wiz=1)
   then begin
     Ballscatter := false;
     Zapped := false;
@@ -6173,5 +6233,3 @@ begin
 end;
 
 end.
-
-

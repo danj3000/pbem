@@ -1169,6 +1169,7 @@ var Reg: TRegistry;
     f, p, p2, p3, q, r, prevlen, curnr, freenr, cnt: integer;
     found: boolean;
     checkdate: TDateTime;
+    DateSeparator: AnsiChar;
 begin
   DateSeparator := '-';
   p := 0;
@@ -1206,17 +1207,17 @@ begin
                                         Copy(s, p+1, length(s) - p);
                   end;
                   for f := 1 to 12 do begin
-                    p := Pos(UpperCase(LongMonthNames[f]), UpperCase(s));
+                    p := Pos(UpperCase(FormatSettings.LongMonthNames[f]), UpperCase(s));
                     if p > 0 then begin
                       s := Copy(s, 1, p-1) + IntToStr(f) +
-                         Copy(s, p + Length(LongMonthNames[f]), length(s));
+                         Copy(s, p + Length(FormatSettings.LongMonthNames[f]), length(s));
                     end;
                   end;
                   for f := 1 to 12 do begin
-                    p := Pos(UpperCase(ShortMonthNames[f]), UpperCase(s));
+                    p := Pos(UpperCase(FormatSettings.ShortMonthNames[f]), UpperCase(s));
                     if p > 0 then begin
                       s := Copy(s, 1, p-1) + IntToStr(f) +
-                         Copy(s, p + Length(ShortMonthNames[f]), length(s));
+                         Copy(s, p + Length(FormatSettings.ShortMonthNames[f]), length(s));
                     end;
                   end;
                   try

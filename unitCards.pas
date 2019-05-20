@@ -111,7 +111,7 @@ begin
               cardhint[numset, setnum[numset]] :=
                  cardhint[numset, setnum[numset]] + Chr(13) + Chr(13);
               s0 := '';
-            end;     
+            end;
           end;
           ReadLn(ff, s);
         end;
@@ -266,53 +266,79 @@ begin
 end;
 
 function DecodeCards(g: integer; decode: boolean): cardlines;
-var f, t, i: integer;
-    s: string;
-    cl: cardlines;
+var
+  setAbbrLocal: string;
+  f, t, i: integer;
+  s: string;
+  cl: cardlines;
 begin
   cl.num := 0;
   s := plcards[g];
-  if s <> '' then begin
-    if decode and (s[1] = '1') then begin
-      if pw[g] = '' then begin
+  if s <> '' then
+  begin
+    if decode and (s[1] = '1') then
+    begin
+      if pw[g] = '' then
+      begin
         pw[g] := InputBox('Password: ', 'Bloodbowl Cards', '');
         t := 0;
-        for f := 1 to length(pw[g]) do t := (t + Ord(pw[g][f])) mod 26;
-        if t <> Ord(s[2]) - 65 then pw[g] := '';
+        for f := 1 to length(pw[g]) do
+          t := (t + Ord(pw[g][f])) mod 26;
+        if t <> Ord(s[2]) - 65 then
+          pw[g] := '';
       end;
     end;
   end;
   f := 1;
-  while (f*2 + 2) <= length(s) do begin
+  while (f * 2 + 2) <= length(s) do
+  begin
     cl.num := cl.num + 1;
-    if s[1] = '0' then t := Ord(s[f*2 + 2]) - 64 else begin
-      if pw[g] = '' then begin
-        if playedcardsset[g,f] = 0 then t := 0 else t := -1;
-      end else begin
-        t := Ord(s[f*2 + 2]) - 65 - Ord(pw[g][f]);
+    if s[1] = '0' then
+      t := Ord(s[f * 2 + 2]) - 64
+    else
+    begin
+      if pw[g] = '' then
+      begin
+        if playedcardsset[g, f] = 0 then
+          t := 0
+        else
+          t := -1;
+      end
+      else
+      begin
+        t := Ord(s[f * 2 + 2]) - 65 - Ord(pw[g][f]);
+        setAbbrLocal := setabbr[i][1];
         for i := 1 to numset do
-          if UpCase(s[f*2 + 1]) = setabbr[i][1] then begin
-            while t <= 0 do t := t + setnum[i];
+          if UpCase(s[f * 2 + 1]) = setAbbrLocal then
+          begin
+            while t <= 0 do
+              t := t + setnum[i];
           end;
       end;
     end;
     for i := 1 to numset do
-      if UpCase(s[f*2 + 1]) = setabbr[i][1] then begin
+      setAbbrLocal := setabbr[i][1];
+      if UpCase(s[f * 2 + 1]) = setAbbrLocal then
+      begin
         cl.color[cl.num] := setcolor[i];
         cl.cset[cl.num] := i;
-        if t > 0 then begin
+        if t > 0 then
+        begin
           cl.cset[cl.num] := i;
           cl.cnum[cl.num] := t;
           DecodedCards[g, cl.num] := t;
           DecodedCardsSet[g, cl.num] := i;
         end;
       end;
-    if t = -1 then begin
-      cl.cset[cl.num] := playedcardsset[g,f];
-      cl.cnum[cl.num] := playedcardsnum[g,f];
+    if t = -1 then
+    begin
+      cl.cset[cl.num] := playedcardsset[g, f];
+      cl.cnum[cl.num] := playedcardsnum[g, f];
     end;
-    if t = 0 then cl.cnum[cl.num] := 0;
-    if s[f*2+1] = Lowercase(s[f*2+1]) then cl.color[cl.num] := clSilver;
+    if t = 0 then
+      cl.cnum[cl.num] := 0;
+    if s[f * 2 + 1] = Lowercase(s[f * 2 + 1]) then
+      cl.color[cl.num] := clSilver;
     f := f + 1;
   end;
   DecodeCards := cl;
@@ -429,7 +455,7 @@ begin
       CardsData[g,f].cnum := cl.cnum[f];
       if cl.cset[f] > 0 then begin
         if cl.cnum[f] > 0 then begin
-          CardsData[g,f].caption := '#' + IntToStr(cl.cnum[f]) + ' ' + 
+          CardsData[g,f].caption := '#' + IntToStr(cl.cnum[f]) + ' ' +
                     cardset[cl.cset[f], cl.cnum[f]];
         end else begin
           CardsData[g,f].caption := setabbr[cl.cset[f]] + ' ?????????';
@@ -473,7 +499,7 @@ end;
 
 procedure PlayActionDrawCards(s: string; dir: integer; bbcards: boolean);
 var f, g, r: integer;
-    s0: string;
+    s0, setAbbrLocal: string;
 begin
   g := Ord(s[2]) - 48;
   if dir = 1 then begin
@@ -483,8 +509,11 @@ begin
     s0 := '';
     while f < length(plcards[g]) do begin
       for r := 1 to numset do
-        if plcards[g][f] = setabbr[r][1]
-                     then s0 := s0 + ' ' + setabbr[r];
+        setAbbrLocal := setabbr[r][1];
+        if plcards[g][f] = setAbbrLocal then
+          begin
+           s0 := s0 + ' ' + setabbr[r];
+          end;
         f := f + 2;
       end;
     if g = 0 then Bloodbowl.LblCardsRed.caption := Trim(s0)
@@ -505,28 +534,37 @@ begin
     if g = 0 then frmCards.RedRB.checked := true
              else frmCards.BlueRB.checked := true;
     Bloodbowl.ButNiggles.enabled := false;
-    Bloodbowl.ButToss.enabled := false;         
+    Bloodbowl.ButToss.enabled := false;
   end;
   ShowCards(2);
 end;
 
 procedure PlayActionAddCard(s: string; dir: integer; bbcards: boolean);
-var g, q, r: integer;
-    s0: string;
+var
+  setAbbrLocal: string;
+  g, q, r: integer;
+  s0: string;
 begin
   g := Ord(s[2]) - 48;
-  if dir = 1 then begin
+  if dir = 1 then
+  begin
     plcards[g] := Copy(s, 3, length(s));
     q := length(plcards[g]) - 1;
     s0 := 'Extra Card for ' + ffcl[g] + ':';
+    setAbbrLocal := setabbr[r][1];
     for r := 1 to numset do
-      if plcards[g][q] = setabbr[r][1] then s0 := s0 + ' ' + setabbr[r];
-    if bbcards then s0 := s0 + ' (cards from ' +
-                                frmSettings.txtCardsIniFile.text + ')';
+      if plcards[g][q] = setAbbrLocal then
+      begin
+        s0 := s0 + ' ' + setabbr[r];
+      end;
+    if bbcards then
+      s0 := s0 + ' (cards from ' + frmSettings.txtCardsIniFile.text + ')';
     DefaultAction(s0);
-  end else begin
+  end
+  else
+  begin
     BackLog;
-    plcards[g] := Copy(plcards[g], 1, Length(plcards[g]) - 2);
+    plcards[g] := Copy(plcards[g], 1, length(plcards[g]) - 2);
   end;
   ShowCards(2);
 end;
