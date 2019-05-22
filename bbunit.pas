@@ -603,10 +603,12 @@ begin
   for g := 0 to 1 do begin
    for f := 1 to 8 do begin
     turn[g,f].color := colorarray[g,0,0];
+    turn[g,f].Transparent := false;
     if ref then turn[g,f].Refresh;
    end;
    for f := 1 to 4 do begin
      marker[g, f].SetValue(0);
+     marker[g,f].Transparent := false;
      if ref then marker[g, f].Refresh;
    end;
   end;
