@@ -152,6 +152,7 @@ object frmSettings: TfrmSettings
           AutoSize = False
           Color = clRed
           ParentColor = False
+          Transparent = False
         end
         object lblAwayColor: TLabel
           Left = 48
@@ -161,6 +162,7 @@ object frmSettings: TfrmSettings
           AutoSize = False
           Color = clBlue
           ParentColor = False
+          Transparent = False
         end
         object Button1: TButton
           Left = 184
