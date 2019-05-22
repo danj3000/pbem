@@ -146,6 +146,7 @@ begin
   height := 19;
   width := 19;
   visible := true;
+  Transparent := false;
   alignment := taCenter;
   font.size := 12;
   showhint := true;
