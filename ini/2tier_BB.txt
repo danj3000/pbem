@@ -1,0 +1,338 @@
+{Tool settings:} 
+
+[UpgradeableApothecaries=No] 
+[FreebootWizards=Yes] 
+[OtherSPPColumn=No] 
+[MVPorEXPColumn=MVP] {Can be 'MVP', 'EXP' or 'Both'} 
+[StartTreasury=1000] 
+[FreebootApoths=No] 
+[PBBL=Yes] 
+
+{All teams must be preceded by a [Race:xxx] tag. 
+After that, without a blank line, put the players, one on each line. 
+The information is ordered like this: 
+Quantity;Position;Cost (in k gp);MA;ST;AG;AV;Skills & Traits;Categories 
+Categorie=G(eneral)/A(gility)/S(trength)/P(assing)/F (physical)/R(acial characteristic) 
+Add a line Reroll=x (in k gp) 
+The next line should have whether the team can have an Apothecary or not 
+Finally the last line shows the default directory for team pictures 
+} 
+
+[Race:Amazon] 
+16;Linewoman;50;6;3;3;7;Dodge;G 
+2;Catcher;70;6;3;3;7;Dodge, Catch;GA 
+2;Thrower;70;6;3;3;7;Dodge, Pass;GP 
+4;Blitzer;90;6;3;3;7;Dodge, Block;GS 
+Reroll=50 
+Apoth=Yes 
+Pictures=Amazon 
+
+[Race:Brettonian] 
+16;Lineman;40;6;3;2;7;Fend;G 
+4;Yeoman;70;6;3;3;8;Wrestle;GS 
+4;Blitzer;120;8;3;3;8;Block, Catch, Dauntless;GS 
+Reroll=60 
+Apoth=Yes 
+Pictures=Bretonnia 
+
+[Race:Chaos] 
+16;Beastman;60;6;3;3;8;Thick Skull, Horns;GSF 
+4;Chaos Warrior;100;5;4;3;9;;GSF 
+1;Minotaur;150;5;5;2;8;Loner, Frenzy, Horns, Mighty Blow, Thick Skull, Wild Animal;SF 
+Reroll=60 
+Apoth=Yes 
+Pictures=Chaos 
+
+[Race:Chaos Dwarf] 
+16;Hobgoblin;40;6;3;3;7;;G 
+6;Chaos Dwarf Blocker;70;4;3;2;9;Block, Tackle, Thick Skull;GS 
+2;Bull Centaur;130;6;4;2;9;Sprint, Sure Feet, Thick Skull;GS 
+1;Minotaur;150;5;5;2;8;Loner, Frenzy, Horns, Mighty Blow, Thick Skull, Wild Animal;S 
+Reroll=70 
+Apoth=Yes 
+Pictures=ChaosDwarf 
+
+[Race:Chaos Pact] 
+12;Marauder;50;6;3;3;8;;GSPF 
+1;Goblin Renegade;40;6;2;3;7;Animosity, Dodge, Right Stuff, Stunty;AF 
+1;Skaven Renegade;50;7;3;3;7;Animosity;GF 
+1;Dark Elf Renegade;70;6;3;4;8;Animosity;GAF 
+1;Chaos Troll;110;4;5;1;9;Loner, Always Hungry, Mighty Blow, Really Stupid, Regeneration, Throw Team-Mate;S 
+1;Chaos Ogre;140;5;5;2;9;Loner, Bonehead, Mighty Blow, Thick Skull, Throw Team-Mate;S 
+1;Minotaur;150;5;5;2;8;Loner, Frenzy, Horns, Mighty Blow, Thick Skull, Wild Animal;S 
+Reroll=70 
+Apoth=Yes 
+Pictures=ChaosAllStars 
+
+[Race:Dark Elf] 
+16;Lineman;70;6;3;4;8;;GA 
+2;Runner;80;7;3;4;7;Dump-Off;GAP 
+2;Assassin;90;6;3;4;7;Shadowing, Stab;GA 
+4;Blitzer;100;7;3;4;8;Block;GA 
+2;Witch Elf;110;7;3;4;7;Frenzy, Dodge, Jump Up;GA 
+Reroll=50 
+Apoth=Yes 
+Pictures=DarkElf 
+
+[Race:Dwarf]
+16;Lineman;70;4;3;2;9;Block, Thick Skull;GS 
+2;Blocker;80;4;3;2;9;Block, Tackle, Thick Skull;GS 
+2;Runner;80;6;3;3;8;Sure Hands, Thick Skull;GP 
+2;Blitzer;80;5;3;3;9;Block, Thick Skull;GS 
+2;Troll Slayer;90;5;3;2;8;Juggernaut, Frenzy, Dauntless, Thick Skull;GS 
+1;Deathroller;160;4;7;1;10;Loner, Break Tackle, Dirty Player, Juggernaut, Mighty Blow, No Hands, Secret Weapon, Stand Firm;S 
+Reroll=50 
+Apoth=Yes 
+Pictures=Dwarf 
+
+[Race:Elf] 
+16;Lineman;60;6;3;4;7;GA 
+2;Thrower;70;6;3;4;7;Pass;GAP 
+4;Catcher;100;8;3;4;7;Catch, Nerves of Steel;GA 
+2;Blitzer;110;7;3;4;8;Block, Side Step;GA 
+Reroll=50 
+Apoth=Yes 
+Pictures=HighElf 
+
+[Race:Goblin] 
+16;Goblin;40;6;2;3;7;Right Stuff, Dodge, Stunty;A 
+1;Bombardier;40;6;2;3;7;Bombs, Dodge, Secret Weapon, Stunty;A 
+1;Pogoer;70;7;2;3;7;Dodge, Leap, Stunty, Very Long Legs;A 
+1;Looney;40;6;2;3;7;Chainsaw, Secret Weapon, Stunty;A 
+1;Fanatic;70;3;7;3;7;Ball & Chain, No Hands, Secret Weapon, Stunty;S 
+2;Squig;90;5;4;3;8;Frenzy, Leap, Wild Animal, No Hands;AS 
+2;Troll;110;4;5;1;9;Loner, Always Hungry, Mighty Blow, Really Stupid, Regeneration, Throw Team-Mate;S 
+Reroll=60 
+Apoth=Yes 
+Pictures=Goblin 
+
+[Race:Halfling] 
+16;Halfling;30;5;2;3;7;Right Stuff, Dodge, Stunty;A 
+2;Treeman;120;2;6;1;10;Mighty Blow, Stand Firm, Thick Skull, Throw Team-Mate, Take Root, Strong Arm;S 
+Reroll=60 
+Apoth=Yes 
+Pictures=Halfling 
+
+[Race:High Elf] 
+16;Lineman;70;6;3;4;8;GA 
+2;Thrower;90;6;3;4;8;Pass, Safe Throw;GAP 
+4;Catcher;90;8;3;4;7;Catch;GA 
+2;Blitzer;100;7;3;4;8;Block;GA 
+Reroll=50 
+Apoth=Yes 
+Pictures=HighElf 
+
+[Race:Human] 
+16;Lineman;50;6;3;3;8;;G 
+4;Catcher;80;8;2;3;8;Catch, Dodge;GA 
+2;Thrower;70;6;3;3;8;Sure Hands, Pass;GP 
+4;Blitzer;80;7;3;3;8;Block;GS 
+1;Ogre;140;5;5;2;9;Loner, Mighty Blow, Thick Skull, Throw Team-Mate, Bonehead;S 
+Reroll=50 
+Apoth=Yes 
+Pictures=Human 
+
+[Race:Khemri] 
+16;Skeleton;40;5;3;2;7;Regeneration, Thick Skull;G 
+2;Blitz-Ra;90;6;3;2;8;Regeneration, Thick Skull, Block;GS 
+2;Thro-Ra;70;6;3;2;7;Regeneration, Thick Skull, Sure Hands, Pass;GP 
+4;Tomb Guardian;110;4;5;1;9;Regeneration;S 
+Reroll=70 
+Apoth=No 
+Pictures=Khemri 
+
+[Race:Lizardmen] 
+16;Skink;60;8;2;3;7;Dodge, Stunty;A 
+6;Saurus;80;6;4;1;9;;GS 
+1;Kroxigor;140;6;5;1;9;Loner, Mighty Blow, Thick Skull, Prehensile Tail, Bonehead;S 
+Reroll=60 
+Apoth=Yes 
+Pictures=Lizardman 
+
+[Race:Necromantic] 
+16;Zombie;40;4;3;2;8;Regeneration;G 
+2;Ghoul;70;7;3;3;7;Dodge;GA 
+2;Wight;90;6;3;3;8;Block, Regeneration;GS 
+2;Flesh Golem;100;4;4;2;9;Stand Firm, Regeneration, Thick Skull;GS 
+2;Werewolf;120;8;3;3;8;Regeneration, Frenzy, Claws;GA 
+Reroll=70 
+Apoth=No 
+Pictures=Necromantic 
+
+[Race:Norse] 
+16;Lineman;50;6;3;3;7;Block;G 
+2;Thrower;70;6;3;3;7;Block, Pass;GP 
+2;Runner;90;7;3;3;7;Block, Dauntless;GA 
+2;Berserker;90;6;3;3;7;Block, Frenzy, Jump Up;GS 
+2;Ulfwerener;110;6;4;2;8;Frenzy;GS 
+1;Snow Troll;140;5;5;1;8;Loner, Claws, Disturbing Presence, Frenzy, Wild Animal;S 
+Reroll=60 
+Apoth=Yes 
+Pictures=Norse 
+
+[Race:Nurgle] 
+16;Rotter;40;5;3;3;8;Decay, Nurgles Rot;GF 
+4;Pestigor;80;6;3;3;8;Horns, Nurgles Rot, Regeneration;GSF 
+4;Nurgle Warrior;110;4;4;2;9;Disturbing Presence, Foul Appearance, Nurgles Rot, Regeneration;GSF 
+1;Beast of Nurgle;140;4;5;1;9;Loner, Disturbing Presence, Foul Appearance, Mighty Blow, Nurgles Rot, Really Stupid, Regeneration, Tentacles;S 
+Reroll=70 
+Apoth=No 
+Pictures=ChaosNurgle 
+
+[Race:Ogre] 
+16;Snotling;20;6;1;3;5;Dodge, Right Stuff, Side Step, Stunty, Titchy;A 
+6;Ogre;140;5;5;2;9;Bonehead, Mighty Blow, Thick Skull, Throw Team-Mate;S 
+Reroll=70 
+Apoth=Yes 
+Pictures=Ogre 
+
+[Race:Orc] 
+16;Lineman;50;5;3;3;9;;G 
+4;Goblin;40;6;2;3;7;Right Stuff, Dodge, Stunty;A 
+2;Thrower;70;5;3;3;8;Sure Hands, Pass;GP 
+4;Black Orc Blocker;80;4;4;2;9;;GS 
+4;Blitzer;80;6;3;3;9;Block;GS 
+1;Troll;110;4;5;1;9;Loner, Always Hungry, Mighty Blow, Really Stupid, Regeneration, Throw Team-Mate;S 
+Reroll=60 
+Apoth=Yes 
+Pictures=Orc 
+
+[Race:Skaven] 
+16;Lineman;50;7;3;3;7;;G 
+2;Thrower;70;7;3;3;7;Sure Hands, Pass;GP 
+4;Gutter Runner;80;9;2;4;7;Dodge;GA 
+2;Blitzer;90;7;3;3;8;Block;GS 
+1;Rat Ogre;150;6;5;2;8;Loner, Mighty Blow, Frenzy, Prehensile Tail, Wild Animal;S 
+Reroll=60 
+Apoth=Yes 
+Pictures=Skaven 
+
+[Race:Slann] 
+16;Lineman;60;6;3;3;8;Leap, Very Long Legs;G 
+4;Catcher;80;7;2;4;7;Diving Catch, Leap, Very Long Legs;GA 
+4;Blitzer;110;7;3;3;8;Diving Tackle, Jump Up, Leap, Very Long Legs;GAS 
+1;Kroxigor;140;6;5;1;9;Loner, Bonehead, Mighty Blow, Prehensile Tail, Thick Skull;S 
+Reroll=50 
+Apoth=Yes 
+Pictures=Slann 
+
+[Race:Undead] 
+16;Skeleton;40;5;3;2;7;Regeneration, Thick Skull;G 
+2;Zombie Blocker;60;4;3;2;8;Regeneration, Thick Skull, Decay;GS 
+2;Ghoul;70;7;3;3;7;Dodge;GA 
+2;Wight;90;6;3;3;8;Block, Regeneration;GS 
+2;Mummy;120;3;5;1;9;Mighty Blow, Regeneration;S 
+Reroll=70 
+Apoth=No 
+Pictures=Undead 
+
+[Race:Underworld] 
+12;Underworld Goblin;40;6;2;3;7;Right Stuff, Dodge, Stunty;AF 
+2;Skaven Lineman;50;7;3;3;7;Animosity;GF 
+2;Skaven Thrower;70;7;3;3;7;Animosity, Pass, Sure Hands;GPF 
+2;Skaven Blitzer;90;7;3;3;8;Animosity, Block;GSF 
+1;Warpstone Troll;110;4;5;1;9;Loner, Always Hungry, Mighty Blow, Really Stupid, Regeneration, Throw Team-Mate;SF 
+Reroll=70 
+Apoth=Yes 
+Pictures=Skaven 
+
+[Race:Vampire] 
+16;Thrall;40;6;3;3;7;Thick Skull;G 
+6;Vampire;110;6;4;4;8;Blood Lust, Hypnotic Gaze, Regeneration;GSA 
+Reroll=70 
+Apoth=Yes 
+Pictures=Vampire 
+
+[Race:Wood Elf] 
+16;Lineman;70;7;3;4;7;;GA 
+4;Catcher;90;8;2;4;7;Catch, Dodge, Sprint;GA 
+2;Thrower;90;7;3;4;7;Pass;GAP 
+2;Wardancer;110;8;3;4;7;Block, Leap;GA 
+Reroll=50 
+Apoth=Yes 
+Pictures=WoodElf 
+
+{The Skills are ordered like this: 
+one line per skill, no blank lines. 
+Per line: Skillname;Categorie;Skill 
+Categorie=G(eneral)/A(gility)/S(trength)/P(assing)/F (Mutation)/R(Extraordinary) 
+Skill=S(kill) 
+} 
+
+[Skills&Traits] 
+Accurate;P;S 
+Always Hungry;R;- 
+Animosity;R;- 
+Ball & Chain;R;- 
+Big Hand;F;S 
+Block;G;S 
+Blood Lust;R;- 
+Bombs;R;- 
+Bonehead;R;- 
+Break Tackle;S;S 
+Catch;A;S 
+Chainsaw;R;- 
+Claw;F;S 
+Claws;F;S 
+Dauntless;G;S 
+Decay;R;- 
+Dirty Player;G;S 
+Disturbing Presence;F;S 
+Diving Catch;A;S 
+Diving Tackle;A;S 
+Dodge;A;S 
+Dump-Off;P;S 
+Extra Arms;F;S 
+Fan Favorite;R;- 
+Fend;G;S 
+Foul Appearance;F;S 
+Frenzy;G;S 
+Grab;S;S 
+Guard;S;S 
+Hail Mary Pass;P;S 
+Horns;F;S 
+Hypnotic Gaze;R;- 
+Juggernaut;S;S 
+Jump Up;A;S 
+Kick;G;S 
+Kick-Off Return;G;S 
+Leader;P;S 
+Leap;A;S 
+Loner;R;- 
+Mighty Blow;S;S 
+Multiple Block;S;S 
+Nerves of Steel;P;S 
+No Hands;R;- 
+Nurgles Rot;R;- 
+Pass;P;S 
+Pass Block;G;S 
+Piling On;S;S 
+Prehensile Tail;F;S 
+Pro;G;S 
+Really Stupid;R;- 
+Regeneration;R;- 
+Right Stuff;R;- 
+Safe Throw;P;S 
+Shadowing;G;S 
+Secret Weapon;R;- 
+Side Step;A;S 
+Sneaky Git;A;S 
+Sprint;A;S 
+Stab;R;- 
+Stakes;R;- 
+Stand Firm;S;S 
+Strip Ball;G;S 
+Strong Arm;S;S 
+Stunty;R;- 
+Sure Feet;A;S 
+Sure Hands;G;S 
+Tackle;G;S 
+Take Root;R;- 
+Tentacles;F;S 
+Thick Skull;S;S 
+Throw Team-Mate;R;- 
+Titchy;R;- 
+Two Heads;F;S 
+Very Long Legs;F;S 
+Wild Animal;R;- 
+Wrestle;G;S

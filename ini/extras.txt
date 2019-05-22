@@ -1,0 +1,47 @@
+[Race:Daemon] 
+4;Plague Bearer;70;5;4;1;7;Foul Appearance, Thick Skull;G
+4;Blood Letter;70;6;4;1;7;Horns;GS
+4;Pink Horror;70;7;2;3;7;Extra Arms, Regeneration;GPF
+4;Daemonette;70;6;3;4;7;No Hands, Claw;GA
+Reroll=70 
+Apoth=Yes 
+Pictures=Chaos 
+
+[Race:Ithilmar Elf] 
+16;Lineman;70;5;3;4;9;GA 
+2;Thrower;90;5;3;4;9;Pass, Kick-Off Return;GAP 
+2;Runner;100;7;3;4;8;Jump Up;GA 
+4;Blitzer;100;6;3;4;9;Block;GA 
+Reroll=50 
+Apoth=Yes 
+Pictures=HighElf
+
+[Race:Tilea] 
+16;Lineman;50;6;3;3;7;Sure Hands;G 
+1;Human Lineman;50;6;3;3;7;Sure Hands;G 
+1;Human Catcher;70;8;2;3;8;Catch, Dodge;GA 
+1;Human Thrower;70;6;3;3;8;Sure Hands, Pass;GP 
+1;Human Blitzer;90;7;3;3;8;Block;GS
+1;Dwarf Blocker;70;4;3;2;9;Block, Tackle, Thick Skull;GS 
+1;Dwarf Runner;80;6;3;3;8;Sure Hands, Thick Skull;GP 
+1;Dwarf Blitzer;80;5;3;3;9;Block, Thick Skull;GS 
+1;Dwarf Troll Slayer;90;5;3;2;8;Juggernaut, Frenzy, Dauntless, Thick Skull;GS 
+1;Elf Lineman;60;6;3;4;7;GA 
+1;Elf Thrower;70;6;3;4;7;Pass;GAP 
+1;Elf Catcher;100;8;3;4;7;Catch, Nerves of Steel;GA 
+1;Elf Blitzer;110;7;3;4;8;Block, Side Step;GA
+1;Amazon Linewoman;50;6;3;3;7;Dodge;G 
+1;Amazon Catcher;70;6;3;3;7;Dodge, Catch;GA 
+1;Amazon Thrower;70;6;3;3;7;Dodge, Pass;GP 
+1;Amazon Blitzer;90;6;3;3;7;Dodge, Block;GS 
+1;Norse Lineman;50;6;3;3;7;Block;G 
+1;Norse Thrower;70;6;3;3;7;Block, Pass;GP 
+1;Norse Runner;90;7;3;3;7;Block, Dauntless;GA 
+1;Norse Berserker;90;6;3;3;7;Block, Frenzy, Jump Up;GS 
+1;Norse Ulfwerener;110;6;4;2;8;Frenzy;GS 
+1;Snow Troll;140;5;5;1;8;Loner, Claws, Disturbing Presence, Frenzy, Wild Animal;S 
+1;Deathroller;160;4;7;1;10;Loner, Break Tackle, Dirty Player, Juggernaut, Mighty Blow, No Hands, Secret Weapon, Stand Firm;S 
+1;Ogre;130;5;5;2;9;Loner, Mighty Blow, Thick Skull, Throw Team-Mate, Bonehead;S 
+Reroll=70 
+Apoth=Yes 
+Pictures=Human 
