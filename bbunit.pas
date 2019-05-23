@@ -643,26 +643,33 @@ begin
         apo1[g].color := colorarray[g, 0, 0];
         apo1[g].font.color := colorarray[g, 0, 1];
         apo1[g].visible := true;
+        apo1[g].Transparent := false;
         apo2[g].color := colorarray[g, 0, 0];
         apo2[g].font.color := colorarray[g, 0, 1];
         apo2[g].visible := true;
+        apo2[g].Transparent := false;
         apo3[g].color := colorarray[g, 0, 0];
         apo3[g].font.color := colorarray[g, 0, 1];
         apo3[g].visible := true;
+        apo3[g].Transparent := false;
         apo4[g].color := colorarray[g, 0, 0];
         apo4[g].font.color := colorarray[g, 0, 1];
         apo4[g].visible := true;
+        apo4[g].Transparent := false;
         apo5[g].color := colorarray[g, 0, 0];
         apo5[g].font.color := colorarray[g, 0, 1];
         apo5[g].visible := true;
+        apo5[g].Transparent := false;
       end else begin
         apo[g].color := colorarray[g, 0, 0];
         apo[g].font.color := colorarray[g, 0, 1];
         apo[g].visible := true;
+        apo[g].Transparent := false;
       end;
       wiz[g].color := colorarray[g, 0, 0];
       wiz[g].font.color := colorarray[g, 0, 1];
       wiz[g].visible := true;
+      wiz[g].Transparent := false;
     end;
   end;
   SetIGMEOY(-1);
@@ -715,37 +722,44 @@ begin
       if (apo[g].color <> colorarray[g, 4, 0]) then begin
         apo[g].color := colorarray[g, 0, 0];
         apo[g].font.color := colorarray[g, 0, 1];
+        apo[g].Transparent := false;
       end;
     end else begin
       if (team[g].apot >= 1) and (apo1[g].color <> colorarray[g, 4, 0])
         then begin
         apo1[g].color := colorarray[g, 0, 0];
         apo1[g].font.color := colorarray[g, 0, 1];
+        apo1[g].Transparent := false;
       end;
       if (team[g].apot >= 2) and (apo2[g].color <> colorarray[g, 4, 0])
         then begin
         apo2[g].color := colorarray[g, 0, 0];
         apo2[g].font.color := colorarray[g, 0, 1];
+        apo2[g].Transparent := false;
       end;
       if (team[g].apot >= 3) and (apo3[g].color <> colorarray[g, 4, 0])
         then begin
         apo3[g].color := colorarray[g, 0, 0];
         apo3[g].font.color := colorarray[g, 0, 1];
+        apo3[g].Transparent := false;
       end;
       if (team[g].apot >= 4) and (apo4[g].color <> colorarray[g, 4, 0])
         then begin
         apo4[g].color := colorarray[g, 0, 0];
         apo4[g].font.color := colorarray[g, 0, 1];
+        apo4[g].Transparent := false;
       end;
       if (team[g].apot >= 5) and (apo5[g].color <> colorarray[g, 4, 0])
         then begin
         apo5[g].color := colorarray[g, 0, 0];
         apo5[g].font.color := colorarray[g, 0, 1];
+        apo5[g].Transparent := false;
       end;
     end;
     if wiz[g].color <> colorarray[g, 4, 0] then begin
       wiz[g].color := colorarray[g, 0, 0];
       wiz[g].font.color := colorarray[g, 0, 1];
+      wiz[g].Transparent := false;
     end;
   end;
   team[g].font.color := TeamTextColor[g];
@@ -1355,6 +1369,7 @@ begin
       apo[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 2;
     end;
     apo[g].visible := true;
+    apo[g].Transparent := false;
     apo[g].alignment := taCenter;
     apo[g].font.size := 12;
     apo[g].color := colorarray[g, 0, 0];
@@ -1376,6 +1391,7 @@ begin
       apo1[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 2;
     end;
     apo1[g].visible := true;
+    apo1[g].Transparent := false;
     apo1[g].alignment := taCenter;
     apo1[g].font.size := 12;
     apo1[g].color := colorarray[g, 0, 0];
@@ -1396,6 +1412,7 @@ begin
       apo2[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 15;
     end;
     apo2[g].visible := true;
+    apo2[g].Transparent := false;
     apo2[g].alignment := taCenter;
     apo2[g].font.size := 12;
     apo2[g].color := colorarray[g, 0, 0];
@@ -1416,6 +1433,7 @@ begin
       apo3[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 28;
     end;
     apo3[g].visible := true;
+    apo3[g].Transparent := false;
     apo3[g].alignment := taCenter;
     apo3[g].font.size := 12;
     apo3[g].color := colorarray[g, 0, 0];
@@ -1436,6 +1454,7 @@ begin
       apo4[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 41;
     end;
     apo4[g].visible := true;
+    apo4[g].Transparent := false;
     apo4[g].alignment := taCenter;
     apo4[g].font.size := 12;
     apo4[g].color := colorarray[g, 0, 0];
@@ -1456,6 +1475,7 @@ begin
       apo5[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 54;
     end;
     apo5[g].visible := true;
+    apo5[g].Transparent := false;
     apo5[g].alignment := taCenter;
     apo5[g].font.size := 12;
     apo5[g].color := colorarray[g, 0, 0];
@@ -1481,6 +1501,7 @@ begin
       {/// added:} + (2 * g - 1) * (apo[g].width + 2); {/// until here};
   end;
   wiz[g].visible := false;
+  wiz[g].Transparent := false;
   wiz[g].alignment := taCenter;
   wiz[g].font.size := 12;
   wiz[g].color := colorarray[g, 0, 0];
@@ -1504,18 +1525,23 @@ begin
       apo5[g].Visible := false;
     end else begin
       apo1[g].visible := true;
+      apo1[g].Transparent := false;
       apo1[g].color := colorarray[g, 0, 0];
       apo1[g].font.color := colorarray[g, 0, 1];
       apo2[g].visible := true;
+      apo2[g].Transparent := false;
       apo2[g].color := colorarray[g, 4, 0];
       apo2[g].font.color := colorarray[g, 4, 1];
       apo3[g].visible := true;
+      apo3[g].Transparent := false;
       apo3[g].color := colorarray[g, 4, 0];
       apo3[g].font.color := colorarray[g, 4, 1];
       apo4[g].visible := true;
+      apo4[g].Transparent := false;
       apo4[g].color := colorarray[g, 4, 0];
       apo4[g].font.color := colorarray[g, 4, 1];
       apo5[g].visible := true;
+      apo5[g].Transparent := false;
       apo5[g].color := colorarray[g, 4, 0];
       apo5[g].font.color := colorarray[g, 4, 1];
       if team[g].apot >= 2 then begin
