@@ -12,7 +12,6 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
-    cbShowSPP: TCheckBox;
     Label1: TLabel;
     txtDPArmMod: TEdit;
     txtDPInjMod: TEdit;
@@ -136,7 +135,6 @@ type
     Label24: TLabel;
     txtHandicapIniFile: TEdit;
     cbWizards: TCheckBox;
-    rgAging: TRadioGroup;
     lblLustrian: TLabel;
     cbPGFI: TCheckBox;
     rgCardSystem: TRadioGroup;
@@ -150,12 +148,6 @@ type
     cbPassingRangesColored: TCheckBox;
     cbBlackIce: TCheckBox;
     cbFG1PT: TCheckBox;
-    cbMVPEXP: TCheckBox;
-    lbEXPAgingPoint: TLabel;
-    txtEXPAgingPoint: TEdit;
-    cbEXPSI: TCheckBox;
-    lblMVPValue: TLabel;
-    txtMVPValue: TEdit;
     cbOPTakeRoot: TCheckBox;
     cbSquarePass: TCheckBox;
     cbBHAssist: TCheckBox;
@@ -238,19 +230,11 @@ begin
     Bloodbowl.RemoveOther1.Visible := false;
   end;
 
-  if frmSettings.cbMVPEXP.checked then begin
-    g := Bloodbowl.SBMVP.left;
-    for f := 0 to Bloodbowl.toolbar.ControlCount - 1 do begin
-      if Bloodbowl.toolbar.Controls[f].left >= g then
-         Bloodbowl.toolbar.Controls[f].left :=
-              Bloodbowl.toolbar.Controls[f].left + Bloodbowl.sbEXP.width;
-    end;
-    Bloodbowl.sbEXP.Left := g;
-  end else begin
-    Bloodbowl.sbEXP.Visible := false;
-    Bloodbowl.EXP1.visible := false;
-    Bloodbowl.RemoveEXP1.visible := false;
-  end;
+
+  Bloodbowl.sbEXP.Visible := false;
+  Bloodbowl.EXP1.visible := false;
+  Bloodbowl.RemoveEXP1.visible := false;
+
 
   if frmSettings.rgCardSystem.ItemIndex >= 3 then begin
     Bloodbowl.butCardsBlue.visible := false;
@@ -321,13 +305,6 @@ begin
    (frmSettings.txtHandicapIniFile.text <> '') then
      OtherHandicapSetup;
 
-  if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-    then begin
-    BloodBowl.SBMVP.Hint := 'EXP Point';
-    BloodBowl.MVPAward1.Caption := 'EXP Point';
-    BloodBowl.RemoveMVP1.Caption := 'Remove EXP';
-  end;
-
   SettingsLoaded := True;
   ApoWizCreate(0);
   ApoWizCreate(1);
@@ -373,7 +350,6 @@ begin
   frmSettings.rgFoulReferee.ItemIndex := Ord(s[4]) - 48;
   GetText;
   frmSettings.rgSkillRollsAt.ItemIndex := Ord(s[1]) - 48;
-  frmSettings.rgAging.ItemIndex := Ord(s[2]) - 48;
   frmSettings.cbNoForcedMAandAG.checked := (s[3] = 'F');
   frmSettings.cbCheerAC.checked := (s[4] = 'S');
   frmSettings.cbNoMVPs.checked := (s[5] = 'M');
@@ -428,10 +404,6 @@ begin
   frmSettings.cbButterfingers.checked := (s[54] = 'A');
   frmSettings.cbFoulApp.checked := (s[55] = 'B');
   frmSettings.cbFG1PT.checked := (s[56] = 'C');
-  frmSettings.cbMVPEXP.checked := (s[57] = 'D');
-  frmSettings.txtMVPValue.text := s[58];
-  frmSettings.txtEXPAgingPoint.Text := s[59];
-  frmSettings.cbEXPSI.checked := (s[60] = 'E');
   frmSettings.cbOPTakeRoot.checked := (s[61] = 'F');
   frmSettings.cbBlackIce.Checked := (s[62] = 'G');
   frmSettings.cbSquarePass.checked := (s[63] = 'H');
@@ -506,7 +478,7 @@ begin
   st := st + Chr(48 + rgFoulReferee.ItemIndex);
   st := st + '*';
   st := st + Chr(48 + rgSkillRollsAt.ItemIndex);
-  st := st + Chr(48 + rgAging.ItemIndex);
+  st := st + Chr(48);
   if cbNoForcedMAandAG.checked then st := st + 'F' else st := st + '.';
   if cbCheerAC.checked then st := st + 'S' else st := st + '.';
   if cbNoMVPs.checked then st := st + 'M' else st := st + '.';
@@ -561,14 +533,10 @@ begin
   if cbButterfingers.checked then st := st + 'A' else st := st + '.';
   if cbFoulApp.checked then st := st + 'B' else st := st + '.';
   if cbFG1PT.checked then st := st + 'C' else st := st + '.';
-  if cbMVPEXP.Checked then st := st + 'D' else st := st + '.';
-  if FVal(txtMVPValue.text)>9 then
-    st := st + '9' else
-    st := st + Trim(txtMVPValue.text);
-  if FVal(txtEXPAgingPoint.text)>9 then
-    st := st + '9' else
-    st := st + Trim(txtEXPAgingPoint.text);
-  if cbEXPSI.checked then st := st + 'E' else st := st + '.';
+  st := st + '.';     // was mvpexp
+  st := st + MVPValue.ToString;
+  st := st + '9';
+  st := st + '.';
   if cbOPTakeRoot.checked then st := st + 'F' else st := st + '.';
   if cbBlackIce.checked then st := st + 'G' else st := st + '.';
   if cbSquarePass.checked then st := st + 'H' else st := st + '.';
@@ -744,9 +712,6 @@ begin
         if Copy(s, 1, 11) = 'NoTZAssist=' then begin
           cbNoTZAssist.checked := (Copy(s, 12, 1) = 'Y');
         end;
-        if Copy(s, 1, 6) = 'Aging=' then begin
-          rgAging.ItemIndex := FVal(copy(s, 7, 1));
-        end;
         if Copy(s, 1, 9) = 'NiggleUp=' then begin
           cbNiggleUp.checked := (Copy(s, 10, 1) = 'Y');
         end;
@@ -834,18 +799,7 @@ begin
         if Copy(s, 1, 7) = 'NoMVPs=' then begin
           cbNoMVPs.checked := (Copy(s, 8, 1) = 'Y');
         end;
-        if Copy(s, 1, 7) = 'MVPEXP=' then begin
-          cbMVPEXP.checked := (Copy(s, 8, 1) = 'Y');
-        end;
-        if Copy(s, 1, 14) = 'EXPAgingPoint=' then begin
-          txtEXPAgingPoint.text := (Copy(s, 15, 1));
-        end;
-        if Copy(s, 1, 9) = 'MVPValue=' then begin
-          txtMVPValue.text := (Copy(s, 10, 1));
-        end;
-        if Copy(s, 1, 6) = 'EXPSI=' then begin
-          cbEXPSI.checked := (Copy(s, 7, 1) = 'Y');
-        end;
+
         if Copy(s, 1, 16) = 'OnPitchTakeRoot=' then begin
           cbOPTakeRoot.checked := (Copy(s, 17, 1) = 'Y');
         end;

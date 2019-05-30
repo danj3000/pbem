@@ -10,6 +10,7 @@ const
   EMailAddress = 'bbtool@yahoogroups.com';
   PBeMVersion = '2.5b';
   PBeMVerText = 'Ronald Lokers Bloodbowl Tool version 2.5b Release';
+  MVPValue = 5;
 
 type
   TmodAlg = class(TDataModule)
@@ -1760,7 +1761,7 @@ end;
 
 procedure WorkOutBlock(g, f, g0, f0: integer);
 var assa, assd, p, db, dd, st, sa, stx, std, st0, horns, dl, NiggleCount,
-    totspp, MVPValue, t, z, dist, squaredist: integer;
+    totspp, t, z, dist, squaredist: integer;
     tz, tz0: TackleZones;
     s, BlockAnswer, ReRollAnswer: string;
     b, bx, fa, avd, jam, bga, bnc, SPP4th, HitBlock, VicBlock,
@@ -2466,15 +2467,14 @@ begin
   frmArmourRoll.rbAVNegOne.checked :=
           (Uppercase(team[g].race) = 'BRIGHT CRUSADERS') and
           (frmSettings.cbBrightCrusaders.checked);
-  if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-    then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
+
   totspp := player[g0,f0].comp0 + 3 * player[g0,f0].td0 +
           2 * player[g0,f0].cas0 + 2 * player[g0,f0].int0 +
-          MVPValue * player[g0,f0].mvp0 +  player[g0,f0].OtherSPP0 +
+          bbalg.MVPValue * player[g0,f0].mvp0 +  player[g0,f0].OtherSPP0 +
           player[g0,f0].exp0 +
           player[g0,f0].comp + 3 * player[g0,f0].td +
           2 * player[g0,f0].cas + 2 * player[g0,f0].int +
-          MVPValue * player[g0,f0].mvp + player[g0,f0].OtherSPP +
+          bbalg.MVPValue * player[g0,f0].mvp + player[g0,f0].OtherSPP +
           player[g0,f0].exp;
   SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
   frmArmourRoll.cbLBanish.checked :=
@@ -2502,7 +2502,7 @@ begin
 end;
 
 procedure WorkOutFoul(g, f, g0, f0: integer);
-var assa, assd, p, totspp, MVPValue, NiggleCount, t: integer;
+var assa, assd, p, totspp, NiggleCount, t: integer;
     tz, tz0: TackleZones;
     s: string;
     b, bx, SPP4th: boolean;
@@ -2645,15 +2645,13 @@ begin
   frmArmourRoll.cbIronMan.checked := (player[g0,f0].hasSkill('Iron Man'));
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
   frmArmourRoll.cbIGMEOY.checked := (g = IGMEOY);
-  if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-    then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
   totspp := player[g0,f0].comp0 + 3 * player[g0,f0].td0 +
           2 * player[g0,f0].cas0 + 2 * player[g0,f0].int0 +
-          MVPValue * player[g0,f0].mvp0 +  player[g0,f0].OtherSPP0 +
+          bbalg.MVPValue * player[g0,f0].mvp0 +  player[g0,f0].OtherSPP0 +
           player[g0,f0].exp0 +
           player[g0,f0].comp + 3 * player[g0,f0].td +
           2 * player[g0,f0].cas + 2 * player[g0,f0].int +
-          MVPValue * player[g0,f0].mvp + player[g0,f0].OtherSPP +
+          bbalg.MVPValue * player[g0,f0].mvp + player[g0,f0].OtherSPP +
           player[g0,f0].exp;
   SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
   frmArmourRoll.cbLBanish.checked :=
@@ -2716,7 +2714,7 @@ begin
 end;
 
 procedure InjurySettings(g0, f0:integer);
-var p, totspp, MVPValue, NiggleCount, t: integer;
+var p, totspp, NiggleCount, t: integer;
     s: string;
     SPP4th: boolean;
 begin
@@ -2756,15 +2754,14 @@ begin
      or (player[g0,f0].hasSkill('NoDeath'));
   frmArmourRoll.cbIronMan.checked := (player[g0,f0].hasSkill('Iron Man'));
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
-  if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-    then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
+
   totspp := player[g0,f0].comp0 + 3 * player[g0,f0].td0 +
           2 * player[g0,f0].cas0 + 2 * player[g0,f0].int0 +
-          MVPValue * player[g0,f0].mvp0 +  player[g0,f0].OtherSPP0 +
+          bbalg.MVPValue * player[g0,f0].mvp0 +  player[g0,f0].OtherSPP0 +
           player[g0,f0].exp0 +
           player[g0,f0].comp + 3 * player[g0,f0].td +
           2 * player[g0,f0].cas + 2 * player[g0,f0].int +
-          MVPValue * player[g0,f0].mvp + player[g0,f0].OtherSPP +
+          bbalg.MVPValue * player[g0,f0].mvp + player[g0,f0].OtherSPP +
           player[g0,f0].exp;
   SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
   frmArmourRoll.cbLBanish.checked :=
@@ -2793,7 +2790,7 @@ begin
 end;
 
 procedure ArmourSettings(g, f, g0, f0, special:integer);
-var p, p2, totspp, MVPValue, NiggleCount, t: integer;
+var p, p2, totspp, NiggleCount, t: integer;
     s: string;
     SPP4th: boolean;
 begin
@@ -2864,20 +2861,18 @@ begin
   frmArmourRoll.cbIronMan.checked :=
     (player[curteam,curplayer].hasSkill('Iron Man'));
   frmArmourRoll.cbDecay.checked := (player[curteam,curplayer].hasSkill('Decay'));
-  if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-    then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
   totspp := player[curteam,curplayer].comp0 + 3 *
     player[curteam,curplayer].td0 +
     2 * player[curteam,curplayer].cas0 + 2 *
     player[curteam,curplayer].int0 +
-    MVPValue * player[curteam,curplayer].mvp0 +
+    bbalg.MVPValue * player[curteam,curplayer].mvp0 +
     player[curteam,curplayer].OtherSPP0 +
     player[curteam,curplayer].exp0 +
     player[curteam,curplayer].comp + 3 *
     player[curteam,curplayer].td +
     2 * player[curteam,curplayer].cas + 2 *
     player[curteam,curplayer].int +
-    MVPValue * player[curteam,curplayer].mvp +
+    bbalg.MVPValue * player[curteam,curplayer].mvp +
     player[curteam,curplayer].OtherSPP +
     player[curteam,curplayer].exp;
   SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);

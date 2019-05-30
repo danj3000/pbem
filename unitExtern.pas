@@ -465,10 +465,7 @@ begin
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
           player[g,f].mvp0 := FVal(GetNextCell(s0));
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          if frmSettings.cbMVPEXP.checked then begin
-            player[g,f].exp0 := FVal(GetNextCell(s0));
-            s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          end;
+
           player[g,f].peaked := (Uppercase(Trim(GetNextCell(s0))) = 'P');
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
           player[g,f].value := MoneyVal(GetNextCell(s0));
@@ -785,7 +782,7 @@ end;
 procedure SaveTeamFile(g: integer; fn: string);
 var gg: TextFile;
     r, s, s0, t, Tom1, Tom2, Tom3, Tom4, Tom5: string;
-    f, i, p, q, p0, q0, totval, piccount, MVPValue, pickuplength, pickup2,
+    f, i, p, q, p0, q0, totval, piccount,  pickuplength, pickup2,
       p2: integer;
     pl, pics: boolean;
 
@@ -974,10 +971,7 @@ begin
             p := GotoNextCell(s, p);
             s := ReplaceNextText(s, '', p);
           end;
-          if frmSettings.cbMVPEXP.checked then begin
-            p := GotoNextCell(s, p);
-            s := ReplaceNextText(s, '', p);
-          end;
+
         end else begin
           s := ReplaceNextText(s, IntToStr(player[g,f].cnumber), p);
           p := GotoNextCell(s, p);
@@ -1125,17 +1119,12 @@ begin
           p := GotoNextCell(s, p);
           s := ReplaceNextText(s,
                 IntToStr(player[g,f].mvp + player[g,f].mvp0), p);
-          if frmSettings.cbMVPEXP.checked then begin
-            p := GotoNextCell(s, p);
-            s := ReplaceNextText(s,
-                IntToStr(player[g,f].exp + player[g,f].exp0), p);
-          end;
+
           p := GotoNextCell(s, p);
           if player[g,f].peaked then begin
             s := ReplaceNextText(s, 'P', p);
           end else begin
-            if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-              then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
+
             s := ReplaceNextText(s, IntToStr(
                     player[g,f].otherSPP + player[g,f].otherSPP0 +
                     player[g,f].comp + player[g,f].comp0 +

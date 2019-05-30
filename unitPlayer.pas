@@ -17,6 +17,8 @@ var
   modPlayer: TmodPlayer;
 
 type TPlayer = class(TLabel)
+  private
+    function GetPlayerSPP() : Integer;
 public
   {default things}
   teamnr, number, cnumber, cnumber0: integer;
@@ -971,7 +973,7 @@ end;
 procedure TPlayer.PlayerEndDrag(Sender, Target: TObject; X,
   Y: Integer);
 var f, g, f0, g0, pb, k, l, targetaction, test1, test2, r, p,
-    NiggleCount, totspp, MVPValue, Shadowroll, pplace, qplace, assa, assd,
+    NiggleCount, totspp, Shadowroll, pplace, qplace, assa, assd,
     ascount, dist1, dist2, finaldist, t, u, v, w, ploc, qloc, arrow,
     dk1, dk2, dk3, TestP, TestQ, NewP, NewQ, NewP2, NewQ2, NewP3, NewQ3,
     FinalP, FinalQ, FinalDK, RollNeed, KickP, KickQ, DKRoll, HGazeTarget: integer;
@@ -2193,21 +2195,19 @@ begin
             (Sender as Tplayer).number].hasSkill('Iron Man'));
           frmArmourRoll.cbDecay.checked := (player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].hasSkill('Decay'));
-          if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-            then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
           totspp :=
             player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].comp0 +
             3 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].td0 +
             2 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].cas0 +
             2 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].int0 +
-            MVPValue * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].mvp0 +
+            bbalg.MVPValue * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].mvp0 +
             player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].OtherSPP0 +
             player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].EXP0 +
             player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].comp +
             3 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].td +
             2 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].cas +
             2 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].int +
-            MVPValue * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].mvp +
+            bbalg.MVPValue * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].mvp +
             player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].OtherSPP +
             player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].EXP;
           SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
@@ -2899,7 +2899,7 @@ begin
 end;
 
 procedure TPlayer.ShowPlayerDetails;
-var h, txtlen, MVPValue, p, p2, p3: integer;
+var h, txtlen, p, p2, p3: integer;
     s2, t, t2: string;
 begin
   if (LoadedFileFirstBlood) and (LoadedFlag) then begin
@@ -2941,17 +2941,11 @@ begin
     if txtlen>100 then PlayerData[teamnr,5].font.size := 9 else
       PlayerData[teamnr,5].font.size := 10;
     PlayerData[teamnr,5].caption := GetSkillString(-1);
-    if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-      then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
-    if frmSettings.cbShowSPP.checked then begin
-      h := comp + 3 * td + 2 * cas + 2 * int + MVPValue * mvp + otherspp + exp;
-      h := h + comp0 + 3 * td0 + 2 * cas0 + 2 * int0 + MVPValue * mvp0 +
-        otherspp0 + exp0;
+    h := GetPlayerSPP();
       if Trim(PlayerData[teamnr,5].caption) <> '' then
          PlayerData[teamnr,5].caption := PlayerData[teamnr,5].caption + Chr(13);
       PlayerData[teamnr,5].caption := PlayerData[teamnr,5].caption +
          'Total SPP: ' + IntToStr(h);
-    end;
     if ((teamnr=0) and (HomePic<>picture)) or
        ((teamnr<>0) and (AwayPic<>picture)) then begin
       if picture = '' then begin
@@ -3707,9 +3701,7 @@ begin
              player[g,f].exp := player[g,f].exp + 1;
            end;
       'M': begin
-             if (frmSettings.rgAging.ItemIndex <> 3) or (frmSettings.cbMVPEXP.checked)
-               then s0 := 'MVP Award' else
-               s0 := 'EXP Point';
+             s0 := 'MVP Award';
              player[g,f].mvp := player[g,f].mvp + 1;
            end;
     end;
@@ -3762,9 +3754,7 @@ begin
              player[g,f].exp := player[g,f].exp - 1;
            end;
       'M': begin
-             if (frmSettings.rgAging.ItemIndex <> 3) or (frmSettings.cbMVPEXP.checked)
-               then s0 := 'MVP Award' else
-               s0 := 'EXP Point';
+             s0 := 'MVP Award';
              player[g,f].mvp := player[g,f].mvp - 1;
            end;
     end;
@@ -3878,9 +3868,18 @@ begin
   if peaked then s0 := s0 + 'P' else s0 := s0 + '-';
   s0 := s0 + Chr(value div 10 + 48) + Chr(cnumber + 48);
   if frmSettings.cbUseOtherSPP.checked then s0 := s0 + Chr(otherSPP0 + 48);
-  if frmSettings.cbMVPEXP.checked then s0 := s0 + Chr(exp0 + 48);
   s0 := s0 + Chr(255) + picture;
   GetSaveString := s0;
+end;
+
+function TPlayer.GetPlayerSPP(): integer;
+var spp: integer;
+begin
+  spp := 0;
+  // always show SPP details
+  spp := comp + 3 * td + 2 * cas + 2 * int + bbalg.MVPValue * mvp + otherspp + exp;
+  spp := spp + comp0 + 3 * td0 + 2 * cas0 + 2 * int0 + bbalg.MVPValue * mvp0 + otherspp0 + exp0;
+  Result := spp;
 end;
 
 procedure LeftClickPlayer(g,f: integer);

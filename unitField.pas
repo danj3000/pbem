@@ -134,7 +134,7 @@ end;
 
 procedure TFieldLabel.FieldMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var h, pb, f, g, r, fieldcheck, leap, totspp, MVPValue, p2, NiggleCount, r2,
+var h, pb, f, g, r, fieldcheck, leap, totspp, p2, NiggleCount, r2,
     PProll, assa, assd, ascount, targetaction, pplace, qplace,
     dk1, dk2, dk3, TestP, TestQ, NewP, NewQ, NewP2, NewQ2, NewP3, NewQ3,
     FinalP, FinalQ, FinalDK, dist1, dist2, finaldist, KickP, KickQ,

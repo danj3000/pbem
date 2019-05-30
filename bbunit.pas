@@ -906,9 +906,7 @@ begin
     if Copy(s, 1, 20) = 'AutoSaveAtTurnClick=' then begin
       AutoSave := (Copy(s, 21, 1) = 'Y');
     end;
-    if Copy(s, 1, 23) = 'ShowSPPatPlayerDetails=' then begin
-      frmSettings.cbShowSPP.checked  := (Copy(s, 24, 1) = 'Y');
-    end;
+    // removed ShowSPPatPlayerDetails
     if Copy(s, 1, 21) = 'PassingRangesColored=' then begin
       frmSettings.cbPassingRangesColored.checked := (Copy(s, 22, 1) = 'Y');
     end;
@@ -2735,24 +2733,16 @@ procedure TBloodbowl.SBMVPClick(Sender: TObject);
 var intAnswer: integer;
 begin
   if CanWriteToLog then begin
-    if (frmSettings.rgAging.ItemIndex <> 3) or (frmSettings.cbMVPEXP.checked)
-      then begin
+
       intAnswer := Application.MessageBox(PChar('Are you sure you want to give ' +
             player[curteam, curplayer].GetPlayerName + ' a MVP Award?'),
             'Bloodbowl', mb_YesNo);
-    end else begin
-      intAnswer := Application.MessageBox(PChar('Are you sure you want to give ' +
-            player[curteam, curplayer].GetPlayerName + ' an EXP Point?'),
-            'Bloodbowl', mb_YesNo);
-    end;
+
     if intAnswer = idYes then begin
       player[curteam, curplayer].mvp :=
                     player[curteam, curplayer].mvp + 1;
       LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'M');
-      if (frmSettings.rgAging.ItemIndex <> 3) or (frmSettings.cbMVPEXP.checked)
-        then
-        AddLog('MVP Award for ' + player[curteam, curplayer].GetPlayerName) else
-        AddLog('EXP Point for ' + player[curteam, curplayer].GetPlayerName);
+      AddLog('MVP Award for ' + player[curteam, curplayer].GetPlayerName)
     end;
   end;
 end;
@@ -4275,27 +4265,6 @@ begin
           curroster := 1;
           Buy('Z');
         end;
-        if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-          then begin
-          frmPostgame.ButMVPRed.Caption := 'EXP';
-          frmPostgame.ButMVPBlue.Caption := 'EXP';
-          {Ronald EXP change:
-          frmPostgame.ButMVPRed.enabled := false;
-          frmPostgame.ButMVPBlue.enabled := false;
-          MakeEXPRolls;
-          }
-        end;
-        if (frmSettings.rgAging.ItemIndex = 3) and (frmSettings.cbMVPEXP.checked)
-          then begin
-          frmPostgame.ButMVPRed.Caption := 'MVP/EXP';
-          frmPostgame.ButMVPBlue.Caption := 'MVP/EXP';
-          {Ronald EXP change:
-          frmPostgame.ButMVPRed.enabled := false;
-          frmPostgame.ButMVPBlue.enabled := false;
-          MakeEXPRolls;
-          }
-        end;
-
         Continuing := false;
         frmPostgame.BringToFront;
       end;
@@ -5538,9 +5507,7 @@ begin
       player[curteam, curplayer].mvp :=
                     player[curteam, curplayer].mvp - 1;
       LogWrite('q' + Chr(curteam + 48) + chr(curplayer + 65) + 'M');
-      if (frmSettings.rgAging.ItemIndex <> 3) or (frmSettings.cbMVPEXP.checked) then
-        AddLog('Remove MVP Award for ' + player[curteam, curplayer].GetPlayerName) else
-        AddLog('Remove EXP Point for ' + player[curteam, curplayer].GetPlayerName);
+      AddLog('Remove MVP Award for ' + player[curteam, curplayer].GetPlayerName)
     end;
   end;
 end;

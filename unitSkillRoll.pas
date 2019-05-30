@@ -60,59 +60,13 @@ begin
     'A': begin
             g := Ord(s[3]) - 48;
             f := Ord(s[4]) - 64;
-            if (frmSettings.rgAging.ItemIndex=1) or (frmSettings.rgAging.ItemIndex=2)
-              then begin
-              sk := Copy(s, 6, Length(s) - 6);
-              case s[Length(s)] of
-                '-': t := ', Aging has no effect';
-                'N': t := ', Aging gives him a Niggling injury';
-                'V': t := ', Aging gives -1 AV';
-                'M': t := ', Aging gives -1 MA';
-                'G': t := ', Aging gives -1 AG';
-                'S': t := ', Aging gives -1 ST';
-              end;
-            end else begin
-              sk := Copy(s, 6, Length(s) - 5);
-              t := '';
-            end;
-            TranslateActionSkillRoll :=
-                player[g,f].GetPlayerName + ' gains ' + sk + t;
+            sk := Copy(s, 6, Length(s) - 5);
+            t := '';
+            TranslateActionSkillRoll := player[g,f].GetPlayerName + ' gains ' + sk + t;
          end;
     'E': begin
             g := Ord(s[3]) - 48;
             f := Ord(s[4]) - 64;
-            if (frmSettings.rgAging.ItemIndex=3) then begin
-              CurExp := Ord(s[5]) - 64;
-              EXPRoll := Ord(s[6]) - 64;
-              if Length(s)= 9 then begin
-                AgeRoll1 := Ord(s[7]) - 64;
-                AgeRoll2 := Ord(s[8]) - 64;
-                if not(frmSettings.cbEXPSI.checked) then
-                  AgeRoll := Ageroll1 + Ageroll2 else
-                  AgeRoll := (Ageroll1 * 10) + Ageroll2;
-              end;
-              t := 'Current EXP:' + InttoStr(CurExp) + ', EXP Roll: '
-                          + InttoStr(EXPRoll) + ' #' + InttoStr(f) + ' ' +
-                          player[g,f].name;
-              case s[Length(s)] of
-                'U': t := t + ' GAINS an EXP Point';
-                '-': t := t + ' fails EXP roll, Aging Roll: ' + InttoStr(AgeRoll) +
-                          ' - Aging: No Effect';
-                'T': t := t + ' fails EXP roll, Aging Roll: ' + InttoStr(AgeRoll) +
-                          ' - Aging: Miss Next Game';
-                'N': t := t + ' fails EXP roll, Aging Roll: ' + InttoStr(AgeRoll) +
-                          ' - Aging: Niggling Injury and Miss Next Game';
-                'V': t := t + ' fails EXP roll, Aging Roll: ' + InttoStr(AgeRoll) +
-                          ' - Aging: -1 AV and Miss Next Game';
-                'M': t := t + ' fails EXP roll, Aging Roll: ' + InttoStr(AgeRoll) +
-                          ' - Aging: -1 MA and Miss Next Game';
-                'G': t := t + ' fails EXP roll, Aging Roll: ' + InttoStr(AgeRoll) +
-                          ' - Aging: -1 AG and Miss Next Game';
-                'S': t := t + ' fails EXP roll, Aging Roll: ' + InttoStr(AgeRoll) +
-                          ' - Aging: -1 ST and Miss Next Game';
-                'F': t := t + ' fails EXP roll';
-              end;
-            end;
             TranslateActionSkillRoll := t;
          end;
   end;
@@ -138,120 +92,25 @@ begin
       end;
     end;
     if s[2] = 'A' then begin
-      if (frmSettings.rgAging.ItemIndex=1) or (frmSettings.rgAging.ItemIndex=2)
-        then begin
-        player[g,f].SkillsGained[num] := Copy(s, 6, Length(s) - 6);
-        if s[Length(s)] = 'N' then begin
-          player[g,f].inj := player[g,f].inj + 'N';
-        end;
-      end else begin
-        player[g,f].SkillsGained[num] := Copy(s, 6, Length(s) - 5);
-      end;
+      player[g,f].SkillsGained[num] := Copy(s, 6, Length(s) - 5);
       DefaultAction(TranslateActionSkillRoll(s));
     end;
     if s[2] = 'E' then begin
-      if (frmSettings.rgAging.ItemIndex=3) then begin
-        CurExp := Ord(s[5]) - 64;
-        EXPRoll := Ord(s[6]) - 64;
-        if s[Length(s)] = 'U' then begin
-          if frmSettings.cbMVPEXP.checked then
-             player[g, f].exp := player[g, f].exp + 1 else
-             player[g, f].mvp := player[g, f].mvp + 1;
-        end else if s[Length(s)] = 'V' then begin
-          player[g, f].av := player[g, f].av - 1;
-          player[g,f].inj := player[g,f].inj + 'M';
-          player[g,f].SIAgestatus := 1;
-        end else if s[Length(s)] = 'M' then begin
-          player[g, f].ma := player[g, f].ma - 1;
-          player[g,f].inj := player[g,f].inj + 'M';
-          player[g,f].SIAgestatus := 1;
-        end else if s[Length(s)] = 'G' then begin
-          player[g, f].ag := player[g, f].ag - 1;
-          player[g,f].inj := player[g,f].inj + 'M';
-          player[g,f].SIAgestatus := 1;
-        end else if s[Length(s)] = 'S' then begin
-          player[g, f].st := player[g, f].st - 1;
-          player[g,f].inj := player[g,f].inj + 'M';
-          player[g,f].SIAgestatus := 1;
-        end else if s[Length(s)] = 'N' then begin
-          player[g,f].inj := player[g,f].inj + 'MN';
-          player[g,f].SIAgestatus := 1;
-        end else if s[Length(s)] = 'T' then begin
-          player[g,f].inj := player[g,f].inj + 'M';
-          player[g,f].SIAgestatus := 1;
-        end;
-        DefaultAction(TranslateActionSkillRoll(s));
-        if g = 0 then begin
-          frmPostgame.ButMVPRed.enabled := false;
-          frmPostgame.ButSkillrollRed.enabled := true;
-          frmPostgame.lblNewTRRed.caption := IntToStr(CalculateTeamRating(0));
-        end else begin
-          frmPostgame.ButMVPBlue.enabled := false;
-          frmPostgame.ButSkillrollBlue.enabled := true;
-          frmPostgame.lblNewTRBlue.caption := IntToStr(CalculateTeamRating(1));
-        end;
-      end;
     end;
-  end else begin
+  end
+  else
+  begin
     if s[2] = 'A' then begin
       BackLog;
-      if (frmSettings.rgAging.ItemIndex=1) or (frmSettings.rgAging.ItemIndex=2)
-        then begin
-        if s[Length(s)] = 'N' then begin
-          player[g,f].inj :=
-                Copy(player[g,f].inj, 1, Length(player[g,f].inj) - 1);
-        end;
-      end;
     end;
     if s[2] = 'E' then begin
       BackLog;
-      if (frmSettings.rgAging.ItemIndex=3) then begin
-        CurExp := Ord(s[5]) - 64;
-        EXPRoll := Ord(s[6]) - 64;
-        if s[Length(s)] = 'U' then begin
-          if frmSettings.cbMVPEXP.checked then
-             player[g, f].exp := player[g, f].exp - 1 else
-             player[g, f].mvp := player[g, f].mvp - 1;
-        end else if s[Length(s)] = 'V' then begin
-          player[g, f].av := player[g, f].av + 1;
-          player[g,f].inj :=
-            Copy(player[g,f].inj, 1, Length(player[g,f].inj) - 1);
-          player[g,f].SIAgestatus := 0;
-        end else if s[Length(s)] = 'M' then begin
-          player[g, f].ma := player[g, f].ma + 1;
-          player[g,f].inj :=
-            Copy(player[g,f].inj, 1, Length(player[g,f].inj) - 1);
-          player[g,f].SIAgestatus := 0;
-        end else if s[Length(s)] = 'G' then begin
-          player[g, f].ag := player[g, f].ag + 1;
-          player[g,f].inj :=
-            Copy(player[g,f].inj, 1, Length(player[g,f].inj) - 1);
-          player[g,f].SIAgestatus := 0;
-        end else if s[Length(s)] = 'S' then begin
-          player[g, f].st := player[g, f].st + 1;
-          player[g,f].inj :=
-            Copy(player[g,f].inj, 1, Length(player[g,f].inj) - 1);
-          player[g,f].SIAgestatus := 0;
-        end else if s[Length(s)] = 'N' then begin
-          player[g,f].inj :=
-            Copy(player[g,f].inj, 1, Length(player[g,f].inj) - 2);
-          player[g,f].SIAgestatus := 0;
-        end else if s[Length(s)] = 'T' then begin
-          player[g,f].inj :=
-            Copy(player[g,f].inj, 1, Length(player[g,f].inj) - 1);
-          player[g,f].SIAgestatus := 0;
-        end;
-        if g = 0 then frmPostgame.ButMVPRed.enabled := true
-           else frmPostgame.ButMVPBlue.enabled := true;
-        if g = 0 then frmPostgame.ButSkillrollRed.enabled := false
-           else frmPostgame.ButSkillrollBlue.enabled := false;
-      end;
     end;
   end;
 end;
 
 procedure CountSkillRolls(g, f: integer);
-var h, ha, hb, hg, i, MVPValue: integer;
+var h, ha, hb, hg, i: integer;
     SPPNeeded: array [1..7] of integer;
 begin
   if not (frmSettings.rgSkillRollsAt.ItemIndex = 1) then begin
@@ -275,15 +134,14 @@ begin
   h := 1;
   if (((player[g,f].BigGuy) and not (frmSettings.rgBGA4th.ItemIndex >= 1)) or
       (player[g,f].hasSkill('DProg'))) then h := 2;
-  if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-    then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
+
   hb := player[g,f].comp0 + 3 * player[g,f].td0 +
           2 * player[g,f].cas0 + 2 * player[g,f].int0 +
-          MVPValue * player[g,f].mvp0 + player[g,f].otherSPP0 +
+          bbalg.MVPValue * player[g,f].mvp0 + player[g,f].otherSPP0 +
           player[g,f].exp0;
   hg := player[g,f].comp + 3 * player[g,f].td +
           2 * player[g,f].cas + 2 * player[g,f].int +
-          MVPValue * player[g,f].mvp + player[g,f].otherSPP +
+          bbalg.MVPValue * player[g,f].mvp + player[g,f].otherSPP +
           player[g,f].exp;
   ha := hb + hg;
   player[g,f].skillrolls := 0;
@@ -338,16 +196,6 @@ begin
   if player[teamSK, playerSK].SkillRollsMade[numSK,0] > 0 then begin
     r1 := player[teamSK, playerSK].SkillRollsMade[numSK,0];
     r2 := player[teamSK, playerSK].SkillRollsMade[numSK,1];
-    if (frmSettings.rgAging.ItemIndex=1) or (frmSettings.rgAging.ItemIndex=2)
-      then begin
-      a1 := player[teamSK, playerSK].SkillAgingRollsMade[numSK,0];
-      a2 := player[teamSK, playerSK].SkillAgingRollsMade[numSK,1];
-      if player[teamSK, playerSK].SkillAgingEffectRollsMade[numSK,0] > 0
-       then begin
-        ae1 := player[teamSK, playerSK].SkillAgingEffectRollsMade[numSK,0];
-        ae2 := player[teamSK, playerSK].SkillAgingEffectRollsMade[numSK,1];
-      end;
-    end;
     if player[teamSK, playerSK].SkillsGained[numSK] = '+1 MA' then begin
       rbMA.Checked := true;
     end else if player[teamSK, playerSK].SkillsGained[numSK] = '+1 AG' then begin
@@ -365,39 +213,6 @@ begin
     player[teamSK, playerSK].SkillRollsMade[numSK, 1] := r2;
     s := '(sr' + Chr(teamSK + 48) + Chr(playerSK + 64) +
              Chr(numSK + 48) + Chr(r1 + 48) + Chr(r2 + 48);
-    if (frmSettings.rgAging.ItemIndex=1) or (frmSettings.rgAging.ItemIndex=2)
-      then begin
-      if frmSettings.rgAging.ItemIndex = 1 then begin
-        AgingRoll[1] := 3;
-        AgingRoll[2] := 4;
-        AgingRoll[3] := 5;
-        AgingRoll[4] := 6;
-        AgingRoll[5] := 7;
-        AgingRoll[6] := 8;
-        AgingRoll[7] := 9;
-      end else if frmSettings.rgAging.ItemIndex = 2 then begin
-        AgingRoll[1] := 4;
-        AgingRoll[2] := 5;
-        AgingRoll[3] := 6;
-        AgingRoll[4] := 7;
-        AgingRoll[5] := 8;
-        AgingRoll[6] := 9;
-        AgingRoll[7] := 10;
-      end;
-      a1 := Rnd(6,2) + 1;
-      a2 := Rnd(6,2) + 1;
-      player[teamSK, playerSK].SkillAgingRollsMade[numSK, 0] := a1;
-      player[teamSK, playerSK].SkillAgingRollsMade[numSK, 1] := a2;
-      s := s + Chr(a1 + 48) + Chr(a2 + 48);
-      if a1 + a2 < AgingRoll[player[teamSK, playerSK].SkillLevel[numSK]]
-       then begin
-        ae1 := Rnd(6,2) + 1;
-        ae2 := Rnd(6,2) + 1;
-        player[teamSK, playerSK].SkillAgingEffectRollsMade[numSK, 0] := ae1;
-        player[teamSK, playerSK].SkillAgingEffectRollsMade[numSK, 1] := ae2;
-        s := s + Chr(ae1 + 48) + Chr(ae2 + 48);
-      end;
-    end;
     LogWrite(s);
   end;
   imDie1.Picture.LoadFromFile(
@@ -417,31 +232,7 @@ begin
     rbST.checked := rbST.enabled;
   end;
   butAccept.enabled := (player[teamSK, playerSK].SkillsGained[numSK] = '');
-  if (frmSettings.rgAging.ItemIndex=1) or (frmSettings.rgAging.ItemIndex=2) then begin
-    imDieA1.Picture.LoadFromFile(
-                            curdir + 'images\die' + IntToStr(a1) + '.bmp');
-    imDieA2.Picture.LoadFromFile(
-                            curdir + 'images\die' + IntToStr(a2) + 'b.bmp');
-    if ae1 > 0 then begin
-      imDieA3.Picture.LoadFromFile(
-                            curdir + 'images\die' + IntToStr(ae1) + '.bmp');
-      imDieA4.Picture.LoadFromFile(
-                            curdir + 'images\die' + IntToStr(ae2) + 'b.bmp');
-      lblNoAgingEffect.visible := false;
-      case (ae1 + ae2) of
-        9  : lblAgingEffect.caption := '-1 AV';
-        10 : lblAgingEffect.caption := '-1 MA';
-        11 : lblAgingEffect.caption := '-1 AG';
-        12 : lblAgingEffect.caption := '-1 ST';
-      else
-        lblAgingEffect.caption := 'Niggling injury';
-      end;
-      frmSkillRolls.Height := 430;
-    end else begin
-      lblNoAgingEffect.visible := true;
-      frmSkillRolls.Height := 370;
-    end;
-  end else begin
+  begin
     frmSkillRolls.Height := 320;
   end;
 end;
@@ -489,36 +280,6 @@ begin
   frmSkillRolls.lbPlayers.Items[lbPlayers.ItemIndex] :=
       player[teamSK, playerSK].GetPlayerName + ' gains ' +
       player[teamSK, playerSK].SkillsGained[numSK];
-  if (frmSettings.rgAging.ItemIndex=1) or (frmSettings.rgAging.ItemIndex=2) then begin
-    if player[teamSK, playerSK].SkillAgingEffectRollsMade[numsk,0] = 0
-     then begin
-      t := t + '-';
-    end else begin
-      r := player[teamSK, playerSK].SkillAgingEffectRollsMade[numsk,0] +
-           player[teamSK, playerSK].SkillAgingEffectRollsMade[numsk,1];
-      case r of
-        9 : begin
-              t := t + 'V';
-              player[teamSK, playerSK].av := player[teamSK, playerSK].av - 1;
-            end;
-        10: begin
-              t := t + 'M';
-              player[teamSK, playerSK].ma := player[teamSK, playerSK].ma - 1;
-            end;
-        11: begin
-              t := t + 'G';
-              player[teamSK, playerSK].ag := player[teamSK, playerSK].ag - 1;
-            end;
-        12: begin
-              t := t + 'S';
-              player[teamSK, playerSK].st := player[teamSK, playerSK].st - 1;
-            end;
-      else  begin
-              t := t + 'N';
-            end;
-      end;
-    end;
-  end;
   if CanWriteToLog then begin
     LogWrite(t);
     PlayActionSkillRoll(t, 1);

@@ -63,8 +63,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 713
     Height = 545
-    ActivePage = TabSheet1
-    TabIndex = 0
+    ActivePage = TabSheet5
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
@@ -82,20 +81,12 @@ object frmSettings: TfrmSettings
         Height = 13
         Caption = 'Select the league you are playing in:'
       end
-      object cbShowSPP: TCheckBox
-        Left = 16
-        Top = 24
-        Width = 161
-        Height = 17
-        Caption = 'Show SPP with player details'
-        TabOrder = 0
-      end
       object txtFieldImageFile: TEdit
         Left = 96
         Top = 96
         Width = 121
         Height = 21
-        TabOrder = 1
+        TabOrder = 0
         Text = 'field.jpg'
       end
       object rgRandomAlgorithm: TRadioGroup
@@ -111,15 +102,14 @@ object frmSettings: TfrmSettings
           
             'Random algorithm based on article by Robert Edwards (http://www.' +
             'pbembb.com/article.htm)')
-        TabOrder = 2
+        TabOrder = 1
       end
       object cmbLeague: TComboBox
         Left = 200
         Top = 344
         Width = 273
         Height = 21
-        ItemHeight = 13
-        TabOrder = 3
+        TabOrder = 2
         Text = 'cmbLeague'
         OnChange = cmbLeagueChange
       end
@@ -129,7 +119,7 @@ object frmSettings: TfrmSettings
         Width = 297
         Height = 73
         Caption = 'Base colors'
-        TabOrder = 4
+        TabOrder = 3
         object Label22: TLabel
           Left = 8
           Top = 16
@@ -198,7 +188,7 @@ object frmSettings: TfrmSettings
         Width = 89
         Height = 25
         Caption = 'Select file'
-        TabOrder = 5
+        TabOrder = 4
         OnClick = butSelectFileClick
       end
       object cbPassingRangesColored: TCheckBox
@@ -207,7 +197,7 @@ object frmSettings: TfrmSettings
         Width = 233
         Height = 17
         Caption = 'Colored Passing bands for color blindness'
-        TabOrder = 6
+        TabOrder = 5
       end
       object cbBlackIce: TCheckBox
         Left = 288
@@ -215,7 +205,7 @@ object frmSettings: TfrmSettings
         Width = 281
         Height = 17
         Caption = 'Movement #s shown in Black for White/Ice field Jpgs'
-        TabOrder = 7
+        TabOrder = 6
       end
       object cbWeatherPitch: TCheckBox
         Left = 352
@@ -223,7 +213,7 @@ object frmSettings: TfrmSettings
         Width = 281
         Height = 17
         Caption = 'Show Weather Pitches'
-        TabOrder = 8
+        TabOrder = 7
       end
     end
     object TabSheet2: TTabSheet
@@ -687,20 +677,6 @@ object frmSettings: TfrmSettings
     object TabSheet5: TTabSheet
       Caption = 'Player Advancement'
       ImageIndex = 4
-      object lbEXPAgingPoint: TLabel
-        Left = 16
-        Top = 424
-        Width = 211
-        Height = 13
-        Caption = 'Number of EXP needed before aging begins:'
-      end
-      object lblMVPValue: TLabel
-        Left = 16
-        Top = 320
-        Width = 196
-        Height = 13
-        Caption = 'Number of SPPs given for a MVP Award: '
-      end
       object rgSkillRollsAt: TRadioGroup
         Left = 8
         Top = 16
@@ -740,52 +716,6 @@ object frmSettings: TfrmSettings
           'Players not missing the match but not leaving the dugout can get' +
           ' the MVP'
         TabOrder = 3
-      end
-      object rgAging: TRadioGroup
-        Left = 8
-        Top = 112
-        Width = 257
-        Height = 113
-        Caption = 'Aging System'
-        ItemIndex = 1
-        Items.Strings = (
-          'No Aging'
-          'LRB Aging (3+, 4+, 5+, 6+, 7+, 8+, 9+)'
-          'Aging - Advanced (4+, 5+, 6+, 7+, 8+, 9+, 10+)'
-          'EXP System')
-        TabOrder = 4
-      end
-      object cbMVPEXP: TCheckBox
-        Left = 16
-        Top = 376
-        Width = 385
-        Height = 17
-        Caption = 'Allow Players MVPs under the EXP aging system'
-        TabOrder = 5
-      end
-      object txtEXPAgingPoint: TEdit
-        Left = 232
-        Top = 424
-        Width = 17
-        Height = 21
-        TabOrder = 6
-        Text = '6'
-      end
-      object cbEXPSI: TCheckBox
-        Left = 16
-        Top = 400
-        Width = 385
-        Height = 17
-        Caption = 'Use Serious Injury table for aging failures'
-        TabOrder = 7
-      end
-      object txtMVPValue: TEdit
-        Left = 216
-        Top = 320
-        Width = 17
-        Height = 21
-        TabOrder = 8
-        Text = '5'
       end
     end
     object TabSheet6: TTabSheet
@@ -1488,7 +1418,6 @@ object frmSettings: TfrmSettings
     OnClick = butAcceptClick
   end
   object cdColorDialog: TColorDialog
-    Ctl3D = True
     Left = 664
     Top = 24
   end

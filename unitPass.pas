@@ -300,7 +300,7 @@ begin
 end;
 
 procedure InjuryPlayer;
-var Injmod, totspp, NiggleCount, MVPValue, p, t: integer;
+var Injmod, totspp, NiggleCount, p, t: integer;
   s: string;
   SPP4th: boolean;
 begin
@@ -346,15 +346,14 @@ begin
      or (player[TeamCatcher,NumberCatcher].hasSkill('NoDeath'));
   frmArmourRoll.cbIronMan.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Iron Man'));
   frmArmourRoll.cbDecay.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Decay'));
-  if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-    then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
+
   totspp := player[TeamCatcher,NumberCatcher].comp0 + 3 * player[TeamCatcher,NumberCatcher].td0 +
           2 * player[TeamCatcher,NumberCatcher].cas0 + 2 * player[TeamCatcher,NumberCatcher].int0 +
-          MVPValue * player[TeamCatcher,NumberCatcher].mvp0 +  player[TeamCatcher,NumberCatcher].OtherSPP0 +
+          bbalg.MVPValue * player[TeamCatcher,NumberCatcher].mvp0 +  player[TeamCatcher,NumberCatcher].OtherSPP0 +
           player[TeamCatcher,NumberCatcher].exp0 +
           player[TeamCatcher,NumberCatcher].comp + 3 * player[TeamCatcher,NumberCatcher].td +
           2 * player[TeamCatcher,NumberCatcher].cas + 2 * player[TeamCatcher,NumberCatcher].int +
-          MVPValue * player[TeamCatcher,NumberCatcher].mvp + player[TeamCatcher,NumberCatcher].OtherSPP +
+          bbalg.MVPValue * player[TeamCatcher,NumberCatcher].mvp + player[TeamCatcher,NumberCatcher].OtherSPP +
           player[TeamCatcher,NumberCatcher].exp;
   SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
   frmArmourRoll.cbLBanish.checked :=
@@ -385,7 +384,7 @@ end;
 procedure DetermineInterceptors(g, f, p, q: integer);
 var d, dp, dq, dist9, r2, r3, catchodds, bestplayer: real;
     h, besth, bestodds, r, r4, r5, r6, bestmove, bestst, bestspp, bptz,
-    disttoTD, totspp, MVPValue: integer;
+    disttoTD, totspp: integer;
     s: string;
     safethrow, pspiral, SPP4th, TZone, GoodPlayer, HMPPass: boolean;
     tz: TackleZones;
@@ -480,8 +479,6 @@ begin
                 if (disttoTD <= player[1-g,h].ma + 3) and
                   (player[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
               r5 := 20 - player[1-g,h].st;
-              if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-                then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
               totspp := player[1-g,h].comp0 + 3 * player[1-g,h].td0 +
                 2 * player[1-g,h].cas0 + 2 * player[1-g,h].int0 +
                 MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
@@ -586,15 +583,13 @@ begin
                 if (disttoTD <= player[1-g,h].ma + 3) and
                   (player[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
               r5 := 20 - player[1-g,h].st;
-              if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-                then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
               totspp := player[1-g,h].comp0 + 3 * player[1-g,h].td0 +
                 2 * player[1-g,h].cas0 + 2 * player[1-g,h].int0 +
-                MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
+                bbalg.MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
                 player[1-g,h].exp0 +
                 player[1-g,h].comp + 3 * player[1-g,h].td +
                 2 * player[1-g,h].cas + 2 * player[1-g,h].int +
-                MVPValue * player[1-g,h].mvp + player[1-g,h].OtherSPP +
+                bbalg.MVPValue * player[1-g,h].mvp + player[1-g,h].OtherSPP +
                 player[1-g,h].exp;
               SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
               if SPP4th then begin
@@ -642,7 +637,7 @@ end;
 function DetermineDivingCatch(p, q, cancatch, catchtype: integer): boolean;
 var d, dp, dq, dist9, r2, r3, catchodds, bestplayer: real;
     g, h, besth, bestodds, r, r4, r5, r6, bestmove, bestst, bestspp, bptz,
-    disttoTD, totspp, MVPValue, bestg: integer;
+    disttoTD, totspp, bestg: integer;
     s: string;
     safethrow, pspiral, SPP4th, TZone, GoodPlayer, BlueTeam, RedTeam,
       DCCatch: boolean;
@@ -729,15 +724,13 @@ begin
                   if (disttoTD <= player[1-g,h].ma + 3) and
                     (player[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
                 r5 := 20 - player[1-g,h].st;
-                if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-                  then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
                 totspp := player[1-g,h].comp0 + 3 * player[1-g,h].td0 +
                   2 * player[1-g,h].cas0 + 2 * player[1-g,h].int0 +
-                  MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
+                  bbalg.MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
                   player[1-g,h].exp0 +
                   player[1-g,h].comp + 3 * player[1-g,h].td +
                   2 * player[1-g,h].cas + 2 * player[1-g,h].int +
-                  MVPValue * player[1-g,h].mvp + player[1-g,h].OtherSPP +
+                  bbalg.MVPValue * player[1-g,h].mvp + player[1-g,h].OtherSPP +
                   player[1-g,h].exp;
                 SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
                 if SPP4th then begin
@@ -837,15 +830,13 @@ begin
                   if (disttoTD <= player[1-g,h].ma + 3) and
                     (player[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
                 r5 := 20 - player[1-g,h].st;
-                if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-                  then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
                 totspp := player[1-g,h].comp0 + 3 * player[1-g,h].td0 +
                   2 * player[1-g,h].cas0 + 2 * player[1-g,h].int0 +
-                  MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
+                  bbalg.MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
                   player[1-g,h].exp0 +
                   player[1-g,h].comp + 3 * player[1-g,h].td +
                   2 * player[1-g,h].cas + 2 * player[1-g,h].int +
-                  MVPValue * player[1-g,h].mvp + player[1-g,h].OtherSPP +
+                  bbalg.MVPValue * player[1-g,h].mvp + player[1-g,h].OtherSPP +
                   player[1-g,h].exp;
                 SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
                 if SPP4th then begin

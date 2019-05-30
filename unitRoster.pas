@@ -190,7 +190,7 @@ begin
   w[12] := 28;
   w[13] := 28;
   w[14] := 28;
-  if frmSettings.cbMVPEXP.checked then w[15] := 28 else w[15] := 0;
+  w[15] := 0;
   w[16] := 28;
   w[17] := 28;
   frmRoster.height := 525;
@@ -241,9 +241,7 @@ begin
   lb[0,11].caption := 'TD';
   lb[0,12].caption := 'Cas';
   lb[0,13].caption := 'Int';
-  if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-    then lb[0,14].caption := 'EXP' else
-    lb[0,14].Caption := 'MVP';
+  lb[0,14].Caption := 'MVP';
   lb[0,15].caption := 'EXP';
   lb[0,16].caption := 'Tot';
   lb[0,17].caption := 'Status';
@@ -381,7 +379,7 @@ begin
 end;
 
 procedure ShowSPP(g: integer);
-var f, h, hb, hg, ha, MVPValue: integer;
+var f, h, hb, hg, ha: integer;
 begin
   for f := 1 to team[g].numplayers do begin
     for h := 9 to 16 do begin
@@ -390,15 +388,13 @@ begin
   end;
   for f := 1 to team[g].numplayers do
    if player[g,f].status <> 11 then begin
-  if (frmSettings.rgAging.ItemIndex = 3) and (not(frmSettings.cbMVPEXP.checked))
-      then MVPValue := 1 else MVPValue := FVal(frmSettings.txtMVPValue.text);
     hb := player[g,f].comp0 + 3 * player[g,f].td0 +
           2 * player[g,f].cas0 + 2 * player[g,f].int0 +
-          MVPValue * player[g,f].mvp0 + player[g,f].otherSPP0 +
+          bbalg.MVPValue * player[g,f].mvp0 + player[g,f].otherSPP0 +
           player[g,f].exp0;
     hg := player[g,f].comp + 3 * player[g,f].td +
           2 * player[g,f].cas + 2 * player[g,f].int +
-          MVPValue * player[g,f].mvp + player[g,f].otherSPP +
+          bbalg.MVPValue * player[g,f].mvp + player[g,f].otherSPP +
           player[g,f].exp;
     ha := hb + hg;
     if frmRoster.GameRB.checked then begin

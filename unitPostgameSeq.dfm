@@ -57,7 +57,7 @@ object frmPostgame: TfrmPostgame
     object Label3: TLabel
       Left = 8
       Top = 400
-      Width = 128
+      Width = 159
       Height = 18
       Caption = 'New Team Rating:'
       Font.Charset = DEFAULT_CHARSET
@@ -70,7 +70,7 @@ object frmPostgame: TfrmPostgame
     object LblNewTRRed: TLabel
       Left = 176
       Top = 400
-      Width = 27
+      Width = 33
       Height = 18
       Caption = '100'
       Font.Charset = DEFAULT_CHARSET
@@ -331,9 +331,6 @@ object frmPostgame: TfrmPostgame
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ParentFont = False
-      TabOrder = 0
-      OnClick = ButMWRedClick
       Glyph.Data = {
         E6040000424DE604000000000000360000002800000014000000140000000100
         180000000000B0040000C40E0000C40E00000000000000000000FFFFFFFFFFFF
@@ -375,6 +372,9 @@ object frmPostgame: TfrmPostgame
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFF}
+      ParentFont = False
+      TabOrder = 0
+      OnClick = ButMWRedClick
     end
     object ButMVPRed: TBitBtn
       Left = 8
@@ -387,9 +387,6 @@ object frmPostgame: TfrmPostgame
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ParentFont = False
-      TabOrder = 1
-      OnClick = ButMVPRedClick
       Glyph.Data = {
         E6040000424DE604000000000000360000002800000014000000140000000100
         180000000000B0040000CE0E0000C40E00000000000000000000FFFFFFFFFFFF
@@ -431,6 +428,9 @@ object frmPostgame: TfrmPostgame
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFF}
+      ParentFont = False
+      TabOrder = 1
+      OnClick = ButMVPRedClick
     end
     object ButSkillRollRed: TBitBtn
       Left = 8
@@ -444,9 +444,6 @@ object frmPostgame: TfrmPostgame
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ParentFont = False
-      TabOrder = 2
-      OnClick = ButSkillRollRedClick
       Glyph.Data = {
         E6040000424DE604000000000000360000002800000014000000140000000100
         180000000000B0040000C40E0000C40E00000000000000000000FFFFFFFFFFFF
@@ -488,6 +485,9 @@ object frmPostgame: TfrmPostgame
         0000000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFF}
+      ParentFont = False
+      TabOrder = 2
+      OnClick = ButSkillRollRedClick
     end
     object ButFFRed: TBitBtn
       Left = 8
@@ -500,9 +500,6 @@ object frmPostgame: TfrmPostgame
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ParentFont = False
-      TabOrder = 3
-      OnClick = ButFFRedClick
       Glyph.Data = {
         E6040000424DE604000000000000360000002800000014000000140000000100
         180000000000B0040000C40E0000C40E00000000000000000000FFFFFF0000FF
@@ -544,6 +541,9 @@ object frmPostgame: TfrmPostgame
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFF}
+      ParentFont = False
+      TabOrder = 3
+      OnClick = ButFFRedClick
     end
     object ButPurchaseRed: TBitBtn
       Left = 8
@@ -557,9 +557,6 @@ object frmPostgame: TfrmPostgame
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ParentFont = False
-      TabOrder = 4
-      OnClick = ButPurchaseRedClick
       Glyph.Data = {
         E6040000424DE604000000000000360000002800000014000000140000000100
         180000000000B0040000C40E0000C40E00000000000000000000FFFFFFFFFFFF
@@ -601,6 +598,9 @@ object frmPostgame: TfrmPostgame
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFF}
+      ParentFont = False
+      TabOrder = 4
+      OnClick = ButPurchaseRedClick
     end
     object TxtMWModRed: TEdit
       Left = 152
@@ -641,7 +641,7 @@ object frmPostgame: TfrmPostgame
     object Label4: TLabel
       Left = 8
       Top = 400
-      Width = 128
+      Width = 159
       Height = 18
       Caption = 'New Team Rating:'
       Font.Charset = DEFAULT_CHARSET
@@ -654,7 +654,7 @@ object frmPostgame: TfrmPostgame
     object LblNewTRBlue: TLabel
       Left = 176
       Top = 400
-      Width = 27
+      Width = 33
       Height = 18
       Caption = '100'
       Font.Charset = DEFAULT_CHARSET
@@ -915,9 +915,6 @@ object frmPostgame: TfrmPostgame
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ParentFont = False
-      TabOrder = 0
-      OnClick = ButMWBlueClick
       Glyph.Data = {
         E6040000424DE604000000000000360000002800000014000000140000000100
         180000000000B0040000C40E0000C40E00000000000000000000FFFFFFFFFFFF
@@ -959,6 +956,9 @@ object frmPostgame: TfrmPostgame
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFF}
+      ParentFont = False
+      TabOrder = 0
+      OnClick = ButMWBlueClick
     end
     object ButMVPBlue: TBitBtn
       Left = 8
@@ -971,9 +971,6 @@ object frmPostgame: TfrmPostgame
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ParentFont = False
-      TabOrder = 1
-      OnClick = ButMVPBlueClick
       Glyph.Data = {
         E6040000424DE604000000000000360000002800000014000000140000000100
         180000000000B0040000CE0E0000C40E00000000000000000000FFFFFFFFFFFF
@@ -1015,6 +1012,9 @@ object frmPostgame: TfrmPostgame
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFF}
+      ParentFont = False
+      TabOrder = 1
+      OnClick = ButMVPBlueClick
     end
     object ButSkillRollBlue: TBitBtn
       Left = 8
@@ -1028,9 +1028,6 @@ object frmPostgame: TfrmPostgame
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ParentFont = False
-      TabOrder = 2
-      OnClick = ButSkillRollBlueClick
       Glyph.Data = {
         E6040000424DE604000000000000360000002800000014000000140000000100
         180000000000B0040000C40E0000C40E00000000000000000000FFFFFFFFFFFF
@@ -1072,6 +1069,9 @@ object frmPostgame: TfrmPostgame
         0000000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFF}
+      ParentFont = False
+      TabOrder = 2
+      OnClick = ButSkillRollBlueClick
     end
     object ButFFBlue: TBitBtn
       Left = 8
@@ -1084,9 +1084,6 @@ object frmPostgame: TfrmPostgame
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ParentFont = False
-      TabOrder = 3
-      OnClick = ButFFBlueClick
       Glyph.Data = {
         E6040000424DE604000000000000360000002800000014000000140000000100
         180000000000B0040000C40E0000C40E00000000000000000000FFFFFFFF0000
@@ -1128,6 +1125,9 @@ object frmPostgame: TfrmPostgame
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFF}
+      ParentFont = False
+      TabOrder = 3
+      OnClick = ButFFBlueClick
     end
     object ButPurchaseBlue: TBitBtn
       Left = 8
@@ -1141,9 +1141,6 @@ object frmPostgame: TfrmPostgame
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ParentFont = False
-      TabOrder = 4
-      OnClick = ButPurchaseBlueClick
       Glyph.Data = {
         E6040000424DE604000000000000360000002800000014000000140000000100
         180000000000B0040000C40E0000C40E00000000000000000000FFFFFFFFFFFF
@@ -1185,6 +1182,9 @@ object frmPostgame: TfrmPostgame
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFF}
+      ParentFont = False
+      TabOrder = 4
+      OnClick = ButPurchaseBlueClick
     end
     object TxtMWModBlue: TEdit
       Left = 152
