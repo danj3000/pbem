@@ -211,8 +211,7 @@ begin
                 else frmPostgame.lblFFResultBlue.caption := 'No change';
     end;
     DefaultAction(s0);
-    frmPostgame.lblNewTRRed.caption := IntToStr(CalculateTeamRating(0));
-    frmPostgame.lblNewTRBlue.caption := IntToStr(CalculateTeamRating(1));
+
   end else begin
     if tm = 0 then begin
       frmPostgame.ImFFDieRed.visible := false;

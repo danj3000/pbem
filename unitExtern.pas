@@ -894,7 +894,7 @@ begin
     p := Pos('TEAM RATING:', UpperCase(s));
     if p > 0 then begin
       p := GotoNextCell(s, p);
-      s := ReplaceNextText(s, IntToStr(CalculateTeamRating(g)), p);
+      //s := ReplaceNextText(s, IntToStr(CalculateTeamRating(g)), p);
     end;
     p := Pos('TREASURY:', UpperCase(s));
     if p > 0 then begin
@@ -1123,16 +1123,10 @@ begin
           p := GotoNextCell(s, p);
           if player[g,f].peaked then begin
             s := ReplaceNextText(s, 'P', p);
-          end else begin
-
-            s := ReplaceNextText(s, IntToStr(
-                    player[g,f].otherSPP + player[g,f].otherSPP0 +
-                    player[g,f].comp + player[g,f].comp0 +
-                    3 * (player[g,f].td + player[g,f].td0) +
-                    2 * (player[g,f].int + player[g,f].int0) +
-                    2 * (player[g,f].cas + player[g,f].cas0) +
-                    MVPValue * (player[g,f].mvp + player[g,f].mvp0) +
-                    player[g,f].exp + player[g,f].exp0), p);
+          end
+          else
+          begin
+            s := ReplaceNextText(s, IntToStr(player[g,f].GetStartingSPP() + player[g,f].GetMatchSPP()), p);
           end;                                                                      
           p := GotoNextCell(s, p);
           s := ReplaceNextText(s, Money(player[g,f].value), p);

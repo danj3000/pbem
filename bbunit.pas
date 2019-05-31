@@ -5232,7 +5232,7 @@ begin
 end;
 
 procedure TBloodbowl.AVInjRoll1Click(Sender: TObject);
-var p, NiggleCount, totspp, MVPValue, ploc, qloc, v, w: integer;
+var p, NiggleCount, totspp, ploc, qloc, v, w: integer;
     s: string;
     SPP4th, BallScatter: boolean;
 begin

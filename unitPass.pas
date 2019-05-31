@@ -347,14 +347,9 @@ begin
   frmArmourRoll.cbIronMan.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Iron Man'));
   frmArmourRoll.cbDecay.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Decay'));
 
-  totspp := player[TeamCatcher,NumberCatcher].comp0 + 3 * player[TeamCatcher,NumberCatcher].td0 +
-          2 * player[TeamCatcher,NumberCatcher].cas0 + 2 * player[TeamCatcher,NumberCatcher].int0 +
-          bbalg.MVPValue * player[TeamCatcher,NumberCatcher].mvp0 +  player[TeamCatcher,NumberCatcher].OtherSPP0 +
-          player[TeamCatcher,NumberCatcher].exp0 +
-          player[TeamCatcher,NumberCatcher].comp + 3 * player[TeamCatcher,NumberCatcher].td +
-          2 * player[TeamCatcher,NumberCatcher].cas + 2 * player[TeamCatcher,NumberCatcher].int +
-          bbalg.MVPValue * player[TeamCatcher,NumberCatcher].mvp + player[TeamCatcher,NumberCatcher].OtherSPP +
-          player[TeamCatcher,NumberCatcher].exp;
+  totspp := player[TeamCatcher,NumberCatcher].GetStartingSPP() +
+            player[TeamCatcher,NumberCatcher].GetMatchSPP();
+
   SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
   frmArmourRoll.cbLBanish.checked :=
       ((player[TeamCatcher,NumberCatcher].hasSkill('Banishment')) and (totspp < 26) and
@@ -382,12 +377,14 @@ begin
 end;
 
 procedure DetermineInterceptors(g, f, p, q: integer);
-var d, dp, dq, dist9, r2, r3, catchodds, bestplayer: real;
-    h, besth, bestodds, r, r4, r5, r6, bestmove, bestst, bestspp, bptz,
-    disttoTD, totspp: integer;
-    s: string;
-    safethrow, pspiral, SPP4th, TZone, GoodPlayer, HMPPass: boolean;
-    tz: TackleZones;
+var
+  loopPlayer: unitPlayer.TPlayer;
+  d, dp, dq, dist9, r2, r3, catchodds, bestplayer: real;
+  h, besth, bestodds, r, r4, r5, r6, bestmove, bestst, bestspp, bptz, disttoTD,
+    totspp: integer;
+  s: string;
+  safethrow, pspiral, SPP4th, TZone, GoodPlayer, HMPPass: boolean;
+  tz: TackleZones;
 begin
   s := '';
   besth := 0;
@@ -397,137 +394,196 @@ begin
   r2 := 0;
   r3 := 0;
   HMPPass := false;
-  dist := (player[g,f].p - p) * (player[g,f].p - p)
-        + (player[g,f].q - q) * (player[g,f].q - q);
+  dist := (player[g, f].p - p) * (player[g, f].p - p) + (player[g, f].q - q) *
+    (player[g, f].q - q);
   if frmSettings.cbSquarePass.checked then
-    squaredist := RangeRulerRange(player[g,f].p, player[g,f].q, p, q);
-  if frmSettings.cbSquarePass.Checked then begin
-    if squaredist > 3 then HMPPass := true;
-  end else begin
-    if dist > 182 then HMPPass := true;
+    squaredist := RangeRulerRange(player[g, f].p, player[g, f].q, p, q);
+  if frmSettings.cbSquarePass.checked then
+  begin
+    if squaredist > 3 then
+      HMPPass := true;
+  end
+  else
+  begin
+    if dist > 182 then
+      HMPPass := true;
   end;
-  if not(HMPPass) then begin
-    for h := 1 to team[1-g].numplayers do begin
-      {check if player is on field and standing}
-      TZone := True;
-      if (player[1-g,h].tz > 0) and (not(frmSettings.cbNoTZAssist.checked))
-       then TZone := False;
-      if (player[1-g,h].hasSkill('Nonball Handler')) then TZone := False;
-      if (player[1-g,h].status = 1) and (TZone) then begin
-        {calculate closest point on pass-line to opponent}
-        d := ((player[g,f].p - p) * (player[g,f].p - player[1-g,h].p) +
-              (player[g,f].q - q) * (player[g,f].q - player[1-g,h].q)) /
-             ((player[g,f].p - p) * (player[g,f].p - p) +
-              (player[g,f].q - q) * (player[g,f].q - q));
-        {if d<0 or d>1 then the opponent is not between passer and catcher}
-        if (d > 0) and (d < 1) then begin
-          {(dp,dq) is point on pass-line closest to opponent}
-          dp := player[g,f].p + d * (p - player[g,f].p);
-          dq := player[g,f].q + d * (q - player[g,f].q);
-          {calculate distance from (dp,dq) to opponent}
-          dist9 := Sqrt((player[1-g,h].p - dp) * (player[1-g,h].p - dp) +
-                       (player[1-g,h].q - dq) * (player[1-g,h].q - dq));
-          {the range ruler is 1.9 inches wide, a player's base is 1 inch wide
-           so if the distance is at most 2.9/2 = 1.45 inch then the opponent
-           can intercept... but squares are 1.1 inch wide so dist must be
-           smaller than 1.45/1.1=1.318}
-          GoodPlayer := False;
-          if frmSettings.cbSquarePass.checked then begin
-            GoodPlayer := CanIntercept(player[g,f].p,player[g,f].q,p,q,
-              player[1-g,h].p,player[1-g,h].q);
-            if GoodPlayer then dist9 := 1;
+  if not(HMPPass) then
+  begin
+    for h := 1 to team[1 - g].numplayers do
+    begin
+      { check if player is on field and standing }
+      TZone := true;
+      loopPlayer := player[1 - g, h];
+      if (loopPlayer.tz > 0) and (not(frmSettings.cbNoTZAssist.checked)) then
+        TZone := false;
+      if (loopPlayer.hasSkill('Nonball Handler')) then
+        TZone := false;
+      if (loopPlayer.status = 1) and (TZone) then
+      begin
+        { calculate closest point on pass-line to opponent }
+        d := ((player[g, f].p - p) * (player[g, f].p - loopPlayer.p) +
+          (player[g, f].q - q) * (player[g, f].q - loopPlayer.q)) /
+          ((player[g, f].p - p) * (player[g, f].p - p) + (player[g, f].q - q) *
+          (player[g, f].q - q));
+        { if d<0 or d>1 then the opponent is not between passer and catcher }
+        if (d > 0) and (d < 1) then
+        begin
+          { (dp,dq) is point on pass-line closest to opponent }
+          dp := player[g, f].p + d * (p - player[g, f].p);
+          dq := player[g, f].q + d * (q - player[g, f].q);
+          { calculate distance from (dp,dq) to opponent }
+          dist9 := Sqrt((loopPlayer.p - dp) * (loopPlayer.p - dp) +
+            (loopPlayer.q - dq) * (loopPlayer.q - dq));
+          { the range ruler is 1.9 inches wide, a player's base is 1 inch wide
+            so if the distance is at most 2.9/2 = 1.45 inch then the opponent
+            can intercept... but squares are 1.1 inch wide so dist must be
+            smaller than 1.45/1.1=1.318 }
+          GoodPlayer := false;
+          if frmSettings.cbSquarePass.checked then
+          begin
+            GoodPlayer := CanIntercept(player[g, f].p, player[g, f].q, p, q,
+              loopPlayer.p, loopPlayer.q);
+            if GoodPlayer then
+              dist9 := 1;
           end;
-          if dist9 <= 1.318 then begin
-            if s <> '' then begin
+          if dist9 <= 1.318 then
+          begin
+            if s <> '' then
+            begin
               s := s + ', ';
-              r := 7 - player[1-g, h].ag + 2;
-              if player[g,f].hasSkill('Perfect Spiral') then r := r - 1;
-              if player[1-g, h].hasSkill('Extra Arms') then r := r - 1;
-              if (player[1-g, h].hasSkill('Very Long Legs')) or
-                 (player[1-g, h].hasSkill('VLL')) then r := r - 1;
-              if player[1-g, h].hasSkill('Elephant Trunk') then r := r - 1;
-              if player[1-g, h].hasSkill('House Fly Head') then r := r + 2;
-              if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
-                and not (player[1-g,h].hasSkill('Weather Immunity')) then r := r + 1;
-              if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
-                and not (player[1-g,h].hasSkill('Weather Immunity')) then r := r + 1;
-              tz := CountTZ(1-g, h);
-              if not(player[1-g, h].hasSkill('Nerves of Steel')) then
+              r := 7 - loopPlayer.ag + 2;
+              if player[g, f].hasSkill('Perfect Spiral') then
+                r := r - 1;
+              if loopPlayer.hasSkill('Extra Arms') then
+                r := r - 1;
+              if (loopPlayer.hasSkill('Very Long Legs')) or
+                (loopPlayer.hasSkill('VLL')) then
+                r := r - 1;
+              if loopPlayer.hasSkill('Elephant Trunk') then
+                r := r - 1;
+              if loopPlayer.hasSkill('House Fly Head') then
+                r := r + 2;
+              if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12))
+                = 'POURING RAIN') and
+                not(loopPlayer.hasSkill('Weather Immunity')) then
+                r := r + 1;
+              if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10))
+                = 'EERIE MIST') and not(loopPlayer.hasSkill('Weather Immunity'))
+              then
+                r := r + 1;
+              tz := CountTZ(1 - g, h);
+              if not(loopPlayer.hasSkill('Nerves of Steel')) then
                 r := r + tz.num;
               bptz := tz.num;
-              r := r + CountFA(1-g, h);
-              if r < 2 then r := 2;
-              if r > 6 then r := 6;
+              r := r + CountFA(1 - g, h);
+              if r < 2 then
+                r := 2;
+              if r > 6 then
+                r := 6;
               r2 := r;
               r3 := r;
-              if player[1-g, h].hasSkill('Catch') then r2 := r2 - 1.5;
-              if bptz = 0 then r3 := r3 - 2;
-              if (bptz <> 0) and (player[1-g,h].hasSkill('Dodge')) then
-                 r3 := r3 - 1;
-              if g=0 then disttoTD := 25 - player[1-g,h].q else
-                disttoTD := player[1-g,h].q;
-              if disttoTD <= player[1-g,h].ma then r4 := 1 else
-                if (disttoTD <= player[1-g,h].ma + 1) and
-                  (player[1-g,h].hasSkill('Sure Feet')) then r4 := 2 else
-                if (disttoTD <= player[1-g,h].ma + 1) then r4 := 3 else
-                if (disttoTD <= player[1-g,h].ma + 2) and
-                  (player[1-g,h].hasSkill('Sure Feet')) then r4 := 4 else
-                if (disttoTD <= player[1-g,h].ma + 2) then r4 := 5 else
-                if (disttoTD <= player[1-g,h].ma + 3) and
-                  (player[1-g,h].hasSkill('Sure Feet')) and
-                  (player[1-g,h].hasSkill('Sprint')) then r4 := 6 else
-                if (disttoTD <= player[1-g,h].ma + 3) and
-                  (player[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
-              r5 := 20 - player[1-g,h].st;
-              totspp := player[1-g,h].comp0 + 3 * player[1-g,h].td0 +
-                2 * player[1-g,h].cas0 + 2 * player[1-g,h].int0 +
-                MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
-                player[1-g,h].exp0 +
-                player[1-g,h].comp + 3 * player[1-g,h].td +
-                2 * player[1-g,h].cas + 2 * player[1-g,h].int +
-                MVPValue * player[1-g,h].mvp + player[1-g,h].OtherSPP +
-                player[1-g,h].exp;
+              if loopPlayer.hasSkill('Catch') then
+                r2 := r2 - 1.5;
+              if bptz = 0 then
+                r3 := r3 - 2;
+              if (bptz <> 0) and (loopPlayer.hasSkill('Dodge')) then
+                r3 := r3 - 1;
+              if g = 0 then
+                disttoTD := 25 - loopPlayer.q
+              else
+                disttoTD := loopPlayer.q;
+              if disttoTD <= loopPlayer.ma then
+                r4 := 1
+              else if (disttoTD <= loopPlayer.ma + 1) and
+                (loopPlayer.hasSkill('Sure Feet')) then
+                r4 := 2
+              else if (disttoTD <= loopPlayer.ma + 1) then
+                r4 := 3
+              else if (disttoTD <= loopPlayer.ma + 2) and
+                (loopPlayer.hasSkill('Sure Feet')) then
+                r4 := 4
+              else if (disttoTD <= loopPlayer.ma + 2) then
+                r4 := 5
+              else if (disttoTD <= loopPlayer.ma + 3) and
+                (loopPlayer.hasSkill('Sure Feet')) and
+                (loopPlayer.hasSkill('Sprint')) then
+                r4 := 6
+              else if (disttoTD <= loopPlayer.ma + 3) and
+                (loopPlayer.hasSkill('Sprint')) then
+                r4 := 7
+              else
+                r4 := 8;
+              r5 := 20 - loopPlayer.st;
+              totspp := loopPlayer.GetStartingSPP() + loopPlayer.GetMatchSPP();
               SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-              if SPP4th then begin
-                if totspp >= 176 then r6 := 100 else
-                  if totspp >= 126 then r6 := 176 - totspp else
-                  if totspp >= 76 then r6 := 126 - totspp else
-                  if totspp >= 51 then r6 := 76 - totspp else
-                  if totspp >= 31 then r6 := 51 - totspp else
-                  if totspp >= 16 then r6 := 31 - totspp else
-                  if totspp >= 6 then r6 := 16 - totspp else r6 := 6 - totspp;
-              end else begin
-                if totspp >= 251 then r6 := 100 else
-                  if totspp >= 151 then r6 := 251 - totspp else
-                  if totspp >= 101 then r6 := 151 - totspp else
-                  if totspp >= 51 then r6 := 101 - totspp else
-                  if totspp >= 26 then r6 := 51 - totspp else
-                  if totspp >= 11 then r6 := 26 - totspp else
-                  if totspp >= 6 then r6 := 11 - totspp else r6 := 6 - totspp;
+              if SPP4th then
+              begin
+                if totspp >= 176 then
+                  r6 := 100
+                else if totspp >= 126 then
+                  r6 := 176 - totspp
+                else if totspp >= 76 then
+                  r6 := 126 - totspp
+                else if totspp >= 51 then
+                  r6 := 76 - totspp
+                else if totspp >= 31 then
+                  r6 := 51 - totspp
+                else if totspp >= 16 then
+                  r6 := 31 - totspp
+                else if totspp >= 6 then
+                  r6 := 16 - totspp
+                else
+                  r6 := 6 - totspp;
+              end
+              else
+              begin
+                if totspp >= 251 then
+                  r6 := 100
+                else if totspp >= 151 then
+                  r6 := 251 - totspp
+                else if totspp >= 101 then
+                  r6 := 151 - totspp
+                else if totspp >= 51 then
+                  r6 := 101 - totspp
+                else if totspp >= 26 then
+                  r6 := 51 - totspp
+                else if totspp >= 11 then
+                  r6 := 26 - totspp
+                else if totspp >= 6 then
+                  r6 := 11 - totspp
+                else
+                  r6 := 6 - totspp;
               end;
-              if r6 = 1 then r6 := 2 else
-                if r6 = 2 then r6 := 1;
-              if (r2=catchodds) and (r3=bestplayer) and (r4=bestmove) and
-                (r5=bestst) and (r6<bestspp) then begin
+              if r6 = 1 then
+                r6 := 2
+              else if r6 = 2 then
+                r6 := 1;
+              if (r2 = catchodds) and (r3 = bestplayer) and (r4 = bestmove) and
+                (r5 = bestst) and (r6 < bestspp) then
+              begin
                 besth := h;
                 bestodds := r;
                 bestspp := r6;
               end;
-              if (r2=catchodds) and (r3=bestplayer) and (r4=bestmove) and
-                (r5<bestst) then begin
+              if (r2 = catchodds) and (r3 = bestplayer) and (r4 = bestmove) and
+                (r5 < bestst) then
+              begin
                 besth := h;
                 bestodds := r;
                 bestst := r5;
                 bestspp := r6;
               end;
-              if (r2=catchodds) and (r4=bestmove) and (r3<bestplayer) then begin
+              if (r2 = catchodds) and (r4 = bestmove) and (r3 < bestplayer) then
+              begin
                 besth := h;
                 bestodds := r;
                 bestplayer := r3;
                 bestst := r5;
                 bestspp := r6;
               end;
-              if (r2=catchodds) and (r4<bestmove) then begin
+              if (r2 = catchodds) and (r4 < bestmove) then
+              begin
                 besth := h;
                 bestodds := r;
                 bestplayer := r3;
@@ -535,7 +591,8 @@ begin
                 bestst := r5;
                 bestspp := r6;
               end;
-              if r2<catchodds then begin
+              if r2 < catchodds then
+              begin
                 besth := h;
                 bestodds := r;
                 catchodds := r2;
@@ -544,73 +601,116 @@ begin
                 bestst := r5;
                 bestspp := r6;
               end;
-            end else begin
-              r := 7 - player[1-g, h].ag + 2;
-              if player[g,f].hasSkill('Perfect Spiral') then r := r - 1;
-              if player[1-g, h].hasSkill('Extra Arms') then r := r - 1;
-              if (player[1-g, h].hasSkill('Very Long Legs')) or
-                 (player[1-g, h].hasSkill('VLL')) then r := r - 1;
-              if player[1-g, h].hasSkill('Elephant Trunk') then r := r - 1;
-              if player[1-g, h].hasSkill('House Fly Head') then r := r + 2;
-              if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
-                and not (player[1-g,h].hasSkill('Weather Immunity')) then r := r + 1;
-              if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
-                and not (player[1-g,h].hasSkill('Weather Immunity')) then r := r + 1;
-              tz := CountTZ(1-g, h);
-              if not(player[1-g, h].hasSkill('Nerves of Steel')) then
-                 r := r + tz.num;
-              r := r + CountFA(1-g, h);
-              if r < 2 then r := 2;
-              if r > 6 then r := 6;
+            end
+            else
+            begin
+              r := 7 - loopPlayer.ag + 2;
+              if player[g, f].hasSkill('Perfect Spiral') then
+                r := r - 1;
+              if loopPlayer.hasSkill('Extra Arms') then
+                r := r - 1;
+              if (loopPlayer.hasSkill('Very Long Legs')) or
+                (loopPlayer.hasSkill('VLL')) then
+                r := r - 1;
+              if loopPlayer.hasSkill('Elephant Trunk') then
+                r := r - 1;
+              if loopPlayer.hasSkill('House Fly Head') then
+                r := r + 2;
+              if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12))
+                = 'POURING RAIN') and
+                not(loopPlayer.hasSkill('Weather Immunity')) then
+                r := r + 1;
+              if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10))
+                = 'EERIE MIST') and not(loopPlayer.hasSkill('Weather Immunity'))
+              then
+                r := r + 1;
+              tz := CountTZ(1 - g, h);
+              if not(loopPlayer.hasSkill('Nerves of Steel')) then
+                r := r + tz.num;
+              r := r + CountFA(1 - g, h);
+              if r < 2 then
+                r := 2;
+              if r > 6 then
+                r := 6;
               r2 := r;
               r3 := r;
-              if player[1-g, h].hasSkill('Catch') then r2 := r2 - 1.5;
-              if tz.num = 0 then r3 := r3 - 2;
-              if (tz.num <> 0) and (player[1-g,h].hasSkill('Dodge')) then
-                 r3 := r3 - 1;
-              if g=0 then disttoTD := 25 - player[1-g,h].q else
-                disttoTD := player[1-g,h].q;
-              if disttoTD <= player[1-g,h].ma then r4 := 1 else
-                if (disttoTD <= player[1-g,h].ma + 1) and
-                  (player[1-g,h].hasSkill('Sure Feet')) then r4 := 2 else
-                if (disttoTD <= player[1-g,h].ma + 1) then r4 := 3 else
-                if (disttoTD <= player[1-g,h].ma + 2) and
-                  (player[1-g,h].hasSkill('Sure Feet')) then r4 := 4 else
-                if (disttoTD <= player[1-g,h].ma + 2) then r4 := 5 else
-                if (disttoTD <= player[1-g,h].ma + 3) and
-                  (player[1-g,h].hasSkill('Sure Feet')) and
-                  (player[1-g,h].hasSkill('Sprint')) then r4 := 6 else
-                if (disttoTD <= player[1-g,h].ma + 3) and
-                  (player[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
-              r5 := 20 - player[1-g,h].st;
-              totspp := player[1-g,h].comp0 + 3 * player[1-g,h].td0 +
-                2 * player[1-g,h].cas0 + 2 * player[1-g,h].int0 +
-                bbalg.MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
-                player[1-g,h].exp0 +
-                player[1-g,h].comp + 3 * player[1-g,h].td +
-                2 * player[1-g,h].cas + 2 * player[1-g,h].int +
-                bbalg.MVPValue * player[1-g,h].mvp + player[1-g,h].OtherSPP +
-                player[1-g,h].exp;
+              if loopPlayer.hasSkill('Catch') then
+                r2 := r2 - 1.5;
+              if tz.num = 0 then
+                r3 := r3 - 2;
+              if (tz.num <> 0) and (loopPlayer.hasSkill('Dodge')) then
+                r3 := r3 - 1;
+              if g = 0 then
+                disttoTD := 25 - loopPlayer.q
+              else
+                disttoTD := loopPlayer.q;
+              if disttoTD <= loopPlayer.ma then
+                r4 := 1
+              else if (disttoTD <= loopPlayer.ma + 1) and
+                (loopPlayer.hasSkill('Sure Feet')) then
+                r4 := 2
+              else if (disttoTD <= loopPlayer.ma + 1) then
+                r4 := 3
+              else if (disttoTD <= loopPlayer.ma + 2) and
+                (loopPlayer.hasSkill('Sure Feet')) then
+                r4 := 4
+              else if (disttoTD <= loopPlayer.ma + 2) then
+                r4 := 5
+              else if (disttoTD <= loopPlayer.ma + 3) and
+                (loopPlayer.hasSkill('Sure Feet')) and
+                (loopPlayer.hasSkill('Sprint')) then
+                r4 := 6
+              else if (disttoTD <= loopPlayer.ma + 3) and
+                (loopPlayer.hasSkill('Sprint')) then
+                r4 := 7
+              else
+                r4 := 8;
+              r5 := 20 - loopPlayer.st;
+              totspp := loopPlayer.GetStartingSPP() + loopPlayer.GetMatchSPP();
+
               SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-              if SPP4th then begin
-                if totspp >= 176 then r6 := 100 else
-                  if totspp >= 126 then r6 := 176 - totspp else
-                  if totspp >= 76 then r6 := 126 - totspp else
-                  if totspp >= 51 then r6 := 76 - totspp else
-                  if totspp >= 31 then r6 := 51 - totspp else
-                  if totspp >= 16 then r6 := 31 - totspp else
-                  if totspp >= 6 then r6 := 16 - totspp else r6 := 6 - totspp;
-              end else begin
-                if totspp >= 251 then r6 := 100 else
-                  if totspp >= 151 then r6 := 251 - totspp else
-                  if totspp >= 101 then r6 := 151 - totspp else
-                  if totspp >= 51 then r6 := 101 - totspp else
-                  if totspp >= 26 then r6 := 51 - totspp else
-                  if totspp >= 11 then r6 := 26 - totspp else
-                  if totspp >= 6 then r6 := 11 - totspp else r6 := 6 - totspp;
+              if SPP4th then
+              begin
+                if totspp >= 176 then
+                  r6 := 100
+                else if totspp >= 126 then
+                  r6 := 176 - totspp
+                else if totspp >= 76 then
+                  r6 := 126 - totspp
+                else if totspp >= 51 then
+                  r6 := 76 - totspp
+                else if totspp >= 31 then
+                  r6 := 51 - totspp
+                else if totspp >= 16 then
+                  r6 := 31 - totspp
+                else if totspp >= 6 then
+                  r6 := 16 - totspp
+                else
+                  r6 := 6 - totspp;
+              end
+              else
+              begin
+                if totspp >= 251 then
+                  r6 := 100
+                else if totspp >= 151 then
+                  r6 := 251 - totspp
+                else if totspp >= 101 then
+                  r6 := 151 - totspp
+                else if totspp >= 51 then
+                  r6 := 101 - totspp
+                else if totspp >= 26 then
+                  r6 := 51 - totspp
+                else if totspp >= 11 then
+                  r6 := 26 - totspp
+                else if totspp >= 6 then
+                  r6 := 11 - totspp
+                else
+                  r6 := 6 - totspp;
               end;
-              if r6 = 1 then r6 := 2 else
-                if r6 = 2 then r6 := 1;
+              if r6 = 1 then
+                r6 := 2
+              else if r6 = 2 then
+                r6 := 1;
               bestodds := r;
               besth := h;
               catchodds := r2;
@@ -619,17 +719,18 @@ begin
               bestst := r5;
               bestspp := r6;
             end;
-            s := s + '#' + IntToStr(player[1-g,h].cnumber);
+            s := s + '#' + IntToStr(loopPlayer.cnumber);
           end;
         end;
       end;
     end;
-    if s <> '' then begin
+    if s <> '' then
+    begin
       Bloodbowl.comment.text := 'The pass can be intercepted by: ' + s;
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      safethrow := player[g,f].hasSkill('Safe Throw');
-      pspiral := player[g,f].hasSkill('Perfect Spiral');
-      ShowCatchWindow(1-g, besth, 2, pspiral, safethrow);
+      safethrow := player[g, f].hasSkill('Safe Throw');
+      pspiral := player[g, f].hasSkill('Perfect Spiral');
+      ShowCatchWindow(1 - g, besth, 2, pspiral, safethrow);
     end;
   end;
 end;
@@ -724,14 +825,8 @@ begin
                   if (disttoTD <= player[1-g,h].ma + 3) and
                     (player[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
                 r5 := 20 - player[1-g,h].st;
-                totspp := player[1-g,h].comp0 + 3 * player[1-g,h].td0 +
-                  2 * player[1-g,h].cas0 + 2 * player[1-g,h].int0 +
-                  bbalg.MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
-                  player[1-g,h].exp0 +
-                  player[1-g,h].comp + 3 * player[1-g,h].td +
-                  2 * player[1-g,h].cas + 2 * player[1-g,h].int +
-                  bbalg.MVPValue * player[1-g,h].mvp + player[1-g,h].OtherSPP +
-                  player[1-g,h].exp;
+                totspp := player[1-g,h].GetStartingSPP() + player[1-g,h].GetMatchSPP();
+
                 SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
                 if SPP4th then begin
                   if totspp >= 176 then r6 := 100 else
@@ -830,14 +925,8 @@ begin
                   if (disttoTD <= player[1-g,h].ma + 3) and
                     (player[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
                 r5 := 20 - player[1-g,h].st;
-                totspp := player[1-g,h].comp0 + 3 * player[1-g,h].td0 +
-                  2 * player[1-g,h].cas0 + 2 * player[1-g,h].int0 +
-                  bbalg.MVPValue * player[1-g,h].mvp0 +  player[1-g,h].OtherSPP0 +
-                  player[1-g,h].exp0 +
-                  player[1-g,h].comp + 3 * player[1-g,h].td +
-                  2 * player[1-g,h].cas + 2 * player[1-g,h].int +
-                  bbalg.MVPValue * player[1-g,h].mvp + player[1-g,h].OtherSPP +
-                  player[1-g,h].exp;
+                totspp := player[1-g,h].GetStartingSPP() + player[1-g,h].GetMatchSPP();
+
                 SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
                 if SPP4th then begin
                   if totspp >= 176 then r6 := 100 else

@@ -2468,14 +2468,8 @@ begin
           (Uppercase(team[g].race) = 'BRIGHT CRUSADERS') and
           (frmSettings.cbBrightCrusaders.checked);
 
-  totspp := player[g0,f0].comp0 + 3 * player[g0,f0].td0 +
-          2 * player[g0,f0].cas0 + 2 * player[g0,f0].int0 +
-          bbalg.MVPValue * player[g0,f0].mvp0 +  player[g0,f0].OtherSPP0 +
-          player[g0,f0].exp0 +
-          player[g0,f0].comp + 3 * player[g0,f0].td +
-          2 * player[g0,f0].cas + 2 * player[g0,f0].int +
-          bbalg.MVPValue * player[g0,f0].mvp + player[g0,f0].OtherSPP +
-          player[g0,f0].exp;
+  totspp := player[g0,f0].GetStartingSPP + player[g0,f0].GetMatchSPP();
+
   SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
   frmArmourRoll.cbLBanish.checked :=
       ((player[g0,f0].hasSkill('Banishment')) and (totspp < 26) and
@@ -2645,14 +2639,8 @@ begin
   frmArmourRoll.cbIronMan.checked := (player[g0,f0].hasSkill('Iron Man'));
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
   frmArmourRoll.cbIGMEOY.checked := (g = IGMEOY);
-  totspp := player[g0,f0].comp0 + 3 * player[g0,f0].td0 +
-          2 * player[g0,f0].cas0 + 2 * player[g0,f0].int0 +
-          bbalg.MVPValue * player[g0,f0].mvp0 +  player[g0,f0].OtherSPP0 +
-          player[g0,f0].exp0 +
-          player[g0,f0].comp + 3 * player[g0,f0].td +
-          2 * player[g0,f0].cas + 2 * player[g0,f0].int +
-          bbalg.MVPValue * player[g0,f0].mvp + player[g0,f0].OtherSPP +
-          player[g0,f0].exp;
+  totspp := player[g0,f0].GetStartingSPP() + player[g0,f0].GetMatchSPP();
+
   SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
   frmArmourRoll.cbLBanish.checked :=
       ((player[g0,f0].hasSkill('Banishment')) and (totspp < 26) and
@@ -2755,14 +2743,9 @@ begin
   frmArmourRoll.cbIronMan.checked := (player[g0,f0].hasSkill('Iron Man'));
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
 
-  totspp := player[g0,f0].comp0 + 3 * player[g0,f0].td0 +
-          2 * player[g0,f0].cas0 + 2 * player[g0,f0].int0 +
-          bbalg.MVPValue * player[g0,f0].mvp0 +  player[g0,f0].OtherSPP0 +
-          player[g0,f0].exp0 +
-          player[g0,f0].comp + 3 * player[g0,f0].td +
-          2 * player[g0,f0].cas + 2 * player[g0,f0].int +
-          bbalg.MVPValue * player[g0,f0].mvp + player[g0,f0].OtherSPP +
-          player[g0,f0].exp;
+  totspp := player[g0,f0].GetStartingSPP() +
+            player[g0,f0].GetMatchSPP();
+
   SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
   frmArmourRoll.cbLBanish.checked :=
       ((player[g0,f0].hasSkill('Banishment')) and (totspp < 26) and

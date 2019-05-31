@@ -9,8 +9,6 @@ uses
 type
   TfrmPostgame = class(TForm)
     GBPostgameRed: TGroupBox;
-    Label3: TLabel;
-    LblNewTRRed: TLabel;
     ImMWDieRed: TImage;
     LblMWRollRed: TLabel;
     Label5: TLabel;
@@ -33,8 +31,6 @@ type
     TxtMWModRed: TEdit;
     butFFTotModRed: TButton;
     GBPostgameBlue: TGroupBox;
-    Label4: TLabel;
-    LblNewTRBlue: TLabel;
     ImMWDieBlue: TImage;
     LblMWRollBlue: TLabel;
     Label11: TLabel;
@@ -92,7 +88,6 @@ procedure MatchWinningsModifier(tm: integer);
 procedure CreateMVPplayer(tm, pl: integer);
 procedure PlayActionMVP(s: string; dir: integer);
 procedure MVP(tm: integer);
-function CalculateTeamRating(g: integer): integer;
 
 implementation
 
@@ -113,8 +108,6 @@ begin
     frmPostgame.BringToFront;
     DefaultAction('Start of Post-Game Sequence');
     PostgameActive := true;
-    frmPostgame.lblNewTRRed.caption := IntToStr(CalculateTeamRating(0));
-    frmPostgame.lblNewTRBlue.caption := IntToStr(CalculateTeamRating(1));
     {Disable the MVP button for BribeTheAnnouncers}
     if BribeTheAnnouncers then begin
       if team[0].tr < team[1].tr then begin
@@ -161,7 +154,6 @@ begin
       frmPostgame.LblMWTotRed.caption := IntToStr(team[tm].matchwinnings) + '0';
       frmPostgame.ButMWRed.enabled := false;
       frmPostgame.ButPurchaseRed.enabled := true;
-      frmPostgame.lblNewTRRed.caption := IntToStr(CalculateTeamRating(0));
     end else begin
       frmPostgame.ImMWDieBlue.Picture.LoadFromFile(
                             curdir + 'images\die' + IntToStr(r) + 'b.bmp');
@@ -174,7 +166,6 @@ begin
       frmPostgame.LblMWTotBlue.caption := IntToStr(r + mw + w + t) + '0';
       frmPostgame.ButMWBlue.enabled := false;
       frmPostgame.ButPurchaseBlue.enabled := true;
-      frmPostgame.lblNewTRBlue.caption := IntToStr(CalculateTeamRating(1));
     end;
     s0 := 'Match winnings for ' + ffcl[tm] + ': ' + IntToStr(r);
     s0 := s0 + ' + ' + IntToStr(mw) + ' (Match Winnings Table)';
@@ -300,13 +291,11 @@ begin
              else frmPostgame.TxtMwModRed.Text := IntToStr(m);
     frmPostgame.LblMWTotRed.caption :=
        IntToStr(10 * team[tm].matchwinnings + team[tm].matchwinningsmod);
-    frmPostgame.lblNewTRRed.caption := IntToStr(CalculateTeamRating(0));
   end else begin
     if m = 0 then frmPostgame.TxtMwModBlue.Text := ''
              else frmPostgame.TxtMwModBlue.Text := IntToStr(m);
     frmPostgame.LblMWTotBlue.caption :=
        IntToStr(10 * team[tm].matchwinnings + team[tm].matchwinningsmod);
-    frmPostgame.lblNewTRBlue.caption := IntToStr(CalculateTeamRating(1));
   end;
 end;
 
@@ -370,11 +359,9 @@ begin
     if tm = 0 then begin
       frmPostgame.ButMVPRed.enabled := false;
       frmPostgame.ButSkillrollRed.enabled := true;
-      frmPostgame.lblNewTRRed.caption := IntToStr(CalculateTeamRating(0));
     end else begin
       frmPostgame.ButMVPBlue.enabled := false;
       frmPostgame.ButSkillrollBlue.enabled := true;
-      frmPostgame.lblNewTRBlue.caption := IntToStr(CalculateTeamRating(1));
     end;
   end else begin
     if tm = 0 then frmPostgame.ButMVPRed.enabled := true
@@ -523,38 +510,6 @@ begin
   if (Sender as TLabel).parent = GBPostgameRed then tm := 0 else tm := 1;
   pl := FVal((Sender as TLabel).caption);
   player[tm,pl].ShowPlayerDetails;
-end;
-
-function CalculateTeamRating(g: integer): integer;
-var f, tr, valtot, spp: integer;
-begin
-  spp := 0;
-  valtot := 0;
-  for f := 1 to team[g].numplayers do begin
-    if not((player[g,f].status = 8) or (player[g,f].status = 11)) then begin
-      valtot := valtot + player[g,f].value;
-      spp := spp + bbalg.MVPValue * (player[g,f].mvp + player[g,f].mvp0)
-                 + 2 * (player[g,f].int + player[g,f].int0)
-                 + 3 * (player[g,f].td + player[g,f].td0)
-                 + 2 * (player[g,f].cas + player[g,f].cas0)
-                 + player[g,f].comp + player[g,f].comp0
-                 + player[g,f].OtherSPP + player[g,f].OtherSPP0
-                 + player[g,f].exp + player[g,f].exp0;
-    end;
-  end;
-  tr := valtot div 10 + spp div 5;
-  tr := tr + team[g].reroll * team[g].rerollcost div 10;
-  tr := tr + team[g].ff;
-  tr := tr + team[g].cheerleaders;
-  tr := tr + team[g].asstcoaches;
-  if frmSettings.cbApoths.checked then tr := tr + team[g].apot else
-    tr := tr + team[g].apot * 5;
-  if frmSettings.cbWizards.checked then tr := tr + team[g].wiz * 5 else
-    tr := tr + team[g].wiz * 15;
-  if frmSettings.cbNegativeWinnings.Checked then
-    tr := tr + Abs(MoneyVal(team[g].treasury)) div 10 
-    else tr := tr + MoneyVal(team[g].treasury) div 10;
-  CalculateTeamRating := tr;
 end;
 
 procedure TfrmPostgame.TxtMWModRedExit(Sender: TObject);

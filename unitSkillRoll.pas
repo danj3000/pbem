@@ -135,14 +135,8 @@ begin
   if (((player[g,f].BigGuy) and not (frmSettings.rgBGA4th.ItemIndex >= 1)) or
       (player[g,f].hasSkill('DProg'))) then h := 2;
 
-  hb := player[g,f].comp0 + 3 * player[g,f].td0 +
-          2 * player[g,f].cas0 + 2 * player[g,f].int0 +
-          bbalg.MVPValue * player[g,f].mvp0 + player[g,f].otherSPP0 +
-          player[g,f].exp0;
-  hg := player[g,f].comp + 3 * player[g,f].td +
-          2 * player[g,f].cas + 2 * player[g,f].int +
-          bbalg.MVPValue * player[g,f].mvp + player[g,f].otherSPP +
-          player[g,f].exp;
+  hb := player[g,f].GetStartingSPP();
+  hg := player[g,f].GetMatchSPP();
   ha := hb + hg;
   player[g,f].skillrolls := 0;
   for i := 1 to 7 do begin

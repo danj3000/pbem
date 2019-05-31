@@ -29,9 +29,9 @@ public
   p, q: integer;
   {status of player}
   status, SIstatus, SOstatus, SOSIstatus, SIAgestatus: integer;
-  {SPP at start of the match}
-  int, td, cas, comp, mvp, otherSPP, exp: integer;
   {SPP scored during match}
+  int, td, cas, comp, mvp, otherSPP, exp: integer;
+  {SPP at start of the match}
   int0, td0, cas0, comp0, mvp0, otherSPP0, exp0: integer;
   {current stats}
   ma, st, ag, av: integer;
@@ -72,6 +72,8 @@ public
     {StunStatus is used to track players automatically turning from Stun
       to prone}
 
+  function GetStartingSPP(): Integer;
+  function GetMatchSPP(): Integer;
   constructor New(form: TForm; tm, nr: integer);
 
   procedure PlayerMouseDown(Sender: TObject; Button: TMouseButton;
@@ -958,6 +960,22 @@ begin
     end;
     {End of Rooted, Swamped, and Netted}
   end;
+end;
+
+function TPlayer.GetStartingSPP : Integer;
+begin
+    Result := comp0 + 3 * td0 +
+          2 * cas0 + 2 * int0 +
+          bbalg.MVPValue * mvp0 + otherSPP0 +
+          exp0;
+end;
+
+function TPlayer.GetMatchSPP : Integer;
+begin
+   Result := comp + 3 * td +
+          2 * cas + 2 * int +
+          bbalg.MVPValue * mvp + otherSPP +
+          exp;
 end;
 
 procedure TPlayer.PlayerMouseDown(Sender: TObject; Button: TMouseButton;
@@ -2196,20 +2214,9 @@ begin
           frmArmourRoll.cbDecay.checked := (player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].hasSkill('Decay'));
           totspp :=
-            player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].comp0 +
-            3 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].td0 +
-            2 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].cas0 +
-            2 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].int0 +
-            bbalg.MVPValue * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].mvp0 +
-            player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].OtherSPP0 +
-            player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].EXP0 +
-            player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].comp +
-            3 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].td +
-            2 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].cas +
-            2 * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].int +
-            bbalg.MVPValue * player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].mvp +
-            player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].OtherSPP +
-            player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].EXP;
+            player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].GetStartingSPP() +
+            player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].GetMatchSPP();
+
           SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
           frmArmourRoll.cbLBanish.checked :=
             ((player[(Sender as TPlayer).teamnr,
@@ -2933,19 +2940,21 @@ begin
     txtlen := Length(position);
     if txtlen>25 then PlayerData[teamnr,3].font.size := 9 else
       if txtlen>20 then PlayerData[teamnr,3].font.size := 10 else
-      PlayerData[teamnr,3].font.size := 12;
+        PlayerData[teamnr,3].font.size := 12;
     PlayerData[teamnr,3].caption := position;
     PlayerData[teamnr,4].caption := IntToStr(ma) + ' ' +
        IntToStr(st) + ' ' + IntToStr(ag) + ' ' + IntToStr(av);
     txtlen := Length(GetSkillString(-1));
-    if txtlen>100 then PlayerData[teamnr,5].font.size := 9 else
+    if txtlen>100 then
+      PlayerData[teamnr,5].font.size := 9
+    else
       PlayerData[teamnr,5].font.size := 10;
+
     PlayerData[teamnr,5].caption := GetSkillString(-1);
-    h := GetPlayerSPP();
-      if Trim(PlayerData[teamnr,5].caption) <> '' then
-         PlayerData[teamnr,5].caption := PlayerData[teamnr,5].caption + Chr(13);
-      PlayerData[teamnr,5].caption := PlayerData[teamnr,5].caption +
-         'Total SPP: ' + IntToStr(h);
+    if Trim(PlayerData[teamnr,5].caption) <> '' then
+      PlayerData[teamnr,5].caption := PlayerData[teamnr,5].caption + Chr(13);
+
+    PlayerData[teamnr,5].caption := PlayerData[teamnr,5].caption + 'Total SPP: ' + IntToStr(GetPlayerSPP());
     if ((teamnr=0) and (HomePic<>picture)) or
        ((teamnr<>0) and (AwayPic<>picture)) then begin
       if picture = '' then begin
@@ -2972,7 +2981,9 @@ begin
       end;
       if teamnr=0 then HomePic := picture else AwayPic := picture;
     end;
-  end else begin
+  end
+  else
+  begin
     for h := 1 to 5 do PlayerData[teamnr,h].caption := '';
     if teamnr = 0 then Bloodbowl.imPlayerImageRed.visible := false
                   else Bloodbowl.imPlayerImageBlue.visible := false;

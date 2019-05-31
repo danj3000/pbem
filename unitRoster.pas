@@ -149,8 +149,7 @@ begin
     player[g,f].Redraw;
   end;
   RedrawDugOut;
-  frmPostgame.lblNewTRRed.caption := IntToStr(CalculateTeamRating(0));
-  frmPostgame.lblNewTRBlue.caption := IntToStr(CalculateTeamRating(1));
+
 end;
 
 procedure TRetireButton.RetireButtonClick(Sender: TObject);
@@ -388,14 +387,8 @@ begin
   end;
   for f := 1 to team[g].numplayers do
    if player[g,f].status <> 11 then begin
-    hb := player[g,f].comp0 + 3 * player[g,f].td0 +
-          2 * player[g,f].cas0 + 2 * player[g,f].int0 +
-          bbalg.MVPValue * player[g,f].mvp0 + player[g,f].otherSPP0 +
-          player[g,f].exp0;
-    hg := player[g,f].comp + 3 * player[g,f].td +
-          2 * player[g,f].cas + 2 * player[g,f].int +
-          bbalg.MVPValue * player[g,f].mvp + player[g,f].otherSPP +
-          player[g,f].exp;
+    hb := player[g,f].GetStartingSPP();
+    hg := player[g,f].GetMatchSPP();
     ha := hb + hg;
     if frmRoster.GameRB.checked then begin
       if (player[g,f].otherSPP > 0)
@@ -468,7 +461,7 @@ end;
 
 procedure ShowCurrentTeamStats(g: integer);
 begin
-  frmRoster.tr.caption := IntToStr(CalculateTeamRating(g));
+  //frmRoster.tr.caption := IntToStr(CalculateTeamRating(g));
   frmRoster.treasury.caption := team[g].treasury;
   if team[g].treasury <> team[g].treasury0 then
     frmRoster.treasury.font.color := clRed

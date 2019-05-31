@@ -54,32 +54,6 @@ object frmPostgame: TfrmPostgame
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    object Label3: TLabel
-      Left = 8
-      Top = 400
-      Width = 159
-      Height = 18
-      Caption = 'New Team Rating:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clRed
-      Font.Height = -16
-      Font.Name = 'Copperplate Gothic Bold'
-      Font.Style = []
-      ParentFont = False
-    end
-    object LblNewTRRed: TLabel
-      Left = 176
-      Top = 400
-      Width = 33
-      Height = 18
-      Caption = '100'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clRed
-      Font.Height = -16
-      Font.Name = 'Copperplate Gothic Bold'
-      Font.Style = []
-      ParentFont = False
-    end
     object ImMWDieRed: TImage
       Left = 168
       Top = 16
@@ -638,32 +612,6 @@ object frmPostgame: TfrmPostgame
     Font.Style = []
     ParentFont = False
     TabOrder = 1
-    object Label4: TLabel
-      Left = 8
-      Top = 400
-      Width = 159
-      Height = 18
-      Caption = 'New Team Rating:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -16
-      Font.Name = 'Copperplate Gothic Bold'
-      Font.Style = []
-      ParentFont = False
-    end
-    object LblNewTRBlue: TLabel
-      Left = 176
-      Top = 400
-      Width = 33
-      Height = 18
-      Caption = '100'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -16
-      Font.Name = 'Copperplate Gothic Bold'
-      Font.Style = []
-      ParentFont = False
-    end
     object ImMWDieBlue: TImage
       Left = 168
       Top = 16
