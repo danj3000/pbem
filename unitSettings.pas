@@ -12,22 +12,6 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
-    Label1: TLabel;
-    txtDPArmMod: TEdit;
-    txtDPInjMod: TEdit;
-    Label2: TLabel;
-    Label3: TLabel;
-    GroupBox1: TGroupBox;
-    rbFoulRule1: TRadioButton;
-    rbFoulRule2: TRadioButton;
-    rbFoulRule3: TRadioButton;
-    rbFoulRule4: TRadioButton;
-    rbFoulRule5: TRadioButton;
-    Label6: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
-    Label10: TLabel;
     rgFoulReferee: TRadioGroup;
     Label11: TLabel;
     cbMB4th: TCheckBox;
@@ -208,8 +192,8 @@ begin
   frmSettings.butAccept.visible := false;
   frmSettings.lblCantChange.visible := true;
 
-  frmArmourRoll.txtDPArmMod.text := '+' + Trim(frmSettings.txtDPArmMod.text);
-  frmArmourRoll.txtDPInjMod.text := '+' + Trim(frmSettings.txtDPInjMod.text);
+  frmArmourRoll.txtDPArmMod.text := '+' + bbalg.DirtyPlayerArmourModifier.ToString;
+  frmArmourRoll.txtDPInjMod.text := '+' + bbalg.DirtyPlayerInjuryModifier.ToString;
 
   FillKOTable;
   FillWTable;
@@ -338,15 +322,7 @@ begin
   frmSettings.rgBGA4th.ItemIndex := Ord(s[8]) - 48;
   frmSettings.cbDTAfter.checked := (s[9] = 'A');
   GetText;
-  frmSettings.txtDPArmMod.text := s[1];
-  frmSettings.txtDPInjMod.text := s[2];
-  case s[3] of
-    '1': frmSettings.rbFoulRule1.checked := true;
-    '2': frmSettings.rbFoulRule2.checked := true;
-    '3': frmSettings.rbFoulRule3.checked := true;
-    '4': frmSettings.rbFoulRule4.checked := true;
-    '5': frmSettings.rbFoulRule5.checked := true;
-  end;
+
   frmSettings.rgFoulReferee.ItemIndex := Ord(s[4]) - 48;
   GetText;
   frmSettings.rgSkillRollsAt.ItemIndex := Ord(s[1]) - 48;
@@ -469,12 +445,9 @@ begin
   st := st + Chr(48 + rgBGA4th.ItemIndex);
   if cbDTAfter.checked then st := st + 'A' else st := st + '.';
   st := st + '*';
-  st := st + Trim(txtDPArmMod.text) + Trim(txtDPInjMod.text);
-  if rbFoulRule1.checked then st := st + '1' else
-  if rbFoulRule2.checked then st := st + '2' else
-  if rbFoulRule3.checked then st := st + '3' else
-  if rbFoulRule4.checked then st := st + '4' else
-  if rbFoulRule5.checked then st := st + '5' else st := st + '.';
+  st := st + '2';
+
+  st := st + '5';   // foul rule 5 (always)
   st := st + Chr(48 + rgFoulReferee.ItemIndex);
   st := st + '*';
   st := st + Chr(48 + rgSkillRollsAt.ItemIndex);
@@ -638,19 +611,6 @@ begin
         b := (s = '[' + cmbLeague.Items[cmbLeague.ItemIndex] + ']');
       end;
       if b then begin
-        if Copy(s, 1, 12) = 'DirtyPlayer=' then begin
-          txtDPArmMod.text := Copy(s, 14, 1);
-          txtDPInjMod.text := Copy(s, 17, 1);
-        end;
-        if Copy(s, 1, 12) = 'FoulAssists=' then begin
-          case FVal(copy(s, 13, 1)) of
-            0: rbFoulRule1.Checked := true;
-            1: rbFoulRule2.Checked := true;
-            2: rbFoulRule3.Checked := true;
-            3: rbFoulRule4.Checked := true;
-            4: rbFoulRule5.Checked := true;
-          end;
-        end;
         if Copy(s, 1, 12) = 'FoulReferee=' then begin
           rgFoulReferee.ItemIndex := FVal(copy(s, 13, 1));
         end;

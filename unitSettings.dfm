@@ -63,7 +63,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 713
     Height = 545
-    ActivePage = TabSheet5
+    ActivePage = TabSheet4
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
@@ -526,134 +526,6 @@ object frmSettings: TfrmSettings
     object TabSheet4: TTabSheet
       Caption = 'Fouling rules'
       ImageIndex = 3
-      object Label1: TLabel
-        Left = 8
-        Top = 16
-        Width = 53
-        Height = 13
-        Caption = 'Dirty Player'
-      end
-      object Label2: TLabel
-        Left = 80
-        Top = 16
-        Width = 6
-        Height = 13
-        Caption = '+'
-      end
-      object Label3: TLabel
-        Left = 112
-        Top = 16
-        Width = 6
-        Height = 13
-        Caption = '+'
-      end
-      object txtDPArmMod: TEdit
-        Left = 88
-        Top = 16
-        Width = 17
-        Height = 21
-        TabOrder = 0
-        Text = '2'
-      end
-      object txtDPInjMod: TEdit
-        Left = 120
-        Top = 16
-        Width = 17
-        Height = 21
-        TabOrder = 1
-        Text = '2'
-      end
-      object GroupBox1: TGroupBox
-        Left = 8
-        Top = 56
-        Width = 697
-        Height = 153
-        Caption = 'Assisting fouls'
-        TabOrder = 2
-        object Label6: TLabel
-          Left = 24
-          Top = 16
-          Width = 354
-          Height = 13
-          Caption = 
-            '3rd edition standard rule: all players in the Tackle Zone can as' +
-            'sists the foul.'
-        end
-        object Label7: TLabel
-          Left = 24
-          Top = 40
-          Width = 486
-          Height = 13
-          Caption = 
-            'Only players not in an enemy Tackle Zone can assist (like Block)' +
-            '. Players with Guard can always assist.'
-        end
-        object Label8: TLabel
-          Left = 24
-          Top = 64
-          Width = 217
-          Height = 13
-          Caption = 'Only players with Dirty Player can assist a foul.'
-        end
-        object Label9: TLabel
-          Left = 24
-          Top = 88
-          Width = 583
-          Height = 13
-          Caption = 
-            'Only players not in an enemy Tackle Zone can assist (like Block)' +
-            '. Players with Dirty Player can always assist. (PBEMBB rule)'
-        end
-        object Label10: TLabel
-          Left = 24
-          Top = 112
-          Width = 662
-          Height = 26
-          Caption = 
-            'BB2k1 edition rule: only players not in an enemy Tackle Zone can' +
-            ' assist a foul (no matter what skill they have). Counterassists ' +
-            'can be given. The following skills can not be used: Claw, Razor ' +
-            'Sharp Fangs/Claws, Mighty Blow.'
-          WordWrap = True
-        end
-        object rbFoulRule1: TRadioButton
-          Left = 8
-          Top = 16
-          Width = 17
-          Height = 17
-          TabOrder = 0
-        end
-        object rbFoulRule2: TRadioButton
-          Left = 8
-          Top = 40
-          Width = 17
-          Height = 17
-          TabOrder = 1
-        end
-        object rbFoulRule3: TRadioButton
-          Left = 8
-          Top = 64
-          Width = 17
-          Height = 17
-          TabOrder = 2
-        end
-        object rbFoulRule4: TRadioButton
-          Left = 8
-          Top = 88
-          Width = 17
-          Height = 17
-          TabOrder = 3
-        end
-        object rbFoulRule5: TRadioButton
-          Left = 8
-          Top = 112
-          Width = 17
-          Height = 17
-          Checked = True
-          TabOrder = 4
-          TabStop = True
-        end
-      end
       object rgFoulReferee: TRadioGroup
         Left = 8
         Top = 216
@@ -671,7 +543,7 @@ object frmSettings: TfrmSettings
             'e)'
           'Referee Roll 5+ when under IGMEOY, 6 when not'
           'Referee Roll is always 6')
-        TabOrder = 3
+        TabOrder = 0
       end
     end
     object TabSheet5: TTabSheet

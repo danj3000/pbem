@@ -239,12 +239,12 @@ begin
   txtPilingOnST.text := '';
   txtNiggles.text := '';
   ModalResult := 1;
-  if frmSettings.rbFoulRule5.checked then begin
-    frmArmourRoll.rbClaw.visible := true;
-    frmArmourRoll.rbFangs.visible := true;
-    frmArmourRoll.rbARMightyBlow.visible := true;
-    frmArmourRoll.rbIRMightyBlow.visible := true;
-  end;
+
+  frmArmourRoll.rbClaw.visible := true;
+  frmArmourRoll.rbFangs.visible := true;
+  frmArmourRoll.rbARMightyBlow.visible := true;
+  frmArmourRoll.rbIRMightyBlow.visible := true;
+
 end;
 
 procedure TfrmArmourRoll.FormActivate(Sender: TObject);
@@ -358,17 +358,17 @@ begin
           frmArmourRoll.pnlIR.left := frmArmourRoll.pnlAR.width;
           frmArmourRoll.pnlPlayerSize.left := frmArmourRoll.pnlAR.width;
           frmArmourRoll.width :=
-               frmArmourRoll.pnlAR.width + frmArmourRoll.pnlIR.width;
-          if frmSettings.rbFoulRule5.checked then begin
-            frmArmourRoll.rbClaw.checked := false;
-            frmArmourRoll.rbFangs.checked := false;
-            frmArmourRoll.rbARMightyBlow.checked := false;
-            frmArmourRoll.rbIRMightyBlow.checked := false;
-            frmArmourRoll.rbClaw.visible := false;
-            frmArmourRoll.rbFangs.visible := false;
-            frmArmourRoll.rbARMightyBlow.visible := false;
-            frmArmourRoll.rbIRMightyBlow.visible := false;
-          end;
+          frmArmourRoll.pnlAR.width + frmArmourRoll.pnlIR.width;
+
+          frmArmourRoll.rbClaw.checked := false;
+          frmArmourRoll.rbFangs.checked := false;
+          frmArmourRoll.rbARMightyBlow.checked := false;
+          frmArmourRoll.rbIRMightyBlow.checked := false;
+          frmArmourRoll.rbClaw.visible := false;
+          frmArmourRoll.rbFangs.visible := false;
+          frmArmourRoll.rbARMightyBlow.visible := false;
+          frmArmourRoll.rbIRMightyBlow.visible := false;
+
           if frmSettings.cbNoInjMods.Checked then begin
               frmArmourRoll.rbIRNoSkill.checked := true;
               frmArmourRoll.rbNoStunty.checked := true;

@@ -11,6 +11,9 @@ const
   PBeMVersion = '2.5b';
   PBeMVerText = 'Ronald Lokers Bloodbowl Tool version 2.5b Release';
   MVPValue = 5;
+  DirtyPlayerArmourModifier = 1;
+  DirtyPlayerInjuryModifier = 1;
+
 
 type
   TmodAlg = class(TDataModule)
@@ -2506,12 +2509,12 @@ begin
     IntToStr(player[g0,f0].cnumber);
   {count assists}
   assa := 0;
-  if frmSettings.rbFoulRule5.checked then begin
+
     BlockTeam := g0;
     BlockPlayer := f0;
     HitTeam := g;
     HitPlayer := f;
-  end;
+
   if not(((frmSettings.rbWA.ItemIndex = 1) and
       (player[g,f].hasSkill('Wild Animal'))) or (player[g,f].hasSkill('Maniac')))
       then begin
@@ -2520,28 +2523,10 @@ begin
     for p := 1 to tz.num do begin
       if tz.pl[p] <> f then begin
         b := false;
-        if frmSettings.rbFoulRule1.checked then b := true;
-        if frmSettings.rbFoulRule2.checked then begin
-          if player[g,tz.pl[p]].hasSkill('Guard') then b := true
-          else begin
-            tz0 := CountTZBlockCA(g, tz.pl[p]);
-            if tz0.num = 0 then b := true;
-          end;
-        end;
-        if frmSettings.rbFoulRule3.checked then begin
-          if player[g,tz.pl[p]].hasSkill('Dirty Player') then b := true
-        end;
-        if frmSettings.rbFoulRule4.checked then begin
-          if player[g,tz.pl[p]].hasSkill('Dirty Player') then b := true
-          else begin
-            tz0 := CountTZBlockCA(g, tz.pl[p]);
-            if tz0.num = 0 then b := true;
-          end;
-        end;
-        if frmSettings.rbFoulRule5.checked then begin
+
           tz0 := CountTZBlockCA(g, tz.pl[p]);
           if tz0.num = 0 then b := true;
-        end;
+
         if b then begin
           assa := assa + 1;
           if player[g,tz.pl[p]].hasSkill('Running Chainsaw') then
@@ -2556,7 +2541,7 @@ begin
     end;
   end;
   assd := 0;
-  if frmSettings.rbFoulRule5.checked then begin
+
     {count counterassists}
     tz := CountTZBlockCA2(g, f);
     bx := false;
@@ -2576,7 +2561,7 @@ begin
         end;
       end;
     end;
-  end;
+
   Bloodbowl.comment.text := s;
   Bloodbowl.EnterButtonClick(Bloodbowl);
   frmArmourRoll.txtArmourValue.text := IntToStr(player[g0,f0].av);

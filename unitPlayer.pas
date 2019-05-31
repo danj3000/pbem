@@ -1038,7 +1038,7 @@ begin
     GameStatus := '';
     if frmPass.txtBulletThrow.Visible then begin
       frmPass.txtBulletThrow.Visible := false;
-      frmArmourRoll.txtDPInjMod.text := '+' + Trim(frmSettings.txtDPInjMod.text);
+      frmArmourRoll.txtDPInjMod.text := '+' + bbAlg.DirtyPlayerInjuryModifier.ToString();
     end;
 
   end else if (GameStatus = 'Bomb') or (GameStatus = 'BigBomb') or
