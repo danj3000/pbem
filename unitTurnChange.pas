@@ -463,7 +463,7 @@ begin
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
       if (player[g,f].Ally) and (player[g,f].status < 6)
-          and not (frmSettings.rgBGA4th.ItemIndex >= 1) then begin
+          and not (true) then begin       // bigguy
         s := 'tA' + Chr(g + 48) + Chr(f + 64);
         LogWrite(s);
         PlayActionStartHalf(s, 1);

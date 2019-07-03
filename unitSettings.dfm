@@ -63,7 +63,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 713
     Height = 545
-    ActivePage = TabSheet4
+    ActivePage = TabSheet3
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
@@ -380,33 +380,13 @@ object frmSettings: TfrmSettings
         Caption = 'Diving Tackle'
         TabOrder = 2
       end
-      object rgBGA4th: TRadioGroup
-        Left = 16
-        Top = 320
-        Width = 665
-        Height = 89
-        Caption = 'Big Guys and Allies'
-        ItemIndex = 2
-        Items.Strings = (
-          
-            'At the start of each half, for each Ally a team reroll is lost o' +
-            'n a D6 result of 1; Big Guys need double SPP for new skills.'
-          
-            'Big Guys and Allies cannot use team rerolls, but can use Leader ' +
-            're-rolls'
-          'Big Guys and Allies cannot use team or Leader re-rolls'
-          
-            'Big Guys cannot use any re-rolls. Loners and Allies must roll a ' +
-            '4+ to use a team re-roll or it is wasted')
-        TabOrder = 3
-      end
       object cbTentacles4th: TCheckBox
         Left = 16
         Top = 128
         Width = 97
         Height = 17
         Caption = 'Tentacles'
-        TabOrder = 4
+        TabOrder = 3
       end
       object cbBT4th: TCheckBox
         Left = 16
@@ -414,7 +394,7 @@ object frmSettings: TfrmSettings
         Width = 97
         Height = 17
         Caption = 'Break Tackle'
-        TabOrder = 5
+        TabOrder = 4
       end
       object cbDTAfter: TCheckBox
         Left = 16
@@ -422,54 +402,7 @@ object frmSettings: TfrmSettings
         Width = 201
         Height = 17
         Caption = 'Diving Tackle - Apply after Dodge roll'
-        TabOrder = 6
-      end
-      object cbLRBHorns: TCheckBox
-        Left = 16
-        Top = 416
-        Width = 313
-        Height = 17
-        Caption = 'Horns gives +1 ST to 2nd block if first one was at +1 ST'
-        TabOrder = 7
-      end
-      object cbWizards: TCheckBox
-        Left = 16
-        Top = 440
-        Width = 313
-        Height = 17
-        Caption = 'Wizards are freebooted for 50k instead of purchased for 150k'
-        TabOrder = 8
-      end
-      object cbFoulApp: TCheckBox
-        Left = 16
-        Top = 488
-        Width = 313
-        Height = 17
-        Caption = 'Foul Appearance works while prone/stunned'
-        TabOrder = 9
-      end
-      object cbApoths: TCheckBox
-        Left = 16
-        Top = 464
-        Width = 313
-        Height = 17
-        Caption = 'Apothecary is freebooted for 10k instead of purchased for 50k'
-        TabOrder = 10
-      end
-      object rbWA: TRadioGroup
-        Left = 16
-        Top = 248
-        Width = 665
-        Height = 65
-        Caption = 'Wild Animal'
-        ItemIndex = 2
-        Items.Strings = (
-          'Wild Animal must go first only'
-          
-            'Wild Animal must go first and do not receive assist when blockin' +
-            'g'
-          'Wild Animals need 2+ to block or blitz, 4+ for anything else')
-        TabOrder = 11
+        TabOrder = 5
       end
       object rbPO: TRadioGroup
         Left = 16
@@ -482,7 +415,7 @@ object frmSettings: TfrmSettings
           'Piling On is declared before the armour roll'
           'Piling On is declared after the armour roll'
           'Piling On is an armour re-roll')
-        TabOrder = 12
+        TabOrder = 6
       end
       object rgTitchy: TRadioGroup
         Left = 248
@@ -497,7 +430,7 @@ object frmSettings: TfrmSettings
             'Titchy gives extra players, +1 to dodge with injury,passing, and' +
             ' TZ penalties'
           'Titchy gives +1 to dodge but no TZ when dodged into')
-        TabOrder = 13
+        TabOrder = 7
       end
       object rgHGaze: TRadioGroup
         Left = 248
@@ -512,7 +445,7 @@ object frmSettings: TfrmSettings
           
             'Hypnotic Gaze is an AG roll with -1 modifier for each opposing T' +
             'Z after the 1st')
-        TabOrder = 14
+        TabOrder = 8
       end
       object cbDC: TCheckBox
         Left = 256
@@ -520,31 +453,12 @@ object frmSettings: TfrmSettings
         Width = 153
         Height = 17
         Caption = 'Diving Catch (Vault rules)'
-        TabOrder = 15
+        TabOrder = 9
       end
     end
     object TabSheet4: TTabSheet
       Caption = 'Fouling rules'
       ImageIndex = 3
-      object rgFoulReferee: TRadioGroup
-        Left = 8
-        Top = 216
-        Width = 697
-        Height = 169
-        Caption = 'Referee rules'
-        ItemIndex = 4
-        Items.Strings = (
-          'Standard 3rd edition, no IGMEOY'
-          'Standard 3rd edition with IGMEOY'
-          'Referee Roll 2+ when under IGMEOY, 6 when not'
-          'Referee Roll 3+ when under IGMEOY, 6 when not'
-          
-            'Referee Roll 4+ when under IGMEOY, 6 when not (BB2k1 edition rul' +
-            'e)'
-          'Referee Roll 5+ when under IGMEOY, 6 when not'
-          'Referee Roll is always 6')
-        TabOrder = 0
-      end
     end
     object TabSheet5: TTabSheet
       Caption = 'Player Advancement'

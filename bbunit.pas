@@ -524,7 +524,8 @@ var
   fn, GameStatus, FollowUp, LDFILEDT, BugString, HomePic,
     AwayPic, LustrianRoll, LustrianRoll2: string; {fn=filename, LDFILEDT=File Date/Time}
   ff: file of char;
-  curteam, curplayer, curmove, IGMEOY, HalfNo, lastroll, lastroll2, lastroll3,
+  curteam, curplayer:  integer;
+  curmove, IGMEOY, HalfNo, lastroll, lastroll2, lastroll3,
   NumHandicaps, ActionTeam, ActionPlayer, ArgueMod, RefMod,
   ThrownTeam, ThrownPlayer, LastFieldP, LastFieldQ, DigP, DigQ,
   DigStrength, RandCnt1, RandCnt2, RandCnt3, RandCnt4, RandCnt5,
@@ -545,7 +546,8 @@ var
   LBanishment2, SmellingSalts, IronMan, Decay, PulledPunches,
   TIKSTPK, BribeTheAnnouncers, NoDeath, FixedRand, SaveGameAllowed,
   FirstLoad, Touchback, SettingsLoaded, AccuratePassPlay, PalmedCoin,
-  SideStepStop, ProSkill, KickOffNow, DodgeNoStand, GetCAS, AVBreak,
+  SideStepStop, ProSkill, KickOffNow, DodgeNoStand, GetCAS: boolean;
+  AVBreak,
   LoadedFileFirstBlood, LoadedFlag: boolean;
   PlayerData: array [0..1, 1..5] of TLabel;
   CardsData: array [0..1, 1..25] of TCardLabel;
@@ -1690,7 +1692,7 @@ begin
           s := Chr(av + 48) + FoulRoll(av, armod, injmod, eye);
           LogWrite('^' + s);
           { RONALD: CHANGE HERE: Use PlayAction instead of copying the code }
-          PlayActionFoulRoll('^' + s, 1);
+          PlayActionFoulRoll('^' + s, DIR_FORWARD);
         end;
       end;
       p := Pos('c@rds', comment.text);
@@ -1825,7 +1827,7 @@ begin
       '!': PlayActionRollBlockDice(s, 1, 1);
       '@': PlayActionRollBlockDice(s, 1, 2);
       '#': PlayActionRollBlockDice(s, 1, 3);
-      '^': PlayActionFoulRoll(s, 1);
+      '^': PlayActionFoulRoll(s, DIR_FORWARD);
       ']': PlayActionAddCard(s, 1, false);
       '>': PlayActionAddCard(s, 1, true);
       '1': PlayActionRoll1Die(s, 1);
@@ -2178,7 +2180,7 @@ begin
         if lastroll < 4 then begin
           bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
             (player[ActionTeam,ActionPlayer].Ally))
-            and (frmSettings.rgBGA4th.ItemIndex >= 1));
+            and (true));   // bigguy
           proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro'))) and
             (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
             and (ActionTeam = curmove);
@@ -4249,22 +4251,6 @@ begin
           end;
         end;
         {End Evil Gits rolls}
-        if (frmSettings.cbWizards.checked) and (team[0].wiz=1) then begin
-          curroster := 0;
-          Buy('X');
-        end;
-        if (frmSettings.cbWizards.checked) and (team[1].wiz=1) then begin
-          curroster := 1;
-          Buy('X');
-        end;
-        if (frmSettings.cbApoths.checked) and (team[0].apot<>0) then begin
-          curroster := 0;
-          Buy('Z');
-        end;
-        if (frmSettings.cbApoths.checked) and (team[1].apot<>0) then begin
-          curroster := 1;
-          Buy('Z');
-        end;
         Continuing := false;
         frmPostgame.BringToFront;
       end;
@@ -4286,7 +4272,7 @@ begin
       player[g,f].UseSkill('Greater Glory');
       Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
       bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-         and (frmSettings.rgBGA4th.ItemIndex >= 1));
+         and (true));   // bigguy
       proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 3) and
          (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
       reroll := CanUseTeamReroll(bga);

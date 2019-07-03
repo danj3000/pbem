@@ -88,7 +88,7 @@ begin
     (player[g,f].hasSkill('Sprint')) and (not(player[g,f].usedSkill('Sprint')));
 
   frmGFI.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (frmSettings.rgBGA4th.ItemIndex >= 1));
+      (player[g,f].Ally)) and (true));    // big guy
 
   CalculateGFIRollNeeded;
 

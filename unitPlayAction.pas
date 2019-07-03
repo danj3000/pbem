@@ -17,7 +17,8 @@ var
   modPlayAction: TmodPlayAction;
 
   WaitLength: integer;
-
+const
+  DIR_FORWARD = 1;
 procedure Wait;
 procedure DefaultAction(s: string);
 
@@ -76,7 +77,7 @@ end;
 
 procedure PlayActionNote(s: string; dir: integer);
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     AddNote(Copy(s, 2, length(s) - 2));
     DefaultAction('Note: "' + Copy(s, 2, length(s) - 2) + '"');
   end else begin
@@ -87,7 +88,7 @@ end;
 
 procedure PlayActionComment(s: string; dir, tm: integer);
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     if tm < 2 then
        DefaultAction(ffcl[tm] + ': "' + Copy(s, 2, length(s) - 2) + '"')
     else
@@ -100,7 +101,7 @@ end;
 procedure PlayActionRoll1Die(s: string; dir: integer);
 begin
   DiceRollShow(Ord(s[2]) - 48, 0);
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     DefaultAction('Roll: ' + s[2]);
   end else begin
     BackLog;
@@ -110,7 +111,7 @@ end;
 procedure PlayActionRoll2Dice(s: string; dir: integer);
 begin
   DiceRollShow(Ord(s[3]) - 48, Ord(s[2]) - 48);
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     DefaultAction('Roll: (' + s[2] + ',' + s[3] +
                   ') = ' + IntToStr(Ord(s[2]) + Ord(s[3]) - 96));
   end else begin
@@ -121,7 +122,7 @@ end;
 procedure PlayActionRollScatter(s: string; dir: integer);
 begin
   ScatterRollShow(Ord(s[2]) - 48);
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     DefaultAction('Scatter: ' + s[2]);
   end else begin
     BackLog;
@@ -145,7 +146,7 @@ begin
     s0 := s0 + ' , ' + DBRoll[d3];
   end;
   BlockRollShow(d1, d2, d3);
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     DefaultAction(s0);
   end else begin
     BackLog;
@@ -154,7 +155,7 @@ end;
 
 procedure PlayActionThrowIn(s: string; dir: integer);
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     DefaultAction(TranslateThrowIn(s));
   end else begin
     BackLog;
@@ -165,7 +166,7 @@ procedure PlayActionWeatherRoll(s: string; dir: integer);
 var f, g, p: integer;
     s0: string;
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     f := Ord(s[3]) - 48;
     g := Ord(s[4]) - 48;
     DefaultAction('(' + IntToStr(f) + ',' + IntToStr(g) + ') = ' +
@@ -271,7 +272,7 @@ end;
 procedure PlayActionKickOff(s: string; dir: integer);
 var f, g: integer;
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     f := Ord(s[3]) - 48;
     g := Ord(s[4]) - 48;
     DefaultAction('(' + IntToStr(f) + ',' + IntToStr(g) + ') : ' +
@@ -283,7 +284,7 @@ end;
 
 procedure PlayActionArmourRoll(s: string; dir: integer);
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     DefaultAction(ArmourRollToText(Copy(s,2,length(s))));
   end else begin
     BackLog;
@@ -292,7 +293,7 @@ end;
 
 procedure PlayActionInjuryRoll(s: string; dir: integer);
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     DefaultAction(InjuryRollToText(Copy(s,2,length(s))));
   end else begin
     BackLog;
@@ -301,7 +302,7 @@ end;
 
 procedure PlayActionFoulRoll(s: string; dir: integer);
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     DefaultAction(FoulRollToText(Copy(s,2,length(s))));
   end else begin
     BackLog;
@@ -312,7 +313,7 @@ procedure PlayActionUseApo(s: string; dir: integer);
 var g: integer;
 begin
   g := Ord(s[2]) - 48;
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     if not(frmSettings.cbUpApoth.checked) then begin
       apo[g].color := colorarray[g, 4, 0];
       apo[g].font.color := colorarray[g, 4, 1];
@@ -378,7 +379,7 @@ procedure PlayActionUseWiz(s: string; dir: integer);
 var g: integer;
 begin
   g := Ord(s[2]) - 48;
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     wiz[g].color := colorarray[g, 4, 0];
     wiz[g].font.color := colorarray[g, 4, 1];
     DefaultAction(ffcl[g] + '''s Wizard casts a spell');
@@ -392,7 +393,7 @@ end;
 procedure PlayActionRandomPlayer(s: string; dir: integer);
 var f, g: integer;
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     g := Ord(s[2]) - 48;
     f := Ord(s[3]) - 64;
     DefaultAction('Randomly chosen player: ' + player[g,f].GetPlayerName);
@@ -405,7 +406,7 @@ procedure PlayActionSetIGMEOY(s: string; dir: integer);
 var g: integer;
     s0: string;
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     g := Ord(s[3]) - 66;
     SetIGMEOY(g);
     if g = -1 then s0 := 'Reset' else s0 := ffcl[g];
@@ -451,7 +452,7 @@ procedure PlayActionComputerID(s: string; dir: integer);
 var g, f: integer;
     nextopenSlot: boolean;
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     nextopenSlot := true;
     for g := 1 to 500 do begin
       if (nextopenSlot) and (ComputerID[g]=' ') then begin
@@ -466,7 +467,7 @@ procedure PlayActionLuck(s: string; dir: integer);
 var x,y: integer;
     nextopenSlot: boolean;
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     if s[2]='R' then begin
       x := Pos('|', s);
       y := Pos('~', s);
@@ -541,7 +542,7 @@ procedure PlayActionPlayBook(s: string; dir: integer);
 var x,y,z: integer;
     s2, s3: string;
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     if s[2]='R' then begin
       x := Pos(':',s);
       s2 := Copy(s, 3, (x-3));
@@ -643,7 +644,7 @@ end;
 procedure PlayActionPGFI(s: string; dir: integer);
 var g, f: integer;
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     g := Ord(s[3]) - 48;
     f := Ord(s[4]) - 64;
     player[g,f].GFI := player[g,f].GFI + 1;
@@ -657,7 +658,7 @@ end;
 procedure PlayActionDeStun(s: string; dir: integer);
 var g, f, increment: integer;
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     g := Ord(s[3]) - 48;
     f := Ord(s[4]) - 64;
     increment := Ord(s[5]) - 48;
@@ -673,7 +674,7 @@ end;
 procedure PlayActionCoachRef(s: string; dir: integer);
 var g, ArgueCall: integer;
 begin
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     if s[2]='C' then begin
       g := Ord(s[3]) - 48;
       ArgueCall := Ord(s[4]) - 48;

@@ -12,7 +12,6 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
-    rgFoulReferee: TRadioGroup;
     Label11: TLabel;
     cbMB4th: TCheckBox;
     cbSF4th: TCheckBox;
@@ -20,7 +19,6 @@ type
     TabSheet4: TTabSheet;
     rgSkillRollsAt: TRadioGroup;
     cbNoForcedMAandAG: TCheckBox;
-    rgBGA4th: TRadioGroup;
     cbTentacles4th: TCheckBox;
     cbBT4th: TCheckBox;
     TabSheet5: TTabSheet;
@@ -106,7 +104,6 @@ type
     butAwayColorChange: TButton;
     cdColorDialog: TColorDialog;
     cbKicking: TCheckBox;
-    cbLRBHorns: TCheckBox;
     cbMVPBench: TCheckBox;
     TabSheet9: TTabSheet;
     cbWeakStunty: TCheckBox;
@@ -118,7 +115,6 @@ type
     txtCardsIniFile: TEdit;
     Label24: TLabel;
     txtHandicapIniFile: TEdit;
-    cbWizards: TCheckBox;
     lblLustrian: TLabel;
     cbPGFI: TCheckBox;
     rgCardSystem: TRadioGroup;
@@ -128,7 +124,6 @@ type
     cbButterfingers: TCheckBox;
     butSelectFile: TButton;
     dlgPic: TOpenDialog;
-    cbFoulApp: TCheckBox;
     cbPassingRangesColored: TCheckBox;
     cbBlackIce: TCheckBox;
     cbFG1PT: TCheckBox;
@@ -142,8 +137,6 @@ type
     cbNoFieldGoals: TCheckBox;
     cbOnPitchSpellcasters: TCheckBox;
     cbNegativeWinnings: TCheckBox;
-    cbApoths: TCheckBox;
-    rbWA: TRadioGroup;
     rbPO: TRadioGroup;
     cbLOS: TCheckBox;
     cbNoInjMods: TCheckBox;
@@ -314,16 +307,15 @@ begin
   frmSettings.txtWeatherTable.text := GetText;
   frmSettings.cbMB4th.checked := (s[1] = 'M');
   frmSettings.cbSF4th.checked := (s[2] = 'S');
-  frmSettings.rbWA.ItemIndex := Ord(s[3]) - 48;
+//  frmSettings.rbWA.ItemIndex := Ord(s[3]) - 48;
   frmSettings.cbDT4th.checked := (s[4] = 'D');
   frmSettings.cbTentacles4th.checked := (s[5] = 'T');
   frmSettings.cbBT4th.checked := (s[6] = 'B');
   frmSettings.rbPO.ItemIndex := Ord(s[7]) - 48;
-  frmSettings.rgBGA4th.ItemIndex := Ord(s[8]) - 48;
+//  frmSettings.rgBGA4th.ItemIndex := Ord(s[8]) - 48;
   frmSettings.cbDTAfter.checked := (s[9] = 'A');
   GetText;
 
-  frmSettings.rgFoulReferee.ItemIndex := Ord(s[4]) - 48;
   GetText;
   frmSettings.rgSkillRollsAt.ItemIndex := Ord(s[1]) - 48;
   frmSettings.cbNoForcedMAandAG.checked := (s[3] = 'F');
@@ -371,14 +363,13 @@ begin
   frmSettings.cbKicking.checked := (s[45] = 'S');
   frmSettings.cbNiggleHalf.checked := (s[46] = 'T');
   frmSettings.cbMVPBench.checked := (s[47] = 'U');
-  frmSettings.cbLRBHorns.checked := (s[48] = 'V');
-  frmSettings.cbWizards.checked := (s[49] = 'W');
+  //frmSettings.cbWizards.checked := (s[49] = 'W');
   frmSettings.rgPassFumble.ItemIndex := Ord(s[50]) - 48;
   frmSettings.cbPGFI.checked := (s[51] = 'X');
   frmSettings.cbLateInt.checked := (s[52] = 'Y');
   frmSettings.cbDig.checked := (s[53] = 'Z');
   frmSettings.cbButterfingers.checked := (s[54] = 'A');
-  frmSettings.cbFoulApp.checked := (s[55] = 'B');
+//  frmSettings.cbFoulApp.checked := (s[55] = 'B');
   frmSettings.cbFG1PT.checked := (s[56] = 'C');
   frmSettings.cbOPTakeRoot.checked := (s[61] = 'F');
   frmSettings.cbBlackIce.Checked := (s[62] = 'G');
@@ -391,7 +382,6 @@ begin
   frmSettings.cbNoFieldGoals.checked := (s[69] = 'N');
   frmSettings.cbOnPitchSpellcasters.checked := (s[70] = 'O');
   frmSettings.cbNegativeWinnings.checked := (s[71] = 'P');
-  frmSettings.cbApoths.checked := (s[72] = 'Q');
   frmSettings.cbNoInjMods.checked := (s[73] = 'R');
   frmSettings.cbFirethrower.checked := (s[74] = 'S');
   GetText;
@@ -437,18 +427,18 @@ begin
         txtKOTable.text + '*' + txtWeatherTable.text + '*';
   if cbMB4th.checked then st := st + 'M' else st := st + '.';
   if cbSF4th.checked then st := st + 'S' else st := st + '.';
-  st := st + Chr(48 + rbWA.ItemIndex);
+  st := st + Chr(48 + 2);    // Wild animal
   if cbDT4th.checked then st := st + 'D' else st := st + '.';
   if cbTentacles4th.checked then st := st + 'T' else st := st + '.';
   if cbBT4th.checked then st := st + 'B' else st := st + '.';
   st := st + Chr(48 + rbPO.ItemIndex);
-  st := st + Chr(48 + rgBGA4th.ItemIndex);
+  st := st + Chr(48 + 3);
   if cbDTAfter.checked then st := st + 'A' else st := st + '.';
   st := st + '*';
   st := st + '2';
 
   st := st + '5';   // foul rule 5 (always)
-  st := st + Chr(48 + rgFoulReferee.ItemIndex);
+  st := st + ' ';
   st := st + '*';
   st := st + Chr(48 + rgSkillRollsAt.ItemIndex);
   st := st + Chr(48);
@@ -497,14 +487,14 @@ begin
   if cbKicking.checked then st := st + 'S' else st := st + '.';
   if cbNiggleHalf.checked then st := st + 'T' else st := st + '.';
   if cbMVPBench.checked then st := st + 'U' else st := st + '.';
-  if cbLRBHorns.checked then st := st + 'V' else st := st + '.';
-  if cbWizards.checked then st := st + 'W' else st := st + '.';
+  st := st + 'V';    // horns 2nd block
+   st := st + '.';   // wizard freebooters
   st := st + Chr(48 + rgPassFumble.ItemIndex);
   if cbPGFI.checked then st := st + 'X' else st := st + '.';
   if cbLateInt.checked then st := st + 'Y' else st := st + '.';
   if cbDig.checked then st := st + 'Z' else st := st + '.';
   if cbButterfingers.checked then st := st + 'A' else st := st + '.';
-  if cbFoulApp.checked then st := st + 'B' else st := st + '.';
+  st := st + 'B';       // foul prone
   if cbFG1PT.checked then st := st + 'C' else st := st + '.';
   st := st + '.';     // was mvpexp
   st := st + MVPValue.ToString;
@@ -521,7 +511,7 @@ begin
   if cbNoFieldGoals.checked then st := st + 'N' else st := st + '.';
   if cbOnPitchSpellcasters.checked then st := st + 'O' else st := st + '.';
   if cbNegativeWinnings.checked then st := st + 'P' else st := st + '.';
-  if cbApoths.checked then st := st + 'Q' else st := st + '.';
+  st := st + '.';   // apoth
   if cbNoInjMods.checked then st := st + 'R' else st := st + '.';
   if cbFirethrower.checked then st := st + 'S' else st := st + '.';
   st := st + '*';
@@ -611,9 +601,6 @@ begin
         b := (s = '[' + cmbLeague.Items[cmbLeague.ItemIndex] + ']');
       end;
       if b then begin
-        if Copy(s, 1, 12) = 'FoulReferee=' then begin
-          rgFoulReferee.ItemIndex := FVal(copy(s, 13, 1));
-        end;
         if Copy(s, 1, 11) = 'CardSystem=' then begin
           rgCardSystem.ItemIndex := FVal(copy(s, 12, 1)) - 1;
         end;
@@ -644,9 +631,9 @@ begin
         if Copy(s, 1, 20) = '4thEditionStandFirm=' then begin
           cbSF4th.checked := (Copy(s, 21, 1) = 'Y');
         end;
-        if Copy(s, 1, 11) = 'WildAnimal=' then begin
-          rbWA.ItemIndex := FVal(copy(s, 12, 1));
-        end;
+//        if Copy(s, 1, 11) = 'WildAnimal=' then begin
+//          rbWA.ItemIndex := FVal(copy(s, 12, 1));
+//        end;
         if Copy(s, 1, 10) = 'NoInjMods=' then begin
           cbNoInjMods.checked := (Copy(s, 11, 1) = 'Y');
         end;
@@ -682,7 +669,7 @@ begin
           cbMVPBench.checked := (Copy(s, 10, 1) = 'Y');
         end;
         if Copy(s, 1, 9) = 'LRBHorns=' then begin
-          cbLRBHorns.checked := (Copy(s, 10, 1) = 'Y');
+          // cbLRBHorns.checked := (Copy(s, 10, 1) = 'Y');
         end;
         if Copy(s, 1, 14) = 'SquarePassing=' then begin
           cbSquarePass.checked := (Copy(s, 15, 1) = 'Y');
@@ -717,9 +704,9 @@ begin
         if Copy(s, 1, 16) = 'NoForcedMAandAG=' then begin
           cbNoForcedMAandAG.checked := (Copy(s, 17, 1) = 'Y');
         end;
-        if Copy(s, 1, 21) = '4thEditionBigGuyAlly=' then begin
-          rgBGA4th.ItemIndex := FVal(copy(s, 22, 1));
-        end;
+//        if Copy(s, 1, 21) = '4thEditionBigGuyAlly=' then begin
+//          rgBGA4th.ItemIndex := FVal(copy(s, 22, 1));
+//        end;
         if Copy(s, 1, 20) = '4thEditionTentacles=' then begin
           cbTentacles4th.checked := (Copy(s, 21, 1) = 'Y');
         end;
@@ -886,27 +873,27 @@ begin
         if Copy(s, 1, 6) = 'Wings=' then begin
           cbWings.checked := (Copy(s, 7, 1) = 'Y');
         end;
-        if Copy(s, 1, 8) = 'FAProne=' then begin
-          cbFoulApp.checked := (Copy(s, 9, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 8) = 'FAProne=' then begin
+//          cbFoulApp.checked := (Copy(s, 9, 1) = 'Y');
+//        end;
         if Copy(s, 1, 7) = 'DeStun=' then begin
           cbDeStun.checked := (Copy(s, 8, 1) = 'Y');
         end;
         if Copy(s, 1, 16) = 'FieldGoal1Point=' then begin
           cbFG1PT.checked := (Copy(s, 17, 1) = 'Y');
         end;
-        if Copy(s, 1, 17) = 'Freeboot Wizards=' then begin
-          cbWizards.checked := (Copy(s, 18, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 17) = 'Freeboot Wizards=' then begin
+//          cbWizards.checked := (Copy(s, 18, 1) = 'Y');
+//        end;
         if Copy(s, 1, 16) = 'OnPitch Wizards=' then begin
           cbOnPitchSpellcasters.checked := (Copy(s, 17, 1) = 'Y');
         end;
         if Copy(s, 1, 18) = 'Negative Winnings=' then begin
           cbNegativeWinnings.checked := (Copy(s, 19, 1) = 'Y');
         end;
-        if Copy(s, 1, 16) = 'Freeboot Apoths=' then begin
-          cbApoths.checked := (Copy(s, 17, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 16) = 'Freeboot Apoths=' then begin
+//          cbApoths.checked := (Copy(s, 17, 1) = 'Y');
+//        end;
         if Copy(s, 1, 11) = 'PassFumble=' then begin
           rgPassFumble.ItemIndex := FVal(copy(s, 12, 1));
         end;

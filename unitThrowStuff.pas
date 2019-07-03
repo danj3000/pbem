@@ -402,7 +402,7 @@ begin
     frmThrowStuff.cbRealTitchy.visible := false;
   end;
   frmThrowStuff.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (frmSettings.rgBGA4th.ItemIndex >= 1));
+      (player[g,f].Ally)) and (true));      // bigguy
   frmThrowStuff.cbTitchy.checked :=
       (Pos('HALFLING', Uppercase(player[g,f].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g,f].position)) > 0)

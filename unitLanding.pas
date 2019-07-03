@@ -90,7 +90,7 @@ begin
      ((player[g,f].hasSkill('Flyer')) and
      (frmSettings.cbFlyer.checked));
   frmLanding.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (frmSettings.rgBGA4th.ItemIndex >= 1));
+      (player[g,f].Ally)) and (true));  // big guy
 
   CalculateLandingRollNeeded;
 

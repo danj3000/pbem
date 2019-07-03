@@ -474,7 +474,7 @@ procedure PlayActionCardsRoll(s: string; dir: integer);
 var g: integer;
 begin
   g := Ord(s[3]) - 48;
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     DefaultAction(TranslateCardsRollLong(s));
     if g = 0 then Bloodbowl.ButCardsRed.enabled := false
              else Bloodbowl.ButCardsBlue.enabled := false;
@@ -502,7 +502,7 @@ var f, g, r: integer;
     s0, setAbbrLocal: string;
 begin
   g := Ord(s[2]) - 48;
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     frmCards.Hide;
     plcards[g] := Copy(s, 3, length(s));
     f := 3;
@@ -546,7 +546,7 @@ var
   s0: string;
 begin
   g := Ord(s[2]) - 48;
-  if dir = 1 then
+  if dir = DIR_FORWARD then
   begin
     plcards[g] := Copy(s, 3, length(s));
     q := length(plcards[g]) - 1;
@@ -577,7 +577,7 @@ begin
   f := Ord(s[3]) - 64;
   cs := Ord(s[4]) - 64;
   cn := Ord(s[5]) - 64;
-  if dir = 1 then begin
+  if dir = DIR_FORWARD then begin
     s0 := cardset[cs, cn];
     CardsData[g,f].cset := cs;
     CardsData[g,f].cnum := cn;

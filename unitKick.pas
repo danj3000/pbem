@@ -157,7 +157,7 @@ begin
     frmKick.cbHFHead.Visible := false;
   end;
   frmKick.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (frmSettings.rgBGA4th.ItemIndex >= 1));
+      (player[g,f].Ally)) and (true)); // big guy
 
   frmKick.cbVerySunny.checked :=
     (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'VERY SUNNY') and

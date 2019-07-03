@@ -112,7 +112,7 @@ begin
      (frmSettings.cbButterfingers.checked);
   frmPickUp.cbNBH.checked := player[g,f].hasSkill('Nonball Handler');
   frmPickUp.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (frmSettings.rgBGA4th.ItemIndex >= 1));
+      (player[g,f].Ally)) and (true));   // big guy
 
   CalculatePickUpRollNeeded;
 

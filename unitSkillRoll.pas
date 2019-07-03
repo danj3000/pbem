@@ -132,7 +132,7 @@ begin
   end;
   teamSK := g;
   h := 1;
-  if (((player[g,f].BigGuy) and not (frmSettings.rgBGA4th.ItemIndex >= 1)) or
+  if (((player[g,f].BigGuy) and not (true)) or  // big guy
       (player[g,f].hasSkill('DProg'))) then h := 2;
 
   hb := player[g,f].GetStartingSPP();

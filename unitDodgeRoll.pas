@@ -104,7 +104,7 @@ begin
   frmDodgeRoll.ETrunkCB.checked := (player[g0,f0].hasSkill('Elephant Trunk'))
     and (frmSettings.cbElephantTrunk.checked);
   frmDodgeRoll.cbBigGuyAlly.checked := (((player[g0,f0].BigGuy) or
-    (player[g0,f0].Ally)) and (frmSettings.rgBGA4th.ItemIndex >= 1));
+    (player[g0,f0].Ally)) and ( true));   // bigguy
   b := 0;
   pt := 0;
   ten := 0;

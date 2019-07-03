@@ -210,6 +210,7 @@ begin
 
   Bloodbowl.comment.text := s;
   Bloodbowl.EnterButtonClick(Sender);
+
   rbARNoSkill.Checked := true;
   rbIRNoSkill.Checked := true;
   rbPilingOn.Checked := false;

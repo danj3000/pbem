@@ -24,9 +24,9 @@ type
   end;
 
 type TackleZones = record
-                    num: integer;
-                    pl: array [1..8] of integer;
-             end;
+                     num: integer;
+                     pl: array [1..8] of integer;
+                   end;
 
 var
   modAlg: TmodAlg;
@@ -713,13 +713,12 @@ end;
 function FoulRollToText(s: string): string;
 var r, av, armod, frno: integer;
     t: string;
-    CSkin: boolean;
 begin
   {BugString := s;}
   {Ronald: next line added for backward compatibility}
   if not((s[2] = 'C') or (s[2] = ' ')) then
            s := s[1] + ' ' + Copy(s, 2, Length(s) - 1);
-  if s[2] = 'C' then CSkin := true else CSkin := false;
+
   av := Ord(s[1]) - 48;
   armod := Ord(s[3]) - 48;
   t := 'Foul Roll (AV ' + IntToStr(av) + ') ';
@@ -728,49 +727,23 @@ begin
   if armod > 0 then t := t + '+' + IntToStr(armod);
   if armod < 0 then t := t + IntToStr(armod);
   t := t + '=' + IntToStr(r);
-  if r > av then t := t + ' Foul successful. ' else t := t + ' Foul failed. ';
-  if frmSettings.rgFoulReferee.ItemIndex <= 1 then begin
-    if ((length(s) < 7) and (s[4] = s[5])) or (s[6] = 'S') then begin
-      t := t + ' The referee has spotted the foul! Re-roll or remove the ' +
-           'player from the field ';
-      if r > av then t := t + ' and roll for injury';
-    end else begin
-      if r <= av then t := t + ' ' else begin
-        if CSkin then
-          t := t + ' ' + InjuryRollToText(Copy(s, 6, length(s))) +
-               '- Crystal Skin=Re-roll Armour/Choose worst injury if success'
-        else t := t + ' ' + InjuryRollToText(Copy(s, 6, length(s)));
-      end;
-    end;
-  end else begin
+  if r > av then
+    t := t + ' Foul successful. '
+  else
+    t := t + ' Foul failed. ';
+
+
     frno := 0;
-    if length(s) > 6 then frno := 6;
-    if length(s) > 10 then frno := 10;
-    if length(s) > 12 then frno := 12;
-    if length(s) > 13 then frno := 13;
-    if length(s) > 14 then frno := 14;
-    if length(s) > 16 then frno := 16;
-    if length(s) > 20 then frno := 20;
-    if s[frno] = 'S' then begin
-      if Bloodbowl.ArgueCallSB.Visible then begin
-        t := t + 'Referee Roll: ' + s[frno+1] +
-          ' - The referee has spotted the foul, fouler Sent Off - Argue Call? -';
-      end else begin
-        t := t + 'Referee Roll: ' + s[frno+1] +
-          ' - The referee has spotted the foul, fouler Sent Off - ';
-      end;
-    end else begin
-      t := t + 'Referee Roll: ' + s[frno+1] +
-           ' - The referee did not notice the foul - ';
-    end;
-    if r <= av then t := t + ' ' else begin
-      if CSkin then
-        t := t + ' ' + InjuryRollToText(Copy(s, 6, length(s))) +
-             '- Crystal Skin=Re-roll Armour/Choose worst injury if success'
-      else t := t + ' ' + InjuryRollToText(Copy(s, 6, length(s)));
-    end;
-  end;
-  FoulRollToText := t;
+    if s.IndexOf('S') > 0 then
+      t := t + 'The referee has spotted the foul! Fouler Sent Off';
+
+    // add injury roll text if appropriate ?
+    if r <= av then
+      t := t + ' '
+    else
+      t := t + ' ' + InjuryRollToText(Copy(s, 6, length(s)));
+
+  Result := t;
 end;
 
 function InjuryRoll(injmod: integer): string;
@@ -1233,9 +1206,9 @@ end;
 
 function FoulRoll(av, armod, injmod: integer; eye: boolean): string;
 var s, CS: string;
-    r1, r2, r3, am, im, v, c, FoulRef, ploc, qloc: integer;
+    r1, r2, r3, am, im, v, c, ploc, qloc: integer;
 begin
-  FoulRef := frmSettings.rgFoulReferee.ItemIndex;
+  // how is AVBreak set?
   if AVBreak then begin
     if curmove = 0 then begin
       AVBreakTOTRed := AVBreakTOTRed + 1;
@@ -1243,134 +1216,54 @@ begin
       AVBreakTOTBlue := AVBreakTOTBlue + 1;
     end;
   end;
-  {Test for 4th edition Mighty Blow and Dirty Player}
-  if (injmod < 0) and (injmod >= -6) and not (DirtyPlayer4th)
-   then am := armod - 1 else
-     if (injmod < 0) and (injmod >= -6) and (DirtyPlayer4th)
-       then begin
-         Val(Trim(frmArmourRoll.txtDPArmMod.text), v, c);
-         am := armod - v;
-       end else am := armod;
+
+  // dice rolls
   r1 := Rnd(6,5) + 1;
   r2 := Rnd(6,2) + 1;
-  r3 := Rnd(6,3) + 1;
-  if (r3 < 6) and ((team[curmove].tr) > (team[1-curmove].tr)) then
-    r3 := r3 + RefMod;
+
   s := '';
-  if ((FoulRef <= 1) and eye and (r1 = r2))
-       or ((FoulRef <= 1) and not(eye) and (r1 <> r2))
-       or ((FoulRef > 1) and not(eye) and (r3 < 6))
-       or ((FoulRef > 1) and eye and (r3 < FoulRef))
-       or ((GettheRef = curmove) or (GettheRef=2)) then begin
-    if r1 + r2 + am > av then begin
-      im := abs(injmod);
-      if im = 9 then im := 1;
-      if im = 8 then im := 0;
-      if im = 7 then im := -1;
-      s := InjuryRoll(im);
-      if AVBreak then begin
-        if curmove = 0 then begin
-          AVBreakRed := AVBreakRed + 1;
-        end else if curmove = 1 then begin
-          AVBreakBlue := AVBreakBlue + 1;
-        end;
+
+  am := armod;
+  if (r1 + r2 + am > av) then
+  begin
+    im := abs(injmod) - 1;
+    s := InjuryRoll(im);
+    if AVBreak then begin
+      if curmove = 0 then begin
+        AVBreakRed := AVBreakRed + 1;
+      end else if curmove = 1 then begin
+        AVBreakBlue := AVBreakBlue + 1;
       end;
-    end else begin
-      am := armod;
-      if (r1 + r2 + am > av) and not (DirtyPlayer4th) then begin
-        im := abs(injmod) - 1;
-        s := InjuryRoll(im);
-        if AVBreak then begin
-          if curmove = 0 then begin
-            AVBreakRed := AVBreakRed + 1;
-          end else if curmove = 1 then begin
-            AVBreakBlue := AVBreakBlue + 1;
-          end;
-        end;
-      end else if (r1 + r2 + am > av) and (DirtyPlayer4th) then begin
-        Val(Trim(frmArmourRoll.txtDPInjMod.text), v, c);
-        im := abs(injmod) - v;
-        s := InjuryRoll(im);
-        if AVBreak then begin
-          if curmove = 0 then begin
-            AVBreakRed := AVBreakRed + 1;
-          end else if curmove = 1 then begin
-            AVBreakBlue := AVBreakBlue + 1;
-          end;
-        end;
-      end else s := '';
     end;
-    {ref has Not spotted the foul}
-    if FoulRef <= 1 then begin
-      s := s + 'N';
-    end else begin
-      s := s + 'N' + InttoStr(r3);
+  end
+  else
+    s := '';
+
+  if(r1 = r2) then
+    s := s + 'S';
+
+  if (HitPlayer<> -1) and (HitTeam<> -1) then begin
+    if player[HitTeam,HitPlayer].status = STATUS_BALL_CARRIER then
+    begin
+      ploc := player[HitTeam,HitPlayer].p;
+      qloc := player[HitTeam,HitPlayer].q;
+      player[HitTeam,HitPlayer].SOstatus := player[HitTeam,HitPlayer].status;
+      player[HitTeam,HitPlayer].SOSIstatus := player[HitTeam,HitPlayer].SIstatus;
+      player[HitTeam,HitPlayer].SetStatus(12);
+      ScatterBallFrom(ploc, qloc, 1, 0);
+    end
+    else
+    begin
+      player[HitTeam,HitPlayer].SOstatus := player[HitTeam,HitPlayer].status;
+      player[HitTeam,HitPlayer].SOSIstatus := player[HitTeam,HitPlayer].SIstatus;
+      player[HitTeam,HitPlayer].SetStatus(12);
     end;
-  end else begin
-    {ref has Spotted the foul}
-    if FoulRef <= 1 then begin
-      s := s + 'S';
-    end else begin
-      if r1 + r2 + am > av then begin
-        im := abs(injmod);
-        if im = 9 then im := 1;
-        if im = 8 then im := 0;
-        if im = 7 then im := -1;
-        s := InjuryRoll(im);
-        if AVBreak then begin
-          if curmove = 0 then begin
-            AVBreakRed := AVBreakRed + 1;
-          end else if curmove = 1 then begin
-            AVBreakBlue := AVBreakBlue + 1;
-          end;
-        end;
-      end else begin
-        am := armod;
-        if (r1 + r2 + am > av) and not (DirtyPlayer4th) then begin
-          im := abs(injmod) - 1;
-          s := InjuryRoll(im);
-          if AVBreak then begin
-            if curmove = 0 then begin
-              AVBreakRed := AVBreakRed + 1;
-            end else if curmove = 1 then begin
-              AVBreakBlue := AVBreakBlue + 1;
-            end;
-          end;
-        end else if (r1 + r2 + am > av) and (DirtyPlayer4th) then begin
-          Val(Trim(frmArmourRoll.txtDPInjMod.text), v, c);
-          im := abs(injmod) - v;
-          s := InjuryRoll(im);
-          if AVBreak then begin
-            if curmove = 0 then begin
-              AVBreakRed := AVBreakRed + 1;
-            end else if curmove = 1 then begin
-              AVBreakBlue := AVBreakBlue + 1;
-            end;
-          end;
-        end else s := '';
-      end;
-      s := s + 'S' + InttoStr(r3);
-    end;
-    if (HitPlayer<> -1) and (HitTeam<> -1) then begin
-      if player[HitTeam,HitPlayer].status=2 then begin
-        ploc := player[HitTeam,HitPlayer].p;
-        qloc := player[HitTeam,HitPlayer].q;
-        player[HitTeam,HitPlayer].SOstatus := player[HitTeam,HitPlayer].status;
-        player[HitTeam,HitPlayer].SOSIstatus := player[HitTeam,HitPlayer].SIstatus;
-        player[HitTeam,HitPlayer].SetStatus(12);
-        ScatterBallFrom(ploc, qloc, 1, 0);
-      end else begin
-        player[HitTeam,HitPlayer].SOstatus := player[HitTeam,HitPlayer].status;
-        player[HitTeam,HitPlayer].SOSIstatus := player[HitTeam,HitPlayer].SIstatus;
-        player[HitTeam,HitPlayer].SetStatus(12);
-      end;
-      HitTeam := -1;
-      HitPlayer := -1;
-    end;
+    HitTeam := -1;
+    HitPlayer := -1;
   end;
-  if CrystalSkin then CS := 'C' else CS := ' ';
+
   AVBreak := false;
-  FoulRoll := CS + Chr(am + 48) + Chr(r1 + 48) + Chr(r2 + 48) + s;
+  Result := ' ' + Chr(am + 48) + Chr(r1 + 48) + Chr(r2 + 48) + s;
 end;
 
 function TranslateHandicap: string;
@@ -1751,7 +1644,7 @@ begin
     if ((player[1-g0,f].status = 1)
         or (player[1-g0,f].status = 2)
         or (((player[1-g0,f].status=3) or (player[1-g0,f].status=4)) and
-        (frmSettings.cbFoulApp.Checked)))
+        (true)))     // foul prone
         and (player[1-g0,f].hasSkill('Foul Appearanc*')) then begin
     {TOM CHANGE:  Original code had the sum of the ABS <=3
      when it should be each condition being <= 3}
@@ -1777,7 +1670,7 @@ begin
   std := player[g0,f0].st;
   assa := 0;
   bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-            and (frmSettings.rgBGA4th.ItemIndex >= 1));
+            and (true));
   BlockTeam := g0;
   BlockPlayer := f0;
   HitTeam := g;
@@ -1833,7 +1726,7 @@ begin
       if lastroll >= p then fa := true else begin
         bga := (((player[g,f].BigGuy) or
           (player[g,f].Ally))
-          and (frmSettings.rgBGA4th.ItemIndex >= 1));
+          and (true));
         proskill := ((player[g,f].HasSkill('Pro')))
           and (lastroll <= 1) and
           (not (player[g,f].usedSkill('Pro')))
@@ -1893,7 +1786,7 @@ begin
       if lastroll >= p then avd := true else begin
         bga := (((player[g,f].BigGuy) or
           (player[g,f].Ally))
-          and (frmSettings.rgBGA4th.ItemIndex >= 1));
+          and (true));
         proskill := ((player[g,f].HasSkill('Pro')))
           and (lastroll <= 1) and
           (not (player[g,f].usedSkill('Pro')))
@@ -1961,7 +1854,7 @@ begin
         if lastroll >= p then jam := true else begin
           bga := (((player[g,f].BigGuy) or
             (player[g,f].Ally))
-            and (frmSettings.rgBGA4th.ItemIndex >= 1));
+            and (true));
           proskill := ((player[g,f].HasSkill('Pro')))
             and (lastroll <= 1) and
             (not (player[g,f].usedSkill('Pro')))
@@ -2041,7 +1934,7 @@ begin
         if lastroll > player[g0,f0].st then dl := 1 else begin
           bga := (((player[g,f].BigGuy) or
             (player[g,f].Ally))
-            and (frmSettings.rgBGA4th.ItemIndex >= 1));
+            and (true));
           proskill := ((player[g,f].HasSkill('Pro')))
             and (lastroll <= 1) and
             (not (player[g,f].usedSkill('Pro')))
@@ -2138,7 +2031,7 @@ begin
     if player[g,f].font.size = 12 then s := s + ') b ' else begin
       if (player[g,f].FirstBlock = 1)
       and ((player[g,f].LastAction = 1) or ((player[g,f].LastAction = 2)
-      and (frmSettings.cbLRBHorns.checked))) then begin
+      and (true))) then begin   // horns 2nd
         if (player[g0,f0].hasSkill('Stiff Arm')) and
         (player[g,f].SecondBlock = 0) then begin
           s := s + ',stiff arm';
@@ -2165,7 +2058,7 @@ begin
     end;
     assa := horns + sa;
   {count assists}
-    if (not((frmSettings.rbWA.ItemIndex=1)
+    if (not((false)                      // Wild animal
                      and (player[g,f].hasSkill('Wild Animal')))) and
        (not((player[g,f].hasSkill('Ball and Chain')))) and
        (not((player[g,f].hasSkill('Maniac')))) then begin
@@ -2192,6 +2085,7 @@ begin
         end;
       end;
     end;
+
     assd := 0;
     {count counterassists}
     if (not((player[g,f].hasSkill('Ball and Chain')))) then begin
@@ -2217,28 +2111,43 @@ begin
         end;
       end;
     end;
+
     if (stx + assa < 1) and (player[g,f].st > 0) then begin
       assa := 0;
     end;
-    if stx + assa > 2 * (std + assd) then begin
+
+    if stx + assa > 2 * (std + assd) then
+    begin
       s := s + ' (3 block dice)';
       db := 3;
-    end else if stx + assa > std + assd then begin
+    end
+    else
+    if stx + assa > std + assd then
+    begin
       s := s + ' (2 block dice)';
       db := 2;
-    end else if stx + assa = std + assd then begin
+    end
+    else
+    if stx + assa = std + assd then
+    begin
       s := s + ' (1 block die)';
       db := 1;
-    end else
-     if 2 * (stx + assa) < std + assd then begin
+    end
+    else
+    if 2 * (stx + assa) < std + assd then
+    begin
       s := s + ' (3 block dice DEFENDER''S CHOICE)';
       db := -3;
-    end else begin
+    end
+    else
+    begin
       s := s + ' (2 block dice DEFENDER''S CHOICE)';
       db := -2;
     end;
+    // log action type
     Bloodbowl.comment.text := s;
     Bloodbowl.EnterButtonClick(Bloodbowl);
+
     lastroll := 0;
     lastroll2 := 0;
     lastroll3 := 0;
@@ -2510,12 +2419,12 @@ begin
   {count assists}
   assa := 0;
 
-    BlockTeam := g0;
-    BlockPlayer := f0;
-    HitTeam := g;
-    HitPlayer := f;
+  BlockTeam := g0;
+  BlockPlayer := f0;
+  HitTeam := g;
+  HitPlayer := f;
 
-  if not(((frmSettings.rbWA.ItemIndex = 1) and
+  if not(((false) and                     // Wild animal
       (player[g,f].hasSkill('Wild Animal'))) or (player[g,f].hasSkill('Maniac')))
       then begin
     tz := CountTZFoul(g0, f0);
@@ -2564,6 +2473,7 @@ begin
 
   Bloodbowl.comment.text := s;
   Bloodbowl.EnterButtonClick(Bloodbowl);
+
   frmArmourRoll.txtArmourValue.text := IntToStr(player[g0,f0].av);
   frmArmourRoll.txtAssists.text := IntToStr((assa-assd));
   frmArmourRoll.rbARNoSkill.checked := true;
@@ -2663,6 +2573,7 @@ begin
   ShowHurtForm('F');
 end;
 
+//todo: remove this
 procedure SetIGMEOY(g: integer);
 begin
   if IGMEOY = 0 then begin

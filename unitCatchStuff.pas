@@ -270,7 +270,7 @@ begin
   frmCatchStuff.cbButterfingers.checked := (player[g,f].hasSkill('Butterfingers')) and
      (frmSettings.cbButterfingers.checked);
   frmCatchStuff.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (frmSettings.rgBGA4th.ItemIndex >= 1));
+      (player[g,f].Ally)) and (true)); // big guy
   frmCatchStuff.cbPouringRain.checked :=
     (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
      and not (player[g,f].hasSkill('Weather Immunity')) OR

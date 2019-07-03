@@ -478,7 +478,7 @@ begin
         if lastroll < 2 then begin
           bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
             (player[ActionTeam,ActionPlayer].Ally))
-            and (frmSettings.rgBGA4th.ItemIndex >= 1));
+            and (true));   // bigguy
           proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
             and (lastroll <= 1) and
             (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
@@ -578,7 +578,7 @@ begin
           if (lastroll - tz.num - DigStrength) < 1 then begin
             bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
               (player[ActionTeam,ActionPlayer].Ally))
-              and (frmSettings.rgBGA4th.ItemIndex >= 1));
+              and (true));  // bigguy
             proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
               and (lastroll <= 1) and
               (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
@@ -710,7 +710,7 @@ begin
         if lastroll < PProll then begin
           bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
             (player[ActionTeam,ActionPlayer].Ally))
-            and (frmSettings.rgBGA4th.ItemIndex >= 1));
+            and (true));  // bigguy
           proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
             and (lastroll <= 1) and
             (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
@@ -793,7 +793,7 @@ begin
           if lastroll < r then begin
             bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
               (player[ActionTeam,ActionPlayer].Ally))
-              and (frmSettings.rgBGA4th.ItemIndex >= 1));
+              and (true));  // bigguy
             proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
               and (lastroll <= 1) and
               (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))

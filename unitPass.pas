@@ -199,7 +199,7 @@ begin
     frmPass.cbRealTitchy.visible := false;
   end;
   frmPass.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (frmSettings.rgBGA4th.ItemIndex >= 1));
+      (player[g,f].Ally)) and (true));     // big guy
   frmPass.cbTitchy.checked :=
       (Pos('HALFLING', Uppercase(player[g,f].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g,f].position)) > 0)

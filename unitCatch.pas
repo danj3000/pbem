@@ -145,7 +145,7 @@ begin
   frmCatch.cbVeryLongLegs.visible := false;
   frmCatch.cbVeryLongLegs.checked := (player[g,f].hasSkill('Very Long Legs'));
   frmCatch.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (frmSettings.rgBGA4th.ItemIndex >= 1));
+      (player[g,f].Ally)) and (true)); // big guy
   frmCatch.cbPouringRain.checked :=
     (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
      and not (player[g,f].hasSkill('Weather Immunity')) OR

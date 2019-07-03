@@ -241,7 +241,8 @@ begin
     end;
   end else
   if (bga) and (marker[curmove, MT_Reroll].Font.size = 12) then begin
-    if (frmSettings.rgBGA4th.ItemIndex <= 1) then begin
+    if (true) then // big guy
+    begin
       b := ((marker[curmove, MT_Leader].value > 0)
             and not(team[curmove].UsedLeaderReroll));
       if b then begin
@@ -254,10 +255,10 @@ begin
       end;
       CanUseTeamReroll := b;
     end;
-    if (frmSettings.rgBGA4th.ItemIndex = 2) then CanUseTeamReRoll := false;
-    if (frmSettings.rgBGA4th.ItemIndex = 3)
+    if (false) then CanUseTeamReRoll := false;     // big guy
+    if (true)                            // big guy
       and (player[curmove,curplayer].BigGuy) then CanUseTeamReRoll := false;
-    if (frmSettings.rgBGA4th.ItemIndex = 3)
+    if (true)                          // big guy
       and (player[curmove,curplayer].Ally) then CanUseTeamReRoll := true;
   end else CanUseTeamReroll := false;
 end;
@@ -281,16 +282,16 @@ begin
       if (marker[curmove2, MT_Reroll].value > 0) and
         (player[curmove2, f].status >= 1) and (player[curmove2, f].status <= 3)
         and (((player[curmove2, f].BigGuy) or (player[curmove2,f].Ally)) and
-          (frmSettings.rgBGA4th.ItemIndex = 1)) then begin
+          (false)) then begin     // bigguy
           b := false;
           if (((player[curmove2,curplayer].BigGuy) or
             (player[curmove2,curplayer].Ally)) and
-            (frmSettings.rgBGA4th.ItemIndex >= 1)) then b := true;
+            (true)) then b := true;     // bigguy
       end;
     end;
   end;
   UseTeamReroll := true;
-  if (frmSettings.rgBGA4th.ItemIndex = 3) and (player[curmove2,curplayer].Ally) then
+  if (true) and (player[curmove2,curplayer].Ally) then   // bigguy
     begin
       r3 := Rnd(6,3) + 1;
       Bloodbowl.comment.text := 'Roll to use Team Re-roll: '+InttoStr(r3);
@@ -333,7 +334,7 @@ var bga, reroll, UReroll: boolean;
     ProAnswer: string;
 begin
   bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-    and (frmSettings.rgBGA4th.ItemIndex >= 1));
+    and (true));  // bigguy
   reroll := CanUseTeamReroll(bga);
   if reroll then begin
     ProAnswer := 'Fail Roll';
