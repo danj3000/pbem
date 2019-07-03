@@ -356,54 +356,6 @@ object frmSettings: TfrmSettings
         Height = 13
         Caption = 'Use LRB edition rules for the following skills:'
       end
-      object cbMB4th: TCheckBox
-        Left = 16
-        Top = 32
-        Width = 97
-        Height = 17
-        Caption = 'Mighty Blow'
-        TabOrder = 0
-      end
-      object cbSF4th: TCheckBox
-        Left = 16
-        Top = 56
-        Width = 97
-        Height = 17
-        Caption = 'Stand Firm'
-        TabOrder = 1
-      end
-      object cbDT4th: TCheckBox
-        Left = 16
-        Top = 80
-        Width = 89
-        Height = 17
-        Caption = 'Diving Tackle'
-        TabOrder = 2
-      end
-      object cbTentacles4th: TCheckBox
-        Left = 16
-        Top = 128
-        Width = 97
-        Height = 17
-        Caption = 'Tentacles'
-        TabOrder = 3
-      end
-      object cbBT4th: TCheckBox
-        Left = 16
-        Top = 152
-        Width = 97
-        Height = 17
-        Caption = 'Break Tackle'
-        TabOrder = 4
-      end
-      object cbDTAfter: TCheckBox
-        Left = 16
-        Top = 104
-        Width = 201
-        Height = 17
-        Caption = 'Diving Tackle - Apply after Dodge roll'
-        TabOrder = 5
-      end
       object rbPO: TRadioGroup
         Left = 16
         Top = 176
@@ -415,37 +367,7 @@ object frmSettings: TfrmSettings
           'Piling On is declared before the armour roll'
           'Piling On is declared after the armour roll'
           'Piling On is an armour re-roll')
-        TabOrder = 6
-      end
-      object rgTitchy: TRadioGroup
-        Left = 248
-        Top = 80
-        Width = 401
-        Height = 65
-        Caption = 'Titchy'
-        ItemIndex = 0
-        Items.Strings = (
-          'Titchy is not allowed'
-          
-            'Titchy gives extra players, +1 to dodge with injury,passing, and' +
-            ' TZ penalties'
-          'Titchy gives +1 to dodge but no TZ when dodged into')
-        TabOrder = 7
-      end
-      object rgHGaze: TRadioGroup
-        Left = 248
-        Top = 8
-        Width = 401
-        Height = 65
-        Caption = 'Hypnotic Gaze'
-        ItemIndex = 2
-        Items.Strings = (
-          'Hypnotic Gaze is a free action that must beat opponent'#39's AG'
-          'Hypnotic Gaze is used in place of a block and needs a 2+'
-          
-            'Hypnotic Gaze is an AG roll with -1 modifier for each opposing T' +
-            'Z after the 1st')
-        TabOrder = 8
+        TabOrder = 0
       end
       object cbDC: TCheckBox
         Left = 256
@@ -453,7 +375,7 @@ object frmSettings: TfrmSettings
         Width = 153
         Height = 17
         Caption = 'Diving Catch (Vault rules)'
-        TabOrder = 9
+        TabOrder = 1
       end
     end
     object TabSheet4: TTabSheet

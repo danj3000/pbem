@@ -13,14 +13,9 @@ type
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
     Label11: TLabel;
-    cbMB4th: TCheckBox;
-    cbSF4th: TCheckBox;
-    cbDT4th: TCheckBox;
     TabSheet4: TTabSheet;
     rgSkillRollsAt: TRadioGroup;
     cbNoForcedMAandAG: TCheckBox;
-    cbTentacles4th: TCheckBox;
-    cbBT4th: TCheckBox;
     TabSheet5: TTabSheet;
     Label4: TLabel;
     txtRegenRollNeeded: TEdit;
@@ -52,7 +47,6 @@ type
     rgRandomAlgorithm: TRadioGroup;
     cmbLeague: TComboBox;
     Label20: TLabel;
-    cbDTAfter: TCheckBox;
     TabSheet8: TTabSheet;
     Label19: TLabel;
     cbFragile: TCheckBox;
@@ -142,8 +136,6 @@ type
     cbNoInjMods: TCheckBox;
     cbFirethrower: TCheckBox;
     cbWeatherPitch: TCheckBox;
-    rgTitchy: TRadioGroup;
-    rgHGaze: TRadioGroup;
     cbWideZone: TCheckBox;
     cbRuleof11: TCheckBox;
     cbLRB4KO: TCheckBox;
@@ -305,15 +297,15 @@ begin
   frmSettings.txtMWTable.text := GetText;
   frmSettings.txtKOTable.text := GetText;
   frmSettings.txtWeatherTable.text := GetText;
-  frmSettings.cbMB4th.checked := (s[1] = 'M');
-  frmSettings.cbSF4th.checked := (s[2] = 'S');
+//  frmSettings.cbMB4th.checked := (s[1] = 'M');
+//  frmSettings.cbSF4th.checked := (s[2] = 'S');
 //  frmSettings.rbWA.ItemIndex := Ord(s[3]) - 48;
-  frmSettings.cbDT4th.checked := (s[4] = 'D');
-  frmSettings.cbTentacles4th.checked := (s[5] = 'T');
-  frmSettings.cbBT4th.checked := (s[6] = 'B');
+//  frmSettings.cbDT4th.checked := (s[4] = 'D');
+//  frmSettings.cbTentacles4th.checked := (s[5] = 'T');
+//  frmSettings.cbBT4th.checked := (s[6] = 'B');
   frmSettings.rbPO.ItemIndex := Ord(s[7]) - 48;
 //  frmSettings.rgBGA4th.ItemIndex := Ord(s[8]) - 48;
-  frmSettings.cbDTAfter.checked := (s[9] = 'A');
+//  frmSettings.cbDTAfter.checked := (s[9] = 'A');
   GetText;
 
   GetText;
@@ -336,7 +328,7 @@ begin
   frmSettings.cbSingleEye.checked := (s[18] = 'K');
   frmSettings.cbNullField.checked := (s[19] = 'O');
   frmSettings.cbThirdEye.checked := (s[20] = 'T');
-  frmSettings.rgTitchy.ItemIndex := Ord(s[21]) - 48;
+  //frmSettings.rgTitchy.ItemIndex := Ord(s[21]) - 48;
   frmSettings.cbWaaaghArmour.checked := (s[22] = 'W');
   frmSettings.cbBrightCrusaders.checked := (s[23] = 'X');
   frmSettings.cbEvilGits.checked := (s[24] = 'U');
@@ -389,7 +381,7 @@ begin
   frmSettings.rgTiedMatchMod.ItemIndex := Ord(s[2]) - 48;
   frmSettings.cbFFMinus1Per10.checked := (s[3] = 'M');
   frmSettings.cbFFTrueDice.checked := (s[4] = 'T');
-  frmSettings.rgHGaze.ItemIndex := Ord(s[5]) - 48;
+//  frmSettings.rgHGaze.ItemIndex := Ord(s[5]) - 48;
   frmSettings.cbLOS.checked := (s[6] = 'L');
   frmSettings.cbWeatherPitch.checked := (s[7] = 'W');
   frmSettings.cbWideZone.checked := (s[8] = 'Z');
@@ -425,15 +417,15 @@ begin
   st := cmbLeague.Items[cmbLeague.ItemIndex] + '*';
   st := st + txtHandicapTable.text + '*' + txtMWTable.text + '*' +
         txtKOTable.text + '*' + txtWeatherTable.text + '*';
-  if cbMB4th.checked then st := st + 'M' else st := st + '.';
-  if cbSF4th.checked then st := st + 'S' else st := st + '.';
+  st := st + 'M';
+  st := st + 'S';
   st := st + Chr(48 + 2);    // Wild animal
-  if cbDT4th.checked then st := st + 'D' else st := st + '.';
-  if cbTentacles4th.checked then st := st + 'T' else st := st + '.';
-  if cbBT4th.checked then st := st + 'B' else st := st + '.';
+  st := st + 'D';
+  st := st + 'T';
+  st := st + 'B';
   st := st + Chr(48 + rbPO.ItemIndex);
   st := st + Chr(48 + 3);
-  if cbDTAfter.checked then st := st + 'A' else st := st + '.';
+  st := st + 'A';
   st := st + '*';
   st := st + '2';
 
@@ -460,7 +452,7 @@ begin
   if cbSingleEye.checked then st := st + 'K' else st := st + '.';
   if cbNullField.checked then st := st + 'O' else st := st + '.';
   if cbThirdEye.checked then st := st + 'T' else st := st + '.';
-  st := st + Chr(48 + rgTitchy.ItemIndex);
+  st := st + Chr(48 + 2);
   if cbWaaaghArmour.checked then st := st + 'W' else st := st + '.';
   if cbBrightCrusaders.checked then st := st + 'X' else st := st + '.';
   if cbEvilGits.checked then st := st + 'U' else st := st + '.';
@@ -519,7 +511,7 @@ begin
   st := st + Chr(48 + rgTiedMatchMod.ItemIndex);
   if cbFFMinus1Per10.checked then st := st + 'M' else st := st + '.';
   if cbFFTrueDice.checked then st := st + 'T' else st := st + '.';
-  st := st + Chr(48 + rgHGaze.ItemIndex);
+  st := st + Chr(48 + 2);    // hypnogaze
   if cbLOS.checked then st := st + 'L' else st := st + '.';
   if cbWeatherPitch.checked then st := st + 'W' else st := st + '.';
   if cbWideZone.checked then st := st + 'Z' else st := st + '.';
@@ -625,12 +617,12 @@ begin
         if Copy(s, 1, 18) = 'TiedMatchModifier=' then begin
           rgTiedMatchMod.ItemIndex := FVal(copy(s, 19, 1));
         end;
-        if Copy(s, 1, 21) = '4thEditionMightyBlow=' then begin
-          cbMB4th.checked := (Copy(s, 22, 1) = 'Y');
-        end;
-        if Copy(s, 1, 20) = '4thEditionStandFirm=' then begin
-          cbSF4th.checked := (Copy(s, 21, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 21) = '4thEditionMightyBlow=' then begin
+//          cbMB4th.checked := (Copy(s, 22, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 20) = '4thEditionStandFirm=' then begin
+//          cbSF4th.checked := (Copy(s, 21, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 11) = 'WildAnimal=' then begin
 //          rbWA.ItemIndex := FVal(copy(s, 12, 1));
 //        end;
@@ -640,12 +632,12 @@ begin
         if Copy(s, 1, 15) = 'NewDivingCatch=' then begin
           cbDC.checked := (Copy(s, 16, 1) = 'Y');
         end;
-        if Copy(s, 1, 23) = '4thEditionDivingTackle=' then begin
-          cbDT4th.checked := (Copy(s, 24, 1) = 'Y');
-        end;
-        if Copy(s, 1, 18) = 'DivingTackleAfter=' then begin
-          cbDTAfter.checked := (Copy(s, 19, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 23) = '4thEditionDivingTackle=' then begin
+//          cbDT4th.checked := (Copy(s, 24, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 18) = 'DivingTackleAfter=' then begin
+//          cbDTAfter.checked := (Copy(s, 19, 1) = 'Y');
+//        end;
         if Copy(s, 1, 9) = 'PilingOn=' then begin
           rbPO.ItemIndex := FVal(copy(s, 10, 1));
         end;
@@ -695,9 +687,9 @@ begin
         if Copy(s, 1, 9) = 'Ruleof11=' then begin
           cbRuleof11.checked := (Copy(s, 10, 1) = 'Y');
         end;
-        if Copy(s, 1, 6) = 'HGaze=' then begin
-          rgHGaze.ItemIndex := FVal(copy(s, 7, 1));
-        end;
+//        if Copy(s, 1, 6) = 'HGaze=' then begin
+//          rgHGaze.ItemIndex := FVal(copy(s, 7, 1));
+//        end;
         if Copy(s, 1, 14) = 'GoblinWeapons=' then begin
           cbGoblinWeapons.checked := (Copy(s, 15, 1) = 'Y');
         end;
@@ -707,12 +699,12 @@ begin
 //        if Copy(s, 1, 21) = '4thEditionBigGuyAlly=' then begin
 //          rgBGA4th.ItemIndex := FVal(copy(s, 22, 1));
 //        end;
-        if Copy(s, 1, 20) = '4thEditionTentacles=' then begin
-          cbTentacles4th.checked := (Copy(s, 21, 1) = 'Y');
-        end;
-        if Copy(s, 1, 22) = '4thEditionBreakTackle=' then begin
-          cbBT4th.checked := (Copy(s, 23, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 20) = '4thEditionTentacles=' then begin
+//          cbTentacles4th.checked := (Copy(s, 21, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 22) = '4thEditionBreakTackle=' then begin
+//          cbBT4th.checked := (Copy(s, 23, 1) = 'Y');
+//        end;
         if Copy(s, 1, 11) = 'WeakStunty=' then begin
           cbWeakStunty.checked := (Copy(s, 12, 1) = 'Y');
         end;
@@ -807,9 +799,9 @@ begin
         if Copy(s, 1, 9) = 'ThirdEye=' then begin
           cbThirdEye.checked := (Copy(s, 10, 1) = 'Y');
         end;
-        if Copy(s, 1, 7) = 'Titchy=' then begin
-          rgTitchy.ItemIndex := FVal(copy(s, 8, 1));
-        end;
+//        if Copy(s, 1, 7) = 'Titchy=' then begin
+//          rgTitchy.ItemIndex := FVal(copy(s, 8, 1));
+//        end;
         if Copy(s, 1, 13) = 'WaaaghArmour=' then begin
           cbWaaaghArmour.checked := (Copy(s, 14, 1) = 'Y');
         end;

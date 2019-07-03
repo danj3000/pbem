@@ -193,8 +193,8 @@ begin
     frmPass.cb3EyeMinus.checked := false;
   end;
   frmPass.cbRealTitchy.checked := (player[g,f].hasSkill('Titchy')) and
-    (frmSettings.rgTitchy.ItemIndex=1);
-  if not (frmSettings.rgTitchy.ItemIndex=1) then begin
+    (false);
+  if not (false) then begin
     frmPass.cbRealTitchy.checked := false;
     frmPass.cbRealTitchy.visible := false;
   end;
@@ -328,7 +328,7 @@ begin
   frmArmourRoll.cbWaaaghArmour.checked := (
       player[TeamCatcher,NumberCatcher].hasSkill('Waaagh Armour'));
   if (player[TeamCatcher,NumberCatcher].hasSkill('TITCHY'))
-     and (frmSettings.rgTitchy.ItemIndex=1) then begin
+     and (false) then begin
      frmArmourRoll.rbTitchyPlayer.checked := true;
   end else if ((Pos('HALFLING', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0)

@@ -1414,7 +1414,7 @@ begin
     if (((player[1-g0,f].status = 1) or (player[1-g0,f].status = 2))
       and ((player[1-g0,f].hasSkill('Shadow*')) or
            ((player[1-g0,f].hasSkill('Diving Tackle'))
-                               and (frmSettings.cbDT4th.checked))))
+                               )))
       or ((player[1-g0,f].status = 3) and (player[1-g0,f].hasSkill('Trip Up')))
          then begin
       if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
@@ -2358,9 +2358,7 @@ begin
       (player[g0,f0].hasSkill('Waaagh Armour'));
   frmArmourRoll.cbWaaaghArmour.checked := (
       player[g0,f0].hasSkill('Waaagh Armour'));
-  if (player[g0,f0].hasSkill('TITCHY')) and (frmSettings.rgTitchy.ItemIndex=1)
-     then begin frmArmourRoll.rbTitchyPlayer.checked := true;
-  end else if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
+  if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
         then begin
@@ -2515,9 +2513,7 @@ begin
       (player[g0,f0].hasSkill('Waaagh Armour'));
   frmArmourRoll.cbWaaaghArmour.checked := (
       player[g0,f0].hasSkill('Waaagh Armour'));
-  if (player[g0,f0].hasSkill('TITCHY')) and (frmSettings.rgTitchy.ItemIndex=1)
-     then begin frmArmourRoll.rbTitchyPlayer.checked := true;
-  end else if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
+  if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
         then begin
@@ -2620,9 +2616,7 @@ begin
       (player[g0,f0].hasSkill('Waaagh Armour'));
   frmArmourRoll.cbWaaaghArmour.checked := (
       player[g0,f0].hasSkill('Waaagh Armour'));
-  if (player[g0,f0].hasSkill('TITCHY')) and (frmSettings.rgTitchy.ItemIndex=1)
-     then begin frmArmourRoll.rbTitchyPlayer.checked := true;
-  end else if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
+  if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
         then begin
@@ -2716,10 +2710,7 @@ begin
     (player[curteam,curplayer].hasSkill('Waaagh Armour'));
   frmArmourRoll.cbWaaaghArmour.checked :=
    (player[curteam,curplayer].hasSkill('Waaagh Armour'));
-  if (player[curteam,curplayer].hasSkill('TITCHY'))
-    and (frmSettings.rgTitchy.ItemIndex=1)
-    then begin frmArmourRoll.rbTitchyPlayer.checked := true;
-  end else if
+  if
    ((Pos('HALFLING', Uppercase(player[curteam,curplayer].position)) > 0) or
    ((Pos('GOBLIN', Uppercase(player[curteam,curplayer].position)) > 0)
    and not (Pos('HOBGOBLIN', Uppercase(player[curteam,curplayer].position)) > 0)))

@@ -2378,8 +2378,6 @@ begin
      TotalPlaying := 0;
      extratitchy := 0;
      for i := 1 to team[TeamTest].numplayers do begin
-       if (frmSettings.rgTitchy.ItemIndex=1) and
-         (player[TeamTest,i].HasSkill('Titchy')) then extratitchy := 1;
        if (player[TeamTest,i].q = 12) and (TeamTest = 0) and
          (player[TeamTest,i].p > 3) and (player[TeamTest,i].p < 11) then
          LOS := LOS + 1;
@@ -2818,8 +2816,6 @@ begin
       TotalPlayers := 0;
       extratitchy := 0;
       for i := 1 to team[TeamTest].numplayers do begin
-        if (frmSettings.rgTitchy.ItemIndex=1) and
-          (player[TeamTest,i].HasSkill('Titchy')) then extratitchy := 1;
         if (player[TeamTest,i].q = 12) and (TeamTest = 0) and
           (player[TeamTest,i].p > 3) and (player[TeamTest,i].p < 11) then
           LOS := LOS + 1;
@@ -2852,8 +2848,6 @@ begin
       TotalPlaying := 0;
       extratitchy := 0;
       for i := 1 to team[TeamTest].numplayers do begin
-        if (frmSettings.rgTitchy.ItemIndex=1) and
-          (player[TeamTest,i].HasSkill('Titchy')) then extratitchy := 1;
         if (player[TeamTest,i].q = 12) and (TeamTest = 0) and
           (player[TeamTest,i].p > 3) and (player[TeamTest,i].p < 11) then
           LOS := LOS + 1;
@@ -4399,10 +4393,12 @@ begin
     if not (player[curteam,curplayer].usedSkill('Hypnotic Gaze'))
     then begin
       GameStatus := 'HGaze';
-      if (frmSettings.rgHGaze.ItemIndex=1) and (player[curteam,curplayer].font.size=12) then
+      if (false) and  // hypnogaze
+       (player[curteam,curplayer].font.size=12) then
         Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO GAZE ... REMEMBER'+
           ' YOU MUST USE A BLITZ ACTION TO GAZE AND MOVE AFTER GAZING'
-      else if (frmSettings.rgHGaze.ItemIndex=1) and (player[curteam,curplayer].font.size<>12) then
+      else if (false)  // hypnogaze
+      and (player[curteam,curplayer].font.size<>12) then
         Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO GAZE ... REMEMBER'+
           ' YOU MUST USE A BLITZ ACTION TO DO THIS SINCE YOU HAVE MOVED ALREADY'
       else Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO GAZE';

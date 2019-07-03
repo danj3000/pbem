@@ -1162,8 +1162,7 @@ begin
         and (ActionTeam = curmove);
       reroll := CanUseTeamReroll(bga);
       tz := CountTZBlockCA(ActionTeam,ActionPlayer);
-      if (frmSettings.rgHGaze.ItemIndex=1) then HGazeTarget := 1 else
-      if (frmSettings.rgHGaze.ItemIndex=2) then
+      if (true) then
         HGazeTarget := 6 - player[ActionTeam,ActionPlayer].ag + (tz.num - 1) else
         HGazeTarget := player[(Sender as TPlayer).teamnr,
         (Sender as Tplayer).number].ag;
@@ -1214,7 +1213,7 @@ begin
         Bloodbowl.comment.text := 'Hypnotic Gaze failed';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       end;
-      if (frmSettings.rgHGaze.ItemIndex=2) then begin
+      if (true) then begin     // hypnogaze
         s := 'x' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 65) +
           Chr(player[ActionTeam,ActionPlayer].UsedMA + 64);
         LogWrite(s);
@@ -2189,7 +2188,7 @@ begin
             (Sender as Tplayer).number].hasSkill('Waaagh Armour'));
           if (player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].hasSkill('TITCHY')) and
-            (frmSettings.rgTitchy.ItemIndex=1) then begin
+            (false) then begin
              frmArmourRoll.rbTitchyPlayer.checked := true;
             end else if ((Pos('HALFLING', Uppercase(player[(Sender as TPlayer).teamnr,
              (Sender as Tplayer).number].position)) > 0) or

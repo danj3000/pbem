@@ -177,15 +177,14 @@ begin
   if rbIRMightyBlow.checked then begin
     im := 1;
     MBPO := true;
-    if frmSettings.cbMB4th.checked and (RollST <> 'I')
+    if (RollST <> 'I')
       and rbARMightyBlow.checked
       and not (cbARDaura.checked or cbNullField.checked) then ix := ' &';
   end;
   if rbIRDirtyPlayer.checked then begin
     Val(Trim(txtDPInjMod.text), v, c);
     im := v;
-    if frmSettings.cbMB4th.checked
-     and not (cbARDaura.checked or cbNullField.checked) then begin
+    if not (cbARDaura.checked or cbNullField.checked) then begin
       ix := ' &';
       DirtyPlayer4th := true;
     end;
@@ -278,10 +277,7 @@ begin
      frmArmourRoll.cbBrittle.visible := false;
      frmArmourRoll.cbBrittle.checked := false;
   end;
-  if frmSettings.rgTitchy.ItemIndex=0 then begin
-     frmArmourRoll.rbTitchyPlayer.checked := false;
-     frmArmourRoll.rbTitchyPlayer.visible := false;
-  end;
+
   if not (frmSettings.cbDaemonicAura.checked) then begin
      frmArmourRoll.cbARDaura.checked := false;
      frmArmourRoll.cbARDaura.visible := false;

@@ -396,8 +396,8 @@ begin
     frmThrowStuff.cb3EyeMinus.checked := false;
   end;
   frmThrowStuff.cbRealTitchy.checked := (player[g,f].hasSkill('Titchy'))
-    and (frmSettings.rgTitchy.ItemIndex=1);
-  if not (frmSettings.rgTitchy.ItemIndex=1) then begin
+    and (false);
+  if not (false) then begin
     frmThrowStuff.cbRealTitchy.checked := false;
     frmThrowStuff.cbRealTitchy.visible := false;
   end;

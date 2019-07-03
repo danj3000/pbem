@@ -91,15 +91,15 @@ begin
   frmDodgeRoll.StuntyCB.checked := (player[g0,f0].hasSkill('Stunty')) and
     (not(player[g0,f0].HasSkill('SW*')));
   frmDodgeRoll.TwoHeadsCB.checked := player[g0,f0].hasSkill('Two Heads');
-  if frmSettings.cbBT4th.checked then
+  if true then
        frmDodgeRoll.BreakTackleCB.checked :=
                         (player[g0,f0].hasSkill('Break Tackle')
                          and not(player[g0,f0].usedSkill('Break Tackle')))
   else frmDodgeRoll.BreakTackleCB.checked :=
                         player[g0,f0].hasSkill('Break Tackle');
-  frmDodgeRoll.TitchyCB.Visible := frmSettings.rgTitchy.ItemIndex<>0;
+  frmDodgeRoll.TitchyCB.Visible := true;
   frmDodgeRoll.TitchyCB.checked := (player[g0,f0].hasSkill('Titchy')) and
-    (not(player[g0,f0].HasSkill('SW*'))) and (frmSettings.rgTitchy.ItemIndex<>0);
+    (not(player[g0,f0].HasSkill('SW*'))) and (true);
   frmDodgeRoll.ETrunkCB.visible := frmSettings.cbElephantTrunk.checked;
   frmDodgeRoll.ETrunkCB.checked := (player[g0,f0].hasSkill('Elephant Trunk'))
     and (frmSettings.cbElephantTrunk.checked);
@@ -111,7 +111,7 @@ begin
   DTf := 1;
   OppHasTackle := false;
   frmDodgeRoll.cbDivingTackle.checked := false;
-  frmDodgeRoll.cbDivingTackle.visible := frmSettings.cbDT4th.checked;
+  frmDodgeRoll.cbDivingTackle.visible := true;
   for i := -1 to 1 do
    for j := -1 to 1 do if (i<>0) or (j<>0) then begin
     tz := 0;
@@ -129,7 +129,7 @@ begin
           and (abs(player[1-g0,f].q - player[g0,f0].q - j) <= 1) then begin
             if (player[1-g0,f].tz = 0) and
                not ((player[1-g0,f].hasSkill('Titchy')) and
-                 (frmSettings.rgTitchy.ItemIndex<>0)) then tz := tz + 1;
+                 (true)) then tz := tz + 1;
           end;
           if (player[1-g0,f].p = player[g0,f0].p + i)
           and (player[1-g0,f].q = player[g0,f0].q + j) then begin
@@ -142,7 +142,7 @@ begin
               end;
               if player[1-g0,f].hasSkill('Tackle') then OppHasTackle := true;
               if (player[1-g0,f].hasSkill('Diving Tackle')) and
-                 (player[1-g0,f].status = 1) and (frmSettings.cbDT4th.checked)
+                 (player[1-g0,f].status = 1) and (true)
                  then begin
                    frmDodgeRoll.cbDivingTackle.checked := true;
                    DTf := f;
@@ -197,7 +197,7 @@ end;
 procedure TfrmDodgeRoll.Recalc(Sender: TObject);
 begin
   if frmDodgeRoll.BreakTackleCB.checked
-   and frmSettings.cbBT4th.checked then
+   and true then
       frmDodgeRoll.BreakTackleCB.checked :=
         player[g0,f0].hasSkill('Break Tackle')
         and not(player[g0,f0].usedSkill('Break Tackle'));
@@ -243,7 +243,7 @@ function WorkOutDodgeResult(t: integer): boolean;
 var r3: integer;
 begin
   r3 := 0;
-  if frmSettings.cbDTAfter.checked
+  if true
     and frmDodgeRoll.cbDivingTackle.checked then begin
      if r = 2 then r3 := 7 else
      if r = 3 then r3 := 2 else r3 := r - 2;
@@ -252,10 +252,10 @@ begin
   if frmDodgeRoll.cbDivingTackle.checked then begin
     if (lastroll >= r) then begin
       if (frmDodgeRoll.BreakTackleCB.checked) and (lastroll < r2) and
-         (frmSettings.cbBT4th.checked) then
+         (true) then
           player[g0,f0].UseSkill('Break Tackle');
       if (not(player[1-g0,DTf].usedSkill('Diving Tackle'))) and
-        (not(frmSettings.cbDTAfter.checked)) then
+        (not(true)) then
           player[1-g0,DTf].UseSkill('Diving Tackle');
       if player[1-g0,DTf].usedSkill('Diving Tackle') then
        Bloodbowl.comment.text := 'Dodge successful - Diving Tackle used - Place' +
@@ -265,8 +265,8 @@ begin
       WorkOutDodgeResult := true;
     end else begin
       if (not(player[1-g0,DTf].usedSkill('Diving Tackle')) and
-        (not (frmSettings.cbDTAfter.checked))) or
-        ((frmSettings.cbDTAfter.checked) and (lastroll >= r3) and
+        (not (true))) or
+        ((true) and (lastroll >= r3) and
          not(player[1-g0,DTf].usedSkill('Diving Tackle'))) then
         player[1-g0,DTf].UseSkill('Diving Tackle');
       if (t = 0) and (player[1-g0,DTf].usedSkill('Diving Tackle')) then
@@ -285,7 +285,7 @@ begin
   end else begin
     if (lastroll >= r) then begin
       if (frmDodgeRoll.BreakTackleCB.checked) and (lastroll < r2) and
-         (frmSettings.cbBT4th.checked) then
+         (true) then
           player[g0,f0].UseSkill('Break Tackle');
       Bloodbowl.comment.text := 'Dodge successful';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
@@ -308,7 +308,7 @@ begin
   succes := true;
   UReroll := true;
   f := 1;
-  Tentacles4th := frmSettings.cbTentacles4th.checked;
+  Tentacles4th := true;
   while succes and (f <= FVal(Tentacles.text)) do begin
     s := player[g0,f0].GetPlayerName + ' tries to get away from Tentacles';
     if Tentacles4th then
@@ -359,12 +359,12 @@ begin
       Bloodbowl.comment.text := Bloodbowl.comment.text + 'Two Heads, ';
     if ETrunkCB.checked then
       Bloodbowl.comment.text := Bloodbowl.comment.text + 'Elephant Trunk, ';
-    if BreakTackleCB.checked and frmSettings.cbBT4th.checked then
+    if BreakTackleCB.checked and true then
        Bloodbowl.comment.text := Bloodbowl.comment.text +
        'Break Tackle (optional), ';
-    if BreakTackleCB.checked and not(frmSettings.cbBT4th.checked) then
+    if BreakTackleCB.checked and not(true) then
       Bloodbowl.comment.text := Bloodbowl.comment.text + 'Break Tackle, ';
-    if (cbDivingTackle.checked) and not (frmSettings.cbDTAfter.checked) then
+    if (cbDivingTackle.checked) and not (true) then
       Bloodbowl.comment.text := Bloodbowl.comment.text + 'Diving Tackle, ';
     if PrehTail.text <> '0' then Bloodbowl.comment.text :=
          Bloodbowl.comment.text + PrehTail.text +' Prehensile Tail, ';
@@ -510,16 +510,7 @@ var s: string;
 begin
   player[g0,f0].UseSkill('Stand Firm');
 {  player[g0,f0].MakeCurrent;}
-  if not(frmSettings.cbSF4th.checked) then begin
-    PlacePlayer(f0, g0,
-     player[g0,f0].p + DirBut[db].dx, player[g0,f0].q + DirBut[db].dy);
-    if (player[g0,f0].p = ball.p) and (player[g0,f0].q = ball.q) then begin
-      Continuing := true;
-      player[g0,f0].SetStatus(2);
-      Continuing := false;
-      ShowPickUpWindow(g0, f0);
-    end;
-  end else if player[g0,f0].UsedMA = 0 then begin
+  if player[g0,f0].UsedMA = 0 then begin
     s := 'x' + Chr(g0 + 48) + Chr(f0 + 65) + Chr(player[g0,f0].UsedMA + 64);
     LogWrite(s);
     PlayActionEndOfMove(s, 1);

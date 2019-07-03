@@ -1765,27 +1765,6 @@ begin
   PlayActionPrepareForKickOff(s, 1);
   SWSafeRef := 3;
 
-  {Titchy handling: see if extra players can be fielded}
-  if frmSettings.rgTitchy.ItemIndex=1 then begin
-    for g := 0 to 1 do begin
-      extratitchy := 0;
-      for f := 1 to team[g].numplayers do begin
-        if (player[g,f].status <= 7)
-        and (player[g,f].HasSkill('Titchy')) then extratitchy := 9;
-      end;
-      if extratitchy = 9 then begin
-        s := 'KT' + Chr(g + 48);
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        if lastroll = 1 then extratitchy := 0 else
-        if lastroll < 6 then extratitchy := 1 else extratitchy := 2;
-        {extratitchy := lastroll div 2;  1->0, 2->1, 3->1, etc.}
-        s := s + InttoStr(extratitchy);
-        LogWrite(s);
-        PlayActionPrepareForKickOff(s, 1);
-      end;
-    end;
-  end;
-
   LogWrite('KR');
   PlayActionPrepareForKickOff('KR', 1);
 
