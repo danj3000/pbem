@@ -1466,9 +1466,7 @@ begin
       or (player[1-g0,f].status = 2) then begin
         if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
         and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
-        and ((player[1-g0,f].tz = 0)
-        or ((player[1-g0,f].tz <> 0)
-        and (frmSettings.cbNoTZAssist.checked)))
+        and ((player[1-g0,f].tz = 0))
         then begin
           tz.num := tz.num + 1;
           tz.pl[tz.num] := f;
@@ -1493,13 +1491,7 @@ begin
         tz.num := tz.num + 1;
         tz.pl[tz.num] := f;
       end;
-      if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
-      and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
-      and (player[1-g0,f].tz <> 0)
-      and (frmSettings.cbNoTZAssist.checked) then begin
-        tz.num := tz.num + 1;
-        tz.pl[tz.num] := f;
-      end;
+
     end;
   end;
   CountTZBlockA := tz;
@@ -1524,13 +1516,7 @@ begin
         tz.num := tz.num + 1;
         tz.pl[tz.num] := f;
       end;
-      if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
-      and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
-      and (player[1-g0,f].tz <> 0)
-      and (frmSettings.cbNoTZAssist.checked) then begin
-        tz.num := tz.num + 1;
-        tz.pl[tz.num] := f;
-      end;
+
     end;
   end;
   CountTZFoul := tz;
@@ -1555,7 +1541,7 @@ begin
              (player[g0,f].HasSkill('Cold Blooded')) then Bhead := True;
           if (player[g0,f].HasSkill('Really Stupid')) or
              (player[g0,f].HasSkill('Stone Cold Stupid')) then RStupid := True;
-          if (player[g0,f].tz > 0) and (not(frmSettings.cbNoTZAssist.checked))
+          if (player[g0,f].tz > 0)
             then TZone := False;
           if TZone and not RStupid then
             a := a + 1;
@@ -1588,13 +1574,10 @@ begin
     end;
     if ((player[1-g0,f].status = 1)
         and (player[1-g0,f].hasSkill('Pass Block')))
-      or ((player[1-g0,f].status = 3)
-        and (player[1-g0,f].hasSkill('Pass Block'))
-        and (player[1-g0,f].hasSkill('Jump Up'))
-        and (frmSettings.cbPBJumpUp.checked))
-    then begin
-      if (player[1-g0,f].tz = 0) or
-       (frmSettings.cbNoTZAssist.checked) then begin
+    then
+    begin
+      if (player[1-g0,f].tz = 0)  then
+       begin
         if ((abs(OpponentP - ThrowerP)) <= 4) and
            ((abs(OpponentQ - ThrowerQ)) <= 4) then a := a + 1;
         if ((abs(OpponentP - CatcherP)) <= 4) and
@@ -2614,7 +2597,7 @@ begin
 end;
 
 procedure ArmourSettings(g, f, g0, f0, special:integer);
-var p, p2, totspp, NiggleCount, t: integer;
+var p2, totspp, NiggleCount, t: integer;
     s: string;
 
 begin
@@ -2794,8 +2777,8 @@ function CanIntercept(p,q,p0,q0,i,j: integer): boolean;
  The rangeruler is 5 cm wide so if y * 2.9 cm (width of a square)
  is less than 2.5 cm, the interceptor can indeed make an interception.
 }
-var x, y, f, g, dist, dmod, d, dp2, dq2: real;
-    dp, dq, bigd, littled, distint: integer;
+var  dist, dmod, d, dp2, dq2: real;
+    dp, dq, bigd, littled: integer;
     b: boolean;
 begin
   dp := abs(p0 - p);

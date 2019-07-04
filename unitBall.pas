@@ -309,7 +309,7 @@ var arrow, arrowp, arrowq, lastp, lastq, scat, g, f, f2, firstQ, QTeam: integer;
     s: string;
 begin
   KickSkill := false;
-  if frmSettings.cbKicking.checked then KickerPlayer := false else
+
     KickerPlayer := true;
   FirstQ := Q;
   if FirstQ <= 12 then QTeam := 1 else QTeam := 0;

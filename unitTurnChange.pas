@@ -389,9 +389,8 @@ begin
 end;
 
 procedure PrepareStartHalf;
-var s, t: string;
-    f, g, p, i, j, r, r2, acroll, chroll, r1, done: integer;
-    HadNiggle: boolean;
+var s: string;
+    f, g, p, i, j, r, r2, done: integer;
 begin
   if Bloodbowl.PregamePanel.visible then s := 'tP' else s := 't ';
   LogWrite(s);
@@ -513,36 +512,7 @@ begin
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       end;
     end;
-    if frmSettings.cbCheerAC.checked and (HalfNo = 1) then begin
-      acroll := 0;
-      chroll := 0;
-      i := team[g].cheerleaders div 2;
-      if i<>0 then begin
-        for j := 1 to i do begin
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if (lastroll = 6) and (acroll=1) then acroll := 2;
-          if (lastroll = 6) and (acroll=0) then acroll := 1;
-        end;
-        if acroll = 2 then s := 'tE' + Chr(g + 48) else
-          if acroll = 1 then s := 'tG' + Chr(g + 48) else
-          s := 'tg' + Chr(g + 48);
-        LogWrite(s);
-        PlayActionStartHalf(s, 1);
-      end;
-      i := team[g].asstcoaches div 2;
-      if i<>0 then begin
-        for j := 1 to i do begin
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if (lastroll = 6) and (chroll=1) then chroll := 2;
-          if (lastroll = 6) and (chroll=0) then chroll := 1;
-        end;
-        if chroll = 2 then s := 'tD' + Chr(g + 48) else
-          if chroll = 1 then s := 'tM' + Chr(g + 48) else
-          s := 'tm' + Chr(g + 48);
-        LogWrite(s);
-        PlayActionStartHalf(s, 1);
-      end;
-    end;
+
   end;
 
   if IGMEOY <> -1 then begin
@@ -1322,18 +1292,7 @@ begin
           curteam := g;
           curplayer := f;
           Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
-        end else if (team[g].apot >= 3) and (frmSettings.cbUpApoth.checked)
-          and (apo3[g].font.color = colorarray[g, 0, 1]) then begin
-          s := 'Kk' + Chr(g + 48) + Chr(f + 64);
-          Logwrite(s);
-          PlayActionPrepareForKickOff(s, 1);
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll = 6 then begin
-            curteam := g;
-            curplayer := f;
-            Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
-          end;
-        end;
+        end else
       end;
     end;
   end;
@@ -1652,22 +1611,7 @@ begin
             player[g,f].SOstatus := player[g,f].status;
             player[g,f].SOSIstatus := player[g,f].SIstatus;
             player[g,f].SetStatus(12);
-            if (frmSettings.cbSWRef.checked) then begin
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-              if lastroll >= 4 then begin
-                Bloodbowl.comment.text := UPPERCASE(player[g,f].GetPlayerName +
-                  ' catches the Referee eye too much and the Referee confiscates'
-                  + ' his secret weapon!');
-                Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                s3 := Chr(252) + player[g,f].GetPlayerName + ' loses his weapon!';
-                PlayActionComment(s3, 1, 2);
-                LogWrite(s3);
-              end else begin
-                Bloodbowl.comment.text := player[g,f].GetPlayerName +
-                  ' passes the referee roll and keeps his weapon!';
-                Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              end;
-            end;
+
           end;
         end;
       end;

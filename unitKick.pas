@@ -114,16 +114,6 @@ begin
   NumberKicker := f;
   frmKick.Height := 345;
 
-  if frmSettings.cbNoFieldGoals.checked then begin
-    frmKick.cbFGAttempt.Checked := false;
-    frmKick.cbFGAttempt.Visible := false;
-    frmKick.cbWideZone.checked := false;
-    frmKick.cbWideZone.Visible := false;
-    frmKick.cbHookKick.Visible := false;
-    frmKick.cbHookKick.Checked := false;
-    frmKick.Label4.Visible := false;
-    frmKick.txtDistanceNeeded.Visible := false;
-  end;
   frmKick.gbKick.enabled := true;
   frmKick.lblKicker.caption := player[g,f].GetPlayerName;
   frmKick.lblKicker.font.color := colorarray[g,0,0];
@@ -697,11 +687,7 @@ begin
   if butFumbleInaccurate.caption = 'Kick Field Goal' then begin
     ModalResult := 1;
     if CanWriteToLog then begin
-      if frmSettings.cbFG1PT.checked then begin
-        player[TeamKicker, NumberKicker].td :=
-          player[TeamKicker, NumberKicker].td + 1;
-        LogWrite('p' + Chr(TeamKicker + 48) + chr(NumberKicker + 65) + 'T');
-      end else begin
+      begin
         player[TeamKicker, NumberKicker].int :=
           player[TeamKicker, NumberKicker].int + 1;
         LogWrite('p' + Chr(TeamKicker + 48) + chr(NumberKicker + 65) + 'I');
@@ -711,8 +697,7 @@ begin
       {increase score marker}
       marker[TeamKicker, MT_Score].MarkerMouseUp(
         marker[curteam, MT_Score], mbLeft, [], 0, 0);
-      if not(frmSettings.cbFG1PT.Checked) then
-         marker[TeamKicker, MT_Score].MarkerMouseUp(
+      marker[TeamKicker, MT_Score].MarkerMouseUp(
            marker[TeamKicker, MT_Score], mbLeft, [], 0, 0);
       GameStatus := 'Field Goal';
     end;
@@ -839,7 +824,7 @@ begin
          ((KickQ > 25) and (LastP>=6) and (LastP<=8) and
          (TeamKicker=0) and (frmKick.cbFGAttempt.checked)) then begin
            if CanWriteToLog then begin
-             if not(frmSettings.cbFG1PT.checked) then begin
+             begin
                player[TeamKicker, NumberKicker].int :=
                   player[TeamKicker, NumberKicker].int + 1;
                LogWrite('p' + Chr(TeamKicker + 48) + chr(NumberKicker + 65) + 'I');
@@ -850,16 +835,6 @@ begin
                  marker[curteam, MT_Score], mbLeft, [], 0, 0);
                marker[TeamKicker, MT_Score].MarkerMouseUp(
                  marker[TeamKicker, MT_Score], mbLeft, [], 0, 0);
-               GameStatus := 'Field Goal';
-             end else begin
-               player[TeamKicker, NumberKicker].td :=
-                  player[TeamKicker, NumberKicker].td + 1;
-               LogWrite('p' + Chr(TeamKicker + 48) + chr(NumberKicker + 65) + 'T');
-               AddLog('Field Goal for ' +
-                 player[TeamKicker, NumberKicker].GetPlayerName);
-               {increase score marker}
-               marker[TeamKicker, MT_Score].MarkerMouseUp(
-                 marker[curteam, MT_Score], mbLeft, [], 0, 0);
                GameStatus := 'Field Goal';
              end;
            end;

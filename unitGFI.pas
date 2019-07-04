@@ -55,7 +55,6 @@ var r: integer;
 begin
   r := 2;
   if frmGFI.cbBlizzard.checked then r := r + 1;
-  if frmSettings.cbPGFI.checked then r := r + player[TeamPlayer,NumberPlayer].GFI;
   if r < 2 then r := 2;
   if r > 6 then r := 6;
   GFIRollNeeded := r;
@@ -83,9 +82,8 @@ begin
   frmGFI.cbGFIInjury.checked := (player[g,f].hasSkill('GFI Injury')) and
      (frmSettings.cbGFIInjury.checked);
 
-  frmGFI.cbSprint.Visible := frmSettings.cbPGFI.checked;
-  frmGFI.cbSprint.Checked := (frmSettings.cbPGFI.Checked) and
-    (player[g,f].hasSkill('Sprint')) and (not(player[g,f].usedSkill('Sprint')));
+  frmGFI.cbSprint.Visible := false;
+  frmGFI.cbSprint.Checked := (false);
 
   frmGFI.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true));    // big guy
@@ -107,24 +105,12 @@ begin
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll >= GFIRollNeeded then begin
     WorkOutGFIResult := true;
-    if frmSettings.cbPGFI.checked then begin
-      if CanWriteToLog then begin
-        s := 'QP' + Chr(curteam + 48) + Chr(curplayer + 64);
-        LogWrite(s);
-        PlayActionPGFI(s, 1);
-      end;
-    end;
+
   end else if (lastroll+1 >= GFIRollNeeded) and (lastroll<>1) and
     (frmGFI.cbSprint.Checked) then begin
     player[TeamPlayer,NumberPlayer].UseSkill('Sprint');
     WorkOutGFIResult := true;
-    if frmSettings.cbPGFI.checked then begin
-      if CanWriteToLog then begin
-        s := 'QP' + Chr(curteam + 48) + Chr(curplayer + 64);
-        LogWrite(s);
-        PlayActionPGFI(s, 1);
-      end;
-    end;
+    
   end else begin
     if i = 0 then Bloodbowl.comment.text := 'GFI roll failed!'
              else Bloodbowl.comment.text := 'GFI RE-ROLL failed!';

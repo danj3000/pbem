@@ -1018,7 +1018,7 @@ begin
             end;
             ActionTeam := g;
             ActionPlayer := f;
-            if (not(frmSettings.cbLateInt.checked)) and (not(Bthrow)) then
+            if  (not(Bthrow)) then
               DetermineInterceptors(g, f, player[(Sender as TPlayer).teamnr,
               (Sender as TPlayer).number].p, player[(Sender as TPlayer).teamnr,
               (Sender as TPlayer).number].q);
@@ -1325,7 +1325,7 @@ begin
     if CanWriteToLog then begin
       if not (player[(Sender as TPlayer).teamnr,
       (Sender as TPlayer).number].hasSkill('Undead')) then begin
-        if (not(frmSettings.cbUpApoth.checked)) then begin
+        begin
           LogWrite('a' + Chr(ActionTeam + 48));
           AddLog(ffcl[ActionTeam] + ' uses the Apothecary');
           apo[ActionTeam].color := colorarray[ActionTeam, 4, 0];
@@ -1358,36 +1358,8 @@ begin
           end;
           GameStatus := '';
           ActionTeam := -1;
-        end else begin
-          LogWrite('a' + Chr(ActionTeam + 48) + '1');
-          AddLog(ffcl[ActionTeam] + ' uses the Level 1 Apothecary');
-          apo1[ActionTeam].color := colorarray[ActionTeam, 4, 0];
-          apo1[ActionTeam].font.color := colorarray[ActionTeam, 4, 1];
-          if (player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].status = 9)
-          then begin
-            player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].SetStatus(0);
-          end else begin
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if (Uppercase(team[(Sender as TPlayer).teamnr].race) = 'SHALLYA') and
-              (lastroll=1) then lastroll := 2;
-            if lastroll = 1 then begin
-              BloodBowl.comment.Text := 'Apothecary FAILS!';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            end else begin
-              if (player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].status >= 1)
-              and (player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].status <= 4)
-              then begin
-                player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].SetStatus(3);
-              end else begin
-                player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].SetStatus(0);
-              end;
-              BloodBowl.comment.Text := 'Apothecary heals the player!';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            end;
-          end;
-          GameStatus := '';
-          ActionTeam := -1;
         end;
+
       end else begin
         Bloodbowl.Loglabel.caption := 'APOTHECARIES CANNOT HEAL THE UNDEAD';
         GameStatus := '';
@@ -3840,7 +3812,6 @@ begin
         Chr(comp0 + 48) + Chr(mvp0 + 48);
   if peaked then s0 := s0 + 'P' else s0 := s0 + '-';
   s0 := s0 + Chr(value div 10 + 48) + Chr(cnumber + 48);
-  if frmSettings.cbUseOtherSPP.checked then s0 := s0 + Chr(otherSPP0 + 48);
   s0 := s0 + Chr(255) + picture;
   GetSaveString := s0;
 end;

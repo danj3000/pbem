@@ -356,7 +356,7 @@ begin
       { check if player is on field and standing }
       TZone := true;
       loopPlayer := player[1 - g, h];
-      if (loopPlayer.tz > 0) and (not(frmSettings.cbNoTZAssist.checked)) then
+      if (loopPlayer.tz > 0)  then
         TZone := false;
       if (loopPlayer.hasSkill('Nonball Handler')) then
         TZone := false;
@@ -641,7 +641,7 @@ begin
       for h := 1 to team[1-g].numplayers do begin
         {check if player is on field and standing}
         TZone := True;
-        if (player[1-g,h].tz > 0) and (not(frmSettings.cbNoTZAssist.checked))
+        if (player[1-g,h].tz > 0)
          then TZone := False;
         if (player[1-g,h].hasSkill('Nonball Handler')) or
           (player[1-g,h].hasSkill('No Hands')) then TZone := False;
@@ -909,8 +909,7 @@ begin
     Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
     WorkOutPassResult := true;
   end else begin
-    if ((lastroll + PassRollMod <= 1) and (frmSettings.rgPassFumble.ItemIndex=0))
-       or ((lastroll + PassTZMod <= 1) and (frmSettings.rgPassFumble.ItemIndex=1))
+    if (lastroll + PassRollMod <= 1)
        or (lastroll = 1)  then begin
       Bloodbowl.comment.text := 'Pass is fumbled!';
       frmPass.butFumbleInaccurate.caption := 'Fumble';
@@ -961,8 +960,7 @@ begin
       ModalResult := 1;
       Hide;
       if TeamCatcher = -1 then begin
-        if frmSettings.cbLateInt.checked then
-          DetermineInterceptors(TeamPasser, NumberPasser, FieldP, FieldQ);
+
         if (player[TeamPasser, NumberPasser].status = 2) and
           (frmSettings.cbDC.checked) then
           DCCheck := DetermineDivingCatch(FieldP, FieldQ, 1, 1);
@@ -972,11 +970,6 @@ begin
         BTCheck := true;
         if frmPass.txtBulletThrow.Visible then BTCheck := BulletThrowCheck;
         if BTCheck then begin
-          if (frmSettings.cbLateInt.checked) and
-            not(frmPass.txtBulletThrow.Visible) then
-            DetermineInterceptors(TeamPasser, NumberPasser,
-              (player[TeamCatcher,NumberCatcher].p),
-              (player[TeamCatcher,NumberCatcher].q));
           if player[TeamPasser, NumberPasser].status = 2 then begin
             AccuratePassPlay := true;
             AccurateTeam := TeamPasser;
@@ -1002,8 +995,7 @@ begin
       ModalResult := 1;
       Hide;
       if TeamCatcher = -1 then begin
-        if frmSettings.cbLateInt.checked then
-          DetermineInterceptors(TeamPasser, NumberPasser, FieldP, FieldQ);
+
         if (player[TeamPasser, NumberPasser].status = 2) and
           (frmSettings.cbDC.checked) then
           DCCheck := DetermineDivingCatch(FieldP, FieldQ, 1, 1);
@@ -1013,11 +1005,7 @@ begin
         BTCheck := true;
         if frmPass.txtBulletThrow.Visible then BTCheck := BulletThrowCheck;
         if BTCheck then begin
-          if (frmSettings.cbLateInt.checked) and
-            not(frmPass.txtBulletThrow.Visible) then
-            DetermineInterceptors(TeamPasser, NumberPasser,
-              (player[TeamCatcher,NumberCatcher].p),
-              (player[TeamCatcher,NumberCatcher].q));
+
           if player[TeamPasser, NumberPasser].status = 2 then begin
             AccuratePassPlay := true;
             AccurateTeam := TeamPasser;
@@ -1069,8 +1057,6 @@ begin
       frmPass.ModalResult := 1;
       frmPass.Hide;
       if TeamCatcher = -1 then begin
-        if frmSettings.cbLateInt.checked then
-          DetermineInterceptors(TeamPasser, NumberPasser, FieldP, FieldQ);
         if (player[TeamPasser, NumberPasser].status = 2) and
           (frmSettings.cbDC.checked) then
           DCCheck := DetermineDivingCatch(FieldP, FieldQ, 1, 1);
@@ -1080,11 +1066,6 @@ begin
         BTCheck := true;
         if frmPass.txtBulletThrow.Visible then BTCheck := BulletThrowCheck;
         if BTCheck then begin
-          if (frmSettings.cbLateInt.checked) and
-            not(frmPass.txtBulletThrow.Visible) then
-            DetermineInterceptors(TeamPasser, NumberPasser,
-              (player[TeamCatcher,NumberCatcher].p),
-              (player[TeamCatcher,NumberCatcher].q));
           if player[TeamPasser, NumberPasser].status = 2 then begin
             AccuratePassPlay := true;
             AccurateTeam := TeamPasser;
@@ -1110,8 +1091,6 @@ begin
       frmPass.ModalResult := 1;
       frmPass.Hide;
       if TeamCatcher = -1 then begin
-        if frmSettings.cbLateInt.checked then
-          DetermineInterceptors(TeamPasser, NumberPasser, FieldP, FieldQ);
         if (player[TeamPasser, NumberPasser].status = 2) and
           (frmSettings.cbDC.checked) then
           DCCheck := DetermineDivingCatch(FieldP, FieldQ, 1, 1);
@@ -1121,11 +1100,6 @@ begin
         BTCheck := true;
         if frmPass.txtBulletThrow.Visible then BTCheck := BulletThrowCheck;
         if BTCheck then begin
-          if (frmSettings.cbLateInt.checked) and
-            not(frmPass.txtBulletThrow.Visible) then
-            DetermineInterceptors(TeamPasser, NumberPasser,
-              (player[TeamCatcher,NumberCatcher].p),
-              (player[TeamCatcher,NumberCatcher].q));
           if player[TeamPasser, NumberPasser].status = 2 then begin
             AccuratePassPlay := true;
             AccurateTeam := TeamPasser;
@@ -1199,15 +1173,10 @@ begin
                     player[TeamPasser, NumberPasser].q, 1, 0);
   end else begin
     if TeamCatcher = -1 then begin
-      if frmSettings.cbLateInt.checked then
-        DetermineInterceptors(TeamPasser, NumberPasser, FieldP, FieldQ);
+
       if player[TeamPasser, NumberPasser].status = 2 then
           ScatterBallFrom(FieldP, FieldQ, 3, 0);
     end else begin
-      if frmSettings.cbLateInt.checked then
-        DetermineInterceptors(TeamPasser, NumberPasser,
-           player[TeamCatcher, NumberCatcher].p,
-           player[TeamCatcher, NumberCatcher].q);
       if player[TeamPasser, NumberPasser].status = 2 then
         ScatterBallFrom(player[TeamCatcher, NumberCatcher].p,
                       player[TeamCatcher, NumberCatcher].q, 3, 0);

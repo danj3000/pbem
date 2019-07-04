@@ -262,8 +262,6 @@ begin
         if ShortDes[f,g] = 'SMELLING SALTS' then SmellingSalts := True;
         if ShortDes[f,g] = 'BRIBE THE ANNOUNCERS' then BribeTheAnnouncers := True;
         if ShortDes[f,g] = 'PALMED COIN' then PalmedCoin := True;
-        if (ShortDes[f,g] = 'BIASED REFEREE') and
-          (frmSettings.cbBiasedReferee.checked) then ArgueMod := 2;
         if (ShortDes[f,g] = 'UNDER SCRUNTIY') and
           (frmSettings.txtHandicapIniFile.text='bbhandicap_MBBL2.ini') then
           RefMod := 1;
@@ -401,8 +399,7 @@ begin
             if ShortDes[f,g] = 'SMELLING SALTS' then SmellingSalts := True;
             if ShortDes[f,g] = 'BRIBE THE ANNOUNCERS' then BribeTheAnnouncers := True;
             if ShortDes[f,g] = 'PALMED COIN' then PalmedCoin := True;
-            if (ShortDes[f,g] = 'BIASED REFEREE') and
-              (frmSettings.cbBiasedReferee.checked) then ArgueMod := 2;
+
             if (ShortDes[f,g] = 'UNDER SCRUNTIY') and
               (frmSettings.txtHandicapIniFile.text='bbhandicap_MBBL2.ini') then
               RefMod := 1;
@@ -524,8 +521,7 @@ begin
         if ShortDes[f,g] = 'SMELLING SALTS' then SmellingSalts := True;
         if ShortDes[f,g] = 'BRIBE THE ANNOUNCERS' then BribeTheAnnouncers := True;
         if ShortDes[f,g] = 'PALMED COIN' then PalmedCoin := True;
-        if (ShortDes[f,g] = 'BIASED REFEREE') and
-          (frmSettings.cbBiasedReferee.checked) then ArgueMod := 2;
+
         if (ShortDes[f,g] = 'UNDER SCRUNTIY') and
           (frmSettings.txtHandicapIniFile.text='bbhandicap_MBBL2.ini') then
           RefMod := 1;

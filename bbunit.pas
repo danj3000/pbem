@@ -641,28 +641,7 @@ begin
 {  if ref then RedrawDugOut;}
   if SettingsLoaded then begin
     for g := 0 to 1 do begin
-      if frmSettings.cbUpApoth.checked then begin
-        apo1[g].color := colorarray[g, 0, 0];
-        apo1[g].font.color := colorarray[g, 0, 1];
-        apo1[g].visible := true;
-        apo1[g].Transparent := false;
-        apo2[g].color := colorarray[g, 0, 0];
-        apo2[g].font.color := colorarray[g, 0, 1];
-        apo2[g].visible := true;
-        apo2[g].Transparent := false;
-        apo3[g].color := colorarray[g, 0, 0];
-        apo3[g].font.color := colorarray[g, 0, 1];
-        apo3[g].visible := true;
-        apo3[g].Transparent := false;
-        apo4[g].color := colorarray[g, 0, 0];
-        apo4[g].font.color := colorarray[g, 0, 1];
-        apo4[g].visible := true;
-        apo4[g].Transparent := false;
-        apo5[g].color := colorarray[g, 0, 0];
-        apo5[g].font.color := colorarray[g, 0, 1];
-        apo5[g].visible := true;
-        apo5[g].Transparent := false;
-      end else begin
+      begin
         apo[g].color := colorarray[g, 0, 0];
         apo[g].font.color := colorarray[g, 0, 1];
         apo[g].visible := true;
@@ -720,44 +699,14 @@ begin
     turn[g,f].color := colorarray[g,0,0];
   end;
   if SettingsLoaded then begin
-    if not(frmSettings.cbUpApoth.checked) then begin
+
+    begin
       if (apo[g].color <> colorarray[g, 4, 0]) then begin
         apo[g].color := colorarray[g, 0, 0];
         apo[g].font.color := colorarray[g, 0, 1];
         apo[g].Transparent := false;
       end;
-    end else begin
-      if (team[g].apot >= 1) and (apo1[g].color <> colorarray[g, 4, 0])
-        then begin
-        apo1[g].color := colorarray[g, 0, 0];
-        apo1[g].font.color := colorarray[g, 0, 1];
-        apo1[g].Transparent := false;
-      end;
-      if (team[g].apot >= 2) and (apo2[g].color <> colorarray[g, 4, 0])
-        then begin
-        apo2[g].color := colorarray[g, 0, 0];
-        apo2[g].font.color := colorarray[g, 0, 1];
-        apo2[g].Transparent := false;
-      end;
-      if (team[g].apot >= 3) and (apo3[g].color <> colorarray[g, 4, 0])
-        then begin
-        apo3[g].color := colorarray[g, 0, 0];
-        apo3[g].font.color := colorarray[g, 0, 1];
-        apo3[g].Transparent := false;
-      end;
-      if (team[g].apot >= 4) and (apo4[g].color <> colorarray[g, 4, 0])
-        then begin
-        apo4[g].color := colorarray[g, 0, 0];
-        apo4[g].font.color := colorarray[g, 0, 1];
-        apo4[g].Transparent := false;
-      end;
-      if (team[g].apot >= 5) and (apo5[g].color <> colorarray[g, 4, 0])
-        then begin
-        apo5[g].color := colorarray[g, 0, 0];
-        apo5[g].font.color := colorarray[g, 0, 1];
-        apo5[g].Transparent := false;
-      end;
-    end;
+    end ;
     if wiz[g].color <> colorarray[g, 4, 0] then begin
       wiz[g].color := colorarray[g, 0, 0];
       wiz[g].font.color := colorarray[g, 0, 1];
@@ -1257,11 +1206,11 @@ end;
 procedure TBloodbowl.ApoWizClick(Sender: TObject);
 var g: integer;
 begin
-  if (not(frmSettings.cbUpApoth.checked)) and
-    ((((Sender as TLabel).top = apo[0].top) and
+  if ((((Sender as TLabel).top = apo[0].top) and
     ((Sender as TLabel).Left = apo[0].Left)) or
     (((Sender as TLabel).top = apo[1].top) and
-    ((Sender as TLabel).Left = apo[1].Left))) then begin
+    ((Sender as TLabel).Left = apo[1].Left))) then
+    begin
       if (Sender as TLabel) = apo[0] then g := 0 else g := 1;
       if apo[g].color = colorarray[g, 0, 0] then begin
         GameStatus := 'Apoth1';
@@ -1269,94 +1218,13 @@ begin
         ActionTeam := g;
       end;
 
-  end else
-    if (frmSettings.cbUpApoth.checked) and
-      ((((Sender as TLabel).top = apo1[0].top) and
-      ((Sender as TLabel).Left = apo1[0].Left)) or
-      (((Sender as TLabel).top = apo1[1].top) and
-      ((Sender as TLabel).Left = apo1[1].Left))) then begin
-      if (Sender as TLabel) = apo1[0] then g := 0 else g := 1;
-      if apo1[g].color = colorarray[g, 0, 0] then begin
-        GameStatus := 'Apoth1';
-        Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO APOTHECARY';
-        ActionTeam := g;
-      end;
+  end;
 
-  end else
-    if (frmSettings.cbUpApoth.checked) and
-      ((((Sender as TLabel).top = apo2[0].top) and
-      ((Sender as TLabel).Left = apo2[0].Left)) or
-      (((Sender as TLabel).top = apo2[1].top) and
-      ((Sender as TLabel).Left = apo2[1].Left))) then begin
-      if (Sender as TLabel) = apo2[0] then g := 0 else g := 1;
-      if apo2[g].color = colorarray[g, 0, 0] then begin
-        GameStatus := 'Apoth2';
-        Loglabel.caption := 'CLICK ON THE NIGGLED PLAYER YOU WISH TO APOTHECARY';
-        ActionTeam := g;
-      end;
-
-  end else
-    if (frmSettings.cbUpApoth.checked) and
-      ((((Sender as TLabel).top = apo3[0].top) and
-      ((Sender as TLabel).Left = apo3[0].Left)) or
-      (((Sender as TLabel).top = apo3[1].top) and
-      ((Sender as TLabel).Left = apo3[1].Left))) then begin
-      if (Sender as TLabel) = apo3[0] then g := 0 else g := 1;
-      if apo3[g].color = colorarray[g, 0, 0] then begin
-        if CanWriteToLog then begin
-          LogWrite('a' + Chr(g + 48) + '3');
-          AddLog(ffcl[g] + ' disables the Level 3 Apothecary');
-          apo3[g].color := colorarray[g, 4, 0];
-          apo3[g].font.color := colorarray[g, 4, 1];
-        end;
-      end;
-
-  end else
-    if (frmSettings.cbUpApoth.checked) and
-      ((((Sender as TLabel).top = apo4[0].top) and
-      ((Sender as TLabel).Left = apo4[0].Left)) or
-      (((Sender as TLabel).top = apo4[1].top) and
-      ((Sender as TLabel).Left = apo4[1].Left))) then begin
-      if (Sender as TLabel) = apo4[0] then g := 0 else g := 1;
-      if apo4[g].color = colorarray[g, 0, 0] then begin
-        GameStatus := 'Apoth4';
-        Loglabel.caption := 'CLICK ON THE SERIOUSLY INJURED PLAYER YOU WISH TO APOTHECARY';
-        ActionTeam := g;
-      end;
-
-  end else
-    if (frmSettings.cbUpApoth.checked) and
-      ((((Sender as TLabel).top = apo5[0].top) and
-      ((Sender as TLabel).Left = apo5[0].Left)) or
-      (((Sender as TLabel).top = apo5[1].top) and
-      ((Sender as TLabel).Left = apo5[1].Left))) then begin
-      if (Sender as TLabel) = apo5[0] then g := 0 else g := 1;
-      if apo5[g].color = colorarray[g, 0, 0] then begin
-        GameStatus := 'Apoth5';
-        Loglabel.caption := 'CLICK ON THE DEAD PLAYER YOU WISH TO APOTHECARY';
-        ActionTeam := g;
-      end;
-
-  end else
-    {if (((Sender as TLabel).top = wiz[0].top) and
-      ((Sender as TLabel).Left = wiz[0].Left)) or
-      (((Sender as TLabel).top = wiz[1].top) and
-      ((Sender as TLabel).Left = wiz[1].Left)) then begin
-      if (Sender as TLabel) = wiz[0] then g := 0 else g := 1;
-      if wiz[g].color = colorarray[g, 0, 0] then begin
-        if CanWriteToLog then begin
-          LogWrite('W' + Chr(g + 48));
-          AddLog(ffcl[g] + '''s Wizard casts a spell');
-          wiz[g].color := colorarray[g, 4, 0];
-          wiz[g].font.color := colorarray[g, 4, 1];
-        end;
-      end;
-    end;}
 end;
 
 procedure ApoWizCreate(g: integer);
 begin
-  if not(frmSettings.cbUpApoth.checked) then begin
+  begin
     apo[g] := TLabel.Create(Bloodbowl);
     apo[g].autosize := false;
     apo[g].caption := 'APO';
@@ -1378,124 +1246,14 @@ begin
     apo[g].showhint := true;
     apo[g].OnClick := Bloodbowl.ApoWizClick;
     apo[g].parent := Bloodbowl;
-  end else begin
-    apo1[g] := TLabel.Create(Bloodbowl);
-    apo1[g].autosize := false;
-    apo1[g].caption := 'A';
-    apo1[g].height := 19;
-    apo1[g].width := 13;
-    apo1[g].top := pnlDugOut[0,3].top + 3;
-    if g = 0 then begin
-      apo1[g].left := pnlDugOut[0,3].left - 66;
-    end else begin
-      apo1[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 2;
-    end;
-    apo1[g].visible := true;
-    apo1[g].Transparent := false;
-    apo1[g].alignment := taCenter;
-    apo1[g].font.size := 12;
-    apo1[g].color := colorarray[g, 0, 0];
-    apo1[g].font.color := colorarray[g, 0, 1];
-    apo1[g].hint := 'Click to use Level 1 Apothecary';
-    apo1[g].showhint := true;
-    apo1[g].OnClick := Bloodbowl.ApoWizClick;
-    apo1[g].parent := Bloodbowl;
-    apo2[g] := TLabel.Create(Bloodbowl);
-    apo2[g].autosize := false;
-    apo2[g].caption := 'P';
-    apo2[g].height := 19;
-    apo2[g].width := 13;
-    apo2[g].top := pnlDugOut[0,3].top + 3;
-    if g = 0 then begin
-      apo2[g].left := pnlDugOut[0,3].left - 53;
-    end else begin
-      apo2[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 15;
-    end;
-    apo2[g].visible := true;
-    apo2[g].Transparent := false;
-    apo2[g].alignment := taCenter;
-    apo2[g].font.size := 12;
-    apo2[g].color := colorarray[g, 0, 0];
-    apo2[g].font.color := colorarray[g, 0, 1];
-    apo2[g].hint := 'Click to use Level 2 Apothecary';
-    apo2[g].showhint := true;
-    apo2[g].OnClick := Bloodbowl.ApoWizClick;
-    apo2[g].parent := Bloodbowl;
-    apo3[g] := TLabel.Create(Bloodbowl);
-    apo3[g].autosize := false;
-    apo3[g].caption := 'O';
-    apo3[g].height := 19;
-    apo3[g].width := 13;
-    apo3[g].top := pnlDugOut[0,3].top + 3;
-    if g = 0 then begin
-      apo3[g].left := pnlDugOut[0,3].left - 40;
-    end else begin
-      apo3[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 28;
-    end;
-    apo3[g].visible := true;
-    apo3[g].Transparent := false;
-    apo3[g].alignment := taCenter;
-    apo3[g].font.size := 12;
-    apo3[g].color := colorarray[g, 0, 0];
-    apo3[g].font.color := colorarray[g, 0, 1];
-    apo3[g].hint := 'Click to use Level 3 Apothecary';
-    apo3[g].showhint := true;
-    apo3[g].OnClick := Bloodbowl.ApoWizClick;
-    apo3[g].parent := Bloodbowl;
-    apo4[g] := TLabel.Create(Bloodbowl);
-    apo4[g].autosize := false;
-    apo4[g].caption := 'T';
-    apo4[g].height := 19;
-    apo4[g].width := 13;
-    apo4[g].top := pnlDugOut[0,3].top + 3;
-    if g = 0 then begin
-      apo4[g].left := pnlDugOut[0,3].left - 27;
-    end else begin
-      apo4[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 41;
-    end;
-    apo4[g].visible := true;
-    apo4[g].Transparent := false;
-    apo4[g].alignment := taCenter;
-    apo4[g].font.size := 12;
-    apo4[g].color := colorarray[g, 0, 0];
-    apo4[g].font.color := colorarray[g, 0, 1];
-    apo4[g].hint := 'Click to use Level 4 Apothecary';
-    apo4[g].showhint := true;
-    apo4[g].OnClick := Bloodbowl.ApoWizClick;
-    apo4[g].parent := Bloodbowl;
-    apo5[g] := TLabel.Create(Bloodbowl);
-    apo5[g].autosize := false;
-    apo5[g].caption := 'H';
-    apo5[g].height := 19;
-    apo5[g].width := 13;
-    apo5[g].top := pnlDugOut[0,3].top + 3;
-    if g = 0 then begin
-      apo5[g].left := pnlDugOut[0,3].left - 14;
-    end else begin
-      apo5[g].left := pnlDugOut[1,3].left + pnlDugOut[1,3].width + 54;
-    end;
-    apo5[g].visible := true;
-    apo5[g].Transparent := false;
-    apo5[g].alignment := taCenter;
-    apo5[g].font.size := 12;
-    apo5[g].color := colorarray[g, 0, 0];
-    apo5[g].font.color := colorarray[g, 0, 1];
-    apo5[g].hint := 'Click to use Level 5 Apothecary';
-    apo5[g].showhint := true;
-    apo5[g].OnClick := Bloodbowl.ApoWizClick;
-    apo5[g].parent := Bloodbowl;
-  end;
+  end ;
+
   wiz[g] := TLabel.Create(Bloodbowl);
   wiz[g].autosize := false;
   wiz[g].caption := 'WIZ';
   wiz[g].height := 19;
   wiz[g].width := 38;
-  if frmSettings.cbUpApoth.checked then begin
-    wiz[g].top := apo1[g].top {/// was: - 20};
-    if g = 0 then
-      wiz[g].left := apo3[g].left + (2 * g - 1) * ((apo5[g].width*5) + 2)
-    else wiz[g].left := apo1[g].left + (2 * g - 1) * ((apo1[g].width*5) + 2);
-  end else begin
+  begin
     wiz[g].top := apo[g].top {/// was: - 20};
     wiz[g].left := apo[g].left
       {/// added:} + (2 * g - 1) * (apo[g].width + 2); {/// until here};
@@ -1510,58 +1268,14 @@ begin
   wiz[g].showhint := true;
   wiz[g].OnClick := Bloodbowl.ApoWizClick;
   wiz[g].parent := Bloodbowl;
-  if not(frmSettings.cbUpApoth.checked) then begin
+  begin
     if team[g].apot > 0 then begin
       apo[g].color := colorarray[g, 0, 0];
       apo[g].font.color := colorarray[g, 0, 1];
       apo[g].visible := true;
     end else apo[g].visible := false;
-  end else begin
-    if team[g].apot = 0 then begin
-      apo1[g].visible := false;
-      apo2[g].visible := false;
-      apo3[g].visible := false;
-      apo4[g].visible := false;
-      apo5[g].Visible := false;
-    end else begin
-      apo1[g].visible := true;
-      apo1[g].Transparent := false;
-      apo1[g].color := colorarray[g, 0, 0];
-      apo1[g].font.color := colorarray[g, 0, 1];
-      apo2[g].visible := true;
-      apo2[g].Transparent := false;
-      apo2[g].color := colorarray[g, 4, 0];
-      apo2[g].font.color := colorarray[g, 4, 1];
-      apo3[g].visible := true;
-      apo3[g].Transparent := false;
-      apo3[g].color := colorarray[g, 4, 0];
-      apo3[g].font.color := colorarray[g, 4, 1];
-      apo4[g].visible := true;
-      apo4[g].Transparent := false;
-      apo4[g].color := colorarray[g, 4, 0];
-      apo4[g].font.color := colorarray[g, 4, 1];
-      apo5[g].visible := true;
-      apo5[g].Transparent := false;
-      apo5[g].color := colorarray[g, 4, 0];
-      apo5[g].font.color := colorarray[g, 4, 1];
-      if team[g].apot >= 2 then begin
-        apo2[g].color := colorarray[g, 0, 0];
-        apo2[g].font.color := colorarray[g, 0, 1];
-      end;
-      if team[g].apot >= 3 then begin
-        apo3[g].color := colorarray[g, 0, 0];
-        apo3[g].font.color := colorarray[g, 0, 1];
-      end;
-      if team[g].apot >= 4 then begin
-        apo4[g].color := colorarray[g, 0, 0];
-        apo4[g].font.color := colorarray[g, 0, 1];
-      end;
-      if team[g].apot = 5 then begin
-        apo5[g].color := colorarray[g, 0, 0];
-        apo5[g].font.color := colorarray[g, 0, 1];
-      end;
-    end;
-  end;
+  end ;
+
 end;
 
 procedure TBloodbowl.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -2687,13 +2401,7 @@ begin
     {increase score marker}
     marker[curteam, MT_Score].MarkerMouseUp(
               marker[curteam, MT_Score], mbLeft, [], 0, 0);
-    if (frmSettings.cbKicking.checked) and not(frmSettings.cbFG1PT.Checked)
-      then begin
-      marker[curteam, MT_Score].MarkerMouseUp(
-          marker[curteam, MT_Score], mbLeft, [], 0, 0);
-      marker[curteam, MT_Score].MarkerMouseUp(
-          marker[curteam, MT_Score], mbLeft, [], 0, 0);
-    end;
+
   end;
 end;
 
@@ -4296,7 +4004,7 @@ begin
          PassFine := false;
       end;
     end;
-    if (player[g,f].tz > 0) and (not(frmSettings.cbNoTZAssist.checked))
+    if (player[g,f].tz > 0)
       then TZone := False;
     if TZone then begin
       if PassFine then begin
@@ -5949,32 +5657,11 @@ end;
 
 procedure TBloodbowl.DisableRedApothecary1Click(Sender: TObject);
 begin
-  if (not(frmSettings.cbUpApoth.checked)) then begin
+  begin
     LogWrite('a' + Chr(0 + 48));
     AddLog(ffcl[0] + ' uses the Apothecary');
     apo[0].color := colorarray[0, 4, 0];
     apo[0].font.color := colorarray[0, 4, 1];
-  end else begin
-    LogWrite('a' + Chr(0 + 48) + '1');
-    AddLog(ffcl[0] + ' uses the Level 1 Apothecary');
-    apo1[0].color := colorarray[0, 4, 0];
-    apo1[0].font.color := colorarray[0, 4, 1];
-    LogWrite('a' + Chr(0 + 48) + '2');
-    AddLog(ffcl[0] + ' uses the Level 2 Apothecary');
-    apo2[0].color := colorarray[0, 4, 0];
-    apo2[0].font.color := colorarray[0, 4, 1];
-    LogWrite('a' + Chr(0 + 48) + '3');
-    AddLog(ffcl[0] + ' disables the Level 3 Apothecary');
-    apo3[0].color := colorarray[0, 4, 0];
-    apo3[0].font.color := colorarray[0, 4, 1];
-    LogWrite('a' + Chr(0 + 48) + '4');
-    AddLog(ffcl[0] + ' uses the Level 4 Apothecary');
-    apo4[0].color := colorarray[0, 4, 0];
-    apo4[0].font.color := colorarray[0, 4, 1];
-    LogWrite('a' + Chr(0 + 48) + '5');
-    AddLog(ffcl[0] + ' uses the Level 5 Apothecary');
-    apo5[0].color := colorarray[0, 4, 0];
-    apo5[0].font.color := colorarray[0, 4, 1];
   end;
 end;
 
@@ -5988,32 +5675,11 @@ end;
 
 procedure TBloodbowl.DisableBlueApothecary1Click(Sender: TObject);
 begin
-  if (not(frmSettings.cbUpApoth.checked)) then begin
+  begin
     LogWrite('a' + Chr(1 + 48));
     AddLog(ffcl[1] + ' uses the Apothecary');
     apo[1].color := colorarray[1, 4, 0];
     apo[1].font.color := colorarray[1, 4, 1];
-  end else begin
-    LogWrite('a' + Chr(1 + 48) + '1');
-    AddLog(ffcl[1] + ' uses the Level 1 Apothecary');
-    apo1[1].color := colorarray[1, 4, 0];
-    apo1[1].font.color := colorarray[1, 4, 1];
-    LogWrite('a' + Chr(1 + 48) + '2');
-    AddLog(ffcl[1] + ' uses the Level 2 Apothecary');
-    apo2[1].color := colorarray[1, 4, 0];
-    apo2[1].font.color := colorarray[1, 4, 1];
-    LogWrite('a' + Chr(1 + 48) + '3');
-    AddLog(ffcl[1] + ' disables the Level 3 Apothecary');
-    apo3[1].color := colorarray[1, 4, 0];
-    apo3[1].font.color := colorarray[1, 4, 1];
-    LogWrite('a' + Chr(1 + 48) + '4');
-    AddLog(ffcl[1] + ' uses the Level 4 Apothecary');
-    apo4[1].color := colorarray[1, 4, 0];
-    apo4[1].font.color := colorarray[1, 4, 1];
-    LogWrite('a' + Chr(1 + 48) + '5');
-    AddLog(ffcl[1] + ' uses the Level 5 Apothecary');
-    apo5[1].color := colorarray[1, 4, 0];
-    apo5[1].font.color := colorarray[1, 4, 1];
   end;
 end;
 

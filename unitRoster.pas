@@ -183,7 +183,7 @@ begin
   w[6] := 21;
   w[7] := 250;
   w[8] := 28;
-  if frmSettings.cbUseOtherSPP.checked then w[9] := 28 else w[9] := 0;
+  w[9] := 0;
   w[10] := 28;
   w[11] := 28;
   w[12] := 28;
@@ -498,13 +498,8 @@ begin
   frmRoster.butBuyReroll.enabled := (tr >= 2 * team[curroster].rerollcost);
   frmRoster.butBuyAsstCoach.enabled := (tr > 0);
   frmRoster.butBuyCheerleader.enabled := (tr > 0);
-  frmRoster.butBuyApo.enabled := ((tr >= 50) and (team[curroster].apot = 0))
-    or ((tr >= 50) and (team[curroster].apot < 5)
-        and (frmSettings.cbUpApoth.checked));
-  frmRoster.butBuyWizard.enabled := ((tr >= 150) and (team[curroster].wiz = 0))
-    or ((tr >= 20) and (Uppercase(team[curroster].race) = 'HALFLING') and
-      (frmSettings.cbHChefNew.checked) and
-      (frmSettings.cbOnPitchSpellcasters.checked));
+  frmRoster.butBuyApo.enabled := ((tr >= 50) and (team[curroster].apot = 0));
+  frmRoster.butBuyWizard.enabled := ((tr >= 150) and (team[curroster].wiz = 0));
 end;
 
 procedure ShowTeam(g: integer);
@@ -710,41 +705,7 @@ begin
              team[g].treasury := IntToStr(MoneyVal(team[g].treasury) - 10) + 'k';
            end;
       'A': begin
-             if frmSettings.cbUpApoth.checked then begin
-               if team[g].apot = 0 then begin
-                 apo1[g].color := colorarray[g, 0, 0];
-                 apo1[g].font.color := colorarray[g, 0, 1];
-                 apo1[g].Visible := true;
-                 apo2[g].color := colorarray[g, 4, 0];
-                 apo2[g].font.color := colorarray[g, 4, 1];
-                 apo2[g].Visible := true;
-                 apo3[g].color := colorarray[g, 4, 0];
-                 apo3[g].font.color := colorarray[g, 4, 1];
-                 apo3[g].Visible := true;
-                 apo4[g].color := colorarray[g, 4, 0];
-                 apo4[g].font.color := colorarray[g, 4, 1];
-                 apo4[g].Visible := true;
-                 apo5[g].color := colorarray[g, 4, 0];
-                 apo5[g].font.color := colorarray[g, 4, 1];
-                 apo5[g].Visible := true;
-               end else if team[g].apot = 1 then begin
-                 apo2[g].color := colorarray[g, 0, 0];
-                 apo2[g].font.color := colorarray[g, 0, 1];
-               end else if team[g].apot = 2 then begin
-                 apo3[g].color := colorarray[g, 0, 0];
-                 apo3[g].font.color := colorarray[g, 0, 1];
-               end else if team[g].apot = 3 then begin
-                 apo4[g].color := colorarray[g, 0, 0];
-                 apo4[g].font.color := colorarray[g, 0, 1];
-               end else if team[g].apot = 4 then begin
-                 apo5[g].color := colorarray[g, 0, 0];
-                 apo5[g].font.color := colorarray[g, 0, 1];
-               end;
-               team[g].apot := team[g].apot + 1;
-               begin
-                 team[g].treasury := IntToStr(MoneyVal(team[g].treasury) - 50) + 'k';
-               end;
-             end else begin
+begin
                if team[g].apot = 0 then begin
                  apo[g].color := colorarray[g, 0, 0];
                  apo[g].font.color := colorarray[g, 0, 1];
@@ -781,27 +742,10 @@ begin
              team[g].wiz := 0;
            end;
         'Z': begin
-             if frmSettings.cbUpApoth.checked then begin
-               apo5[g].color := colorarray[g, 4, 0];
-               apo5[g].font.color := colorarray[g, 4, 1];
-               apo4[g].color := colorarray[g, 4, 0];
-               apo4[g].font.color := colorarray[g, 4, 1];
-               apo3[g].color := colorarray[g, 4, 0];
-               apo3[g].font.color := colorarray[g, 4, 1];
-               apo2[g].color := colorarray[g, 4, 0];
-               apo2[g].font.color := colorarray[g, 4, 1];
-               apo1[g].color := colorarray[g, 4, 0];
-               apo1[g].font.color := colorarray[g, 4, 1];
-               apo5[g].visible := false;
-               apo4[g].visible := false;
-               apo3[g].visible := false;
-               apo2[g].visible := false;
-               apo1[g].visible := false;
-               team[g].apot := 0;
-             end else begin
+
                apo[g].visible := false;
                team[g].apot := 0;
-             end;
+
            end;
     end;
     DefaultAction(TranslateBuy(s));
@@ -823,39 +767,7 @@ begin
              team[g].treasury := IntToStr(MoneyVal(team[g].treasury) + 10) + 'k';
            end;
       'A': begin
-             if frmSettings.cbUpApoth.checked then begin
-               if team[g].apot = 5 then begin
-                 apo5[g].color := colorarray[g, 4, 0];
-                 apo5[g].font.color := colorarray[g, 4, 1];
-               end else if team[g].apot = 4 then begin
-                 apo4[g].color := colorarray[g, 4, 0];
-                 apo4[g].font.color := colorarray[g, 4, 1];
-               end else if team[g].apot = 3 then begin
-                 apo3[g].color := colorarray[g, 4, 0];
-                 apo3[g].font.color := colorarray[g, 4, 1];
-               end else if team[g].apot = 2 then begin
-                 apo2[g].color := colorarray[g, 4, 0];
-                 apo2[g].font.color := colorarray[g, 4, 1];
-               end else if team[g].apot = 1 then begin
-                 apo1[g].color := colorarray[g, 4, 0];
-                 apo1[g].font.color := colorarray[g, 4, 1];
-                 apo5[g].visible := false;
-                 apo4[g].visible := false;
-                 apo3[g].visible := false;
-                 apo2[g].visible := false;
-                 apo1[g].visible := false;
-               end;
-               team[g].apot := team[g].apot - 1;
-               begin
-                 team[g].treasury := IntToStr(MoneyVal(team[g].treasury) + 50) + 'k';
-               end;
-             end else begin
-               if team[g].apot = 1 then apo[g].visible := false;
-               team[g].apot := team[g].apot - 1;
-               begin
-                 team[g].treasury := IntToStr(MoneyVal(team[g].treasury) + 50) + 'k';
-               end;
-             end;
+
            end;
       'W': begin
              if team[g].wiz = 1 then wiz[g].visible := false;
@@ -885,24 +797,8 @@ begin
              team[g].wiz := team[g].wiz + 1;
            end;
       'Z': begin
-             if frmSettings.cbUpApoth.checked then begin
-               apo1[g].color := colorarray[g, 0, 0];
-               apo1[g].font.color := colorarray[g, 0, 1];
-               apo1[g].Visible := true;
-               apo2[g].color := colorarray[g, 4, 0];
-               apo2[g].font.color := colorarray[g, 4, 1];
-               apo2[g].Visible := true;
-               apo3[g].color := colorarray[g, 4, 0];
-               apo3[g].font.color := colorarray[g, 4, 1];
-               apo3[g].Visible := true;
-               apo4[g].color := colorarray[g, 4, 0];
-               apo4[g].font.color := colorarray[g, 4, 1];
-               apo4[g].Visible := true;
-               apo5[g].color := colorarray[g, 4, 0];
-               apo5[g].font.color := colorarray[g, 4, 1];
-               apo5[g].Visible := true;
-               team[g].apot := team[g].apot + 1;
-             end else begin
+
+             begin
                apo[g].color := colorarray[g, 0, 0];
                apo[g].font.color := colorarray[g, 0, 1];
                apo[g].visible := true;

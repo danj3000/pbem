@@ -554,8 +554,7 @@ begin
     Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
     WorkOutPassResult := true;
   end else begin
-    if ((lastroll + PassRollMod <= 1) and (frmSettings.rgPassFumble.ItemIndex=0))
-       or ((lastroll + PassTZMod <= 1) and (frmSettings.rgPassFumble.ItemIndex=1))
+    if ((lastroll + PassRollMod <= 1) )
        or (lastroll = 1)  then begin
       Bloodbowl.comment.text := 'Pass is fumbled!';
       frmThrowStuff.butFumbleInaccurate.caption := 'Fumble';

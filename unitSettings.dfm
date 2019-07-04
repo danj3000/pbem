@@ -63,14 +63,10 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 713
     Height = 545
-    ActivePage = TabSheet7
+    ActivePage = TabSheet9
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label18: TLabel
         Left = 16
         Top = 96
@@ -223,10 +219,6 @@ object frmSettings: TfrmSettings
     object TabSheet2: TTabSheet
       Caption = 'Tables'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label12: TLabel
         Left = 8
         Top = 16
@@ -357,10 +349,6 @@ object frmSettings: TfrmSettings
     object TabSheet3: TTabSheet
       Caption = 'LRB edition'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label11: TLabel
         Left = 16
         Top = 8
@@ -393,10 +381,6 @@ object frmSettings: TfrmSettings
     object TabSheet8: TTabSheet
       Caption = 'New Skills'
       ImageIndex = 7
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label19: TLabel
         Left = 24
         Top = 16
@@ -743,10 +727,6 @@ object frmSettings: TfrmSettings
     object TabSheet9: TTabSheet
       Caption = 'Armour/Injury'
       ImageIndex = 8
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cbNoInjMods: TCheckBox
         Left = 8
         Top = 192
@@ -766,159 +746,6 @@ object frmSettings: TfrmSettings
         Checked = True
         State = cbChecked
         TabOrder = 1
-      end
-    end
-    object TabSheet7: TTabSheet
-      Caption = 'Other'
-      ImageIndex = 6
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-      object cbPBJumpUp: TCheckBox
-        Left = 8
-        Top = 72
-        Width = 273
-        Height = 17
-        Caption = 'Jump Up can be used in combination with Pass Block'
-        TabOrder = 0
-      end
-      object cbNoTZAssist: TCheckBox
-        Left = 8
-        Top = 120
-        Width = 617
-        Height = 17
-        Caption = 
-          'A standing player who does not have a Tackle Zone cannot stop co' +
-          'unterassists but can still assist a block (White Dwarf #182)'
-        TabOrder = 1
-      end
-      object cbUpApoth: TCheckBox
-        Left = 8
-        Top = 144
-        Width = 289
-        Height = 17
-        Caption = 'Reroll KO'#39's for a level 3 Apothecary (Citadel Journal #18)'
-        TabOrder = 2
-      end
-      object cbUseOtherSPP: TCheckBox
-        Left = 8
-        Top = 192
-        Width = 249
-        Height = 17
-        Caption = 'Use '#39'Other'#39' SPP column in HTML-team roster'
-        TabOrder = 3
-      end
-      object cbCheerAC: TCheckBox
-        Left = 8
-        Top = 216
-        Width = 337
-        Height = 17
-        Caption = 'Cheerleader/Assistant Coach Pregame rolls for Special Play cards'
-        TabOrder = 4
-      end
-      object cbBiasedReferee: TCheckBox
-        Left = 8
-        Top = 240
-        Width = 337
-        Height = 17
-        Caption = 'Biased Referee Handicap Event adds +2 to Argue the Call rolls'
-        TabOrder = 5
-      end
-      object cbThrowStunty: TCheckBox
-        Left = 8
-        Top = 96
-        Width = 393
-        Height = 17
-        Caption = 
-          'Thrown Players without Stunty/Titchy have an extra band range pe' +
-          'nalty'
-        TabOrder = 6
-      end
-      object cbKicking: TCheckBox
-        Left = 8
-        Top = 264
-        Width = 185
-        Height = 17
-        Caption = 'Allow Experimental Kicking Rules'
-        TabOrder = 7
-      end
-      object cbPassFumble: TCheckBox
-        Left = 8
-        Top = 168
-        Width = 289
-        Height = 17
-        Caption = 'Pass fumble only on Natural 1s instead of Modified 1s'
-        TabOrder = 8
-      end
-      object cbPGFI: TCheckBox
-        Left = 8
-        Top = 288
-        Width = 337
-        Height = 17
-        Caption = 'Use Progressive GFI'
-        TabOrder = 9
-      end
-      object rgPassFumble: TRadioGroup
-        Left = 344
-        Top = 304
-        Width = 313
-        Height = 81
-        Caption = 'Passing Fumbles'
-        ItemIndex = 0
-        Items.Strings = (
-          'Passing fumbles on all natural and modified 1s'
-          'Passing fumbles on all natural 1s and only TZ modified 1s'
-          'Passing fumbles only on natural 1s')
-        TabOrder = 10
-      end
-      object cbLateInt: TCheckBox
-        Left = 344
-        Top = 424
-        Width = 337
-        Height = 17
-        Caption = 'Roll for Interception after the Pass roll'
-        TabOrder = 11
-      end
-      object cbFG1PT: TCheckBox
-        Left = 192
-        Top = 264
-        Width = 233
-        Height = 17
-        Caption = 'Field Goals and Touchdowns are both 1 point'
-        TabOrder = 12
-      end
-      object cbDiagMove: TCheckBox
-        Left = 8
-        Top = 360
-        Width = 241
-        Height = 17
-        Caption = 'Throw-in Movement can be aimed diagonally'
-        TabOrder = 13
-      end
-      object cbSWRef: TCheckBox
-        Left = 8
-        Top = 384
-        Width = 313
-        Height = 17
-        Caption = 'Secret Weapons can be permantently taken by the Referee'
-        TabOrder = 14
-      end
-      object cbNoFieldGoals: TCheckBox
-        Left = 440
-        Top = 264
-        Width = 233
-        Height = 17
-        Caption = 'Kicking Skill without Field Goal scoring rules'
-        TabOrder = 15
-      end
-      object cbOnPitchSpellcasters: TCheckBox
-        Left = 8
-        Top = 408
-        Width = 313
-        Height = 17
-        Caption = 'On-Pitch Spellcasters instead of off pitch wizards'
-        TabOrder = 16
       end
     end
   end

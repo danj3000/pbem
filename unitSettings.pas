@@ -13,16 +13,11 @@ type
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
     Label11: TLabel;
-    cbPBJumpUp: TCheckBox;
-    cbNoTZAssist: TCheckBox;
-    cbUpApoth: TCheckBox;
-    cbUseOtherSPP: TCheckBox;
     Label12: TLabel;
     Label13: TLabel;
     Label14: TLabel;
     Label15: TLabel;
     Label16: TLabel;
-    TabSheet7: TTabSheet;
     Label18: TLabel;
     butAccept: TButton;
     lblCantChange: TLabel;
@@ -55,10 +50,8 @@ type
     cbBrightCrusaders: TCheckBox;
     cbEvilGits: TCheckBox;
     cbVampireNecrarch: TCheckBox;
-    cbCheerAC: TCheckBox;
     cbVampireLahmian: TCheckBox;
     cbNurglesRotters: TCheckBox;
-    cbBiasedReferee: TCheckBox;
     cbHobgoblin: TCheckBox;
     cbWings: TCheckBox;
     cbWarCry: TCheckBox;
@@ -74,7 +67,6 @@ type
     cbBearHug: TCheckBox;
     cbFlyer: TCheckBox;
     cbLanding: TCheckBox;
-    cbThrowStunty: TCheckBox;
     GroupBox2: TGroupBox;
     Label22: TLabel;
     Label23: TLabel;
@@ -84,30 +76,21 @@ type
     butHomeColorChange: TButton;
     butAwayColorChange: TButton;
     cdColorDialog: TColorDialog;
-    cbKicking: TCheckBox;
     TabSheet9: TTabSheet;
     Label17: TLabel;
     txtCardsIniFile: TEdit;
     Label24: TLabel;
     txtHandicapIniFile: TEdit;
     lblLustrian: TLabel;
-    cbPGFI: TCheckBox;
     rgCardSystem: TRadioGroup;
-    rgPassFumble: TRadioGroup;
-    cbLateInt: TCheckBox;
     cbDig: TCheckBox;
     cbButterfingers: TCheckBox;
     butSelectFile: TButton;
     dlgPic: TOpenDialog;
     cbPassingRangesColored: TCheckBox;
     cbBlackIce: TCheckBox;
-    cbFG1PT: TCheckBox;
-    cbDiagMove: TCheckBox;
-    cbSWRef: TCheckBox;
     cbHChefNew: TCheckBox;
     cbGoblinWeapons: TCheckBox;
-    cbNoFieldGoals: TCheckBox;
-    cbOnPitchSpellcasters: TCheckBox;
     rbPO: TRadioGroup;
     cbNoInjMods: TCheckBox;
     cbFirethrower: TCheckBox;
@@ -143,7 +126,7 @@ uses bbunit, bbalg, unitArmourRoll, unitLog, unitCards, unitRoster,
 {$R *.DFM}
 
 procedure FixSettings;
-var f, g: integer;
+var f: integer;
 begin
   for f := 1 to frmSettings.pcSettings.PageCount - 1 do
                 frmSettings.pcSettings.Pages[f].Enabled := false;
@@ -159,15 +142,7 @@ begin
   frmCards.InitForm;
   frmRoster.InitForm;
 
-  if frmSettings.cbUseOtherSPP.checked then begin
-    g := Bloodbowl.compSB.left;
-    for f := 0 to Bloodbowl.toolbar.ControlCount - 1 do begin
-      if Bloodbowl.toolbar.Controls[f].left >= g then
-         Bloodbowl.toolbar.Controls[f].left :=
-              Bloodbowl.toolbar.Controls[f].left + Bloodbowl.sbOtherSPP.width;
-    end;
-    Bloodbowl.sbOtherSPP.Left := g;
-  end else begin
+  begin
     Bloodbowl.sbOtherSPP.Visible := false;
     Bloodbowl.OtherSPP1.visible := false;
     Bloodbowl.RemoveOther1.Visible := false;
@@ -184,11 +159,6 @@ begin
     Bloodbowl.butCardsRed.visible := false;
   end else begin
     Bloodbowl.butMakeHandicapRolls.visible := false;
-  end;
-
-  if frmSettings.cbOnPitchSpellcasters.Checked then begin
-    Bloodbowl.W1.visible := false;
-    Bloodbowl.LRBWizSpells.visible := false;
   end;
 
   if not (frmSettings.cbBearHug.checked) then
@@ -221,7 +191,7 @@ begin
     BloodBowl.Wings1.visible := false;
     BloodBowl.WingsLeap1.visible := false;
   end;
-  if not (frmSettings.cbKicking.checked) then begin
+  begin
     BloodBowl.MakeKickRoll1.Visible := false;
     BloodBowl.DirtyKick1.Visible := false;
     BloodBowl.Punt1.Visible := false;
@@ -285,7 +255,7 @@ begin
   GetText;
 //  frmSettings.rgSkillRollsAt.ItemIndex := Ord(s[1]) - 48;
 //  frmSettings.cbNoForcedMAandAG.checked := (s[3] = 'F');
-  frmSettings.cbCheerAC.checked := (s[4] = 'S');
+//  frmSettings.cbCheerAC.checked := (s[4] = 'S');
 //  frmSettings.cbNoMVPs.checked := (s[5] = 'M');
 //  frmSettings.cbNiggleUp.checked := (s[6] = 'N');
   frmSettings.cbBanishment.checked := (s[7] = 'B');
@@ -310,7 +280,7 @@ begin
   frmSettings.cbVampireLahmian.checked := (s[26] = 'Y');
   frmSettings.cbNurglesRotters.checked := (s[27] = 'Z');
   frmSettings.cbHobgoblin.checked := (s[28] = 'A');
-  frmSettings.cbBiasedReferee.checked := (s[29] = 'C');
+//  frmSettings.cbBiasedReferee.checked := (s[29] = 'C');
   frmSettings.cbBearHug.checked := (s[30] = 'D');
   frmSettings.cbBulletThrow.checked := (s[31] = 'E');
   frmSettings.cbChill.checked := (s[32] = 'F');
@@ -323,30 +293,30 @@ begin
   frmSettings.cbThrowStinkBomb.checked := (s[39] = 'M');
   frmSettings.cbWarCry.checked := (s[40] = 'N');
   frmSettings.cbWings.checked := (s[41] = 'O');
-  frmSettings.cbThrowStunty.checked := (s[42] = 'P');
+//  frmSettings.cbThrowStunty.checked := (s[42] = 'P');
   frmSettings.cbFlyer.checked := (s[43] = 'Q');
   frmSettings.cbLanding.checked := (s[44] = 'R');
-  frmSettings.cbKicking.checked := (s[45] = 'S');
+//  frmSettings.cbKicking.checked := (s[45] = 'S');
 //  frmSettings.cbNiggleHalf.checked := (s[46] = 'T');
 //  frmSettings.cbMVPBench.checked := (s[47] = 'U');
   //frmSettings.cbWizards.checked := (s[49] = 'W');
-  frmSettings.rgPassFumble.ItemIndex := Ord(s[50]) - 48;
-  frmSettings.cbPGFI.checked := (s[51] = 'X');
-  frmSettings.cbLateInt.checked := (s[52] = 'Y');
+//  frmSettings.rgPassFumble.ItemIndex := Ord(s[50]) - 48;
+//  frmSettings.cbPGFI.checked := (s[51] = 'X');
+//  frmSettings.cbLateInt.checked := (s[52] = 'Y');
   frmSettings.cbDig.checked := (s[53] = 'Z');
   frmSettings.cbButterfingers.checked := (s[54] = 'A');
 //  frmSettings.cbFoulApp.checked := (s[55] = 'B');
-  frmSettings.cbFG1PT.checked := (s[56] = 'C');
+//  frmSettings.cbFG1PT.checked := (s[56] = 'C');
 //  frmSettings.cbOPTakeRoot.checked := (s[61] = 'F');
   frmSettings.cbBlackIce.Checked := (s[62] = 'G');
 //  frmSettings.cbSquarePass.checked := (s[63] = 'H');
 //  frmSettings.cbBHAssist.checked := (s[64] = 'I');
   frmSettings.cbHChefNew.checked := (s[65] = 'J');
-  frmSettings.cbDiagMove.checked := (s[66] = 'K');
-  frmSettings.cbSWRef.checked := (s[67] = 'L');
+//  frmSettings.cbDiagMove.checked := (s[66] = 'K');
+//  frmSettings.cbSWRef.checked := (s[67] = 'L');
   frmSettings.cbGoblinWeapons.checked := (s[68] = 'M');
-  frmSettings.cbNoFieldGoals.checked := (s[69] = 'N');
-  frmSettings.cbOnPitchSpellcasters.checked := (s[70] = 'O');
+//  frmSettings.cbNoFieldGoals.checked := (s[69] = 'N');
+//  frmSettings.cbOnPitchSpellcasters.checked := (s[70] = 'O');
 //  frmSettings.cbNegativeWinnings.checked := (s[71] = 'P');
   frmSettings.cbNoInjMods.checked := (s[73] = 'R');
   frmSettings.cbFirethrower.checked := (s[74] = 'S');
@@ -365,17 +335,17 @@ begin
   frmSettings.cbDC.Checked := (s[12] = 'D');
   GetText;
 //  frmSettings.txtRegenRollNeeded.text := s[1];
-  frmSettings.cbPBJumpUp.checked := (s[2] = 'J');
+//  frmSettings.cbPBJumpUp.checked := (s[2] = 'J');
 //  frmSettings.cbWeakStunty.checked := (s[3] = 'W');
 //  frmSettings.cbNiggleOnFour.checked := (s[4] = 'N');
-  frmSettings.cbNoTZAssist.checked := (s[5] = 'A');
-  frmSettings.cbUpApoth.checked := (s[6] = 'U');
+//  frmSettings.cbNoTZAssist.checked := (s[5] = 'A');
+//  frmSettings.cbUpApoth.checked := (s[6] = 'U');
   frmSettings.rgCardSystem.ItemIndex := Ord(s[7]) - 48;
   GetText;
   frmSettings.txtCardsIniFile.text := GetText;
   frmSettings.txtHandicapIniFile.text := GetText;
   frmSettings.txtFieldImageFile.text := GetText;
-  frmSettings.cbUseOtherSPP.checked := (s[1] = 'O');
+//  frmSettings.cbUseOtherSPP.checked := (s[1] = 'O');
 //  frmSettings.cbSeparateARIR.checked := (s[2] = 'S');
   frmSettings.lblLustrian.Caption := s[3];
 
@@ -409,7 +379,7 @@ begin
   st := st + Chr(48 + 2);
   st := st + Chr(48);
   st := st + 'F';
-  if cbCheerAC.checked then st := st + 'S' else st := st + '.';
+  st := st + '.';
   st := st + '.';  // noMVPs
   st := st + 'N'; // niggle up
   if cbBanishment.checked then st := st + 'B' else st := st + '.';
@@ -434,7 +404,7 @@ begin
   if cbVampireLahmian.checked then st := st + 'Y' else st := st + '.';
   if cbNurglesRotters.checked then st := st + 'Z' else st := st + '.';
   if cbHobgoblin.checked then st := st + 'A' else st := st + '.';
-  if cbBiasedReferee.checked then st := st + 'C' else st := st + '.';
+  st := st + '.';
   if cbBearHug.checked then st := st + 'D' else st := st + '.';
   if cbBulletThrow.checked then st := st + 'E' else st := st + '.';
   if cbChill.checked then st := st + 'F' else st := st + '.';
@@ -447,21 +417,21 @@ begin
   if cbThrowStinkBomb.checked then st := st + 'M' else st := st + '.';
   if cbWarCry.checked then st := st + 'N' else st := st + '.';
   if cbWings.checked then st := st + 'O' else st := st + '.';
-  if cbThrowStunty.checked then st := st + 'P' else st := st + '.';
+  st := st + '.';
   if cbFlyer.checked then st := st + 'Q' else st := st + '.';
   if cbLanding.checked then st := st + 'R' else st := st + '.';
-  if cbKicking.checked then st := st + 'S' else st := st + '.';
+  st := st + '.';
   st := st + '.';    // niggles at half time
   st := st + 'U';    // unused can get mvp
   st := st + 'V';    // horns 2nd block
    st := st + '.';   // wizard freebooters
-  st := st + Chr(48 + rgPassFumble.ItemIndex);
-  if cbPGFI.checked then st := st + 'X' else st := st + '.';
-  if cbLateInt.checked then st := st + 'Y' else st := st + '.';
+  st := st + Chr(48 + 0);  // fumbles
+  st := st + '.';
+  st := st + '.';
   if cbDig.checked then st := st + 'Z' else st := st + '.';
   if cbButterfingers.checked then st := st + 'A' else st := st + '.';
   st := st + 'B';       // foul prone
-  if cbFG1PT.checked then st := st + 'C' else st := st + '.';
+  st := st + '.';
   st := st + '.';     // was mvpexp
   st := st + MVPValue.ToString;
   st := st + '9';
@@ -471,11 +441,11 @@ begin
   st := st + 'H' ;  // squares for passing range
   st := st + 'I'; // boneheads help really stupid
   if cbHChefNew.checked then st := st + 'J' else st := st + '.';
-  if cbDiagMove.checked then st := st + 'K' else st := st + '.';
-  if cbSWRef.checked then st := st + 'L' else st := st + '.';
+  st := st + '.';
+  st := st + '.';
   if cbGoblinWeapons.checked then st := st + 'M' else st := st + '.';
-  if cbNoFieldGoals.checked then st := st + 'N' else st := st + '.';
-  if cbOnPitchSpellcasters.checked then st := st + 'O' else st := st + '.';
+  st := st + '.';
+  st := st + '.';
   st := st + '.';   // negative winnings
   st := st + '.';   // apoth
   if cbNoInjMods.checked then st := st + 'R' else st := st + '.';
@@ -495,16 +465,16 @@ begin
   if cbDC.Checked then st := st + 'D' else st := st + '.';
   st := st + '*';
   st := st + bbalg.RegenRollNeeded.ToString();
-  if cbPBJumpUp.checked then st := st + 'J' else st := st + '.';
+  st := st + '.';
   st := st + 'W'; // stunty penalties
   st := st + '.';   // 41-6 niggling injury
-  if cbNoTZAssist.checked then st := st + 'A' else st := st + '.';
-  if cbUpApoth.checked then st := st + 'U' else st := st + '.';
+  st := st + '.';
+  st := st + '.';
   st := st + Chr(48 + rgCardSystem.ItemIndex);
   st := st + '*' + Trim(txtCardsIniFile.text);
   st := st + '*' + Trim(txtHandicapIniFile.text);
   st := st + '*' + Trim(txtFieldImageFile.text) + '*';
-  if cbUseOtherSPP.checked then st := st + 'O' else st := st + '.';
+  st := st + '.';
   st := st + 'S'; // separate inj/arm rolls
   st := st + frmSettings.lblLustrian.Caption;
   UpdateLog(3, st);
@@ -619,12 +589,12 @@ begin
 //          if Copy(s, 28, 1) = 'Y' then rgSkillRollsAt.ItemIndex := 1
 //                                  else rgSkillRollsAt.ItemIndex := 0;
 //        end;
-        if Copy(s, 1, 9) = 'PBJumpUp=' then begin
-          cbPBJumpUp.checked := (Copy(s, 10, 1) = 'Y');
-        end;
-        if Copy(s, 1, 11) = 'NoTZAssist=' then begin
-          cbNoTZAssist.checked := (Copy(s, 12, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 9) = 'PBJumpUp=' then begin
+//          cbPBJumpUp.checked := (Copy(s, 10, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 11) = 'NoTZAssist=' then begin
+//          cbNoTZAssist.checked := (Copy(s, 12, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 9) = 'NiggleUp=' then begin
 //          cbNiggleUp.checked := (Copy(s, 10, 1) = 'Y');
 //        end;
@@ -646,12 +616,12 @@ begin
         if Copy(s, 1, 16) = 'HalflingChefNew=' then begin
           cbHChefNew.checked := (Copy(s, 17, 1) = 'Y');
         end;
-        if Copy(s, 1, 13) = 'DiagonalMove=' then begin
-          cbDiagMove.checked := (Copy(s, 14, 1) = 'Y');
-        end;
-        if Copy(s, 1, 6) = 'SWRef=' then begin
-          cbSWRef.checked := (Copy(s, 7, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 13) = 'DiagonalMove=' then begin
+//          cbDiagMove.checked := (Copy(s, 14, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 6) = 'SWRef=' then begin
+//          cbSWRef.checked := (Copy(s, 7, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 5) = 'LOS3=' then begin
 //          cbLOS.checked := (Copy(s, 6, 1) = 'Y');
 //        end;
@@ -685,30 +655,30 @@ begin
 //        if Copy(s, 1, 13) = 'NiggleOnFour=' then begin
 //          cbNiggleOnFour.checked := (Copy(s, 14, 1) = 'Y');
 //        end;
-        if Copy(s, 1, 12) = 'ThrowStunty=' then begin
-          cbThrowStunty.checked := (Copy(s, 13, 1) = 'Y');
-        end;
-        if Copy(s, 1, 8) = 'CheerAC=' then begin
-          cbCheerAC.checked := (Copy(s, 9, 1) = 'Y');
-        end;
-        if Copy(s, 1, 8) = 'UpApoth=' then begin
-          cbUpApoth.checked := (Copy(s, 9, 1) = 'Y');
-        end;
-        if Copy(s, 1, 8) = 'Kicking=' then begin
-          cbKicking.checked := (Copy(s, 9, 1) = 'Y');
-        end;
-        if Copy(s, 1, 13) = 'NoFieldGoals=' then begin
-          cbNoFieldGoals.checked := (Copy(s, 14, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 12) = 'ThrowStunty=' then begin
+//          cbThrowStunty.checked := (Copy(s, 13, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 8) = 'CheerAC=' then begin
+//          cbCheerAC.checked := (Copy(s, 9, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 8) = 'UpApoth=' then begin
+//          cbUpApoth.checked := (Copy(s, 9, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 8) = 'Kicking=' then begin
+//          cbKicking.checked := (Copy(s, 9, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 13) = 'NoFieldGoals=' then begin
+//          cbNoFieldGoals.checked := (Copy(s, 14, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 14) = 'FFMinus1Per10=' then begin
 //          cbFFMinus1Per10.checked := (Copy(s, 15, 1) = 'Y');
 //        end;
 //        if Copy(s, 1, 11) = 'FFTrueDice=' then begin
 //          cbFFTrueDice.checked := (Copy(s, 12, 1) = 'Y');
 //        end;
-        if Copy(s, 1, 12) = 'UseOtherSPP=' then begin
-          cbUseOtherSPP.checked := (Copy(s, 13, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 12) = 'UseOtherSPP=' then begin
+//          cbUseOtherSPP.checked := (Copy(s, 13, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 7) = 'NoMVPs=' then begin
 //          cbNoMVPs.checked := (Copy(s, 8, 1) = 'Y');
 //        end;
@@ -797,9 +767,9 @@ begin
         if Copy(s, 1, 10) = 'Hobgoblin=' then begin
           cbHobgoblin.checked := (Copy(s, 11, 1) = 'Y');
         end;
-        if Copy(s, 1, 14) = 'BiasedReferee=' then begin
-          cbBiasedReferee.checked := (Copy(s, 15, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 14) = 'BiasedReferee=' then begin
+//          cbBiasedReferee.checked := (Copy(s, 15, 1) = 'Y');
+//        end;
         if Copy(s, 1, 8) = 'BearHug=' then begin
           cbBearHug.checked := (Copy(s, 9, 1) = 'Y');
         end;
@@ -845,30 +815,30 @@ begin
         if Copy(s, 1, 7) = 'DeStun=' then begin
           cbDeStun.checked := (Copy(s, 8, 1) = 'Y');
         end;
-        if Copy(s, 1, 16) = 'FieldGoal1Point=' then begin
-          cbFG1PT.checked := (Copy(s, 17, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 16) = 'FieldGoal1Point=' then begin
+//          cbFG1PT.checked := (Copy(s, 17, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 17) = 'Freeboot Wizards=' then begin
 //          cbWizards.checked := (Copy(s, 18, 1) = 'Y');
 //        end;
-        if Copy(s, 1, 16) = 'OnPitch Wizards=' then begin
-          cbOnPitchSpellcasters.checked := (Copy(s, 17, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 16) = 'OnPitch Wizards=' then begin
+//          cbOnPitchSpellcasters.checked := (Copy(s, 17, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 18) = 'Negative Winnings=' then begin
 //          cbNegativeWinnings.checked := (Copy(s, 19, 1) = 'Y');
 //        end;
 //        if Copy(s, 1, 16) = 'Freeboot Apoths=' then begin
 //          cbApoths.checked := (Copy(s, 17, 1) = 'Y');
 //        end;
-        if Copy(s, 1, 11) = 'PassFumble=' then begin
-          rgPassFumble.ItemIndex := FVal(copy(s, 12, 1));
-        end;
-        if Copy(s, 1, 5) = 'PGFI=' then begin
-          cbPGFI.checked := (Copy(s, 6, 1) = 'Y');
-        end;
-        if Copy(s, 1, 8) = 'LateInt=' then begin
-          cbLateInt.checked := (Copy(s, 9, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 11) = 'PassFumble=' then begin
+//          rgPassFumble.ItemIndex := FVal(copy(s, 12, 1));
+//        end;
+//        if Copy(s, 1, 5) = 'PGFI=' then begin
+//          cbPGFI.checked := (Copy(s, 6, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 8) = 'LateInt=' then begin
+//          cbLateInt.checked := (Copy(s, 9, 1) = 'Y');
+//        end;
         if Copy(s, 1, 13) = 'CardsIniFile=' then begin
           txtCardsIniFile.text := Copy(s, 14, Length(s) - 13);
         end;

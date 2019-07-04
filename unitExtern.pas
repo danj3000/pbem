@@ -451,10 +451,6 @@ begin
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
           player[g,f].inj := GetNextCell(s0);
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          if frmSettings.cbUseOtherSPP.checked then begin
-            player[g,f].otherSPP0 := FVal(GetNextCell(s0));
-            s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          end;
           player[g,f].comp0 := FVal(GetNextCell(s0));
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
           player[g,f].td0 := FVal(GetNextCell(s0));
@@ -516,13 +512,7 @@ begin
   end;
   for f := team[g].numplayers + 1 to MaxNumPlayersInTeam
    do player[g,f].SetStatusDef(11);
-  if not(frmSettings.cbUpApoth.checked) then begin
-    if team[g].apot > 0 then begin
-      apo[g].color := colorarray[g, 0, 0];
-      apo[g].font.color := colorarray[g, 0, 1];
-      apo[g].visible := true;
-    end else apo[g].visible := false;
-  end else begin
+  begin
     if team[g].apot = 0 then begin
       apo1[g].visible := false;
       apo2[g].visible := false;
@@ -967,10 +957,6 @@ begin
             p := GotoNextCell(s, p);
             s := ReplaceNextText(s, '', p);
           end;
-          if frmSettings.cbUseOtherSPP.checked then begin
-            p := GotoNextCell(s, p);
-            s := ReplaceNextText(s, '', p);
-          end;
 
         end else begin
           s := ReplaceNextText(s, IntToStr(player[g,f].cnumber), p);
@@ -1099,11 +1085,7 @@ begin
                then t := t + 'N';
           end;
           s := ReplaceNextText(s, t, p);
-          if frmSettings.cbUseOtherSPP.checked then begin
-            p := GotoNextCell(s, p);
-            s := ReplaceNextText(s,
-                IntToStr(player[g,f].otherSPP + player[g,f].otherSPP0), p);
-          end;
+
           p := GotoNextCell(s, p);
           s := ReplaceNextText(s,
                 IntToStr(player[g,f].comp + player[g,f].comp0), p);

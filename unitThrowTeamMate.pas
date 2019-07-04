@@ -45,7 +45,6 @@ type
     lblAlwaysHungry: TLabel;
     butPassPro: TButton;
     rbImpossible: TRadioButton;
-    cbStunty: TCheckBox;
     Label5: TLabel;
     lblThrowee: TLabel;
     cbFlyer: TCheckBox;
@@ -154,10 +153,7 @@ begin
   frmTTM.cbHFHead.checked := player[g,f].hasSkill('House Fly Head');
   frmTTM.cbSingleEye.checked := player[g,f].hasSkill('Single Eye');
   frmTTM.cbThirdEye.checked := player[g,f].hasSkill('Third Eye');
-  frmTTM.cbStunty.visible := frmSettings.cbThrowStunty.checked;
-  frmTTM.cbStunty.checked := ((player[g2,f2].hasSkill('Stunty')) or
-    (player[g2,f2].hasSkill('Titchy')) or (player[g2,f2].hasSkill('Midget')))
-    and (frmSettings.cbThrowStunty.checked);
+
   frmTTM.cb3EyePlus.checked := false;
   frmTTM.cb3EyeMinus.checked := false;
   if (frmTTM.cbThirdEye.checked) and (((dist <= 56) and
@@ -182,14 +178,7 @@ begin
   frmTTM.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true));// big guy
 
-  if (not (frmTTM.cbStunty.checked)) and (frmSettings.cbThrowStunty.checked)
-    then begin
-    begin
-      if squaredist = 0 then frmTTM.rbLongPass.checked := true else
-      if squaredist = 1 then frmTTM.rbLongBomb.checked := true else
-      frmTTM.rbImpossible.checked := true;
-    end;
-  end else begin
+  begin
     if (player[g,f].hasSkill('Toss Team-Mate')) then begin
       begin
         if squaredist = 0 then frmTTM.rbShortPass.checked := true else
@@ -211,8 +200,7 @@ begin
     if frmTTM.rbLongBomb.checked then frmTTM.rbLongPass.checked := true else
     if (((dist <= 182) and (false)) or
        ((squaredist <= 3) ))
-      and ((frmTTM.cbStunty.checked) or
-      (not(frmSettings.cbThrowStunty.checked))) then
+       then
       frmTTM.rbLongBomb.checked := true;
   end;
 
@@ -305,8 +293,7 @@ begin
     Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
     WorkOutTTMResult := true;
   end else begin
-    if ((lastroll + TTMRollMod <= 1) and (frmSettings.rgPassFumble.ItemIndex=0))
-       or ((lastroll + TTMTZMod <= 1) and (frmSettings.rgPassFumble.ItemIndex=1))
+    if ((lastroll + TTMRollMod <= 1) )
        or (lastroll = 1)  then begin
       Bloodbowl.comment.text := 'Pass is fumbled!';
       frmTTM.butFumbleInaccurate.caption := 'Fumble';
@@ -843,18 +830,7 @@ end;
 
 procedure TfrmTTM.cbStuntyClick(Sender: TObject);
 begin
-  if (not (frmTTM.cbStunty.checked)) and (frmSettings.cbThrowStunty.checked)
-    then begin
-    if false then begin
-      if dist < 16 then frmTTM.rbLongPass.checked := true else
-      if dist <= 56 then frmTTM.rbLongBomb.checked := true else
-      frmTTM.rbImpossible.checked := true;
-    end else begin
-      if squaredist = 0 then frmTTM.rbLongPass.checked := true else
-      if squaredist = 1 then frmTTM.rbLongBomb.checked := true else
-      frmTTM.rbImpossible.checked := true;
-    end;
-  end else begin
+  begin
     if (player[ActionTeam,ActionPlayer].hasSkill('Toss Team-Mate')) then begin
       if false then begin
         if dist < 16 then frmTTM.rbShortPass.checked := true else
@@ -883,8 +859,7 @@ begin
     if frmTTM.rbLongBomb.checked then frmTTM.rbLongPass.checked := true else
     if (((dist <= 182) and (false)) or
        ((squaredist <= 3) ))
-      and ((frmTTM.cbStunty.checked) or
-      (not(frmSettings.cbThrowStunty.checked))) then
+       then
       frmTTM.rbLongBomb.checked := true;
   end;
   CalculateTTMRollNeeded;

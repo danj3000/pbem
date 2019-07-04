@@ -217,22 +217,13 @@ object frmTTM: TfrmTTM
       TabOrder = 3
       OnClick = TTMSkillClick
     end
-    object cbStunty: TCheckBox
-      Left = 16
-      Top = 144
-      Width = 129
-      Height = 17
-      Caption = 'Throwee is stunty?'
-      TabOrder = 4
-      OnClick = TTMSkillClick
-    end
     object cbFlyer: TCheckBox
       Left = 16
       Top = 120
       Width = 65
       Height = 17
       Caption = 'Flyer'
-      TabOrder = 5
+      TabOrder = 4
       OnClick = TTMSkillClick
     end
   end

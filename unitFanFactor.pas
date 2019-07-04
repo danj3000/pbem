@@ -74,9 +74,7 @@ begin
     ffresult[1] := 1;
   end;
   for g := 0 to 1 do begin
-    if (frmSettings.cbKicking.checked) and (not(frmSettings.cbFG1PT.Checked)) then
-      tdmod[g] := (FVal(marker[g, MT_Score].caption) >= 6)
-      else tdmod[g] := (FVal(marker[g, MT_Score].caption) >= 2);
+    tdmod[g] := (FVal(marker[g, MT_Score].caption) >= 2);
     eachtd[g] := false;
     casmod[g] := (FVal(marker[g, MT_CasScore].caption) >= 2);
     eachcas[g] := false;
@@ -106,9 +104,7 @@ begin
   m := m + ffresult[tm];
   if tdmod[tm] then begin
     if eachtd[tm] then begin
-      if frmSettings.cbKicking.checked then
-        m := m + FVal(marker[tm, MT_Score].caption) div 6 else
-        m := m + FVal(marker[tm, MT_Score].caption) div 2;
+      m := m + FVal(marker[tm, MT_Score].caption) div 2;
     end else m := m + 1;
   end;
   if casmod[tm] then begin

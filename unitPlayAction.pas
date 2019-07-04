@@ -314,64 +314,17 @@ var g: integer;
 begin
   g := Ord(s[2]) - 48;
   if dir = DIR_FORWARD then begin
-    if not(frmSettings.cbUpApoth.checked) then begin
+    begin
       apo[g].color := colorarray[g, 4, 0];
       apo[g].font.color := colorarray[g, 4, 1];
       DefaultAction(ffcl[g] + ' uses the Apothecary');
-    end else begin
-      if s[3] = '1' then begin
-        apo1[g].color := colorarray[g, 4, 0];
-        apo1[g].font.color := colorarray[g, 4, 1];
-        DefaultAction(ffcl[g] + ' uses the Level 1 Apothecary');
-      end;
-      if s[3] = '2' then begin
-        apo2[g].color := colorarray[g, 4, 0];
-        apo2[g].font.color := colorarray[g, 4, 1];
-        DefaultAction(ffcl[g] + ' uses the Level 2 Apothecary');
-      end;
-      if s[3] = '3' then begin
-        apo3[g].color := colorarray[g, 4, 0];
-        apo3[g].font.color := colorarray[g, 4, 1];
-        DefaultAction(ffcl[g] + ' disables the Level 3 Apothecary');
-      end;
-      if s[3] = '4' then begin
-        apo4[g].color := colorarray[g, 4, 0];
-        apo4[g].font.color := colorarray[g, 4, 1];
-        DefaultAction(ffcl[g] + ' uses the Level 4 Apothecary');
-      end;
-      if s[3] = '5' then begin
-        apo5[g].color := colorarray[g, 4, 0];
-        apo5[g].font.color := colorarray[g, 4, 1];
-        DefaultAction(ffcl[g] + ' uses the Level 5 Apothecary');
-      end;
-    end;
+    end ;
   end else begin
     BackLog;
-    if not(frmSettings.cbUpApoth.checked) then begin
+    begin
       apo[g].color := colorarray[g, 0, 0];
       apo[g].font.color := colorarray[g, 0, 1];
-    end else begin
-      if s[3]='1' then begin
-        apo1[g].color := colorarray[g, 0, 0];
-        apo1[g].font.color := colorarray[g, 0, 1];
-      end;
-      if s[3]='2' then begin
-        apo2[g].color := colorarray[g, 0, 0];
-        apo2[g].font.color := colorarray[g, 0, 1];
-      end;
-      if s[3]='3' then begin
-        apo3[g].color := colorarray[g, 0, 0];
-        apo3[g].font.color := colorarray[g, 0, 1];
-      end;
-      if s[3]='4' then begin
-        apo4[g].color := colorarray[g, 0, 0];
-        apo4[g].font.color := colorarray[g, 0, 1];
-      end;
-      if s[3]='5' then begin
-        apo5[g].color := colorarray[g, 0, 0];
-        apo5[g].font.color := colorarray[g, 0, 1];
-      end;
-    end;
+    end
   end;
 end;
 

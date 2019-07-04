@@ -181,9 +181,7 @@ begin
                then tz := CountTZ(curteam,curplayer);
             end;
           if (h < 15) and (h + 1 > player[curteam, curplayer].ma) then begin
-            if frmSettings.cbPGFI.checked then begin
-              if tz.num <> 0 then s := s + 'E' else s := s + 'B';
-            end else if (player[curteam,curplayer].hasSkill('Pogo Stick')) then begin
+             if (player[curteam,curplayer].hasSkill('Pogo Stick')) then begin
               if (h >= player[curteam, curplayer].ma + 4) then begin
                  s := s + 'C';
               end else begin
@@ -234,8 +232,7 @@ begin
         if pb > 0 then
           Application.Messagebox('Opponent might be able to Pass Block!',
           'Bloodbowl Pass Block Warning', MB_OK);
-        if not(frmSettings.cbLateInt.checked) then
-          DetermineInterceptors(curteam, curplayer, p, q);
+        DetermineInterceptors(curteam, curplayer, p, q);
         if player[ActionTeam,ActionPlayer].status = 2 then
            ShowPassPlayerToField(ActionTeam, ActionPlayer, p, q);
         Bloodbowl.Endofmove1Click(Bloodbowl);
@@ -299,8 +296,7 @@ begin
       end else if GameStatus='ThrowinMovement' then begin
         pplace := p - player[ActionTeam,ActionPlayer].p;
         qplace := q - player[ActionTeam,ActionPlayer].q;
-        if (not(frmSettings.cbDiagMove.checked)) and ((pplace=0) or (qplace=0))
-          or (frmSettings.cbDiagMove.checked)
+        if ((pplace=0) or (qplace=0))
           then begin
           TestP := player[ActionTeam,ActionPlayer].p;
           TestQ := player[ActionTeam,ActionPlayer].q;

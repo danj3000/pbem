@@ -254,8 +254,7 @@ begin
   frmCatchStuff.txtCatcherFA.text := IntToStr(CountFA(g, f));
   frmCatchStuff.cbExtraArms.checked := player[g,f].hasSkill('Extra Arms');
   frmCatchStuff.cbNBH.checked := player[g,f].hasSkill('Nonball Handler');
-  frmCatchStuff.cbNoTZ.checked := (player[g,f].tz > 0) and
-    (not(frmSettings.cbNoTZAssist.checked));
+  frmCatchStuff.cbNoTZ.checked := (player[g,f].tz > 0) ;
   frmCatchStuff.cbNervesOfSteel.checked := player[g,f].hasSkill('Nerves of Steel');
   frmCatchStuff.cbETrunk.visible := frmSettings.cbElephantTrunk.checked or
     frmSettings.cbBless.checked;
