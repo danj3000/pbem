@@ -418,48 +418,6 @@ begin
     end;
   end;
 
-  if (frmSettings.cbNiggleHalf.checked) and (HalfNo <> 1) then begin
-    for g := 0 to 1 do begin
-    for f := 1 to team[g].numplayers do begin
-      {look for niggled players}
-      if (player[g,f].status <= 5) then begin
-        HadNiggle := false;
-        s := player[g,f].inj;
-        p := Pos('N', Uppercase(s));
-        if p<>0 then HadNiggle := true;
-        {roll for each N until all done, or 1 rolled}
-        repeat begin
-          r := Rnd(6,1) + 1;
-          r2 := Rnd(6,1) + 1;
-          if ((Uppercase(team[g].race) = 'BRIGHT CRUSADERS')) and (r = 1) and
-            (r2 = 6) and (frmSettings.cbBrightCrusaders.checked) then r := r2;
-          t := 'DN' + Chr(g + 48) + Chr(f + 64) + Chr(r + 48);
-          if (CanWriteToLog) and (p<>0) then begin
-            AddLog(TranslateNiggle(t));
-            LogWrite(t);
-          end;
-          s := Copy(s, p+1, Length(s) - p);
-          p := Pos('N', Uppercase(s));
-          Continuing := true;
-        end until (r = 1) or (p = 0);
-        t := 'Dn' + Chr(g + 48) + Chr(f + 64);
-        if (HadNiggle) then begin
-          if r <> 1 then begin
-            t := t + '9';
-          end else begin
-            t := t + '1';
-          end;
-          if CanWriteToLog then begin
-            AddLog(TranslateNiggleResult(t));
-            LogWrite(t);
-          end;
-          if r = 1 then player[g,f].SetStatus(9);
-        end;
-      end;
-    end;
-    end;
-  end;
-
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
       if (player[g,f].Ally) and (player[g,f].status < 6)
@@ -485,8 +443,7 @@ begin
       {A status 13 failed Take Root player returns to the
         game automatically}
       if (player[g,f].status = 13)
-           and (player[g,f].HasSkill('Take Root')) and
-           (not(frmSettings.cbOPTakeRoot.checked)) then begin
+           and (player[g,f].HasSkill('Take Root'))  then begin
         s := 'tO' + Chr(g + 48) + Chr(f + 64);
         LogWrite(s);
         PlayActionStartHalf(s, 1);
@@ -494,18 +451,7 @@ begin
         curplayer := f;
         Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
       end;
-      {Roll for Take Root if this the beginning of the 1st half}
-      if (player[g,f].HasSkill('Take Root')) and (HalfNo = 1)
-        and (not(frmSettings.cbOPTakeRoot.checked))
-        then begin
-        s := 'tK' + Chr(g + 48) + Chr(f + 64);
-        LogWrite(s);
-        PlayActionStartHalf(s, 1);
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        if lastroll <= 3 then begin
-           player[g,f].SetStatus(13);
-        end;
-      end;
+
       {Clear Out Side Step future programmed squares}
       if (player[g,f].hasSkill('Side Step')) and (HalfNo = 1) then begin
         s := 'QF' + Chr(g + 48) + Chr(f + 64) + Chr(48) + Chr(64) + Chr(64)
@@ -884,7 +830,7 @@ begin
 end;
 
 procedure MakeRegenerationRolls;
-var f, g, Regen2: integer;
+var f, g: integer;
     s: string;
 begin
   for g := 0 to 1 do begin
@@ -903,8 +849,8 @@ begin
         if player[g,f].hasSkill('Restoration') then
             player[g,f].UseSkill('Restoration');
         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        Regen2 := FVal(frmSettings.txtRegenRollNeeded.text);
-        if player[g,f].hasSkill('Restoration') then Regen2 := 2;
+
+
         if ((Uppercase(team[g].race) = 'VAMPIRE - NECRARCH') or
            (Uppercase(team[g].race) = 'VAMPIRE-NECRARCH')) and
            (frmSettings.cbVampireNecrarch.checked) then
@@ -914,7 +860,7 @@ begin
                 '+1 bonus to dice roll for Necrarch Vampire team';
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
            end;
-        if lastroll >= Regen2 then begin
+        if lastroll >= RegenRollNeeded then begin
           curteam := g;
           curplayer := f;
           if (player[g,f].hasSkill('RegenKO')) or
@@ -1431,7 +1377,7 @@ begin
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
       if (player[g,f].HasSkill('Take Root')) and
-        (frmSettings.cbOPTakeRoot.checked) and (player[g,f].ma = 0) then begin
+         (player[g,f].ma = 0) then begin
         s := 'u' + Chr(g + 48) + Chr(f + 64) +
                Chr(0 + 48) +
                Chr(player[g, f].st + 48) +

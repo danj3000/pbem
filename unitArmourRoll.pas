@@ -68,7 +68,6 @@ type
     procedure rbDirtyPlayerClick(Sender: TObject);
     procedure rbFangsClick(Sender: TObject);
     procedure rbIRMightyBlowClick(Sender: TObject);
-    procedure rbIRDirtyPlayerClick(Sender: TObject);
     procedure cbARDauraClick(Sender: TObject);
     procedure cbIRDauraClick(Sender: TObject);
   private
@@ -197,7 +196,7 @@ begin
   if rbWeakPlayer.checked then im := im + 1;
   if rbTitchyPlayer.checked then im := im + 2;
 
-  if frmSettings.cbNiggleUp.checked then begin
+  begin
     Val(Trim(txtNiggles.text), v, c);
     im := im + v;
   end;
@@ -287,10 +286,7 @@ begin
      frmArmourRoll.cbPulledPunches.checked := false;
      frmArmourRoll.cbPulledPunches.visible := false;
   end;
-  if not (frmSettings.cbNiggleUp.checked) then begin
-     frmArmourRoll.lblNiggles.visible := false;
-     frmArmourRoll.txtNiggles.visible := false;
-  end;
+
   case st of
    'A': begin
           frmArmourRoll.caption := 'Armour Roll';
@@ -376,7 +372,7 @@ end;
 
 procedure TfrmArmourRoll.rbClawClick(Sender: TObject);
 begin
-  if not(frmSettings.cbSeparateARIR.checked) then
+  if not(true) then
     rbIRNoSkill.checked := true;
 end;
 
@@ -416,8 +412,6 @@ end;
 
 procedure TfrmArmourRoll.rbFangsClick(Sender: TObject);
 begin
-  if not(frmSettings.cbSeparateARIR.checked) then
-    rbARNoSkill.checked := true;
   if rbChainsaw.checked then begin
     rbChainsaw.checked := false;
     rbARNoSkill.checked := true;
@@ -426,23 +420,10 @@ end;
 
 procedure TfrmArmourRoll.rbIRMightyBlowClick(Sender: TObject);
 begin
-{  txtDPInjMod.enabled := rbIRDirtyPlayer.checked;}
-  if not(frmSettings.cbSeparateARIR.checked) then
-    rbARMightyBlow.checked := true;
   if rbChainsaw.checked then begin
     rbChainsaw.checked := false;
     rbARNoSkill.checked := true;
   end;
-end;
-
-procedure TfrmArmourRoll.rbIRDirtyPlayerClick(Sender: TObject);
-begin
-  if not(frmSettings.cbSeparateARIR.checked) then
-    rbDirtyPlayer.checked := true;
-  {if rbChainsaw.checked then begin
-    rbChainsaw.checked := false;
-    rbARNoSkill.checked := true;
-  end;}
 end;
 
 procedure TfrmArmourRoll.cbARDauraClick(Sender: TObject);

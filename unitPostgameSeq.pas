@@ -242,12 +242,11 @@ begin
   w := 0;
   t := 0;
   if marker[tm, MT_Score].value > marker[1-tm, MT_Score].value then begin
-    w := frmSettings.rgWonMatchMod.ItemIndex + 1;
+    w := 1; // won match modifier
     result := 2;
   end else begin
     if marker[tm, MT_Score].value > marker[1-tm, MT_Score].value then begin
-      if frmSettings.rgTiedMatchMod.ItemIndex > 0 then
-                           t := frmSettings.rgTiedMatchMod.ItemIndex;
+      t := 1;       // tied match modifier
       result := 1;
     end else begin
       result := 0;
@@ -255,7 +254,7 @@ begin
   end;
 
   {Change Match Win Modifier if total gold would be less than zero}
-  if ((r + mw + w + t) < 0) and (not(frmSettings.cbNegativeWinnings.checked))
+  if ((r + mw + w + t) < 0)
     then mw := mw + ((r + mw + w + t) * (-1));
 
   s := 'w0' + Chr(tm + 48) + Chr(r + 64) + Chr(mw + 64) +
@@ -383,8 +382,8 @@ begin
   s := 'D' + Chr(tm + 48);
   c := 0;
   numEligible := 0;
-  noMVPs := frmSettings.cbNoMVPs.checked;
-  MVPBench := frmSettings.cbMVPBench.Checked;
+  noMVPs := false;
+  MVPBench := true;
   for f := 1 to team[tm].numplayers do
     if ((player[tm,f].PlayedThisMatch) and not (NoMVPs)) or
      ((player[tm,f].PlayedThisMatch) and (NoMVPs) and

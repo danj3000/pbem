@@ -2391,16 +2391,16 @@ begin
        if (Player[TeamTest,i].status >= 1) and (Player[TeamTest,i].status <= 4)
          then TotalPlaying := TotalPlaying + 1;
      end;
-     If (TotalPlayers >= 3) and (LOS < 3) and (frmSettings.cbLOS.checked)
+     If (TotalPlayers >= 3) and (LOS < 3)
        then DefenseOK := False;
-     If (TotalPlayers < 3) and (LOS <> TotalPlayers) and (frmSettings.cbLOS.checked)
+     If (TotalPlayers < 3) and (LOS <> TotalPlayers)
        then DefenseOK := False;
-     if (TotalPlayers >= 11) and (TotalPlaying < 11)
-       and (frmSettings.cbRuleof11.checked) then DefenseOK := False;
-     if (TotalPlayers < 11) and (TotalPlaying <> TotalPlayers)
-       and (frmSettings.cbRuleof11.checked) then DefenseOK := False;
-     If (WZone1 > 2) and (frmSettings.cbWideZone.checked) then DefenseOK := False;
-     If (WZone2 > 2) and (frmSettings.cbWideZone.checked) then DefenseOK := False;
+     if (TotalPlayers >= 11) and (TotalPlaying < 11) then
+        DefenseOK := False;
+     if (TotalPlayers < 11) and (TotalPlaying <> TotalPlayers)then
+        DefenseOK := False;
+     If (WZone1 > 2) then DefenseOK := False;
+     If (WZone2 > 2) then DefenseOK := False;
      if (TotalPlaying>11) and (extratitchy=0) then begin
        Application.Messagebox('You have set up more than 12 players! '
         ,'Bloodbowl Possible Illegal Defense Warning', MB_OK);
@@ -2829,16 +2829,16 @@ begin
         if (Player[TeamTest,i].status >= 1) and (Player[TeamTest,i].status <= 4)
           then TotalPlaying := TotalPlaying + 1;
       end;
-      If (TotalPlayers >= 3) and (LOS < 3) and (frmSettings.cbLOS.checked)
+      If (TotalPlayers >= 3) and (LOS < 3)
         then DefenseOK := False;
-      If (TotalPlayers < 3) and (LOS <> TotalPlayers) and (frmSettings.cbLOS.checked)
+      If (TotalPlayers < 3) and (LOS <> TotalPlayers)
         then DefenseOK := False;
       if (TotalPlayers >= 11) and (TotalPlaying < 11)
-        and (frmSettings.cbRuleof11.checked) then DefenseOK := False;
+        then DefenseOK := False;
       if (TotalPlayers < 11) and (TotalPlaying <> TotalPlayers)
-        and (frmSettings.cbRuleof11.checked) then DefenseOK := False;
-      If (WZone1 > 2) and (frmSettings.cbWideZone.checked) then DefenseOK := False;
-      If (WZone2 > 2) and (frmSettings.cbWideZone.checked) then DefenseOK := False;
+         then DefenseOK := False;
+      If (WZone1 > 2)  then DefenseOK := False;
+      If (WZone2 > 2) then DefenseOK := False;
       if (TotalPlaying>11) and (extratitchy=0) then ExtraPlayers := true;
       TeamTest := 1 - TeamTest;
       LOS := 0;
@@ -2861,16 +2861,16 @@ begin
         if (Player[TeamTest,i].status >= 1) and (Player[TeamTest,i].status <= 4)
           then TotalPlaying := TotalPlaying + 1;
       end;
-      If (TotalPlayers >= 3) and (LOS < 3) and (frmSettings.cbLOS.checked)
+      If (TotalPlayers >= 3) and (LOS < 3)
         then DefenseOK := False;
-      If (TotalPlayers < 3) and (LOS <> TotalPlayers) and (frmSettings.cbLOS.checked)
+      If (TotalPlayers < 3) and (LOS <> TotalPlayers)
         then DefenseOK := False;
       if (TotalPlayers >= 11) and (TotalPlaying < 11)
-        and (frmSettings.cbRuleof11.checked) then DefenseOK := False;
+         then DefenseOK := False;
       if (TotalPlayers < 11) and (TotalPlaying <> TotalPlayers)
-        and (frmSettings.cbRuleof11.checked) then DefenseOK := False;
-      If (WZone1 > 2) and (frmSettings.cbWideZone.checked) then DefenseOK := False;
-      If (WZone2 > 2) and (frmSettings.cbWideZone.checked) then DefenseOK := False;
+        then DefenseOK := False;
+      If (WZone1 > 2)  then DefenseOK := False;
+      If (WZone2 > 2)  then DefenseOK := False;
       if (TotalPlaying>11) and (extratitchy=0) then ExtraPlayers := true;
     end;
     if (ExtraPlayers) then begin

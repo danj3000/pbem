@@ -198,7 +198,7 @@ begin
       (Pos('HALFLING', Uppercase(player[g,f].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g,f].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g,f].position)) > 0)) or
-      ((player[g,f].hasSkill('Stunty')) and (frmSettings.cbWeakStunty.checked));
+      ((player[g,f].hasSkill('Stunty')));
   if  (frmPass.cbTitchy.checked) then
     begin
 
@@ -313,8 +313,7 @@ begin
         and not (Pos('HOBGOBLIN', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0)))
         then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[TeamCatcher,NumberCatcher].hasSkill('STUNTY'))
-           and frmSettings.cbWeakStunty.checked then begin
+  end else if (player[TeamCatcher,NumberCatcher].hasSkill('STUNTY')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else if (player[TeamCatcher,NumberCatcher].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
@@ -328,7 +327,6 @@ begin
   totspp := player[TeamCatcher,NumberCatcher].GetStartingSPP() +
             player[TeamCatcher,NumberCatcher].GetMatchSPP();
 
-  if frmSettings.cbNiggleUp.checked then begin
     s := player[TeamCatcher,NumberCatcher].inj;
     p := Pos('N', Uppercase(s));
     {roll for each N until all done, or 1 rolled}
@@ -339,7 +337,7 @@ begin
       p := Pos('N', Uppercase(s));
     end until (p = 0);
     frmArmourRoll.txtNiggles.text := IntToStr(NiggleCount);
-  end;
+
   ShowHurtForm('I');
 end;
 

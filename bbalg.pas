@@ -13,6 +13,7 @@ const
   MVPValue = 5;
   DirtyPlayerArmourModifier = 1;
   DirtyPlayerInjuryModifier = 1;
+  RegenRollNeeded = 4;
 
 
 type
@@ -513,10 +514,7 @@ begin
            '4': begin
                   if s[10] < '4' then t := t + 'Fractured Leg; '
                                 else t := t + 'Smashed Hand; ';
-                  if frmSettings.cbNiggleOnFour.checked then begin
-                     t := t + 'Niggling Injury';
-                     InjuryStatus := 71;
-                  end else begin
+                  begin
                     t := t + 'Miss Next Game';
                     InjuryStatus := 70;
                   end;
@@ -579,15 +577,7 @@ begin
            '4': begin
                   if s[13] < '4' then t := t + ' Fractured Leg; '
                                 else t := t + ' Smashed Hand; ';
-                  if frmSettings.cbNiggleOnFour.checked then begin
-                     t := t + ' Niggling Injury';
-                     if InjuryStatus = 71 then InjuryStatus := 80;
-                     if InjuryStatus = 70 then InjuryStatus := 71;
-                     if InjuryStatus = 72 then InjuryStatus := 81;
-                     if InjuryStatus = 73 then InjuryStatus := 82;
-                     if InjuryStatus = 74 then InjuryStatus := 83;
-                     if InjuryStatus = 75 then InjuryStatus := 84;
-                  end else begin
+                  begin
                     t := t + ' Miss Next Game';
                     InjuryStatus := InjuryStatus;
                   end;
@@ -910,9 +900,7 @@ begin
                   InjuryStatus := 70;
                 end;
            4: begin
-                  if frmSettings.cbNiggleOnFour.checked then begin
-                     InjuryStatus := 71;
-                  end else begin
+                  begin
                     InjuryStatus := 70;
                   end;
                 end;
@@ -958,9 +946,7 @@ begin
                     InjuryStatus := 70;
                   end;
              4: begin
-                    if frmSettings.cbNiggleOnFour.checked then begin
-                       InjuryStatus := 71;
-                    end else begin
+                    begin
                       InjuryStatus := 70;
                     end;
                   end;
@@ -1003,14 +989,7 @@ begin
                     InjuryStatus := InjuryStatus;
                   end;
              4: begin
-                    if frmSettings.cbNiggleOnFour.checked then begin
-                      if InjuryStatus = 71 then InjuryStatus := 80;
-                      if InjuryStatus = 70 then InjuryStatus := 71;
-                      if InjuryStatus = 72 then InjuryStatus := 81;
-                      if InjuryStatus = 73 then InjuryStatus := 82;
-                      if InjuryStatus = 74 then InjuryStatus := 83;
-                      if InjuryStatus = 75 then InjuryStatus := 84;
-                    end else begin
+                    begin
                       InjuryStatus := InjuryStatus;
                     end;
                   end;
@@ -1578,9 +1557,9 @@ begin
              (player[g0,f].HasSkill('Stone Cold Stupid')) then RStupid := True;
           if (player[g0,f].tz > 0) and (not(frmSettings.cbNoTZAssist.checked))
             then TZone := False;
-          if (not(Bhead)) and (not(RStupid)) and (TZone) then a := a + 1;
-          if (Bhead) and (frmSettings.cbBHAssist.checked) and (TZone)
-            then a := a + 1;
+          if TZone and not RStupid then
+            a := a + 1;
+
         end;
       end;
     end;
@@ -2376,8 +2355,7 @@ begin
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
         then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[g0,f0].hasSkill('STUNTY'))
-           and frmSettings.cbWeakStunty.checked then begin
+  end else if (player[g0,f0].hasSkill('STUNTY')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
@@ -2394,7 +2372,7 @@ begin
   totspp := player[g0,f0].GetStartingSPP + player[g0,f0].GetMatchSPP();
 
 
-  if frmSettings.cbNiggleUp.checked then begin
+
     s := player[g0,f0].inj;
     p := Pos('N', Uppercase(s));
     {roll for each N until all done, or 1 rolled}
@@ -2405,7 +2383,7 @@ begin
       p := Pos('N', Uppercase(s));
     end until (p = 0);
     frmArmourRoll.txtNiggles.text := IntToStr(NiggleCount);
-  end;
+
 end;
 
 procedure WorkOutFoul(g, f, g0, f0: integer);
@@ -2520,8 +2498,7 @@ begin
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
         then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[g0,f0].hasSkill('STUNTY'))
-           and frmSettings.cbWeakStunty.checked then begin
+  end else if (player[g0,f0].hasSkill('STUNTY')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
@@ -2535,7 +2512,7 @@ begin
   totspp := player[g0,f0].GetStartingSPP() + player[g0,f0].GetMatchSPP();
 
   frmArmourRoll.rbDeathRoller.checked := (player[g,f].hasSkill('Deathroller'));
-  if frmSettings.cbNiggleUp.checked then begin
+
     s := player[g0,f0].inj;
     p := Pos('N', Uppercase(s));
     {roll for each N until all done, or 1 rolled}
@@ -2546,7 +2523,7 @@ begin
       p := Pos('N', Uppercase(s));
     end until (p = 0);
     frmArmourRoll.txtNiggles.text := IntToStr(NiggleCount);
-  end;
+
   HitTeam := -1;
   HitPlayer := -1;
   BlockTeam := -1;
@@ -2611,8 +2588,7 @@ begin
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
         then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[g0,f0].hasSkill('STUNTY'))
-           and frmSettings.cbWeakStunty.checked then begin
+  end else if (player[g0,f0].hasSkill('STUNTY')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
@@ -2626,7 +2602,7 @@ begin
   totspp := player[g0,f0].GetStartingSPP() +
             player[g0,f0].GetMatchSPP();
 
-  if frmSettings.cbNiggleUp.checked then begin
+
     s := player[g0,f0].inj;
     p := Pos('N', Uppercase(s));
     {roll for each N until all done, or 1 rolled}
@@ -2637,7 +2613,7 @@ begin
       p := Pos('N', Uppercase(s));
     end until (p = 0);
     frmArmourRoll.txtNiggles.text := IntToStr(NiggleCount);
-  end;
+
   ShowHurtForm('I');
 end;
 
@@ -2695,8 +2671,7 @@ begin
    and not (Pos('HOBGOBLIN', Uppercase(player[curteam,curplayer].position)) > 0)))
    then begin
      frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[curteam,curplayer].hasSkill('STUNTY'))
-  and frmSettings.cbWeakStunty.checked then begin
+  end else if (player[curteam,curplayer].hasSkill('STUNTY')) then begin
     frmArmourRoll.rbWeakPlayer.checked := true;
   end else if (player[curteam,curplayer].hasSkill('Easily Injured'))
    then begin
@@ -2725,7 +2700,7 @@ begin
     player[curteam,curplayer].OtherSPP +
     player[curteam,curplayer].exp;
 
-  if frmSettings.cbNiggleUp.checked then begin
+
     s := player[curteam,curplayer].inj;
     p2 := Pos('N', Uppercase(s));
     {roll for each N until all done, or 1 rolled}
@@ -2736,7 +2711,7 @@ begin
     p2 := Pos('N', Uppercase(s));
     end until (p2 = 0);
     frmArmourRoll.txtNiggles.text := IntToStr(NiggleCount);
-  end;
+
   ShowHurtForm('A');
 end;
 

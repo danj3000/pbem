@@ -203,8 +203,7 @@ begin
                             curdir + 'images\die' + IntToStr(r1) + '.bmp');
   imDie2.Picture.LoadFromFile(
                             curdir + 'images\die' + IntToStr(r2) + 'b.bmp');
-  if frmSettings.cbNoForcedMAandAG.checked then rbSkill.enabled := true else
-    rbSkill.enabled := (r1 = r2) or ((r1 + r2) <= 9);
+  rbSkill.enabled := true;
   txtSkill.enabled := rbSkill.enabled;
   rbMA.enabled := (r1 + r2 = 10);
   rbAG.enabled := (r1 + r2 = 11);

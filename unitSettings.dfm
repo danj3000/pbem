@@ -63,7 +63,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 713
     Height = 545
-    ActivePage = TabSheet5
+    ActivePage = TabSheet7
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
@@ -376,98 +376,6 @@ object frmSettings: TfrmSettings
         Height = 17
         Caption = 'Diving Catch (Vault rules)'
         TabOrder = 1
-      end
-    end
-    object TabSheet4: TTabSheet
-      Caption = 'Fouling rules'
-      ImageIndex = 3
-    end
-    object TabSheet5: TTabSheet
-      Caption = 'Player Advancement'
-      ImageIndex = 4
-      object cbNoForcedMAandAG: TCheckBox
-        Left = 16
-        Top = 248
-        Width = 209
-        Height = 17
-        Caption = 'Allow a normal skill at a roll of 10 or 11'
-        TabOrder = 0
-      end
-      object cbNoMVPs: TCheckBox
-        Left = 16
-        Top = 272
-        Width = 361
-        Height = 17
-        Caption = 
-          'Players with skill '#39'No MVPs'#39' and dead players can not get a MVP ' +
-          'award.'
-        TabOrder = 1
-      end
-      object cbMVPBench: TCheckBox
-        Left = 16
-        Top = 296
-        Width = 385
-        Height = 17
-        Caption = 
-          'Players not missing the match but not leaving the dugout can get' +
-          ' the MVP'
-        TabOrder = 2
-      end
-    end
-    object TabSheet6: TTabSheet
-      Caption = 'Post game'
-      ImageIndex = 5
-      object cbFFMinus1Per10: TCheckBox
-        Left = 16
-        Top = 120
-        Width = 345
-        Height = 17
-        Caption = 
-          '-1 modifier on the Fan Factor roll for each 10 points of Fan Fac' +
-          'tor'
-        TabOrder = 0
-      end
-      object cbFFTrueDice: TCheckBox
-        Left = 16
-        Top = 144
-        Width = 369
-        Height = 17
-        Caption = 
-          'Fan Factor always goes down on a roll of 1, always goes up on a ' +
-          'roll of 6'
-        TabOrder = 1
-      end
-      object rgWonMatchMod: TRadioGroup
-        Left = 16
-        Top = 16
-        Width = 137
-        Height = 65
-        Caption = 'Won Match Modifier'
-        ItemIndex = 0
-        Items.Strings = (
-          '+1'
-          '+2')
-        TabOrder = 2
-      end
-      object rgTiedMatchMod: TRadioGroup
-        Left = 160
-        Top = 16
-        Width = 121
-        Height = 65
-        Caption = 'Tied Match Modifier'
-        ItemIndex = 0
-        Items.Strings = (
-          '+0'
-          '+1')
-        TabOrder = 3
-      end
-      object cbNegativeWinnings: TCheckBox
-        Left = 16
-        Top = 184
-        Width = 369
-        Height = 17
-        Caption = 'Use Negative Winnings rule for incurring team debt'
-        TabOrder = 4
       end
     end
     object TabSheet8: TTabSheet
@@ -819,59 +727,13 @@ object frmSettings: TfrmSettings
     object TabSheet9: TTabSheet
       Caption = 'Armour/Injury'
       ImageIndex = 8
-      object cbWeakStunty: TCheckBox
-        Left = 8
-        Top = 64
-        Width = 409
-        Height = 17
-        Caption = 
-          'All Stunty players suffer a +1 modifier on injury rolls, and +1 ' +
-          'band width on passes.'
-        TabOrder = 0
-      end
-      object cbNiggleOnFour: TCheckBox
-        Left = 8
-        Top = 96
-        Width = 241
-        Height = 17
-        Caption = 'A Serious Injury roll of 41-46 is a Niggling Injury'
-        TabOrder = 1
-      end
-      object cbNiggleUp: TCheckBox
-        Left = 8
-        Top = 128
-        Width = 241
-        Height = 17
-        Caption = 'Each Niggling Injury adds +1 to the Injury Roll'
-        TabOrder = 2
-      end
-      object cbNiggleHalf: TCheckBox
-        Left = 8
-        Top = 160
-        Width = 241
-        Height = 17
-        Caption = 
-          'Niggling Injuries are rolled before each half starts instead of ' +
-          'when the game starts'
-        TabOrder = 3
-      end
-      object cbSeparateARIR: TCheckBox
-        Left = 8
-        Top = 32
-        Width = 457
-        Height = 17
-        Caption = 
-          'Armour roll and Injury rolls are considered 2 different rolls (s' +
-          'o you can use a skill on each)'
-        TabOrder = 4
-      end
       object cbNoInjMods: TCheckBox
         Left = 8
         Top = 192
         Width = 241
         Height = 17
         Caption = 'No injury modifiers allowed'
-        TabOrder = 5
+        TabOrder = 0
       end
       object cbDeStun: TCheckBox
         Left = 8
@@ -881,41 +743,21 @@ object frmSettings: TfrmSettings
         Caption = 
           'Players automatically go from Stunned to Prone at the end of the' +
           ' turn after their injury'
-        TabOrder = 6
+        Checked = True
+        State = cbChecked
+        TabOrder = 1
       end
     end
     object TabSheet7: TTabSheet
       Caption = 'Other'
       ImageIndex = 6
-      object Label4: TLabel
-        Left = 8
-        Top = 40
-        Width = 139
-        Height = 13
-        Caption = 'Roll needed for Regeneration'
-      end
-      object Label5: TLabel
-        Left = 176
-        Top = 40
-        Width = 6
-        Height = 13
-        Caption = '+'
-      end
-      object txtRegenRollNeeded: TEdit
-        Left = 160
-        Top = 40
-        Width = 17
-        Height = 21
-        TabOrder = 0
-        Text = '3'
-      end
       object cbPBJumpUp: TCheckBox
         Left = 8
         Top = 72
         Width = 273
         Height = 17
         Caption = 'Jump Up can be used in combination with Pass Block'
-        TabOrder = 1
+        TabOrder = 0
       end
       object cbNoTZAssist: TCheckBox
         Left = 8
@@ -925,7 +767,7 @@ object frmSettings: TfrmSettings
         Caption = 
           'A standing player who does not have a Tackle Zone cannot stop co' +
           'unterassists but can still assist a block (White Dwarf #182)'
-        TabOrder = 2
+        TabOrder = 1
       end
       object cbUpApoth: TCheckBox
         Left = 8
@@ -933,7 +775,7 @@ object frmSettings: TfrmSettings
         Width = 289
         Height = 17
         Caption = 'Reroll KO'#39's for a level 3 Apothecary (Citadel Journal #18)'
-        TabOrder = 3
+        TabOrder = 2
       end
       object cbUseOtherSPP: TCheckBox
         Left = 8
@@ -941,7 +783,7 @@ object frmSettings: TfrmSettings
         Width = 249
         Height = 17
         Caption = 'Use '#39'Other'#39' SPP column in HTML-team roster'
-        TabOrder = 4
+        TabOrder = 3
       end
       object cbCheerAC: TCheckBox
         Left = 8
@@ -949,7 +791,7 @@ object frmSettings: TfrmSettings
         Width = 337
         Height = 17
         Caption = 'Cheerleader/Assistant Coach Pregame rolls for Special Play cards'
-        TabOrder = 5
+        TabOrder = 4
       end
       object cbBiasedReferee: TCheckBox
         Left = 8
@@ -957,7 +799,7 @@ object frmSettings: TfrmSettings
         Width = 337
         Height = 17
         Caption = 'Biased Referee Handicap Event adds +2 to Argue the Call rolls'
-        TabOrder = 6
+        TabOrder = 5
       end
       object cbThrowStunty: TCheckBox
         Left = 8
@@ -967,7 +809,7 @@ object frmSettings: TfrmSettings
         Caption = 
           'Thrown Players without Stunty/Titchy have an extra band range pe' +
           'nalty'
-        TabOrder = 7
+        TabOrder = 6
       end
       object cbKicking: TCheckBox
         Left = 8
@@ -975,7 +817,7 @@ object frmSettings: TfrmSettings
         Width = 185
         Height = 17
         Caption = 'Allow Experimental Kicking Rules'
-        TabOrder = 8
+        TabOrder = 7
       end
       object cbPassFumble: TCheckBox
         Left = 8
@@ -983,7 +825,7 @@ object frmSettings: TfrmSettings
         Width = 289
         Height = 17
         Caption = 'Pass fumble only on Natural 1s instead of Modified 1s'
-        TabOrder = 9
+        TabOrder = 8
       end
       object cbPGFI: TCheckBox
         Left = 8
@@ -991,7 +833,7 @@ object frmSettings: TfrmSettings
         Width = 337
         Height = 17
         Caption = 'Use Progressive GFI'
-        TabOrder = 10
+        TabOrder = 9
       end
       object rgPassFumble: TRadioGroup
         Left = 344
@@ -1004,7 +846,7 @@ object frmSettings: TfrmSettings
           'Passing fumbles on all natural and modified 1s'
           'Passing fumbles on all natural 1s and only TZ modified 1s'
           'Passing fumbles only on natural 1s')
-        TabOrder = 11
+        TabOrder = 10
       end
       object cbLateInt: TCheckBox
         Left = 344
@@ -1012,7 +854,7 @@ object frmSettings: TfrmSettings
         Width = 337
         Height = 17
         Caption = 'Roll for Interception after the Pass roll'
-        TabOrder = 12
+        TabOrder = 11
       end
       object cbFG1PT: TCheckBox
         Left = 192
@@ -1020,15 +862,7 @@ object frmSettings: TfrmSettings
         Width = 233
         Height = 17
         Caption = 'Field Goals and Touchdowns are both 1 point'
-        TabOrder = 13
-      end
-      object cbOPTakeRoot: TCheckBox
-        Left = 8
-        Top = 312
-        Width = 225
-        Height = 17
-        Caption = 'Use On-Pitch Take Root'
-        TabOrder = 14
+        TabOrder = 12
       end
       object cbSquarePass: TCheckBox
         Left = 344
@@ -1036,15 +870,7 @@ object frmSettings: TfrmSettings
         Width = 337
         Height = 17
         Caption = 'Passing/Interception based on squares not bases'
-        TabOrder = 15
-      end
-      object cbBHAssist: TCheckBox
-        Left = 8
-        Top = 336
-        Width = 241
-        Height = 17
-        Caption = 'Boneheads can assist with Really Stupid rolls'
-        TabOrder = 16
+        TabOrder = 13
       end
       object cbDiagMove: TCheckBox
         Left = 8
@@ -1052,7 +878,7 @@ object frmSettings: TfrmSettings
         Width = 241
         Height = 17
         Caption = 'Throw-in Movement can be aimed diagonally'
-        TabOrder = 17
+        TabOrder = 14
       end
       object cbSWRef: TCheckBox
         Left = 8
@@ -1060,7 +886,7 @@ object frmSettings: TfrmSettings
         Width = 313
         Height = 17
         Caption = 'Secret Weapons can be permantently taken by the Referee'
-        TabOrder = 18
+        TabOrder = 15
       end
       object cbNoFieldGoals: TCheckBox
         Left = 440
@@ -1068,7 +894,7 @@ object frmSettings: TfrmSettings
         Width = 233
         Height = 17
         Caption = 'Kicking Skill without Field Goal scoring rules'
-        TabOrder = 19
+        TabOrder = 16
       end
       object cbOnPitchSpellcasters: TCheckBox
         Left = 8
@@ -1076,31 +902,7 @@ object frmSettings: TfrmSettings
         Width = 313
         Height = 17
         Caption = 'On-Pitch Spellcasters instead of off pitch wizards'
-        TabOrder = 20
-      end
-      object cbLOS: TCheckBox
-        Left = 8
-        Top = 432
-        Width = 337
-        Height = 17
-        Caption = '3 players if available required on the LOS (Line of Scrimmage)'
-        TabOrder = 21
-      end
-      object cbWideZone: TCheckBox
-        Left = 8
-        Top = 456
-        Width = 337
-        Height = 17
-        Caption = 'No more than 2 players allowed in each Wide Zone'
-        TabOrder = 22
-      end
-      object cbRuleof11: TCheckBox
-        Left = 8
-        Top = 480
-        Width = 337
-        Height = 17
-        Caption = 'Must set up 11 players or as many as in Reserves'
-        TabOrder = 23
+        TabOrder = 17
       end
     end
   end

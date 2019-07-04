@@ -81,9 +81,9 @@ begin
     casmod[g] := (FVal(marker[g, MT_CasScore].caption) >= 2);
     eachcas[g] := false;
     match[g] := Bloodbowl.RGGate.Itemindex;
-    ffmod[g] := frmSettings.cbFFMinus1Per10.checked;
+    ffmod[g] := false; // fan factor modifier if > 10
     bigmatch[g] := false;
-    premod[g] := frmSettings.cbFFTrueDice.checked;
+    premod[g] := false;
     specteammod[g] := ((Uppercase(team[g].race) = 'EVIL GITS') or
                       (Uppercase(team[g].race) = 'HEROES OF LAW')) and
                       (frmSettings.cbEvilGits.checked);

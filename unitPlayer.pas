@@ -769,8 +769,8 @@ begin
     {On Pitch Take Root}
     if ((player[g,f].HasSkill('Take Root')) and
       (not (player[g,f].usedSkill('Take Root'))) and (g = curmove))
-      and (player[g,f].status >= 1) and (player[g,f].status <= StunNo) and
-      (frmSettings.cbOPTakeRoot.checked) and (player[g,f].ma <> 0) and
+      and (player[g,f].status >= 1) and (player[g,f].status <= StunNo)
+       and (player[g,f].ma <> 0) and
       (player[g,f].font.size = 12)
       then begin
          player[g,f].UseSkill('Take Root');
@@ -2190,7 +2190,7 @@ begin
              frmArmourRoll.rbWeakPlayer.checked := true;
           end else if (player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].hasSkill('STUNTY'))
-             and frmSettings.cbWeakStunty.checked then begin
+             then begin
             frmArmourRoll.rbWeakPlayer.checked := true;
           end else if (player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].hasSkill('Easily Injured')) then begin
@@ -2211,7 +2211,7 @@ begin
             player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].GetMatchSPP();
 
           
-          if frmSettings.cbNiggleUp.checked then begin
+
             s := player[(Sender as TPlayer).teamnr,
               (Sender as Tplayer).number].inj;
             p := Pos('N', Uppercase(s));
@@ -2223,7 +2223,7 @@ begin
               p := Pos('N', Uppercase(s));
             end until (p = 0);
             frmArmourRoll.txtNiggles.text := IntToStr(NiggleCount);
-          end;
+
           s := 'x' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 65) +
           Chr(player[ActionTeam,ActionPlayer].UsedMA + 64);
           LogWrite(s);
@@ -2834,8 +2834,7 @@ begin
         PlayActionEndOfMove(s2, 1);
       end;
     end;
-    if (player[g,f].HasSkill('Take Root')) and
-      (frmSettings.cbOPTakeRoot.checked) and (player[g,f].ma = 0) and ((st0 = 1)
+    if (player[g,f].HasSkill('Take Root')) and (player[g,f].ma = 0) and ((st0 = 1)
       or (st0 = 2)) and ((newStatus = 3) or (newStatus = 4)) then begin
       s := 'u' + Chr(g + 48) + Chr(f + 64) +
            Chr(0 + 48) +
@@ -4416,8 +4415,7 @@ begin
     {On Pitch Take Root}
     if ((player[g,f].HasSkill('Take Root')) and
       (not (player[g,f].usedSkill('Take Root'))) and (g = curmove))
-      and (player[g,f].status >= 1) and (player[g,f].status <= StunNo) and
-      (frmSettings.cbOPTakeRoot.checked) and (player[g,f].ma <> 0) and
+      and (player[g,f].status >= 1) and (player[g,f].status <= StunNo) and (player[g,f].ma <> 0) and
       (player[g,f].font.size = 12)
       then begin
          player[g,f].UseSkill('Take Root');

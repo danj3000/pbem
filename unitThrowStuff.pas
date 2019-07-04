@@ -400,7 +400,7 @@ begin
       (Pos('HALFLING', Uppercase(player[g,f].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g,f].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g,f].position)) > 0)) or
-      ((player[g,f].hasSkill('Stunty')) and (frmSettings.cbWeakStunty.checked));
+      ((player[g,f].hasSkill('Stunty')) );
   if (frmThrowStuff.cbTitchy.checked) then
     begin
         begin
