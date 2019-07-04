@@ -2058,9 +2058,7 @@ begin
     end;
     assa := horns + sa;
   {count assists}
-    if (not((false)                      // Wild animal
-                     and (player[g,f].hasSkill('Wild Animal')))) and
-       (not((player[g,f].hasSkill('Ball and Chain')))) and
+    if (not((player[g,f].hasSkill('Ball and Chain')))) and
        (not((player[g,f].hasSkill('Maniac')))) then begin
       tz := CountTZBlockA(g0, f0);
       bx := false;
@@ -2422,8 +2420,7 @@ begin
   HitTeam := g;
   HitPlayer := f;
 
-  if not(((false) and                     // Wild animal
-      (player[g,f].hasSkill('Wild Animal'))) or (player[g,f].hasSkill('Maniac')))
+  if not(player[g,f].hasSkill('Maniac'))
       then begin
     tz := CountTZFoul(g0, f0);
     bx := false;

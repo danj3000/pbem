@@ -37,7 +37,6 @@ type
     cbTitchy: TCheckBox;
     Label3: TLabel;
     txtPassFA: TEdit;
-    cbRealTitchy: TCheckBox;
     cbBigGuyAlly: TCheckBox;
     cbHFHead: TCheckBox;
     cbBlizzard: TCheckBox;
@@ -395,12 +394,6 @@ begin
     frmThrowStuff.cb3EyePlus.checked := false;
     frmThrowStuff.cb3EyeMinus.checked := false;
   end;
-  frmThrowStuff.cbRealTitchy.checked := (player[g,f].hasSkill('Titchy'))
-    and (false);
-  if not (false) then begin
-    frmThrowStuff.cbRealTitchy.checked := false;
-    frmThrowStuff.cbRealTitchy.visible := false;
-  end;
   frmThrowStuff.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true));      // bigguy
   frmThrowStuff.cbTitchy.checked :=
@@ -408,21 +401,8 @@ begin
       ((Pos('GOBLIN', Uppercase(player[g,f].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g,f].position)) > 0)) or
       ((player[g,f].hasSkill('Stunty')) and (frmSettings.cbWeakStunty.checked));
-  if (frmThrowStuff.cbRealTitchy.checked) or (frmThrowStuff.cbTitchy.checked) then
+  if (frmThrowStuff.cbTitchy.checked) then
     begin
-      if frmThrowStuff.cbRealTitchy.checked then
-        begin
-          if not(frmSettings.cbSquarePass.checked) then begin
-            if dist < 16 then frmThrowStuff.rbLongPass.checked := true else
-            if dist <= 56 then frmThrowStuff.rbLongBomb.checked := true else
-            frmThrowStuff.rbHailMaryPass.checked := true;
-          end else begin
-            if squaredist = 0 then frmThrowStuff.rbLongPass.checked := true else
-            if squaredist = 1 then frmThrowStuff.rbLongBomb.checked := true else
-            frmThrowStuff.rbHailMaryPass.checked := true;
-          end;
-        end
-      else
         begin
           if frmThrowStuff.cbTitchy.checked then
             begin
@@ -1053,21 +1033,7 @@ end;
 
 procedure TfrmThrowStuff.cbTitchyClick(Sender: TObject);
 begin
-  if frmThrowStuff.cbRealTitchy.checked then
-    begin
-      if not(frmSettings.cbSquarePass.checked) then begin
-        if dist < 16 then frmThrowStuff.rbLongPass.checked := true else
-        if dist <= 56 then frmThrowStuff.rbLongBomb.checked := true else
-        frmThrowStuff.rbHailMaryPass.checked := true;
-      end else begin
-        if squaredist = 0 then frmThrowStuff.rbLongPass.checked := true else
-        if squaredist = 1 then frmThrowStuff.rbLongBomb.checked := true else
-        frmThrowStuff.rbHailMaryPass.checked := true;
-      end;
-    end
-  else
-    begin
-      if frmThrowStuff.cbTitchy.checked then
+  if frmThrowStuff.cbTitchy.checked then
         begin
           if not(frmSettings.cbSquarePass.checked) then begin
             if dist < 16 then frmThrowStuff.rbShortPass.checked := true else
@@ -1080,7 +1046,8 @@ begin
             if squaredist = 2 then frmThrowStuff.rbLongBomb.checked := true else
             frmThrowStuff.rbHailMaryPass.checked := true;
           end;
-      end else
+      end
+      else
         begin
           if not(frmSettings.cbSquarePass.checked) then begin
             if dist < 16 then frmThrowStuff.rbQuickPass.checked := true else
@@ -1095,17 +1062,10 @@ begin
             if squaredist = 3 then frmThrowStuff.rbLongBomb.checked := true else
             frmThrowStuff.rbHailMaryPass.checked := true;
           end;
-        end
-    end;
+        end;
+
   CalculatePassRollNeeded;
 end;
 
-
-
-{          for v := 0 to 1 do begin
-            for w := 1 to team[v].numplayers do begin
-              if (player[v,w].p=StuffP) and (player[v,w].q=StuffQ) and
-              (player[v,w].status >= 1) and (player[v,w].status <= 4) then begin
-                if (player[v,w].status = 1) or (player[v,w].status}
 
 end.

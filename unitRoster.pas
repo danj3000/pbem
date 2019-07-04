@@ -500,16 +500,8 @@ begin
   frmRoster.butBuyCheerleader.enabled := (tr > 0);
   frmRoster.butBuyApo.enabled := ((tr >= 50) and (team[curroster].apot = 0))
     or ((tr >= 50) and (team[curroster].apot < 5)
-        and (frmSettings.cbUpApoth.checked))
-    or ((tr >= 10) and (team[curroster].apot < 5) and (frmSettings.cbUpApoth.checked)
-        and (false))     // apoth
-    or ((tr >= 10) and (team[curroster].apot = 0) and (false));  // apoth
-  frmRoster.butBuyWizard.enabled := ((tr >= 150) and (team[curroster].wiz = 0)
-    and (true)) or                 // wizard freebooters
-    ((tr >= 50) and (team[curroster].wiz = 0) and (false))  // wizard freebooters
-    or ((tr >= 20) and (false) // wizard freebooters
-    and (frmSettings.cbHChefNew.checked)
-      and (Uppercase(team[curroster].race) = 'HALFLING'))
+        and (frmSettings.cbUpApoth.checked));
+  frmRoster.butBuyWizard.enabled := ((tr >= 150) and (team[curroster].wiz = 0))
     or ((tr >= 20) and (Uppercase(team[curroster].race) = 'HALFLING') and
       (frmSettings.cbHChefNew.checked) and
       (frmSettings.cbOnPitchSpellcasters.checked));
@@ -600,7 +592,6 @@ begin
   frmRoster.butBuyCheerleader.visible := true;
   frmRoster.butBuyApo.visible := true;
   frmRoster.butBuyWizard.visible := (PostGameActive) or
-    (false) or                    // wizard freebooters
     ((Uppercase(team[g].race) = 'HALFLING') and (frmSettings.cbHChefNew.checked));
   EnableDisableBuyButtons;
   {frmRoster.cmdChangeStats.visible := not(PostgameActive);}
@@ -777,13 +768,7 @@ begin
                end;
              end;
              team[g].wiz := team[g].wiz + 1;
-             if (false) and                // wizard freebooters
-               (not(Uppercase(team[g].race) = 'HALFLING')) then
-               team[g].treasury := IntToStr(MoneyVal(team[g].treasury) -
-                            50) + 'k' else
-             if ((false) or     // wizard freebooters
-               (frmSettings.cbOnPitchSpellcasters.checked)) and
-               (frmSettings.cbHChefNew.checked) and
+             if (frmSettings.cbHChefNew.checked) and
                (Uppercase(team[g].race) = 'HALFLING') then
                 team[g].treasury := IntToStr(MoneyVal(team[g].treasury) -
                             20) + 'k'
@@ -875,13 +860,10 @@ begin
       'W': begin
              if team[g].wiz = 1 then wiz[g].visible := false;
              team[g].wiz := team[g].wiz - 1;
-             if (false) and                             // wizard freebooters
-               (not(Uppercase(team[g].race) = 'HALFLING')) then
+             if (not(Uppercase(team[g].race) = 'HALFLING')) then
                team[g].treasury := IntToStr(MoneyVal(team[g].treasury) +
                             50) + 'k' else
-             if ((false) or      // wizard freebooters
-               (frmSettings.cbOnPitchSpellcasters.checked)) and
-               (frmSettings.cbHChefNew.checked) and
+             if (frmSettings.cbHChefNew.checked) and
                (Uppercase(team[g].race) = 'HALFLING') then
                 team[g].treasury := IntToStr(MoneyVal(team[g].treasury) +
                             20) + 'k'

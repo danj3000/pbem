@@ -255,11 +255,8 @@ begin
       end;
       CanUseTeamReroll := b;
     end;
-    if (false) then CanUseTeamReRoll := false;     // big guy
-    if (true)                            // big guy
-      and (player[curmove,curplayer].BigGuy) then CanUseTeamReRoll := false;
-    if (true)                          // big guy
-      and (player[curmove,curplayer].Ally) then CanUseTeamReRoll := true;
+    if (player[curmove,curplayer].BigGuy) then CanUseTeamReRoll := false;
+    if (player[curmove,curplayer].Ally) then CanUseTeamReRoll := true;
   end else CanUseTeamReroll := false;
 end;
 
@@ -277,17 +274,6 @@ begin
     for f := 1 to team[curmove2].numplayers do begin
       if (player[curmove2, f].status >= 1) and (player[curmove2, f].status <= 3)
       and (player[curmove2, f].HasSkill('Leader')) then b := true;
-    end;
-    for f := 1 to team[curmove2].numplayers do begin
-      if (marker[curmove2, MT_Reroll].value > 0) and
-        (player[curmove2, f].status >= 1) and (player[curmove2, f].status <= 3)
-        and (((player[curmove2, f].BigGuy) or (player[curmove2,f].Ally)) and
-          (false)) then begin     // bigguy
-          b := false;
-          if (((player[curmove2,curplayer].BigGuy) or
-            (player[curmove2,curplayer].Ally)) and
-            (true)) then b := true;     // bigguy
-      end;
     end;
   end;
   UseTeamReroll := true;

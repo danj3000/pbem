@@ -507,10 +507,6 @@ begin
       WACheck := false;
       for f0 := 1 to team[g].numplayers do begin
         if (player[g,f0].status >= 1) and (player[g,f0].status <= StunNo) and
-          (player[g,f0].HasSkill('Wild Animal')) and
-          (player[g,f0].font.size = 12) and (false) // Wild animal
-          then WACheck := true;
-        if (player[g,f0].status >= 1) and (player[g,f0].status <= StunNo) and
           (player[g,f0].HasSkill('Maniac')) and
           (player[g,f0].font.size = 12)
           then WACheck := true;
@@ -2035,9 +2031,7 @@ begin
       HitTeam := g;
       HitPlayer := f;
       {count assists}
-      if (not((false)    // Wild animal
-                       and (player[g,f].hasSkill('Wild Animal'))))
-        and (not((player[g,f].hasSkill('Ball and Chain'))))
+      if (not((player[g,f].hasSkill('Ball and Chain'))))
         and (not((player[g,f].hasSkill('Maniac')))) then begin
         tz := CountTZBlockA(g0, f0);
         bx := false;
@@ -2186,11 +2180,7 @@ begin
           frmArmourRoll.cbWaaaghArmour.checked :=
             (player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].hasSkill('Waaagh Armour'));
-          if (player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('TITCHY')) and
-            (false) then begin
-             frmArmourRoll.rbTitchyPlayer.checked := true;
-            end else if ((Pos('HALFLING', Uppercase(player[(Sender as TPlayer).teamnr,
+          if ((Pos('HALFLING', Uppercase(player[(Sender as TPlayer).teamnr,
              (Sender as Tplayer).number].position)) > 0) or
              ((Pos('GOBLIN', Uppercase(player[(Sender as TPlayer).teamnr,
              (Sender as Tplayer).number].position)) > 0)
@@ -2372,9 +2362,7 @@ begin
       Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
 
       if lastroll<r then begin
-        bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
-          (player[ActionTeam,ActionPlayer].Ally))
-          and (false)); // bigguy
+        bga := false; // bigguy
         proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
           and (lastroll <= 1) and
           (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
@@ -2703,10 +2691,12 @@ begin
       HitPlayer := f;
 
       {count assists}
-      if (not((false)                   // Wild animal
-                       and (player[g,f].hasSkill('Wild Animal'))))
-        and (not((player[g,f].hasSkill('Ball and Chain'))))
-        and (not((player[g,f].hasSkill('Maniac')))) then begin
+      if (not( false                  // Wild animal
+                and (player[g,f].hasSkill('Wild Animal')))
+                )
+        and (not(player[g,f].hasSkill('Ball and Chain')))
+        and (not(player[g,f].hasSkill('Maniac'))) then
+        begin
         tz := CountTZBlockA(g0, f0);
         bx := false;
         for p := 1 to tz.num do begin
@@ -4176,10 +4166,6 @@ begin
       and (g = curmove) then begin
       WACheck := false;
       for f0 := 1 to team[g].numplayers do begin
-        if (player[g,f0].status >= 1) and (player[g,f0].status <= StunNo) and
-          (player[g,f0].HasSkill('Wild Animal')) and
-          (player[g,f0].font.size = 12) and (false)      // Wild animal
-          then WACheck := true;
         if (player[g,f0].status >= 1) and (player[g,f0].status <= StunNo) and
           (player[g,f0].HasSkill('Maniac')) and
           (player[g,f0].font.size = 12)

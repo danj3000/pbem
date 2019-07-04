@@ -4393,15 +4393,7 @@ begin
     if not (player[curteam,curplayer].usedSkill('Hypnotic Gaze'))
     then begin
       GameStatus := 'HGaze';
-      if (false) and  // hypnogaze
-       (player[curteam,curplayer].font.size=12) then
-        Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO GAZE ... REMEMBER'+
-          ' YOU MUST USE A BLITZ ACTION TO GAZE AND MOVE AFTER GAZING'
-      else if (false)  // hypnogaze
-      and (player[curteam,curplayer].font.size<>12) then
-        Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO GAZE ... REMEMBER'+
-          ' YOU MUST USE A BLITZ ACTION TO DO THIS SINCE YOU HAVE MOVED ALREADY'
-      else Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO GAZE';
+      Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO GAZE';
       ActionTeam := curteam;
       ActionPlayer := curplayer;
     end else begin

@@ -183,22 +183,13 @@ object frmThrowStuff: TfrmThrowStuff
       TabOrder = 4
       OnClick = cbTitchyClick
     end
-    object cbRealTitchy: TCheckBox
-      Left = 16
-      Top = 144
-      Width = 129
-      Height = 17
-      Caption = 'Titchy'
-      TabOrder = 5
-      OnClick = cbTitchyClick
-    end
     object cbHFHead: TCheckBox
       Left = 16
       Top = 168
       Width = 129
       Height = 17
       Caption = 'House Fly Head'
-      TabOrder = 6
+      TabOrder = 5
       OnClick = PassSkillClick
     end
     object cbSingleEye: TCheckBox
@@ -207,7 +198,7 @@ object frmThrowStuff: TfrmThrowStuff
       Width = 129
       Height = 17
       Caption = 'Single Eye'
-      TabOrder = 7
+      TabOrder = 6
       OnClick = PassSkillClick
     end
     object cbThirdEye: TCheckBox
@@ -216,7 +207,7 @@ object frmThrowStuff: TfrmThrowStuff
       Width = 129
       Height = 17
       Caption = 'Third Eye'
-      TabOrder = 8
+      TabOrder = 7
       OnClick = PassSkillClick
     end
   end

@@ -37,7 +37,6 @@ type
     cbTitchy: TCheckBox;
     Label3: TLabel;
     txtPassFA: TEdit;
-    cbRealTitchy: TCheckBox;
     cbBigGuyAlly: TCheckBox;
     cbPerfectSpiral: TCheckBox;
     cbHFHead: TCheckBox;
@@ -192,12 +191,7 @@ begin
     frmPass.cb3EyePlus.checked := false;
     frmPass.cb3EyeMinus.checked := false;
   end;
-  frmPass.cbRealTitchy.checked := (player[g,f].hasSkill('Titchy')) and
-    (false);
-  if not (false) then begin
-    frmPass.cbRealTitchy.checked := false;
-    frmPass.cbRealTitchy.visible := false;
-  end;
+
   frmPass.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true));     // big guy
   frmPass.cbTitchy.checked :=
@@ -205,21 +199,9 @@ begin
       ((Pos('GOBLIN', Uppercase(player[g,f].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g,f].position)) > 0)) or
       ((player[g,f].hasSkill('Stunty')) and (frmSettings.cbWeakStunty.checked));
-  if (frmPass.cbRealTitchy.checked) or (frmPass.cbTitchy.checked) then
+  if  (frmPass.cbTitchy.checked) then
     begin
-      if frmPass.cbRealTitchy.checked then
-        begin
-          if not(frmSettings.cbSquarePass.checked) then begin
-            if dist < 16 then frmPass.rbLongPass.checked := true else
-            if dist <= 56 then frmPass.rbLongBomb.checked := true else
-            frmPass.rbHailMaryPass.checked := true;
-          end else begin
-            if squaredist = 0 then frmPass.rbLongPass.checked := true else
-            if squaredist = 1 then frmPass.rbLongBomb.checked := true else
-            frmPass.rbHailMaryPass.checked := true;
-          end;
-        end
-      else
+
         begin
           if frmPass.cbTitchy.checked then
             begin
@@ -327,10 +309,7 @@ begin
       (player[TeamCatcher,NumberCatcher].hasSkill('Waaagh Armour'));
   frmArmourRoll.cbWaaaghArmour.checked := (
       player[TeamCatcher,NumberCatcher].hasSkill('Waaagh Armour'));
-  if (player[TeamCatcher,NumberCatcher].hasSkill('TITCHY'))
-     and (false) then begin
-     frmArmourRoll.rbTitchyPlayer.checked := true;
-  end else if ((Pos('HALFLING', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0) or
+  if ((Pos('HALFLING', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0)))
         then begin
@@ -1375,19 +1354,7 @@ end;
 
 procedure TfrmPass.cbTitchyClick(Sender: TObject);
 begin
-  if frmPass.cbRealTitchy.checked then
-    begin
-      if not(frmSettings.cbSquarePass.checked) then begin
-        if dist < 16 then frmPass.rbLongPass.checked := true else
-        if dist <= 56 then frmPass.rbLongBomb.checked := true else
-        frmPass.rbHailMaryPass.checked := true;
-      end else begin
-        if squaredist = 0 then frmPass.rbLongPass.checked := true else
-        if squaredist = 1 then frmPass.rbLongBomb.checked := true else
-        frmPass.rbHailMaryPass.checked := true;
-      end;
-    end
-  else
+
     begin
       if frmPass.cbTitchy.checked then
         begin
