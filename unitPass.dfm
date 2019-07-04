@@ -199,33 +199,6 @@ object frmPass: TfrmPass
       TabOrder = 4
       OnClick = cbTitchyClick
     end
-    object cbHFHead: TCheckBox
-      Left = 16
-      Top = 168
-      Width = 129
-      Height = 17
-      Caption = 'House Fly Head'
-      TabOrder = 5
-      OnClick = PassSkillClick
-    end
-    object cbSingleEye: TCheckBox
-      Left = 16
-      Top = 192
-      Width = 129
-      Height = 17
-      Caption = 'Single Eye'
-      TabOrder = 6
-      OnClick = PassSkillClick
-    end
-    object cbThirdEye: TCheckBox
-      Left = 16
-      Top = 216
-      Width = 129
-      Height = 17
-      Caption = 'Third Eye'
-      TabOrder = 7
-      OnClick = PassSkillClick
-    end
   end
   object txtPassTZ: TEdit
     Left = 120
@@ -357,20 +330,11 @@ object frmPass: TfrmPass
   end
   object cbBigGuyAlly: TCheckBox
     Left = 8
-    Top = 472
+    Top = 455
     Width = 129
     Height = 17
     Caption = 'BigGuy/Ally'
     TabOrder = 11
-    Visible = False
-  end
-  object cbPerfectSpiral: TCheckBox
-    Left = 8
-    Top = 456
-    Width = 129
-    Height = 17
-    Caption = 'Perfect Spiral'
-    TabOrder = 12
     Visible = False
   end
   object cbBlizzard: TCheckBox
@@ -379,7 +343,7 @@ object frmPass: TfrmPass
     Width = 57
     Height = 17
     Caption = 'Blizzard'
-    TabOrder = 13
+    TabOrder = 12
     OnClick = PassSkillClick
   end
   object cbImpossible: TCheckBox
@@ -388,25 +352,7 @@ object frmPass: TfrmPass
     Width = 129
     Height = 17
     Caption = 'Impossbile'
-    TabOrder = 14
-    Visible = False
-  end
-  object cb3EyePlus: TCheckBox
-    Left = 88
-    Top = 432
-    Width = 73
-    Height = 17
-    Caption = '3rdEye+'
-    TabOrder = 15
-    Visible = False
-  end
-  object cb3EyeMinus: TCheckBox
-    Left = 96
-    Top = 456
-    Width = 73
-    Height = 17
-    Caption = '3rd Eye -'
-    TabOrder = 16
+    TabOrder = 13
     Visible = False
   end
   object butPro: TButton
@@ -416,7 +362,7 @@ object frmPass: TfrmPass
     Height = 25
     Caption = 'Use Pro'
     Enabled = False
-    TabOrder = 17
+    TabOrder = 14
     OnClick = butProClick
   end
 end

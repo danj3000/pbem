@@ -207,19 +207,6 @@ type
     ThrowTeamMate1: TMenuItem;
     ThrowExplosiveBombs1: TMenuItem;
     ThrowinMovement1: TMenuItem;
-    TargetActionsSpecial1: TMenuItem;
-    BearHug1: TMenuItem;
-    Chill1: TMenuItem;
-    Ethereal1: TMenuItem;
-    MaceTail1: TMenuItem;
-    BulletThrow1: TMenuItem;
-    PitchPlayer1: TMenuItem;
-    ThrowStinkBomb1: TMenuItem;
-    ThrowNet1: TMenuItem;
-    ThrowBigBomb1: TMenuItem;
-    Wings1: TMenuItem;
-    WingsLeap1: TMenuItem;
-    WarCry1: TMenuItem;
     Shadowing1: TMenuItem;
     MakeKickRoll1: TMenuItem;
     DirtyKick1: TMenuItem;
@@ -243,7 +230,6 @@ type
     RemoveCas1: TMenuItem;
     RemoveOther1: TMenuItem;
     RemoveMVP1: TMenuItem;
-    Dig1: TMenuItem;
     RemoveCheerleaderAsstCoach1: TMenuItem;
     ChangeGate1: TMenuItem;
     CrowdRoll1: TMenuItem;
@@ -290,7 +276,6 @@ type
     Teams1: TMenuItem;
     ViewRedTeam1: TMenuItem;
     ViewBlueTeam1: TMenuItem;
-    Firethrower1: TMenuItem;
     RPB2: TMenuItem;
     RPB3: TMenuItem;
     RPB4: TMenuItem;
@@ -541,9 +526,9 @@ var
   RandRoll1, RandRoll2, RandRoll3, RandRoll4, RandRoll5: array [0..100]
     of integer;
   ref, AutoSave, AskConfirmation, MBPO,
-  ThickSkull, PoisonedDagger, CrystalSkin, Brittle,
-  DirtyPlayer4th, DaemonicAura, LesserBanishment, bbfullscreen,
-  LBanishment2, SmellingSalts, IronMan, Decay, PulledPunches,
+  ThickSkull,  CrystalSkin,
+  DirtyPlayer4th,   bbfullscreen,
+   SmellingSalts, IronMan, Decay,
   TIKSTPK, BribeTheAnnouncers, NoDeath, FixedRand, SaveGameAllowed,
   FirstLoad, Touchback, SettingsLoaded, AccuratePassPlay, PalmedCoin,
   SideStepStop, ProSkill, KickOffNow, DodgeNoStand, GetCAS: boolean;
@@ -756,13 +741,10 @@ begin
   PalmedCoin := false;
   IGMEOY := -1;
   ThickSkull := false;
-  PoisonedDagger := false;
+
   CrystalSkin := false;
-  DaemonicAura := false;
-  Brittle := false;
   IronMan := false;
   Decay := false;
-  PulledPunches := false;
   DirtyPlayer4th := false;
   TIKSTPK := false;
   LastFieldP := -1;

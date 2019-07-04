@@ -203,9 +203,9 @@ end;
 procedure TPlayer.PlayerStartDrag(Sender: TObject;
   var DragObject: TDragObject);
 var s, lostcontrol, BANG, RerollAnswer, s2, WAAnswer: string;
-    f, g, f0, f2, Bhead, RSHelp, curturn, playermovement, r, btr, StunNo,
+    f, g, f0, f2, Bhead, RSHelp, curturn, playermovement, r, StunNo,
       WATarget: integer;
-    WACheck, GGCheck, BaCCheck, bga, proskill, reroll, WARoll, UReroll: boolean;
+    WACheck, GGCheck, BaCCheck, bga, proskill, reroll,  UReroll: boolean;
 begin
   if (GameStatus <> 'Pass') and (GameStatus <> 'HGaze')
     and (GameStatus <> 'Chill') and (GameStatus <> 'Ethereal')
@@ -980,7 +980,7 @@ end;
 
 procedure TPlayer.PlayerMouseDown(Sender: TObject; Button: TMouseButton;
                                   Shift: TShiftState; X, Y: Integer);
-var f, g, k, l: integer;
+var f, g: integer;
     s: string;
 begin
   f := (Sender as TPlayer).number;
@@ -2124,24 +2124,13 @@ begin
             IntToStr(player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].av);
           frmArmourRoll.txtAssists.text := IntToStr(0);
-          frmArmourRoll.cbPulledPunches.checked :=
-            (player[ActionTeam,ActionPlayer].hasSkill('Pulled Punches'));
+
           frmArmourRoll.cbThickSkull.checked :=
            (player[(Sender as TPlayer).teamnr,
            (Sender as Tplayer).number].hasSkill('Thick Skull'));
           frmArmourRoll.cbProSkill.checked := (player[(Sender as TPlayer).teamnr,
            (Sender as Tplayer).number].hasSkill('Pro'));
-          frmArmourRoll.cbIRDaura.checked := (player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('Daemonic Aura'));
-          for t := 1 to team[(Sender as TPlayer).teamnr].numplayers do begin
-            if (player[(Sender as TPlayer).teamnr,t].hasSkill('Conjure 3+'))
-            and (player[(Sender as TPlayer).teamnr,t].status >= 1)
-            and (player[(Sender as TPlayer).teamnr,t].status <= 4) then
-              frmArmourRoll.cbIRDaura.checked := False;
-          end;
-          frmArmourRoll.cbWaaaghArmour.checked :=
-            (player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('Waaagh Armour'));
+
           if ((Pos('HALFLING', Uppercase(player[(Sender as TPlayer).teamnr,
              (Sender as Tplayer).number].position)) > 0) or
              ((Pos('GOBLIN', Uppercase(player[(Sender as TPlayer).teamnr,
@@ -2158,14 +2147,12 @@ begin
             (Sender as Tplayer).number].hasSkill('Easily Injured')) then begin
             frmArmourRoll.rbWeakPlayer.checked := true;
           end else frmArmourRoll.rbNoStunty.checked := true;
-          frmArmourRoll.cbBrittle.checked := (player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('Brittle'));
+
           frmArmourRoll.cbNoDeath.checked := (player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].hasSkill('Amateur'))
              or (player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].hasSkill('NoDeath'));
-          frmArmourRoll.cbIronMan.checked := (player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('Iron Man'));
+
           frmArmourRoll.cbDecay.checked := (player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].hasSkill('Decay'));
           totspp :=
@@ -2514,7 +2501,7 @@ begin
 end;
 
 procedure TPlayer.PlayerDragDrop(Sender, Source: TObject; X, Y: Integer);
-var f, g, f0, g0, status: integer;
+var f, g, f0, g0: integer;
     s: string;
 begin
   f := (Sender as TPlayer).number;
@@ -2581,7 +2568,7 @@ end;
 
 procedure TPlayer.PlayerDragOver(Sender, Source: TObject; X, Y: Integer;
                                  State: TDragState; var Accept: Boolean);
-var g, f, g0, f0, assa, assd, p, db, dd, st, sa, stx, std, st0, lastact,
+var g, f, g0, f0, assa, assd, p,  sa, stx, std,
     fblock, horns: integer;
     tz, tz0: TackleZones;
     b, bx: boolean;
@@ -3818,9 +3805,9 @@ end;
 
 procedure LeftClickPlayer(g,f: integer);
 var s, lostcontrol, BANG, RerollAnswer, s2, WAAnswer: string;
-    f0, f2, Bhead, RSHelp, curturn, playermovement, r, btr, StunNo,
+    f0, f2, Bhead, RSHelp, curturn, playermovement, r, StunNo,
       WATarget: integer;
-    WACheck, GGCheck, BaCCheck, bga, proskill, reroll, WARoll, UReroll: boolean;
+    WACheck, GGCheck, BaCCheck, bga, proskill, reroll, UReroll: boolean;
 begin
   if (GameStatus <> 'Pass') and (GameStatus <> 'HGaze')
     and (GameStatus <> 'Chill') and (GameStatus <> 'Ethereal')

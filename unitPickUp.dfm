@@ -141,33 +141,6 @@ object frmPickUp: TfrmPickUp
       TabOrder = 0
       OnClick = BigHandClick
     end
-    object cbETrunk: TCheckBox
-      Left = 8
-      Top = 32
-      Width = 137
-      Height = 17
-      Caption = 'Elephant Trunk or Bless'
-      TabOrder = 1
-      OnClick = NewSkillClick
-    end
-    object cbHFHead: TCheckBox
-      Left = 8
-      Top = 64
-      Width = 97
-      Height = 17
-      Caption = 'House Fly Head'
-      TabOrder = 2
-      OnClick = NewSkillClick
-    end
-    object cbButterfingers: TCheckBox
-      Left = 8
-      Top = 48
-      Width = 97
-      Height = 17
-      Caption = 'Butterfingers'
-      TabOrder = 3
-      OnClick = NewSkillClick
-    end
   end
   object butPickUpRoll: TButton
     Left = 16

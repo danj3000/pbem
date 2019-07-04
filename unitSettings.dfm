@@ -142,7 +142,7 @@ object frmSettings: TfrmSettings
           AutoSize = False
           Color = clRed
           ParentColor = False
-          Transparent = False
+          Transparent = True
         end
         object lblAwayColor: TLabel
           Left = 48
@@ -152,7 +152,7 @@ object frmSettings: TfrmSettings
           AutoSize = False
           Color = clBlue
           ParentColor = False
-          Transparent = False
+          Transparent = True
         end
         object Button1: TButton
           Left = 184
@@ -405,28 +405,14 @@ object frmSettings: TfrmSettings
     object TabSheet8: TTabSheet
       Caption = 'New Skills'
       ImageIndex = 7
+      ExplicitLeft = 8
+      ExplicitTop = 64
       object Label19: TLabel
         Left = 24
         Top = 16
         Width = 266
         Height = 13
         Caption = 'Select the new skills and abilities you want for this match'
-      end
-      object cbFragile: TCheckBox
-        Left = 160
-        Top = 184
-        Width = 113
-        Height = 17
-        Caption = 'Fragile'
-        TabOrder = 0
-      end
-      object cbElephantTrunk: TCheckBox
-        Left = 160
-        Top = 88
-        Width = 113
-        Height = 17
-        Caption = 'Elephant Trunk'
-        TabOrder = 1
       end
       object cbNullField: TCheckBox
         Left = 312
@@ -436,239 +422,7 @@ object frmSettings: TfrmSettings
         Caption = 'Tattoos or Null Field'
         Checked = True
         State = cbChecked
-        TabOrder = 2
-      end
-      object cbGFIInjury: TCheckBox
-        Left = 160
-        Top = 208
-        Width = 113
-        Height = 17
-        Caption = 'GFI Injury'
-        TabOrder = 3
-      end
-      object cbPerfectSpiral: TCheckBox
-        Left = 312
-        Top = 112
-        Width = 113
-        Height = 17
-        Caption = 'Perfect Spiral'
-        TabOrder = 4
-      end
-      object cbHouseFlyHead: TCheckBox
-        Left = 312
-        Top = 40
-        Width = 113
-        Height = 17
-        Caption = 'House Fly Head'
-        TabOrder = 5
-      end
-      object cbCrystalSkin: TCheckBox
-        Left = 24
-        Top = 208
-        Width = 113
-        Height = 17
-        Caption = 'Crystal Skin'
-        TabOrder = 6
-      end
-      object cbWaaaghArmour: TCheckBox
-        Left = 488
-        Top = 160
-        Width = 113
-        Height = 17
-        Caption = 'Waaagh Armour'
-        TabOrder = 7
-      end
-      object cbBanishment: TCheckBox
-        Left = 24
-        Top = 40
-        Width = 113
-        Height = 17
-        Caption = 'Banishment'
-        TabOrder = 8
-      end
-      object cbBrittle: TCheckBox
-        Left = 24
-        Top = 112
-        Width = 113
-        Height = 17
-        Caption = 'Brittle'
-        TabOrder = 9
-      end
-      object cbDaemonicAura: TCheckBox
-        Left = 160
-        Top = 40
-        Width = 113
-        Height = 17
-        Caption = 'Daemonic Aura'
-        TabOrder = 10
-      end
-      object cbPulledPunches: TCheckBox
-        Left = 312
-        Top = 160
-        Width = 113
-        Height = 17
-        Caption = 'Pulled Punches'
-        TabOrder = 11
-      end
-      object cbBless: TCheckBox
-        Left = 24
-        Top = 88
-        Width = 113
-        Height = 17
-        Caption = 'Bless'
-        TabOrder = 12
-      end
-      object cbSingleEye: TCheckBox
-        Left = 312
-        Top = 184
-        Width = 113
-        Height = 17
-        Caption = 'Single Eye'
-        TabOrder = 13
-      end
-      object cbThirdEye: TCheckBox
-        Left = 488
-        Top = 40
-        Width = 113
-        Height = 17
-        Caption = 'Third Eye'
-        TabOrder = 14
-      end
-      object cbWings: TCheckBox
-        Left = 488
-        Top = 208
-        Width = 113
-        Height = 17
-        Caption = 'Wings'
-        TabOrder = 15
-      end
-      object cbWarCry: TCheckBox
-        Left = 488
-        Top = 184
-        Width = 113
-        Height = 17
-        Caption = 'War Cry'
-        TabOrder = 16
-      end
-      object cbThrowStinkBomb: TCheckBox
-        Left = 488
-        Top = 136
-        Width = 113
-        Height = 17
-        Caption = 'Throw Stink Bombs'
-        TabOrder = 17
-      end
-      object cbThrowNet: TCheckBox
-        Left = 488
-        Top = 112
-        Width = 113
-        Height = 17
-        Caption = 'Throw Nets'
-        TabOrder = 18
-      end
-      object cbThrowFireball: TCheckBox
-        Left = 488
-        Top = 88
-        Width = 153
-        Height = 17
-        Caption = 'Throw Fireball (On-Pitch)'
-        TabOrder = 19
-      end
-      object cbThrowBigBomb: TCheckBox
-        Left = 488
-        Top = 64
-        Width = 161
-        Height = 17
-        Caption = 'Throw Big Bomb (Grab Bag)'
-        TabOrder = 20
-      end
-      object cbPitchPlayer: TCheckBox
-        Left = 312
-        Top = 136
-        Width = 113
-        Height = 17
-        Caption = 'Pitch Player'
-        TabOrder = 21
-      end
-      object cbMaceTail: TCheckBox
-        Left = 312
-        Top = 88
-        Width = 113
-        Height = 17
-        Caption = 'Mace Tail'
-        TabOrder = 22
-      end
-      object cbEthereal: TCheckBox
-        Left = 160
-        Top = 112
-        Width = 113
-        Height = 17
-        Caption = 'Ethereal'
-        TabOrder = 23
-      end
-      object cbChill: TCheckBox
-        Left = 24
-        Top = 184
-        Width = 113
-        Height = 17
-        Caption = 'Chill'
-        TabOrder = 24
-      end
-      object cbBulletThrow: TCheckBox
-        Left = 24
-        Top = 136
-        Width = 113
-        Height = 17
-        Caption = 'Bullet Throw'
-        TabOrder = 25
-      end
-      object cbBearHug: TCheckBox
-        Left = 24
-        Top = 64
-        Width = 113
-        Height = 17
-        Caption = 'Bear Hug'
-        TabOrder = 26
-      end
-      object cbFlyer: TCheckBox
-        Left = 160
-        Top = 160
-        Width = 113
-        Height = 17
-        Caption = 'Flyer'
-        TabOrder = 27
-      end
-      object cbLanding: TCheckBox
-        Left = 312
-        Top = 64
-        Width = 113
-        Height = 17
-        Caption = 'Landing'
-        TabOrder = 28
-      end
-      object cbDig: TCheckBox
-        Left = 160
-        Top = 64
-        Width = 113
-        Height = 17
-        Caption = 'Dig'
-        TabOrder = 29
-      end
-      object cbButterfingers: TCheckBox
-        Left = 24
-        Top = 160
-        Width = 113
-        Height = 17
-        Caption = 'Butterfingers'
-        TabOrder = 30
-      end
-      object cbFirethrower: TCheckBox
-        Left = 160
-        Top = 136
-        Width = 145
-        Height = 17
-        Caption = 'Chaos Dwarf Firethrower'
-        TabOrder = 31
+        TabOrder = 0
       end
     end
   end

@@ -20,7 +20,6 @@ type
     butMakeRoll: TButton;
     pnlIR: TPanel;
     GroupBox2: TGroupBox;
-    rbFangs: TRadioButton;
     rbIRNoSkill: TRadioButton;
     lblAssists: TLabel;
     txtAssists: TEdit;
@@ -36,27 +35,19 @@ type
     GroupBox4: TGroupBox;
     rbWeakPlayer: TRadioButton;
     rbTitchyPlayer: TRadioButton;
-    cbCrystalSkin: TCheckBox;
     cbThickSkull: TCheckBox;
     rbChainsaw: TRadioButton;
-    rbPDagger: TRadioButton;
-    cbARDaura: TCheckBox;
-    cbIRDaura: TCheckBox;
     cbNullField: TCheckBox;
-    cbWaaaghArmour: TCheckBox;
-    cbLBanish2: TCheckBox;
     rbDeathRoller: TRadioButton;
-    cbBrittle: TCheckBox;
     cbChainsawKD: TCheckBox;
     rbNoStunty: TRadioButton;
-    cbIronMan: TCheckBox;
-    cbPulledPunches: TCheckBox;
     lblNiggles: TLabel;
     txtNiggles: TEdit;
     cbNoDeath: TCheckBox;
     cbProSkill: TCheckBox;
     rbPilingOn: TCheckBox;
     cbDecay: TCheckBox;
+    rbFangs: TRadioButton;
     procedure rbPilingOnClick(Sender: TObject);
     procedure txtArmourValueChange(Sender: TObject);
     procedure butMakeRollClick(Sender: TObject);
@@ -68,8 +59,7 @@ type
     procedure rbDirtyPlayerClick(Sender: TObject);
     procedure rbFangsClick(Sender: TObject);
     procedure rbIRMightyBlowClick(Sender: TObject);
-    procedure cbARDauraClick(Sender: TObject);
-    procedure cbIRDauraClick(Sender: TObject);
+
   private
     { Private declarations }
   public
@@ -141,7 +131,7 @@ begin
       Val(Trim(txtAssists.text), v, c);
       am := am + v + 1;
     end;
-    if cbARDaura.checked or cbNullField.checked then am := 0;
+    if cbNullField.checked then am := 0;
 
     s := s + ' +' + IntToStr(am);
   end;
@@ -149,15 +139,9 @@ begin
   {Set Global Variables for armour and injury specials based on options}
   ProSkill := cbProSkill.checked;
   ThickSkull := cbThickSkull.checked;
-  PulledPunches := cbPulledPunches.checked and frmSettings.cbPulledPunches.checked;
-  IronMan := cbIronMan.checked;
+
   Decay := cbDecay.Checked;
-  PoisonedDagger := rbPDagger.checked;
-  CrystalSkin := cbCrystalSkin.checked and frmSettings.cbCrystalSkin.checked;
-  DaemonicAura := cbIRDaura.checked and frmSettings.cbDaemonicAura.checked;
-//  LesserBanishment := cbLBanish.checked and frmSettings.cbBanishment.checked;
-  LBanishment2 := cbLBanish2.checked and frmSettings.cbBanishment.checked;
-  Brittle := cbBrittle.checked and frmSettings.cbBrittle.checked;
+
   NoDeath := cbNoDeath.checked;
   DirtyPlayer4th := false;
 
@@ -177,12 +161,12 @@ begin
     MBPO := true;
     if (RollST <> 'I')
       and rbARMightyBlow.checked
-      and not (cbARDaura.checked or cbNullField.checked) then ix := ' &';
+      and not (cbNullField.checked) then ix := ' &';
   end;
   if rbIRDirtyPlayer.checked then begin
     Val(Trim(txtDPInjMod.text), v, c);
     im := v;
-    if not (cbARDaura.checked or cbNullField.checked) then begin
+    begin
       ix := ' &';
       DirtyPlayer4th := true;
     end;
@@ -192,7 +176,7 @@ begin
     im := 7;
     ix := ' &';
   end;
-  if (im <> 7) and (cbWaaaghArmour.checked) then im := 0;
+
   if rbWeakPlayer.checked then im := im + 1;
   if rbTitchyPlayer.checked then im := im + 2;
 
@@ -218,20 +202,14 @@ begin
   cbIGMEOY.checked := false;
   cbThickSkull.checked := false;
   cbProSkill.Checked := false;
-  rbPDagger.checked := false;
-  cbCrystalSkin.checked := false;
-  cbIronMan.checked := false;
+
   cbDecay.checked := false;
-  cbPulledPunches.checked := false;
-  cbARDaura.checked := false;
-  cbIRDaura.checked := false;
+
   cbNullField.checked := false;
-  cbWaaaghArmour.checked := false;
+
   rbChainsaw.checked := false;
   cbChainsawKD.checked := false;
-//  cbLBanish.checked := false;
-  cbLBanish2.checked := false;
-  cbBrittle.checked := false;
+
   cbNoDeath.checked := false;
   txtAssists.text := '';
   txtPilingOnST.text := '';
@@ -254,37 +232,10 @@ procedure ShowHurtForm(st: char);
 begin
   {st = A: Armour Roll, = I: Injury Roll, = F: Foul Roll}
   RollSt := st;
-  if not (frmSettings.cbCrystalSkin.checked) then begin
-     frmArmourRoll.cbCrystalSkin.visible := false;
-     frmArmourRoll.cbCrystalSkin.checked := false;
-  end;
+
   if not (frmSettings.cbNullField.checked) then begin
      frmArmourRoll.cbNullField.visible := false;
      frmArmourRoll.cbNullField.checked := false;
-  end;
-  if not (frmSettings.cbWaaaghArmour.checked) then begin
-     frmArmourRoll.cbWaaaghArmour.visible := false;
-     frmArmourRoll.cbWaaaghArmour.checked := false;
-  end;
-  if not (frmSettings.cbBanishment.checked) then begin
-//     frmArmourRoll.cbLBanish.visible := false;
-//     frmArmourRoll.cbLBanish.checked := false;
-     frmArmourRoll.cbLBanish2.checked := false;
-  end;
-  if not (frmSettings.cbBrittle.checked) then begin
-     frmArmourRoll.cbBrittle.visible := false;
-     frmArmourRoll.cbBrittle.checked := false;
-  end;
-
-  if not (frmSettings.cbDaemonicAura.checked) then begin
-     frmArmourRoll.cbARDaura.checked := false;
-     frmArmourRoll.cbARDaura.visible := false;
-     frmArmourRoll.cbIRDaura.checked := false;
-     frmArmourRoll.cbIRDaura.Visible := false;
-  end;
-  if not (frmSettings.cbPulledPunches.checked) then begin
-     frmArmourRoll.cbPulledPunches.checked := false;
-     frmArmourRoll.cbPulledPunches.visible := false;
   end;
 
   case st of
@@ -297,7 +248,7 @@ begin
           frmArmourRoll.rbPilingOn.visible := true;
           frmArmourRoll.lblPilingOnST.visible := true;
           frmArmourRoll.txtPilingOnST.visible := true;
-          frmArmourRoll.rbPDagger.visible := true;
+
           frmArmourRoll.rbDeathRoller.visible := false;
           frmArmourRoll.cbIGMEOY.visible := false;
           frmArmourRoll.rbIRDirtyPlayer.visible := false;
@@ -321,7 +272,7 @@ begin
           frmArmourRoll.cbIGMEOY.visible := false;
           frmArmourRoll.rbIRDirtyPlayer.visible := true;
           frmArmourRoll.txtDPInjMod.visible := true;
-          frmArmourRoll.rbPDagger.visible := true;
+
           frmArmourRoll.pnlIR.left := frmArmourRoll.pnlAR.left;
           frmArmourRoll.pnlPlayerSize.left := frmArmourRoll.pnlAR.left;
           frmArmourRoll.width := frmArmourRoll.pnlIR.width;
@@ -340,7 +291,7 @@ begin
           frmArmourRoll.rbPilingOn.visible := false;
           frmArmourRoll.lblPilingOnST.visible := false;
           frmArmourRoll.txtPilingOnST.visible := false;
-          frmArmourRoll.rbPDagger.visible := false;
+
           frmArmourRoll.cbIGMEOY.visible := true;
           frmArmourRoll.rbDeathRoller.visible := true;
           frmArmourRoll.rbIRDirtyPlayer.visible := true;
@@ -426,16 +377,5 @@ begin
   end;
 end;
 
-procedure TfrmArmourRoll.cbARDauraClick(Sender: TObject);
-begin
-  if cbARDaura.checked = true then
-      cbIRDaura.checked := true;
-end;
-
-procedure TfrmArmourRoll.cbIRDauraClick(Sender: TObject);
-begin
-  if cbIRDaura.checked = true then
-      cbARDaura.checked := true;
-end;
 
 end.

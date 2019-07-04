@@ -159,33 +159,6 @@ object frmCatchStuff: TfrmCatchStuff
       TabOrder = 1
       OnClick = CatchSkillClick
     end
-    object cbETrunk: TCheckBox
-      Left = 8
-      Top = 64
-      Width = 137
-      Height = 17
-      Caption = 'Elephant Trunk or Bless'
-      TabOrder = 2
-      OnClick = CatchSkillClick
-    end
-    object cbHFHead: TCheckBox
-      Left = 8
-      Top = 88
-      Width = 97
-      Height = 16
-      Caption = 'House Fly Head'
-      TabOrder = 3
-      OnClick = CatchSkillClick
-    end
-    object cbButterfingers: TCheckBox
-      Left = 8
-      Top = 112
-      Width = 97
-      Height = 16
-      Caption = 'Butterfingers'
-      TabOrder = 4
-      OnClick = CatchSkillClick
-    end
   end
   object rgAccPassBB: TRadioGroup
     Left = 8

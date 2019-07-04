@@ -38,14 +38,8 @@ type
     Label3: TLabel;
     txtPassFA: TEdit;
     cbBigGuyAlly: TCheckBox;
-    cbPerfectSpiral: TCheckBox;
-    cbHFHead: TCheckBox;
     cbBlizzard: TCheckBox;
     cbImpossible: TCheckBox;
-    cbSingleEye: TCheckBox;
-    cbThirdEye: TCheckBox;
-    cb3EyePlus: TCheckBox;
-    cb3EyeMinus: TCheckBox;
     txtBulletThrow: TLabel;
     butPro: TButton;
     procedure PassSkillClick(Sender: TObject);
@@ -98,16 +92,7 @@ begin
     and not(frmPass.rbQuickPass.checked) then m := m + 1;
   end;
   if frmPass.cbVerySunny.checked then m := m - 1;
-  if frmPass.cbHFHead.checked then m := m - 2;
-  frmPass.cb3EyePlus.checked := false;
-  frmPass.cb3EyeMinus.checked := false;
-  if (frmPass.cbThirdEye.checked) and
-    (squaredist<=1 ) then
-    frmPass.cb3EyePlus.checked := true else
-    if (frmPass.cbThirdEye.checked) then frmPass.cb3EyeMinus.checked := true;
-  if frmPass.cb3EyeMinus.checked then m := m - 1;
-  if frmPass.cb3EyePlus.checked then m := m + 1;
-  if not(frmPass.cbBlizzard.checked) then frmPass.cbImpossible.checked := false;
+    if not(frmPass.cbBlizzard.checked) then frmPass.cbImpossible.checked := false;
   if (frmPass.rbHailMaryPass.checked) and (frmPass.txtBulletThrow.visible) then
     frmPass.cbImpossible.checked := true;
   PassTZMod := 0;
@@ -157,32 +142,7 @@ begin
   frmPass.cbStrongArm.checked := player[g,f].hasSkill('Strong Arm');
   frmPass.cbAccurate.checked := player[g,f].hasSkill('Accurate');
   frmPass.cbNervesOfSteel.checked := player[g,f].hasSkill('Nerves of Steel');
-  frmPass.cbPerfectSpiral.checked := player[g,f].hasSkill('Perfect Spiral');
-  frmPass.cbHFHead.checked := player[g,f].hasSkill('House Fly Head');
-  frmPass.cbSingleEye.checked := player[g,f].hasSkill('Single Eye');
-  frmPass.cbThirdEye.checked := player[g,f].hasSkill('Third Eye');
-  frmPass.cb3EyePlus.checked := false;
-  frmPass.cb3EyeMinus.checked := false;
-  if (frmPass.cbThirdEye.checked) and
-   (squaredist<=1) then
-    frmPass.cb3EyePlus.checked := true else
-    if (frmPass.cbThirdEye.checked) then frmPass.cb3EyeMinus.checked := true;
-  if not (frmSettings.cbPerfectSpiral.checked) then
-    frmPass.cbPerfectSpiral.checked := false;
-  if not (frmSettings.cbHouseFlyHead.checked) then begin
-    frmPass.cbHFHead.Checked := false;
-    frmPass.cbHFHead.Visible := false;
-  end;
-  if not (frmSettings.cbSingleEye.checked) then begin
-    frmPass.cbSingleEye.Checked := false;
-    frmPass.cbSingleEye.Visible := false;
-  end;
-  if not (frmSettings.cbThirdEye.checked) then begin
-    frmPass.cbThirdEye.Checked := false;
-    frmPass.cbThirdEye.Visible := false;
-    frmPass.cb3EyePlus.checked := false;
-    frmPass.cb3EyeMinus.checked := false;
-  end;
+
 
   frmPass.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true));     // big guy
@@ -278,18 +238,11 @@ begin
     frmArmourRoll.txtDPInjMod.text := InttoStr(Injmod);
   frmArmourRoll.cbThickSkull.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Thick Skull'));
   frmArmourRoll.cbProSkill.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Pro'));
-  frmArmourRoll.cbARDaura.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Daemonic Aura'));
-  frmArmourRoll.cbIRDaura.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Daemonic Aura'));
-  for t := 1 to team[TeamCatcher].numplayers do begin
-    if (player[TeamCatcher,t].hasSkill('Conjure 3+')) and (player[TeamCatcher,t].status >= 1)
-          and (player[TeamCatcher,t].status <= 4) then
-    frmArmourRoll.cbIRDaura.checked := False;
-  end;
+
   frmArmourRoll.cbNullField.checked :=  (player[TeamCatcher,NumberCatcher].hasSkill('Null Field'))
       or (player[TeamCatcher,NumberCatcher].hasSkill('Tattoos')) or
       (player[TeamCatcher,NumberCatcher].hasSkill('Waaagh Armour'));
-  frmArmourRoll.cbWaaaghArmour.checked := (
-      player[TeamCatcher,NumberCatcher].hasSkill('Waaagh Armour'));
+
   if ((Pos('HALFLING', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0)))
@@ -300,10 +253,8 @@ begin
   end else if (player[TeamCatcher,NumberCatcher].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
-  frmArmourRoll.cbBrittle.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Brittle'));
   frmArmourRoll.cbNoDeath.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Amateur'))
      or (player[TeamCatcher,NumberCatcher].hasSkill('NoDeath'));
-  frmArmourRoll.cbIronMan.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Iron Man'));
   frmArmourRoll.cbDecay.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Decay'));
 
   totspp := player[TeamCatcher,NumberCatcher].GetStartingSPP() +
@@ -935,10 +886,7 @@ begin
     if rbLongBomb.checked then s := s + 'Long bomb, ';
     if cbAccurate.checked then s := s + 'Accurate, ';
     if cbStrongArm.checked then s := s + 'Strong Arm, ';
-    if cbHFHead.checked then s := s + 'House Fly Head, ';
-    if cbSingleEye.checked then s := s + 'Single Eye, ';
-    if cbThirdEye.checked then s := s + 'Third Eye, ';
-    if cbPerfectSpiral.checked then s:= s + 'Perfect Spiral, ';
+
   end;
   if cbNervesOfSteel.checked then s := s + 'Nerves of Steel, ' else
    if txtPassTZ.text <> '0' then s := s + txtPassTZ.text + ' TZ, ';
@@ -948,7 +896,7 @@ begin
   Bloodbowl.comment.text := s;
   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
   PassResult := WorkOutPassResult;
-  if (PassResult) and not (frmPass.cbSingleEye.checked) then begin
+  if (PassResult)  then begin
     if cbHailMaryPass.checked then begin
       butPassRoll.enabled := false;
       butPassSkill.enabled := false;
@@ -975,7 +923,7 @@ begin
             AccurateTeam := TeamPasser;
             AccuratePlayer := NumberPasser;
             ShowCatchWindow(TeamCatcher, NumberCatcher, 1,
-              frmPass.cbPerfectSpiral.checked, false);
+              false, false);
           end;
         end else begin
           AVBreak := true;
@@ -986,51 +934,9 @@ begin
         end;
       end;
     end;
-  end else if (frmPass.cbSingleEye.checked) and (PassResult) then begin
-    frmPass.cbSingleEye.checked := false;
-    Bloodbowl.comment.text :=
-      'Accurate Pass must be re-rolled due to Single Eye';
-    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-    if WorkOutPassResult then begin
-      ModalResult := 1;
-      Hide;
-      if TeamCatcher = -1 then begin
-
-        if (player[TeamPasser, NumberPasser].status = 2) and
-          (frmSettings.cbDC.checked) then
-          DCCheck := DetermineDivingCatch(FieldP, FieldQ, 1, 1);
-        if player[TeamPasser, NumberPasser].status = 2 then
-          ScatterBallFrom(FieldP, FieldQ, 1, 0);
-      end else begin
-        BTCheck := true;
-        if frmPass.txtBulletThrow.Visible then BTCheck := BulletThrowCheck;
-        if BTCheck then begin
-
-          if player[TeamPasser, NumberPasser].status = 2 then begin
-            AccuratePassPlay := true;
-            AccurateTeam := TeamPasser;
-            AccuratePlayer := NumberPasser;
-            ShowCatchWindow(TeamCatcher, NumberCatcher, 1,
-              frmPass.cbPerfectSpiral.checked, false);
-          end;
-        end else begin
-          AVBreak := true;
-          InjuryPlayer;
-          AVBreak := false;
-          ScatterBallFrom((player[TeamCatcher,NumberCatcher].p),
-          (player[TeamCatcher,NumberCatcher].q), 1, 0);
-        end;
-      end;
-    end else begin
-      butPassRoll.enabled := false;
-      butPassSkill.enabled := player[TeamPasser,NumberPasser].hasSkill('Pass');
-      butPro.enabled :=
-         player[TeamPasser, NumberPasser].hasSkill('Pro') and
-         not(player[TeamPasser,NumberPasser].usedSkill('Pro'));
-      butTeamReroll.enabled := CanUseTeamReroll(cbBigGuyAlly.checked);
-      frmPass.height := 530;
-    end;
-  end else begin
+  end
+  else
+   begin
     butPassRoll.enabled := false;
     butPassSkill.enabled := player[TeamPasser,NumberPasser].hasSkill('Pass');
     butPro.enabled :=
@@ -1045,7 +951,7 @@ procedure MakePassReroll;
 var PassResult, BTcheck, DCCheck: boolean;
 begin
   PassResult := WorkOutPassResult;
-  if (PassResult) and not (frmPass.cbSingleEye.checked) then begin
+  if (PassResult) then begin
     if frmPass.cbHailMaryPass.checked then begin
       frmPass.butPassRoll.enabled := false;
       frmPass.butPassSkill.enabled := false;
@@ -1071,7 +977,7 @@ begin
             AccurateTeam := TeamPasser;
             AccuratePlayer := NumberPasser;
             ShowCatchWindow(TeamCatcher, NumberCatcher, 1,
-              frmPass.cbPerfectSpiral.checked, false);
+              false, false);
           end;
         end else begin
           AVBreak := true;
@@ -1082,46 +988,9 @@ begin
         end;
       end;
     end;
-  end else if (frmPass.cbSingleEye.checked) and (PassResult) then begin
-    frmPass.cbSingleEye.checked := false;
-    Bloodbowl.comment.text :=
-      'Accurate Pass must be re-rolled due to Single Eye';
-    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-    if WorkOutPassResult then begin
-      frmPass.ModalResult := 1;
-      frmPass.Hide;
-      if TeamCatcher = -1 then begin
-        if (player[TeamPasser, NumberPasser].status = 2) and
-          (frmSettings.cbDC.checked) then
-          DCCheck := DetermineDivingCatch(FieldP, FieldQ, 1, 1);
-        if player[TeamPasser, NumberPasser].status = 2 then
-          ScatterBallFrom(FieldP, FieldQ, 1, 0);
-      end else begin
-        BTCheck := true;
-        if frmPass.txtBulletThrow.Visible then BTCheck := BulletThrowCheck;
-        if BTCheck then begin
-          if player[TeamPasser, NumberPasser].status = 2 then begin
-            AccuratePassPlay := true;
-            AccurateTeam := TeamPasser;
-            AccuratePlayer := NumberPasser;
-            ShowCatchWindow(TeamCatcher, NumberCatcher, 1,
-              frmPass.cbPerfectSpiral.checked, false);
-          end;
-        end else begin
-          AVBreak := true;
-          InjuryPlayer;
-          AVBreak := false;
-          ScatterBallFrom((player[TeamCatcher,NumberCatcher].p),
-          (player[TeamCatcher,NumberCatcher].q), 1, 0);
-        end;
-      end;
-    end else begin
-      frmPass.butPassRoll.enabled := false;
-      frmPass.butPassSkill.enabled := false;
-      frmPass.butTeamReroll.enabled := false;
-      frmPass.butPro.enabled := false;
-    end;
-  end else begin
+  end
+  else
+   begin
     frmPass.butPassRoll.enabled := false;
     frmPass.butPassSkill.enabled := false;
     frmPass.butTeamReroll.enabled := false;

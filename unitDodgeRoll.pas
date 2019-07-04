@@ -33,7 +33,6 @@ type
     butKnockOver: TButton;
     lblDodgeRerollFailed: TLabel;
     TitchyCB: TCheckBox;
-    ETrunkCB: TCheckBox;
     cbBigGuyAlly: TCheckBox;
     cbDivingTackle: TCheckBox;
     butPro: TButton;
@@ -100,9 +99,7 @@ begin
   frmDodgeRoll.TitchyCB.Visible := true;
   frmDodgeRoll.TitchyCB.checked := (player[g0,f0].hasSkill('Titchy')) and
     (not(player[g0,f0].HasSkill('SW*'))) and (true);
-  frmDodgeRoll.ETrunkCB.visible := frmSettings.cbElephantTrunk.checked;
-  frmDodgeRoll.ETrunkCB.checked := (player[g0,f0].hasSkill('Elephant Trunk'))
-    and (frmSettings.cbElephantTrunk.checked);
+
   frmDodgeRoll.cbBigGuyAlly.checked := (((player[g0,f0].BigGuy) or
     (player[g0,f0].Ally)) and ( true));   // bigguy
   b := 0;
@@ -218,10 +215,7 @@ begin
     r := r - 1;
     r2 := r2 - 1;
   end;
-  if ETrunkCB.checked then begin
-    r := r + 1;
-    r2 := r2 + 1;
-  end;
+
   if cbDivingTackle.checked then begin
     r := r + 2;
     r2 := r2 + 2;
@@ -357,8 +351,7 @@ begin
           player[g0,f0].q + DirBut[db].dy].hint + ' (';
     if TwoHeadsCB.checked then
       Bloodbowl.comment.text := Bloodbowl.comment.text + 'Two Heads, ';
-    if ETrunkCB.checked then
-      Bloodbowl.comment.text := Bloodbowl.comment.text + 'Elephant Trunk, ';
+
     if BreakTackleCB.checked and true then
        Bloodbowl.comment.text := Bloodbowl.comment.text +
        'Break Tackle (optional), ';

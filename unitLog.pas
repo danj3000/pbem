@@ -65,9 +65,6 @@ begin
 end;
 
 procedure AddToGameLog(s: string);
-var t: string;
-    p, p2, p3: integer;
-    Loadtest: boolean;
 begin
   SetLength(gamelog, Length(gamelog) + 1);
   gamelog[High(gamelog)] := s;
@@ -219,7 +216,7 @@ begin
 end;
 }
 procedure LogWrite(s: string);
-var p, p2, p3: integer;
+var p: integer;
     s2, t, t2: string;
 begin
   if logpos >= Length(gamelog) then begin

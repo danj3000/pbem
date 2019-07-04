@@ -189,7 +189,6 @@ begin
   frmDodgeRoll.TwoHeadsCB.Caption := TranslateSkillToLanguage('Two Heads');
   frmDodgeRoll.BreakTackleCB.Caption := TranslateSkillToLanguage('Break Tackle');
   frmDodgeRoll.TitchyCB.Caption := TranslateSkillToLanguage('Titchy');
-  frmDodgeRoll.ETrunkCB.Caption := TranslateSkillToLanguage('Elephant Trunk');
   frmDodgeRoll.lblPrehTailTxt.Caption := TranslateSkillToLanguage('Prehensile Tail');
   frmDodgeRoll.lblTentaclesTxt.Caption := TranslateSkillToLanguage('Tentacles');
   frmDodgeRoll.cbDivingTackle.Caption := TranslateSkillToLanguage('Diving Tackle');
@@ -207,8 +206,6 @@ begin
        frmGFI.lblTriesToTxt.caption := s;
     if CompareNode('Blizzard') then
        frmGFI.cbBlizzard.Caption := s;
-    if CompareNode('GFIAutoInjury') then
-       frmGFI.cbGFIInjury.caption := s;
     if CompareNode('SprintForPGFI') then
        frmGFI.cbSprint.caption := s;
     if CompareNode('GoForItFailed') then

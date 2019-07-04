@@ -57,38 +57,7 @@ type
     cbDC: TCheckBox;
     TabSheet8: TTabSheet;
     Label19: TLabel;
-    cbFragile: TCheckBox;
-    cbElephantTrunk: TCheckBox;
     cbNullField: TCheckBox;
-    cbGFIInjury: TCheckBox;
-    cbPerfectSpiral: TCheckBox;
-    cbHouseFlyHead: TCheckBox;
-    cbCrystalSkin: TCheckBox;
-    cbWaaaghArmour: TCheckBox;
-    cbBanishment: TCheckBox;
-    cbBrittle: TCheckBox;
-    cbDaemonicAura: TCheckBox;
-    cbPulledPunches: TCheckBox;
-    cbBless: TCheckBox;
-    cbSingleEye: TCheckBox;
-    cbThirdEye: TCheckBox;
-    cbWings: TCheckBox;
-    cbWarCry: TCheckBox;
-    cbThrowStinkBomb: TCheckBox;
-    cbThrowNet: TCheckBox;
-    cbThrowFireball: TCheckBox;
-    cbThrowBigBomb: TCheckBox;
-    cbPitchPlayer: TCheckBox;
-    cbMaceTail: TCheckBox;
-    cbEthereal: TCheckBox;
-    cbChill: TCheckBox;
-    cbBulletThrow: TCheckBox;
-    cbBearHug: TCheckBox;
-    cbFlyer: TCheckBox;
-    cbLanding: TCheckBox;
-    cbDig: TCheckBox;
-    cbButterfingers: TCheckBox;
-    cbFirethrower: TCheckBox;
     procedure butAcceptClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -152,56 +121,11 @@ begin
     Bloodbowl.butMakeHandicapRolls.visible := false;
   end;
 
-  if not (frmSettings.cbBearHug.checked) then
-    BloodBowl.BearHug1.visible := false;
-  if not (frmSettings.cbBulletThrow.checked) then
-    BloodBowl.BulletThrow1.visible := false;
-  if not (frmSettings.cbChill.checked) then
-    BloodBowl.Chill1.visible := false;
-  if not (frmSettings.cbEthereal.checked) then
-    BloodBowl.Ethereal1.visible := false;
-  if not (frmSettings.cbMaceTail.checked) then
-    BloodBowl.MaceTail1.visible := false;
-  if not (frmSettings.cbPitchPlayer.checked) then
-    BloodBowl.PitchPlayer1.visible := false;
-  if not (frmSettings.cbThrowBigBomb.checked) then
-    BloodBowl.ThrowBigBomb1.visible := false;
-  {if not (frmSettings.cbThrowFireball.checked) then
-    BloodBowl.ThrowFireball1.visible := false; }
-  if not (frmSettings.cbFirethrower.checked) then
-    BloodBowl.Firethrower1.visible := false;
-  if not (frmSettings.cbThrowNet.checked) then
-    BloodBowl.ThrowNet1.visible := false;
-  if not (frmSettings.cbThrowStinkBomb.checked) then
-    BloodBowl.ThrowStinkBomb1.visible := false;
-  if not (frmSettings.cbWarCry.checked) then
-    BloodBowl.WarCry1.visible := false;
-  if not (frmSettings.cbDig.checked) then
-    BloodBowl.Dig1.visible := false;
-  if not (frmSettings.cbWings.checked) then begin
-    BloodBowl.Wings1.visible := false;
-    BloodBowl.WingsLeap1.visible := false;
-  end;
   begin
     BloodBowl.MakeKickRoll1.Visible := false;
     BloodBowl.DirtyKick1.Visible := false;
     BloodBowl.Punt1.Visible := false;
   end;
-  if not (frmSettings.cbBearHug.checked) and
-     not (frmSettings.cbBulletThrow.checked) and
-     not (frmSettings.cbChill.checked) and
-     not (frmSettings.cbEthereal.checked) and
-     not (frmSettings.cbMaceTail.checked) and
-     not (frmSettings.cbPitchPlayer.checked) and
-     not (frmSettings.cbThrowBigBomb.checked) and
-     {not (frmSettings.cbThrowFireball.checked) and}
-     not (frmSettings.cbThrowNet.checked) and
-     not (frmSettings.cbThrowStinkBomb.checked) and
-     not (frmSettings.cbFirethrower.checked) and
-     not (frmSettings.cbWarCry.checked) and
-     not (frmSettings.cbDig.checked) and
-     not (frmSettings.cbWings.checked) then
-     BloodBowl.TargetActionsSpecial1.visible := false;
 
   ShowFieldImage(frmSettings.txtFieldImageFile.text);
 
@@ -249,22 +173,22 @@ begin
 //  frmSettings.cbCheerAC.checked := (s[4] = 'S');
 //  frmSettings.cbNoMVPs.checked := (s[5] = 'M');
 //  frmSettings.cbNiggleUp.checked := (s[6] = 'N');
-  frmSettings.cbBanishment.checked := (s[7] = 'B');
-  frmSettings.cbBless.checked := (s[8] = 'L');
-  frmSettings.cbBrittle.checked := (s[9] = 'R');
-  frmSettings.cbCrystalSkin.checked := (s[10] = 'C');
-  frmSettings.cbDaemonicAura.checked := (s[11] = 'D');
-  frmSettings.cbElephantTrunk.checked := (s[12] = 'E');
-  frmSettings.cbFragile.checked := (s[13] = 'P');
-  frmSettings.cbGFIInjury.checked := (s[14] = 'G');
-  frmSettings.cbHouseFlyHead.checked := (s[15] = 'H');
-  frmSettings.cbPerfectSpiral.checked := (s[16] = 'I');
-  frmSettings.cbPulledPunches.checked := (s[17] = 'J');
-  frmSettings.cbSingleEye.checked := (s[18] = 'K');
+//  frmSettings.cbBanishment.checked := (s[7] = 'B');
+//  frmSettings.cbBless.checked := (s[8] = 'L');
+//  frmSettings.cbBrittle.checked := (s[9] = 'R');
+//  frmSettings.cbCrystalSkin.checked := (s[10] = 'C');
+//  frmSettings.cbDaemonicAura.checked := (s[11] = 'D');
+//  frmSettings.cbElephantTrunk.checked := (s[12] = 'E');
+//  frmSettings.cbFragile.checked := (s[13] = 'P');
+//  frmSettings.cbGFIInjury.checked := (s[14] = 'G');
+//  frmSettings.cbHouseFlyHead.checked := (s[15] = 'H');
+//  frmSettings.cbPerfectSpiral.checked := (s[16] = 'I');
+//  frmSettings.cbPulledPunches.checked := (s[17] = 'J');
+//  frmSettings.cbSingleEye.checked := (s[18] = 'K');
   frmSettings.cbNullField.checked := (s[19] = 'O');
-  frmSettings.cbThirdEye.checked := (s[20] = 'T');
+//  frmSettings.cbThirdEye.checked := (s[20] = 'T');
   //frmSettings.rgTitchy.ItemIndex := Ord(s[21]) - 48;
-  frmSettings.cbWaaaghArmour.checked := (s[22] = 'W');
+//  frmSettings.cbWaaaghArmour.checked := (s[22] = 'W');
 //  frmSettings.cbBrightCrusaders.checked := (s[23] = 'X');
 //  frmSettings.cbEvilGits.checked := (s[24] = 'U');
 //  frmSettings.cbVampireNecrarch.checked := (s[25] = 'V');
@@ -272,21 +196,21 @@ begin
 //  frmSettings.cbNurglesRotters.checked := (s[27] = 'Z');
 //  frmSettings.cbHobgoblin.checked := (s[28] = 'A');
 //  frmSettings.cbBiasedReferee.checked := (s[29] = 'C');
-  frmSettings.cbBearHug.checked := (s[30] = 'D');
-  frmSettings.cbBulletThrow.checked := (s[31] = 'E');
-  frmSettings.cbChill.checked := (s[32] = 'F');
-  frmSettings.cbEthereal.checked := (s[33] = 'G');
-  frmSettings.cbMaceTail.checked := (s[34] = 'H');
-  frmSettings.cbPitchPlayer.checked := (s[35] = 'I');
-  frmSettings.cbThrowBigBomb.checked := (s[36] = 'J');
-  frmSettings.cbThrowFireball.checked := (s[37] = 'K');
-  frmSettings.cbThrowNet.checked := (s[38] = 'L');
-  frmSettings.cbThrowStinkBomb.checked := (s[39] = 'M');
-  frmSettings.cbWarCry.checked := (s[40] = 'N');
-  frmSettings.cbWings.checked := (s[41] = 'O');
+//  frmSettings.cbBearHug.checked := (s[30] = 'D');
+//  frmSettings.cbBulletThrow.checked := (s[31] = 'E');
+//  frmSettings.cbChill.checked := (s[32] = 'F');
+//  frmSettings.cbEthereal.checked := (s[33] = 'G');
+//  frmSettings.cbMaceTail.checked := (s[34] = 'H');
+//  frmSettings.cbPitchPlayer.checked := (s[35] = 'I');
+//  frmSettings.cbThrowBigBomb.checked := (s[36] = 'J');
+//  frmSettings.cbThrowFireball.checked := (s[37] = 'K');
+//  frmSettings.cbThrowNet.checked := (s[38] = 'L');
+//  frmSettings.cbThrowStinkBomb.checked := (s[39] = 'M');
+//  frmSettings.cbWarCry.checked := (s[40] = 'N');
+//  frmSettings.cbWings.checked := (s[41] = 'O');
 //  frmSettings.cbThrowStunty.checked := (s[42] = 'P');
-  frmSettings.cbFlyer.checked := (s[43] = 'Q');
-  frmSettings.cbLanding.checked := (s[44] = 'R');
+//  frmSettings.cbFlyer.checked := (s[43] = 'Q');
+//  frmSettings.cbLanding.checked := (s[44] = 'R');
 //  frmSettings.cbKicking.checked := (s[45] = 'S');
 //  frmSettings.cbNiggleHalf.checked := (s[46] = 'T');
 //  frmSettings.cbMVPBench.checked := (s[47] = 'U');
@@ -294,8 +218,8 @@ begin
 //  frmSettings.rgPassFumble.ItemIndex := Ord(s[50]) - 48;
 //  frmSettings.cbPGFI.checked := (s[51] = 'X');
 //  frmSettings.cbLateInt.checked := (s[52] = 'Y');
-  frmSettings.cbDig.checked := (s[53] = 'Z');
-  frmSettings.cbButterfingers.checked := (s[54] = 'A');
+//  frmSettings.cbDig.checked := (s[53] = 'Z');
+//  frmSettings.cbButterfingers.checked := (s[54] = 'A');
 //  frmSettings.cbFoulApp.checked := (s[55] = 'B');
 //  frmSettings.cbFG1PT.checked := (s[56] = 'C');
 //  frmSettings.cbOPTakeRoot.checked := (s[61] = 'F');
@@ -310,7 +234,7 @@ begin
 //  frmSettings.cbOnPitchSpellcasters.checked := (s[70] = 'O');
 //  frmSettings.cbNegativeWinnings.checked := (s[71] = 'P');
   frmSettings.cbNoInjMods.checked := (s[73] = 'R');
-  frmSettings.cbFirethrower.checked := (s[74] = 'S');
+//  frmSettings.cbFirethrower.checked := (s[74] = 'S');
   GetText;
 //  frmSettings.rgWonMatchMod.ItemIndex := Ord(s[1]) - 48;
 //  frmSettings.rgTiedMatchMod.ItemIndex := Ord(s[2]) - 48;
@@ -373,22 +297,26 @@ begin
   st := st + '.';
   st := st + '.';  // noMVPs
   st := st + 'N'; // niggle up
-  if cbBanishment.checked then st := st + 'B' else st := st + '.';
-  if cbBless.checked then st := st + 'L' else st := st + '.';
-  if cbBrittle.checked then st := st + 'R' else st := st + '.';
-  if cbCrystalSkin.checked then st := st + 'C' else st := st + '.';
-  if cbDaemonicAura.checked then st := st + 'D' else st := st + '.';
-  if cbElephantTrunk.checked then st := st + 'E' else st := st + '.';
-  if cbFragile.checked then st := st + 'P' else st := st + '.';
-  if cbGFIInjury.checked then st := st + 'G' else st := st + '.';
-  if cbHouseFlyHead.checked then st := st + 'H' else st := st + '.';
-  if cbPerfectSpiral.checked then st := st + 'I' else st := st + '.';
-  if cbPulledPunches.checked then st := st + 'J' else st := st + '.';
-  if cbSingleEye.checked then st := st + 'K' else st := st + '.';
+  st := st + '.';
+   st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+
+
   if cbNullField.checked then st := st + 'O' else st := st + '.';
-  if cbThirdEye.checked then st := st + 'T' else st := st + '.';
+  st := st + '.';
+
   st := st + Chr(48 + 2);
-  if cbWaaaghArmour.checked then st := st + 'W' else st := st + '.';
+  st := st + '.';
+
   st := st + '.';
   st := st + '.';
   st := st + '.';
@@ -396,21 +324,21 @@ begin
   st := st + '.';
   st := st + '.';
   st := st + '.';
-  if cbBearHug.checked then st := st + 'D' else st := st + '.';
-  if cbBulletThrow.checked then st := st + 'E' else st := st + '.';
-  if cbChill.checked then st := st + 'F' else st := st + '.';
-  if cbEthereal.checked then st := st + 'G' else st := st + '.';
-  if cbMaceTail.checked then st := st + 'H' else st := st + '.';
-  if cbPitchPlayer.checked then st := st + 'I' else st := st + '.';
-  if cbThrowBigBomb.checked then st := st + 'J' else st := st + '.';
-  if cbThrowFireball.checked then st := st + 'K' else st := st + '.';
-  if cbThrowNet.checked then st := st + 'L' else st := st + '.';
-  if cbThrowStinkBomb.checked then st := st + 'M' else st := st + '.';
-  if cbWarCry.checked then st := st + 'N' else st := st + '.';
-  if cbWings.checked then st := st + 'O' else st := st + '.';
+    st := st + '.';
   st := st + '.';
-  if cbFlyer.checked then st := st + 'Q' else st := st + '.';
-  if cbLanding.checked then st := st + 'R' else st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+    st := st + '.';
+  st := st + '.';
   st := st + '.';
   st := st + '.';    // niggles at half time
   st := st + 'U';    // unused can get mvp
@@ -419,8 +347,9 @@ begin
   st := st + Chr(48 + 0);  // fumbles
   st := st + '.';
   st := st + '.';
-  if cbDig.checked then st := st + 'Z' else st := st + '.';
-  if cbButterfingers.checked then st := st + 'A' else st := st + '.';
+  st := st + '.';
+  st := st + '.';
+
   st := st + 'B';       // foul prone
   st := st + '.';
   st := st + '.';     // was mvpexp
@@ -440,7 +369,8 @@ begin
   st := st + '.';   // negative winnings
   st := st + '.';   // apoth
   if cbNoInjMods.checked then st := st + 'R' else st := st + '.';
-  if cbFirethrower.checked then st := st + 'S' else st := st + '.';
+  st := st + '.';
+
   st := st + '*';
   st := st + Chr(48 + 0);
   st := st + Chr(48 + 1);
@@ -680,66 +610,66 @@ begin
 //        if Copy(s, 1, 28) = 'SeparateArmourAndInjuryRoll=' then begin
 //          cbSeparateARIR.checked := (Copy(s, 29, 1) = 'Y');
 //        end;
-        if Copy(s, 1, 11) = 'Banishment=' then begin
-          cbBanishment.checked := (Copy(s, 12, 1) = 'Y');
-        end;
-        if Copy(s, 1, 6) = 'Bless=' then begin
-          cbBless.checked := (Copy(s, 7, 1) = 'Y');
-        end;
-        if Copy(s, 1, 8) = 'Brittle=' then begin
-          cbBrittle.checked := (Copy(s, 9, 1) = 'Y');
-        end;
-        if Copy(s, 1, 12) = 'CrystalSkin=' then begin
-          cbCrystalSkin.checked := (Copy(s, 13, 1) = 'Y');
-        end;
-        if Copy(s, 1, 13) = 'DaemonicAura=' then begin
-          cbDaemonicAura.checked := (Copy(s, 14, 1) = 'Y');
-        end;
-        if Copy(s, 1, 4) = 'Dig=' then begin
-          cbDig.checked := (Copy(s, 5, 1) = 'Y');
-        end;
-        if Copy(s, 1, 14) = 'ElephantTrunk=' then begin
-          cbElephantTrunk.checked := (Copy(s, 15, 1) = 'Y');
-        end;
-        if Copy(s, 1, 12) = 'Firethrower=' then begin
-          cbFirethrower.checked := (Copy(s, 13, 1) = 'Y');
-        end;
-        if Copy(s, 1, 6) = 'Flyer=' then begin
-          cbFlyer.checked := (Copy(s, 7, 1) = 'Y');
-        end;
-        if Copy(s, 1, 8) = 'Fragile=' then begin
-          cbFragile.checked := (Copy(s, 9, 1) = 'Y');
-        end;
-        if Copy(s, 1, 10) = 'GFIInjury=' then begin
-          cbGFIInjury.checked := (Copy(s, 11, 1) = 'Y');
-        end;
-        if Copy(s, 1, 13) = 'HouseFlyHead=' then begin
-          cbHouseFlyHead.checked := (Copy(s, 14, 1) = 'Y');
-        end;
-        if Copy(s, 1, 8) = 'Landing=' then begin
-          cbLanding.checked := (Copy(s, 9, 1) = 'Y');
-        end;
-        if Copy(s, 1, 14) = 'PerfectSpiral=' then begin
-          cbPerfectSpiral.checked := (Copy(s, 15, 1) = 'Y');
-        end;
-        if Copy(s, 1, 14) = 'PulledPunches=' then begin
-          cbPulledPunches.checked := (Copy(s, 15, 1) = 'Y');
-        end;
-        if Copy(s, 1, 10) = 'SingleEye=' then begin
-          cbSingleEye.checked := (Copy(s, 11, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 11) = 'Banishment=' then begin
+//          cbBanishment.checked := (Copy(s, 12, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 6) = 'Bless=' then begin
+//          cbBless.checked := (Copy(s, 7, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 8) = 'Brittle=' then begin
+//          cbBrittle.checked := (Copy(s, 9, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 12) = 'CrystalSkin=' then begin
+//          cbCrystalSkin.checked := (Copy(s, 13, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 13) = 'DaemonicAura=' then begin
+//          cbDaemonicAura.checked := (Copy(s, 14, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 4) = 'Dig=' then begin
+//          cbDig.checked := (Copy(s, 5, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 14) = 'ElephantTrunk=' then begin
+//          cbElephantTrunk.checked := (Copy(s, 15, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 12) = 'Firethrower=' then begin
+//          cbFirethrower.checked := (Copy(s, 13, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 6) = 'Flyer=' then begin
+//          cbFlyer.checked := (Copy(s, 7, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 8) = 'Fragile=' then begin
+//          cbFragile.checked := (Copy(s, 9, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 10) = 'GFIInjury=' then begin
+//          cbGFIInjury.checked := (Copy(s, 11, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 13) = 'HouseFlyHead=' then begin
+//          cbHouseFlyHead.checked := (Copy(s, 14, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 8) = 'Landing=' then begin
+//          cbLanding.checked := (Copy(s, 9, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 14) = 'PerfectSpiral=' then begin
+//          cbPerfectSpiral.checked := (Copy(s, 15, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 14) = 'PulledPunches=' then begin
+//          cbPulledPunches.checked := (Copy(s, 15, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 10) = 'SingleEye=' then begin
+//          cbSingleEye.checked := (Copy(s, 11, 1) = 'Y');
+//        end;
         if Copy(s, 1, 10) = 'NullField=' then begin
           cbNullField.checked := (Copy(s, 11, 1) = 'Y');
         end;
-        if Copy(s, 1, 9) = 'ThirdEye=' then begin
-          cbThirdEye.checked := (Copy(s, 10, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 9) = 'ThirdEye=' then begin
+//          cbThirdEye.checked := (Copy(s, 10, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 7) = 'Titchy=' then begin
 //          rgTitchy.ItemIndex := FVal(copy(s, 8, 1));
 //        end;
-        if Copy(s, 1, 13) = 'WaaaghArmour=' then begin
-          cbWaaaghArmour.checked := (Copy(s, 14, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 13) = 'WaaaghArmour=' then begin
+//          cbWaaaghArmour.checked := (Copy(s, 14, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 16) = 'BrightCrusaders=' then begin
 //          cbBrightCrusaders.checked := (Copy(s, 17, 1) = 'Y');
 //        end;
@@ -761,45 +691,45 @@ begin
 //        if Copy(s, 1, 14) = 'BiasedReferee=' then begin
 //          cbBiasedReferee.checked := (Copy(s, 15, 1) = 'Y');
 //        end;
-        if Copy(s, 1, 8) = 'BearHug=' then begin
-          cbBearHug.checked := (Copy(s, 9, 1) = 'Y');
-        end;
-        if Copy(s, 1, 12) = 'BulletThrow=' then begin
-          cbBulletThrow.checked := (Copy(s, 13, 1) = 'Y');
-        end;
-        if Copy(s, 1, 14) = 'Butterfingers=' then begin
-          cbButterfingers.checked := (Copy(s, 15, 1) = 'Y');
-        end;
-        if Copy(s, 1, 6) = 'Chill=' then begin
-          cbChill.checked := (Copy(s, 7, 1) = 'Y');
-        end;
-        if Copy(s, 1, 9) = 'Ethereal=' then begin
-          cbEthereal.checked := (Copy(s, 10, 1) = 'Y');
-        end;
-        if Copy(s, 1, 9) = 'MaceTail=' then begin
-          cbMaceTail.checked := (Copy(s, 10, 1) = 'Y');
-        end;
-        if Copy(s, 1, 12) = 'PitchPlayer=' then begin
-          cbPitchPlayer.checked := (Copy(s, 13, 1) = 'Y');
-        end;
-        if Copy(s, 1, 13) = 'ThrowBigBomb=' then begin
-          cbThrowBigBomb.checked := (Copy(s, 14, 1) = 'Y');
-        end;
-        if Copy(s, 1, 14) = 'ThrowFireball=' then begin
-          cbThrowFireball.checked := (Copy(s, 15, 1) = 'Y');
-        end;
-        if Copy(s, 1, 9) = 'ThrowNet=' then begin
-          cbThrowNet.checked := (Copy(s, 10, 1) = 'Y');
-        end;
-        if Copy(s, 1, 15) = 'ThrowStinkBomb=' then begin
-          cbThrowStinkBomb.checked := (Copy(s, 16, 1) = 'Y');
-        end;
-        if Copy(s, 1, 7) = 'WarCry=' then begin
-          cbWarCry.checked := (Copy(s, 8, 1) = 'Y');
-        end;
-        if Copy(s, 1, 6) = 'Wings=' then begin
-          cbWings.checked := (Copy(s, 7, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 8) = 'BearHug=' then begin
+//          cbBearHug.checked := (Copy(s, 9, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 12) = 'BulletThrow=' then begin
+//          cbBulletThrow.checked := (Copy(s, 13, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 14) = 'Butterfingers=' then begin
+//          cbButterfingers.checked := (Copy(s, 15, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 6) = 'Chill=' then begin
+//          cbChill.checked := (Copy(s, 7, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 9) = 'Ethereal=' then begin
+//          cbEthereal.checked := (Copy(s, 10, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 9) = 'MaceTail=' then begin
+//          cbMaceTail.checked := (Copy(s, 10, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 12) = 'PitchPlayer=' then begin
+//          cbPitchPlayer.checked := (Copy(s, 13, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 13) = 'ThrowBigBomb=' then begin
+//          cbThrowBigBomb.checked := (Copy(s, 14, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 14) = 'ThrowFireball=' then begin
+//          cbThrowFireball.checked := (Copy(s, 15, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 9) = 'ThrowNet=' then begin
+//          cbThrowNet.checked := (Copy(s, 10, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 15) = 'ThrowStinkBomb=' then begin
+//          cbThrowStinkBomb.checked := (Copy(s, 16, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 7) = 'WarCry=' then begin
+//          cbWarCry.checked := (Copy(s, 8, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 6) = 'Wings=' then begin
+//          cbWings.checked := (Copy(s, 7, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 8) = 'FAProne=' then begin
 //          cbFoulApp.checked := (Copy(s, 9, 1) = 'Y');
 //        end;

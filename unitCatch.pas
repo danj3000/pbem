@@ -29,15 +29,10 @@ type
     Label1: TLabel;
     txtCatcherFA: TEdit;
     cbBigGuyAlly: TCheckBox;
-    cbETrunk: TCheckBox;
-    cbHFHead: TCheckBox;
-    cbPerfectSpiral: TCheckBox;
     cbVeryLongLegs: TCheckBox;
     cbNBH: TCheckBox;
-    cbFragile: TCheckBox;
     cbSafeThrow: TCheckBox;
     butPro: TButton;
-    cbButterfingers: TCheckBox;
     cbNoTZ: TCheckBox;
     procedure rgAccPassBBClick(Sender: TObject);
     procedure CatchSkillClick(Sender: TObject);
@@ -82,14 +77,10 @@ begin
   r := 7 - player[TeamCatcher, NumberCatcher].ag;
   if frmCatch.rgAccPassBB.ItemIndex = 0 then r := r - 1;
   if frmCatch.rgAccPassBB.ItemIndex = 2 then r := r + 2;
-  if frmCatch.cbPerfectSpiral.checked then r := r - 1;
   if (frmCatch.cbExtraArms.checked) and (not(frmCatch.rgAccPassBB.ItemIndex=2))
      then r := r - 1;
   if (frmCatch.cbVeryLongLegs.checked) and (frmCatch.rgAccPassBB.ItemIndex = 2)
      then r := r - 1;
-  if frmCatch.cbETrunk.checked then r := r - 1;
-  if frmCatch.cbHFHead.checked then r := r + 2;
-  if frmCatch.cbButterfingers.checked then r := r + 1;
   if not(frmCatch.cbNervesOfSteel.checked) then
     r := r + FVal(frmCatch.txtCatcherTZ.text);
   r := r + FVal(frmCatch.txtCatcherFA.text);
@@ -122,25 +113,7 @@ begin
   frmCatch.cbNBH.checked := player[g,f].hasSkill('Nonball Handler');
   frmCatch.cbNoTZ.checked := (player[g,f].tz > 0) ;
   frmCatch.cbNervesOfSteel.checked := player[g,f].hasSkill('Nerves of Steel');
-  frmCatch.cbETrunk.visible := frmSettings.cbElephantTrunk.checked or
-    frmSettings.cbBless.checked;
-  frmCatch.cbETrunk.checked := ((player[g,f].hasSkill('Elephant Trunk')) and
-     (frmSettings.cbElephantTrunk.checked)) or
-     ((player[g,f].hasSkill('Bless')) and
-     (frmSettings.cbBless.checked));
-  frmCatch.cbHFHead.visible := frmSettings.cbHouseFlyHead.checked;
-  frmCatch.cbHFHead.checked := (player[g,f].hasSkill('House Fly Head')) and
-     (frmSettings.cbHouseFlyHead.checked);
-  frmCatch.cbButterfingers.visible := frmSettings.cbButterfingers.checked;
-  frmCatch.cbButterfingers.checked := (player[g,f].hasSkill('Butterfingers')) and
-     (frmSettings.cbButterfingers.checked);
-  frmCatch.cbPerfectSpiral.visible := frmSettings.cbPerfectSpiral.checked;
-  frmCatch.cbPerfectSpiral.checked := (pspiral) and
-     (frmSettings.cbPerfectSpiral.checked);
   frmCatch.cbSafeThrow.Checked := sthrow;
-  frmCatch.cbFragile.visible := frmSettings.cbFragile.checked;
-  frmCatch.cbFragile.checked := (player[g,f].hasSkill('Fragile')) and
-     (frmSettings.cbFragile.checked);
   frmCatch.cbVeryLongLegs.visible := false;
   frmCatch.cbVeryLongLegs.checked := (player[g,f].hasSkill('Very Long Legs'));
   frmCatch.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
@@ -280,13 +253,11 @@ begin
           else
           if rgAccPassBB.ItemIndex = 1 then s := s + 'Bouncing Ball, ' else
           s := s + 'Interception, ';
-  if cbPerfectSpiral.checked then s := s + 'Perfect Spiral, ';
+
   if (cbVeryLongLegs.checked) and (frmCatch.rgAccPassBB.ItemIndex = 2)
        then s := s + 'Very Long Legs, ';
   if cbExtraArms.checked then s := s + 'Extra Arms, ';
-  if cbETrunk.checked then s := s + 'Elephant Trunk, ';
-  if cbHFHead.checked then s := s + 'House Fly Head, ';
-  if cbButterfingers.checked then s := s + 'Butterfingers, ';
+
   if cbNervesOfSteel.checked then s := s + 'Nerves of Steel, ';
   if txtCatcherTZ.Text <> '0' then s := s + txtCatcherTZ.text + ' TZ, ';
   if cbPouringRain.checked then s := s + 'Pouring Rain, ';
@@ -363,8 +334,7 @@ procedure TfrmCatch.butBounceClick(Sender: TObject);
 
 begin
   CanHide := true;
-  if frmCatch.cbFragile.checked then
-     player[TeamCatcher,NumberCatcher].SetStatus(4);
+
   {Stop HEre}
   ScatterBallFrom(player[TeamCatcher, NumberCatcher].p,
                   player[TeamCatcher, NumberCatcher].q, 1, 0);

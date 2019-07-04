@@ -190,42 +190,6 @@ object frmTTM: TfrmTTM
       TabOrder = 0
       OnClick = TTMSkillClick
     end
-    object cbHFHead: TCheckBox
-      Left = 16
-      Top = 72
-      Width = 129
-      Height = 17
-      Caption = 'House Fly Head'
-      TabOrder = 1
-      OnClick = TTMSkillClick
-    end
-    object cbSingleEye: TCheckBox
-      Left = 16
-      Top = 96
-      Width = 129
-      Height = 17
-      Caption = 'Single Eye'
-      TabOrder = 2
-      OnClick = TTMSkillClick
-    end
-    object cbThirdEye: TCheckBox
-      Left = 88
-      Top = 120
-      Width = 65
-      Height = 17
-      Caption = 'Third Eye'
-      TabOrder = 3
-      OnClick = TTMSkillClick
-    end
-    object cbFlyer: TCheckBox
-      Left = 16
-      Top = 120
-      Width = 65
-      Height = 17
-      Caption = 'Flyer'
-      TabOrder = 4
-      OnClick = TTMSkillClick
-    end
   end
   object txtPassTZ: TEdit
     Left = 120
@@ -357,7 +321,7 @@ object frmTTM: TfrmTTM
   end
   object cbBigGuyAlly: TCheckBox
     Left = 8
-    Top = 472
+    Top = 455
     Width = 129
     Height = 17
     Caption = 'BigGuy/Ally'
@@ -382,31 +346,13 @@ object frmTTM: TfrmTTM
     TabOrder = 13
     Visible = False
   end
-  object cb3EyePlus: TCheckBox
-    Left = 88
-    Top = 432
-    Width = 73
-    Height = 17
-    Caption = '3rdEye+'
-    TabOrder = 14
-    Visible = False
-  end
-  object cb3EyeMinus: TCheckBox
-    Left = 96
-    Top = 456
-    Width = 73
-    Height = 17
-    Caption = '3rd Eye -'
-    TabOrder = 15
-    Visible = False
-  end
   object butAlwaysHungry: TButton
     Left = 176
     Top = 304
     Width = 153
     Height = 25
     Caption = 'Always Hungry Roll: 2+'
-    TabOrder = 16
+    TabOrder = 14
     OnClick = butAlwaysHungryRollClick
   end
   object butAHTeamReroll: TButton
@@ -415,7 +361,7 @@ object frmTTM: TfrmTTM
     Width = 89
     Height = 25
     Caption = 'Use Team Reroll'
-    TabOrder = 17
+    TabOrder = 15
     OnClick = butAHTeamRerollClick
   end
   object butAHPro: TButton
@@ -424,7 +370,7 @@ object frmTTM: TfrmTTM
     Width = 57
     Height = 25
     Caption = 'Use Pro'
-    TabOrder = 18
+    TabOrder = 16
     OnClick = butAHProRerollClick
   end
   object butPassPro: TButton
@@ -433,7 +379,7 @@ object frmTTM: TfrmTTM
     Width = 57
     Height = 25
     Caption = 'Use Pro'
-    TabOrder = 19
+    TabOrder = 17
     OnClick = butProRerollClick
   end
 end

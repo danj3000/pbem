@@ -183,33 +183,6 @@ object frmThrowStuff: TfrmThrowStuff
       TabOrder = 4
       OnClick = cbTitchyClick
     end
-    object cbHFHead: TCheckBox
-      Left = 16
-      Top = 168
-      Width = 129
-      Height = 17
-      Caption = 'House Fly Head'
-      TabOrder = 5
-      OnClick = PassSkillClick
-    end
-    object cbSingleEye: TCheckBox
-      Left = 16
-      Top = 192
-      Width = 129
-      Height = 17
-      Caption = 'Single Eye'
-      TabOrder = 6
-      OnClick = PassSkillClick
-    end
-    object cbThirdEye: TCheckBox
-      Left = 16
-      Top = 216
-      Width = 129
-      Height = 17
-      Caption = 'Third Eye'
-      TabOrder = 7
-      OnClick = PassSkillClick
-    end
   end
   object txtPassTZ: TEdit
     Left = 120
@@ -366,24 +339,6 @@ object frmThrowStuff: TfrmThrowStuff
     TabOrder = 13
     Visible = False
   end
-  object cb3EyePlus: TCheckBox
-    Left = 16
-    Top = 352
-    Width = 73
-    Height = 17
-    Caption = '3rdEye+'
-    TabOrder = 14
-    Visible = False
-  end
-  object cb3EyeMinus: TCheckBox
-    Left = 96
-    Top = 352
-    Width = 73
-    Height = 17
-    Caption = '3rd Eye -'
-    TabOrder = 15
-    Visible = False
-  end
   object butPro: TButton
     Left = 272
     Top = 496
@@ -391,7 +346,7 @@ object frmThrowStuff: TfrmThrowStuff
     Height = 25
     Caption = 'Use Pro'
     Enabled = False
-    TabOrder = 16
+    TabOrder = 14
     OnClick = butProClick
   end
   object butProLight: TButton
@@ -401,7 +356,7 @@ object frmThrowStuff: TfrmThrowStuff
     Height = 25
     Caption = 'Use Pro'
     Enabled = False
-    TabOrder = 17
+    TabOrder = 15
     OnClick = butProLightClick
   end
   object butRerollLight: TButton
@@ -410,7 +365,7 @@ object frmThrowStuff: TfrmThrowStuff
     Width = 89
     Height = 25
     Caption = 'Use Team Reroll'
-    TabOrder = 18
+    TabOrder = 16
     OnClick = butRerollLightClick
   end
   object butLightFuse: TButton
@@ -419,7 +374,7 @@ object frmThrowStuff: TfrmThrowStuff
     Width = 153
     Height = 25
     Caption = 'Lite Fuse'
-    TabOrder = 19
+    TabOrder = 17
     OnClick = butLightFuseClick
   end
   object cbNet: TCheckBox
@@ -428,7 +383,7 @@ object frmThrowStuff: TfrmThrowStuff
     Width = 57
     Height = 17
     Caption = 'Blizzard'
-    TabOrder = 20
+    TabOrder = 18
     Visible = False
     OnClick = PassSkillClick
   end

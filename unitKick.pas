@@ -142,7 +142,7 @@ begin
   frmKick.cbHFHead.checked := player[g,f].hasSkill('House Fly Head');
   frmKick.cbWideZone.checked := ((player[g,f].p <= 3) or (player[g,f].p >= 11))
     and (frmKick.cbFGAttempt.Checked);
-  if not (frmSettings.cbHouseFlyHead.checked) then begin
+   begin
     frmKick.cbHFHead.Checked := false;
     frmKick.cbHFHead.Visible := false;
   end;

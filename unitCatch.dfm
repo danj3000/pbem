@@ -159,58 +159,13 @@ object frmCatch: TfrmCatch
       TabOrder = 1
       OnClick = CatchSkillClick
     end
-    object cbETrunk: TCheckBox
-      Left = 8
-      Top = 48
-      Width = 137
-      Height = 17
-      Caption = 'Elephant Trunk or Bless'
-      TabOrder = 2
-      OnClick = CatchSkillClick
-    end
-    object cbHFHead: TCheckBox
-      Left = 8
-      Top = 64
-      Width = 97
-      Height = 16
-      Caption = 'House Fly Head'
-      TabOrder = 3
-      OnClick = CatchSkillClick
-    end
-    object cbPerfectSpiral: TCheckBox
-      Left = 8
-      Top = 80
-      Width = 97
-      Height = 16
-      Caption = 'Perfect Spiral'
-      TabOrder = 4
-      OnClick = CatchSkillClick
-    end
     object cbVeryLongLegs: TCheckBox
       Left = 8
       Top = 112
       Width = 97
       Height = 16
       Caption = 'Very Long Legs'
-      TabOrder = 5
-      OnClick = CatchSkillClick
-    end
-    object cbFragile: TCheckBox
-      Left = 104
-      Top = 16
-      Width = 65
-      Height = 16
-      Caption = 'Fragile'
-      TabOrder = 6
-      OnClick = CatchSkillClick
-    end
-    object cbButterfingers: TCheckBox
-      Left = 8
-      Top = 96
-      Width = 97
-      Height = 16
-      Caption = 'Butterfingers'
-      TabOrder = 7
+      TabOrder = 2
       OnClick = CatchSkillClick
     end
   end

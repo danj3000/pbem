@@ -12,7 +12,6 @@ type
     Label3: TLabel;
     Label6: TLabel;
     gbPass: TGroupBox;
-    cbLanding: TCheckBox;
     rgAccPassBB: TRadioGroup;
     lblPassFailed: TLabel;
     Label7: TLabel;
@@ -59,7 +58,7 @@ begin
   r := 7 - player[TeamLandinger, NumberLandinger].ag;
   if frmLanding.rgAccPassBB.ItemIndex = 0 then r := r - 1;
   if frmLanding.rgAccPassBB.ItemIndex = 2 then r := r + 2;
-  if frmLanding.cbLanding.checked then r := r - 1;
+
   r := r + FVal(frmLanding.txtLandingerTZ.text);
   if r < 2 then r := 2;
   if r > 6 then r := 6;
@@ -83,12 +82,7 @@ begin
   frmLanding.txtLandingerAG.text := IntToStr(player[g,f].ag);
   tz := CountTZEmpty(g, p, q);
   frmLanding.txtLandingerTZ.text := IntToStr(tz.num);
-  frmLanding.cbLanding.visible := frmSettings.cbLanding.checked or
-    frmSettings.cbFlyer.checked;
-  frmLanding.cbLanding.checked := ((player[g,f].hasSkill('Landing')) and
-     (frmSettings.cbLanding.checked)) or
-     ((player[g,f].hasSkill('Flyer')) and
-     (frmSettings.cbFlyer.checked));
+
   frmLanding.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true));  // big guy
 
@@ -142,12 +136,7 @@ begin
        ' tries to Land (';
   if rgAccPassBB.ItemIndex = 0 then s := s + 'Accurate Pass, '
           else s := s + 'Inaccurate Pass, ';
-  if (cbLanding.checked) and
-    player[TeamLandinger, NumberLandinger].hasSkill('Landing')
-    then s := s + 'Landing, ';
-  if cbLanding.checked and
-    player[TeamLandinger, NumberLandinger].hasSkill('Flyer')
-    then s := s + 'Flyer, ';
+
   if txtLandingerTZ.Text <> '0' then s := s + txtLandingerTZ.text + ' TZ, ';
   s := s + txtLandingRollNeeded.text + ')';
   Bloodbowl.comment.text := s;

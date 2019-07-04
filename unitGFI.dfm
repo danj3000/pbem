@@ -157,21 +157,13 @@ object frmGFI: TfrmGFI
     TabOrder = 6
     Visible = False
   end
-  object cbGFIInjury: TCheckBox
-    Left = 80
-    Top = 88
-    Width = 97
-    Height = 17
-    Caption = 'GFI Auto Injury'
-    TabOrder = 7
-  end
   object cbSprint: TCheckBox
     Left = 40
     Top = 112
     Width = 97
     Height = 17
     Caption = 'Sprint for PGFI'
-    TabOrder = 8
+    TabOrder = 7
     Visible = False
     OnClick = cbBlizzardClick
   end
@@ -182,7 +174,7 @@ object frmGFI: TfrmGFI
     Height = 25
     Caption = 'Use Pro'
     Enabled = False
-    TabOrder = 9
+    TabOrder = 8
     OnClick = butProClick
   end
 end

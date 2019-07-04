@@ -29,12 +29,9 @@ type
     Label1: TLabel;
     txtCatcherFA: TEdit;
     cbBigGuyAlly: TCheckBox;
-    cbETrunk: TCheckBox;
-    cbHFHead: TCheckBox;
     cbNBH: TCheckBox;
     cbSafeThrow: TCheckBox;
     butPro: TButton;
-    cbButterfingers: TCheckBox;
     cbNoTZ: TCheckBox;
     procedure rgAccPassBBClick(Sender: TObject);
     procedure CatchSkillClick(Sender: TObject);
@@ -73,9 +70,7 @@ begin
   r := 7 - player[TeamCatcher, NumberCatcher].ag;
   if frmCatchStuff.rgAccPassBB.ItemIndex = 0 then r := r - 1;
   if frmCatchStuff.cbExtraArms.checked then r := r - 1;
-  if frmCatchStuff.cbETrunk.checked then r := r - 1;
-  if frmCatchStuff.cbHFHead.checked then r := r + 2;
-  if frmCatchStuff.cbButterfingers.checked then r := r + 1;
+
   if not(frmCatchStuff.cbNervesOfSteel.checked) then
     r := r + FVal(frmCatchStuff.txtCatcherTZ.text);
   r := r + FVal(frmCatchStuff.txtCatcherFA.text);
@@ -256,18 +251,7 @@ begin
   frmCatchStuff.cbNBH.checked := player[g,f].hasSkill('Nonball Handler');
   frmCatchStuff.cbNoTZ.checked := (player[g,f].tz > 0) ;
   frmCatchStuff.cbNervesOfSteel.checked := player[g,f].hasSkill('Nerves of Steel');
-  frmCatchStuff.cbETrunk.visible := frmSettings.cbElephantTrunk.checked or
-    frmSettings.cbBless.checked;
-  frmCatchStuff.cbETrunk.checked := ((player[g,f].hasSkill('Elephant Trunk')) and
-     (frmSettings.cbElephantTrunk.checked)) or
-     ((player[g,f].hasSkill('Bless')) and
-     (frmSettings.cbBless.checked));
-  frmCatchStuff.cbHFHead.visible := frmSettings.cbHouseFlyHead.checked;
-  frmCatchStuff.cbHFHead.checked := (player[g,f].hasSkill('House Fly Head')) and
-     (frmSettings.cbHouseFlyHead.checked);
-  frmCatchStuff.cbButterfingers.visible := frmSettings.cbButterfingers.checked;
-  frmCatchStuff.cbButterfingers.checked := (player[g,f].hasSkill('Butterfingers')) and
-     (frmSettings.cbButterfingers.checked);
+
   frmCatchStuff.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true)); // big guy
   frmCatchStuff.cbPouringRain.checked :=
@@ -321,9 +305,7 @@ begin
           else
           if rgAccPassBB.ItemIndex = 1 then s := s + 'Bouncing Bomb, ';
   if cbExtraArms.checked then s := s + 'Extra Arms, ';
-  if cbETrunk.checked then s := s + 'Elephant Trunk, ';
-  if cbHFHead.checked then s := s + 'House Fly Head, ';
-  if cbButterfingers.checked then s := s + 'Butterfingers, ';
+
   if cbNervesOfSteel.checked then s := s + 'Nerves of Steel, ';
   if txtCatcherTZ.Text <> '0' then s := s + txtCatcherTZ.text + ' TZ, ';
   if cbPouringRain.checked then s := s + 'Pouring Rain, ';

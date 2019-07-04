@@ -23,13 +23,10 @@ type
     txtPlayerTZ: TEdit;
     txtPickUpRollNeeded: TEdit;
     gbPickUp: TGroupBox;
-    cbETrunk: TCheckBox;
-    cbHFHead: TCheckBox;
     cbBigGuyAlly: TCheckBox;
     cbNBH: TCheckBox;
     cbAutoScatter: TCheckBox;
     butPro: TButton;
-    cbButterfingers: TCheckBox;
     butGFI: TButton;
     procedure BigHandClick(Sender: TObject);
     procedure NewSkillClick(Sender: TObject);
@@ -67,9 +64,7 @@ var r: integer;
 begin
   r := 6 - player[TeamPlayer, NumberPlayer].ag;
   if frmPickUp.cbPouringRain.checked then r := r + 1;
-  if frmPickUp.cbETrunk.checked then r := r - 1;
-  if frmPickUp.cbHFHead.checked then r := r + 2;
-  if frmPickUp.cbButterfingers.checked then r := r + 1;
+
   r := r + FVal(frmPickUp.txtPlayerTZ.text);
   if frmPickUp.cbBigHand.checked then r := 2;
   if r < 2 then r := 2;
@@ -98,18 +93,7 @@ begin
      and not (player[g,f].hasSkill('Weather Immunity')) OR
     (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
      and not (player[g,f].hasSkill('Weather Immunity'));
-  frmPickUp.cbETrunk.visible := frmSettings.cbElephantTrunk.checked or
-    frmSettings.cbBless.checked;
-  frmPickUp.cbETrunk.checked := ((player[g,f].hasSkill('Elephant Trunk')) and
-     (frmSettings.cbElephantTrunk.checked)) or
-     ((player[g,f].hasSkill('Bless')) and
-     (frmSettings.cbBless.checked)) ;
-  frmPickUp.cbHFHead.visible := frmSettings.cbHouseFlyHead.checked;
-  frmPickUp.cbHFHead.checked := (player[g,f].hasSkill('House Fly Head')) and
-     (frmSettings.cbHouseFlyHead.checked);
-  frmPickUp.cbButterfingers.visible := frmSettings.cbButterfingers.checked;
-  frmPickUp.cbButterfingers.checked := (player[g,f].hasSkill('Butterfingers')) and
-     (frmSettings.cbButterfingers.checked);
+
   frmPickUp.cbNBH.checked := player[g,f].hasSkill('Nonball Handler');
   frmPickUp.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true));   // big guy
@@ -163,9 +147,7 @@ begin
     if cbBigHand.checked then s := s + 'Big Hand, ' else begin
       if txtPlayerTZ.Text <> '0' then s := s + txtPlayerTZ.text + ' TZ, ';
       if cbPouringRain.checked then s := s + 'Pouring Rain, ';
-      if cbETrunk.checked then s := s + 'Elephant Trunk, ';
-      if cbHFHead.checked then s := s + 'House Fly Head, ';
-      if cbButterfingers.checked then s := s + 'Butterfingers, ';
+
     end;
     s := s + txtPickUpRollNeeded.text + ')';
   end;

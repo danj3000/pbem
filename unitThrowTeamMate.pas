@@ -32,13 +32,8 @@ type
     Label3: TLabel;
     txtPassFA: TEdit;
     cbBigGuyAlly: TCheckBox;
-    cbHFHead: TCheckBox;
     cbBlizzard: TCheckBox;
     cbImpossible: TCheckBox;
-    cbSingleEye: TCheckBox;
-    cbThirdEye: TCheckBox;
-    cb3EyePlus: TCheckBox;
-    cb3EyeMinus: TCheckBox;
     butAlwaysHungry: TButton;
     butAHTeamReroll: TButton;
     butAHPro: TButton;
@@ -47,7 +42,6 @@ type
     rbImpossible: TRadioButton;
     Label5: TLabel;
     lblThrowee: TLabel;
-    cbFlyer: TCheckBox;
     rbQuickPass: TRadioButton;
     procedure TTMSkillClick(Sender: TObject);
     procedure butAlwaysHungryRollClick(Sender: TObject);
@@ -90,16 +84,7 @@ begin
   if frmTTM.rbLongPass.checked then m := m - 1;
   if frmTTM.rbLongBomb.checked then m := m - 2;
   if frmTTM.cbVerySunny.checked then m := m - 1;
-  if frmTTM.cbHFHead.checked then m := m - 2;
-  frmTTM.cb3EyePlus.checked := false;
-  frmTTM.cb3EyeMinus.checked := false;
-  if (frmTTM.cbThirdEye.checked) and (((dist <= 56) and
-    (not(true))) or ((squaredist<=1) and
-    (true))) then
-    frmTTM.cb3EyePlus.checked := true else
-    if (frmTTM.cbThirdEye.checked) then frmTTM.cb3EyeMinus.checked := true;
-  if frmTTM.cb3EyeMinus.checked then m := m - 1;
-  if frmTTM.cb3EyePlus.checked then m := m + 1;
+
   if not(frmTTM.cbBlizzard.checked) then frmTTM.cbImpossible.checked := false;
   TTMTZMod := 0;
   m := m - FVal(frmTTM.txtPassTZ.text);
@@ -146,35 +131,7 @@ begin
   tz := CountTZ(g, f);
   frmTTM.txtPassTZ.text := IntToStr(tz.num);
   frmTTM.txtPassFA.text := IntToStr(CountFA(g, f));
-  frmTTM.cbFlyer.checked := (player[g2,f2].hasSkill('Flyer')) and
-    (frmSettings.cbFlyer.checked);
-  frmTTM.cbFlyer.visible := frmSettings.cbFlyer.checked;
-  frmTTM.cbAlwaysHungry.checked := player[g,f].hasSkill('Always Hungry');
-  frmTTM.cbHFHead.checked := player[g,f].hasSkill('House Fly Head');
-  frmTTM.cbSingleEye.checked := player[g,f].hasSkill('Single Eye');
-  frmTTM.cbThirdEye.checked := player[g,f].hasSkill('Third Eye');
 
-  frmTTM.cb3EyePlus.checked := false;
-  frmTTM.cb3EyeMinus.checked := false;
-  if (frmTTM.cbThirdEye.checked) and (((dist <= 56) and
-    (not(true))) or ((squaredist<=1) and
-    (true))) then
-    frmTTM.cb3EyePlus.checked := true else
-    if (frmTTM.cbThirdEye.checked) then frmTTM.cb3EyeMinus.checked := true;
-  if not (frmSettings.cbHouseFlyHead.checked) then begin
-    frmTTM.cbHFHead.Checked := false;
-    frmTTM.cbHFHead.Visible := false;
-  end;
-  if not (frmSettings.cbSingleEye.checked) then begin
-    frmTTM.cbSingleEye.Checked := false;
-    frmTTM.cbSingleEye.Visible := false;
-  end;
-  if not (frmSettings.cbThirdEye.checked) then begin
-    frmTTM.cbThirdEye.Checked := false;
-    frmTTM.cbThirdEye.Visible := false;
-    frmTTM.cb3EyePlus.checked := false;
-    frmTTM.cb3EyeMinus.checked := false;
-  end;
   frmTTM.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true));// big guy
 
@@ -192,16 +149,6 @@ begin
         frmTTM.rbImpossible.checked := true;
       end;
     end;
-  end;
-
-  if frmTTM.cbFlyer.checked then begin
-    if frmTTM.rbShortPass.checked then frmTTM.rbQuickPass.checked := true else
-    if frmTTM.rbLongPass.checked then frmTTM.rbShortPass.checked := true else
-    if frmTTM.rbLongBomb.checked then frmTTM.rbLongPass.checked := true else
-    if (((dist <= 182) and (false)) or
-       ((squaredist <= 3) ))
-       then
-      frmTTM.rbLongBomb.checked := true;
   end;
 
   CalculateTTMRollNeeded;
@@ -323,17 +270,14 @@ begin
   if rbShortPass.checked then s := s + 'Short pass, ';
   if rbLongPass.checked then s := s + 'Long pass, ';
   if rbLongBomb.checked then s := s + 'Long bomb, ';
-  if cbFlyer.checked then s := s + 'Flyer, ';
-  if cbHFHead.checked then s := s + 'House Fly Head, ';
-  if cbSingleEye.checked then s := s + 'Single Eye, ';
-  if cbThirdEye.checked then s := s + 'Third Eye, ';
+
   if txtPassTZ.text <> '0' then s := s + txtPassTZ.text + ' TZ, ';
   if cbVerySunny.checked then s := s + 'Very Sunny, ';
   s := s + txtPassRollNeeded.text + ')';
   Bloodbowl.comment.text := s;
   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
   TTMResult := WorkOutTTMResult;
-  if (TTMResult) and not (frmTTM.cbSingleEye.checked) then begin
+  if (TTMResult)  then begin
     ModalResult := 1;
     Hide;
     if GameStatus = 'PitchPlayer2' then acc := 2 else acc := 1;
@@ -371,58 +315,9 @@ begin
         player[TeamThrowee,NumberThrowee].UsedMA - 1;
       ShowLandingWindow(TeamThrowee, NumberThrowee, FieldP, FieldQ, acc);
     end;
-  end else if (frmTTM.cbSingleEye.checked) and (TTMResult) then begin
-    frmTTM.cbSingleEye.checked := false;
-    Bloodbowl.comment.text :=
-      'Accurate Pass must be re-rolled due to Single Eye';
-    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-    if WorkOutTTMResult then begin
-      ModalResult := 1;
-      Hide;
-      if GameStatus = 'PitchPlayer2' then acc := 2 else acc := 1;
-      p := FieldP;
-      q := FieldQ;
-      ballhandler := false;
-      if player[TeamThrowee,NumberThrowee].status = 2 then ballhandler := true;
-      test3 := false;
-      for k := 0 to 1 do
-      for l := 1 to team[k].numplayers do begin
-        if (player[k,l].p = p) and (player[k,l].q = q) and not
-          ((k=TeamThrowee) and (l=NumberThrowee)) then begin
-          k2 := k;
-          l2 := l;
-          test3 := true;
-        end;
-      end;
-      if test3 then begin
-        Bloodbowl.comment.text := '#'+
-          InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-          player[TeamThrowee,NumberThrowee].name + ' lands on top of '+
-          '#'+InttoStr((player[k2,l2].cnumber))+
-          ' '+ player[k2,l2].name +'!  Push back '+ player[k2,l2].name + '!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        Bloodbowl.comment.text := player[TeamThrowee,NumberThrowee].name +
-          ' lands in ' + player[k2,l2].name + 's square.  Place both prone' +
-          ' and make armour/injury rolls for both!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        if ballhandler then begin
-          Bloodbowl.comment.text := 'Manually handle the ball bounce';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        end;
-      end else begin
-        player[TeamThrowee,NumberThrowee].UsedMA :=
-          player[TeamThrowee,NumberThrowee].UsedMA - 1;
-        ShowLandingWindow(TeamThrowee, NumberThrowee, FieldP, FieldQ, acc);
-      end;
-    end else begin
-      butPassRoll.enabled := false;
-      butPassSkill.enabled := player[TeamPasser,NumberPasser].hasSkill('Pass');
-      butTeamReroll.enabled := CanUseTeamReroll(cbBigGuyAlly.checked);
-      butPassPro.enabled := (player[TeamPasser,NumberPasser].hasSkill('Pro'))
-        and not (player[TeamPasser,NumberPasser].usedSkill('Pro'));
-      frmTTM.height := 530;
-    end;
-  end else begin
+  end
+  else
+   begin
     butPassRoll.enabled := false;
     butPassSkill.enabled := player[TeamPasser,NumberPasser].hasSkill('Pass');
     butTeamReroll.enabled := CanUseTeamReroll(cbBigGuyAlly.checked);
@@ -437,7 +332,7 @@ var TTMResult, test3, ballhandler: boolean;
     acc, k, l, k2, l2, p, q: integer;
 begin
   TTMResult := WorkOutTTMResult;
-  if (TTMResult) and not (frmTTM.cbSingleEye.checked) then begin
+  if (TTMResult) then begin
     frmTTM.ModalResult := 1;
     frmTTM.Hide;
     if GameStatus = 'PitchPlayer2' then acc := 2 else acc := 1;
@@ -475,56 +370,8 @@ begin
         player[TeamThrowee,NumberThrowee].UsedMA - 1;
       ShowLandingWindow(TeamThrowee, NumberThrowee, FieldP, FieldQ, acc);
     end;
-  end else if (frmTTM.cbSingleEye.checked) and (TTMResult) then begin
-    frmTTM.cbSingleEye.checked := false;
-    Bloodbowl.comment.text :=
-      'Accurate Pass must be re-rolled due to Single Eye';
-    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-    if WorkOutTTMResult then begin
-      frmTTM.ModalResult := 1;
-      frmTTM.Hide;
-      if GameStatus = 'PitchPlayer2' then acc := 2 else acc := 1;
-      p := FieldP;
-      q := FieldQ;
-      ballhandler := false;
-      if player[TeamThrowee,NumberThrowee].status = 2 then ballhandler := true;
-      test3 := false;
-      for k := 0 to 1 do
-      for l := 1 to team[k].numplayers do begin
-        if (player[k,l].p = p) and (player[k,l].q = q) and not
-          ((k=TeamThrowee) and (l=NumberThrowee)) then begin
-          k2 := k;
-          l2 := l;
-          test3 := true;
-        end;
-      end;
-      if test3 then begin
-        Bloodbowl.comment.text := '#'+
-          InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-          player[TeamThrowee,NumberThrowee].name + ' lands on top of '+
-          '#'+InttoStr((player[k2,l2].cnumber))+
-          ' '+ player[k2,l2].name +'!  Push back '+ player[k2,l2].name + '!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        Bloodbowl.comment.text := player[TeamThrowee,NumberThrowee].name +
-          ' lands in ' + player[k2,l2].name + 's square.  Place both prone' +
-          ' and make armour/injury rolls for both!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        if ballhandler then begin
-          Bloodbowl.comment.text := 'Manually handle the ball bounce';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        end;
-      end else begin
-        player[TeamThrowee,NumberThrowee].UsedMA :=
-          player[TeamThrowee,NumberThrowee].UsedMA - 1;
-        ShowLandingWindow(TeamThrowee, NumberThrowee, FieldP, FieldQ, acc);
-      end;
-    end else begin
-      frmTTM.butPassRoll.enabled := false;
-      frmTTM.butPassSkill.enabled := false;
-      frmTTM.butTeamReroll.enabled := false;
-      frmTTM.butPassPro.enabled := false;
-    end;
-  end else begin
+  end else
+  begin
     frmTTM.butPassRoll.enabled := false;
     frmTTM.butPassSkill.enabled := false;
     frmTTM.butTeamReroll.enabled := false;
@@ -853,15 +700,7 @@ begin
       end;
     end;
   end;
-    if frmTTM.cbFlyer.checked then begin
-    if frmTTM.rbShortPass.checked then frmTTM.rbQuickPass.checked := true else
-    if frmTTM.rbLongPass.checked then frmTTM.rbShortPass.checked := true else
-    if frmTTM.rbLongBomb.checked then frmTTM.rbLongPass.checked := true else
-    if (((dist <= 182) and (false)) or
-       ((squaredist <= 3) ))
-       then
-      frmTTM.rbLongBomb.checked := true;
-  end;
+
   CalculateTTMRollNeeded;
 end;
 

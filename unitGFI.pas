@@ -18,7 +18,6 @@ type
     cbBlizzard: TCheckBox;
     txtGFIRollNeeded: TEdit;
     cbBigGuyAlly: TCheckBox;
-    cbGFIInjury: TCheckBox;
     lblGFIFailed: TLabel;
     cbSprint: TCheckBox;
     butPro: TButton;
@@ -77,10 +76,6 @@ begin
     not (player[g,f].hasSkill('Weather Immunity')) OR
     (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 16)) = 'TORRENTIAL RAINS') and
     not (player[g,f].hasSkill('Weather Immunity'));
-
-  frmGFI.cbGFIInjury.visible := frmSettings.cbGFIInjury.checked;
-  frmGFI.cbGFIInjury.checked := (player[g,f].hasSkill('GFI Injury')) and
-     (frmSettings.cbGFIInjury.checked);
 
   frmGFI.cbSprint.Visible := false;
   frmGFI.cbSprint.Checked := (false);
@@ -204,7 +199,7 @@ begin
   Ballscatter := false;
   v := curteam;
   w := curplayer;
-  if cbGFIInjury.checked then InjurySettings(v,w) else
+
     ArmourSettings(v,w,v,w,0);
   if player[v,w].status < InjuryStatus then begin
     if player[v,w].status=2 then begin

@@ -133,14 +133,6 @@ object frmLanding: TfrmLanding
     Height = 41
     Caption = 'using'
     TabOrder = 4
-    object cbLanding: TCheckBox
-      Left = 8
-      Top = 16
-      Width = 97
-      Height = 17
-      Caption = 'Landing/Flyer'
-      TabOrder = 0
-    end
   end
   object rgAccPassBB: TRadioGroup
     Left = 8

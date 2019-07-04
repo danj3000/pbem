@@ -38,13 +38,8 @@ type
     Label3: TLabel;
     txtPassFA: TEdit;
     cbBigGuyAlly: TCheckBox;
-    cbHFHead: TCheckBox;
     cbBlizzard: TCheckBox;
     cbImpossible: TCheckBox;
-    cbSingleEye: TCheckBox;
-    cbThirdEye: TCheckBox;
-    cb3EyePlus: TCheckBox;
-    cb3EyeMinus: TCheckBox;
     butPro: TButton;
     butProLight: TButton;
     butRerollLight: TButton;
@@ -104,14 +99,7 @@ begin
   end;
   if ThrowStuff = 3 then m := m - 1;
   if frmThrowStuff.cbVerySunny.checked then m := m - 1;
-  if frmThrowStuff.cbHFHead.checked then m := m - 2;
-  frmThrowStuff.cb3EyePlus.checked := false;
-  frmThrowStuff.cb3EyeMinus.checked := false;
-  if (frmThrowStuff.cbThirdEye.checked) and (squaredist<=1)  then
-    frmThrowStuff.cb3EyePlus.checked := true else
-    if (frmThrowStuff.cbThirdEye.checked) then frmThrowStuff.cb3EyeMinus.checked := true;
-  if frmThrowStuff.cb3EyeMinus.checked then m := m - 1;
-  if frmThrowStuff.cb3EyePlus.checked then m := m + 1;
+
   if not(frmThrowStuff.cbBlizzard.checked) and
      not(frmThrowStuff.cbNet.checked) then frmThrowStuff.cbImpossible.checked := false;
   PassTZMod := 0;
@@ -362,29 +350,7 @@ begin
   frmThrowStuff.cbStrongArm.checked := player[g,f].hasSkill('Strong Arm');
   frmThrowStuff.cbAccurate.checked := player[g,f].hasSkill('Accurate');
   frmThrowStuff.cbNervesOfSteel.checked := player[g,f].hasSkill('Nerves of Steel');
-  frmThrowStuff.cbHFHead.checked := player[g,f].hasSkill('House Fly Head');
-  frmThrowStuff.cbSingleEye.checked := player[g,f].hasSkill('Single Eye');
-  frmThrowStuff.cbThirdEye.checked := player[g,f].hasSkill('Third Eye');
-  frmThrowStuff.cb3EyePlus.checked := false;
-  frmThrowStuff.cb3EyeMinus.checked := false;
-  if (frmThrowStuff.cbThirdEye.checked) and
-  ((squaredist<=1) ) then
-    frmThrowStuff.cb3EyePlus.checked := true else
-    if (frmThrowStuff.cbThirdEye.checked) then frmThrowStuff.cb3EyeMinus.checked := true;
-  if not (frmSettings.cbHouseFlyHead.checked) then begin
-    frmThrowStuff.cbHFHead.Checked := false;
-    frmThrowStuff.cbHFHead.Visible := false;
-  end;
-  if not (frmSettings.cbSingleEye.checked) then begin
-    frmThrowStuff.cbSingleEye.Checked := false;
-    frmThrowStuff.cbSingleEye.Visible := false;
-  end;
-  if not (frmSettings.cbThirdEye.checked) then begin
-    frmThrowStuff.cbThirdEye.Checked := false;
-    frmThrowStuff.cbThirdEye.Visible := false;
-    frmThrowStuff.cb3EyePlus.checked := false;
-    frmThrowStuff.cb3EyeMinus.checked := false;
-  end;
+
   frmThrowStuff.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true));      // bigguy
   frmThrowStuff.cbTitchy.checked :=
@@ -579,9 +545,7 @@ begin
     if rbLongBomb.checked then s := s + 'Long bomb, ';
     if cbAccurate.checked then s := s + 'Accurate, ';
     if cbStrongArm.checked then s := s + 'Strong Arm, ';
-    if cbHFHead.checked then s := s + 'House Fly Head, ';
-    if cbSingleEye.checked then s := s + 'Single Eye, ';
-    if cbThirdEye.checked then s := s + 'Third Eye, ';
+
   end;
   if cbNervesOfSteel.checked then s := s + 'Nerves of Steel, ' else
    if txtPassTZ.text <> '0' then s := s + txtPassTZ.text + ' TZ, ';
@@ -591,7 +555,8 @@ begin
   Bloodbowl.comment.text := s;
   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
   PassResult := WorkOutPassResult;
-  if (PassResult) and not (frmThrowStuff.cbSingleEye.checked) then begin
+  if (PassResult)then
+  begin
     if cbHailMaryPass.checked then begin
       butPassRoll.enabled := false;
       butPassSkill.enabled := false;
@@ -623,44 +588,9 @@ begin
         end;
       end;
     end;
-  end else if (frmThrowStuff.cbSingleEye.checked) and (PassResult) then begin
-    frmThrowStuff.cbSingleEye.checked := false;
-    Bloodbowl.comment.text :=
-      'Accurate Pass must be re-rolled due to Single Eye';
-    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-    if WorkOutPassResult then begin
-      ModalResult := 1;
-      Hide;
-      if TeamCatcher = -1 then begin
-        StuffP := FieldP;
-        StuffQ := FieldQ;
-        ScatterStuffFrom(Stuffp, Stuffq, 1, 0, TheThing);
-        If StuffP = -1 then begin
-          Bloodbowl.comment.text :=  TheThing +
-           ' lands in the crowd.  No Effect!';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        end else begin
-          BlowUpBomb;
-        end;
-      end else begin
-        if ThrowStuff <> 4 then
-          ShowCatchStuffWindow(TeamCatcher, NumberCatcher, 1, ThrowStuff)
-        else begin
-          StuffP := player[TeamCatcher, NumberCatcher].p;
-          StuffQ := player[TeamCatcher, NumberCatcher].q;
-          BlowUpBomb;
-        end;
-      end;
-    end else begin
-      butPassRoll.enabled := false;
-      butPassSkill.enabled := player[TeamPasser,NumberPasser].hasSkill('Pass');
-      butPro.enabled :=
-         player[TeamPasser, NumberPasser].hasSkill('Pro') and
-         not(player[TeamPasser,NumberPasser].usedSkill('Pro'));
-      butTeamReroll.enabled := CanUseTeamReroll(cbBigGuyAlly.checked);
-      frmThrowStuff.height := 585;
-    end;
-  end else begin
+  end
+   else
+     begin
     butPassRoll.enabled := false;
     butPassSkill.enabled := player[TeamPasser,NumberPasser].hasSkill('Pass');
     butPro.enabled :=
@@ -676,7 +606,7 @@ var PassResult, BTcheck: boolean;
     v, w: integer;
 begin
   PassResult := WorkOutPassResult;
-  if (PassResult) and not (frmThrowStuff.cbSingleEye.checked) then begin
+  if (PassResult)  then begin
     if frmThrowStuff.cbHailMaryPass.checked then begin
       frmThrowStuff.butPassRoll.enabled := false;
       frmThrowStuff.butPassSkill.enabled := false;
@@ -708,41 +638,9 @@ begin
         end;
       end;
     end;
-  end else if (frmThrowStuff.cbSingleEye.checked) and (PassResult) then begin
-    frmThrowStuff.cbSingleEye.checked := false;
-    Bloodbowl.comment.text :=
-      'Accurate Pass must be re-rolled due to Single Eye';
-    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-    if WorkOutPassResult then begin
-      frmThrowStuff.ModalResult := 1;
-      frmThrowStuff.Hide;
-      if TeamCatcher = -1 then begin
-        StuffP := FieldP;
-        StuffQ := FieldQ;
-        ScatterStuffFrom(Stuffp, Stuffq, 1, 0, TheThing);
-        If StuffP = -1 then begin
-          Bloodbowl.comment.text :=  TheThing +
-           ' lands in the crowd.  No Effect!';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        end else begin
-          BlowUpBomb;
-        end;
-      end else begin
-        if ThrowStuff <> 4 then
-          ShowCatchStuffWindow(TeamCatcher, NumberCatcher, 1, ThrowStuff)
-        else begin
-          StuffP := player[TeamCatcher, NumberCatcher].p;
-          StuffQ := player[TeamCatcher, NumberCatcher].q;
-          BlowUpBomb;
-        end;
-      end;
-    end else begin
-      frmThrowStuff.butPassRoll.enabled := false;
-      frmThrowStuff.butPassSkill.enabled := false;
-      frmThrowStuff.butTeamReroll.enabled := false;
-      frmThrowStuff.butPro.enabled := false;
-    end;
-  end else begin
+  end
+  else
+  begin
     frmThrowStuff.butPassRoll.enabled := false;
     frmThrowStuff.butPassSkill.enabled := false;
     frmThrowStuff.butTeamReroll.enabled := false;

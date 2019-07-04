@@ -764,11 +764,7 @@ begin
   SIdie1 := 0;
   SIdie2 := 0;
   if r1 + r2 + injmod >= 10 then begin
-    {Tom: if Daemonic Aura casualty then result is DEAD}
-    if DaemonicAura then begin
-      sr := 6;
-      sr2 := 6;
-    end else begin
+    begin
       sr := Rnd(6,3) + 1;
       sr2 := Rnd(6,3) + 1;
     end;
@@ -782,23 +778,13 @@ begin
       NoDdie := Rnd(6,3) + 1;
       if NoDdie <= 3 then sr2 := 4 else sr2 := 5;
     end;
-    {Tom: if Banishment Serious Injury then result is Dead if not
-       a star player otherwise its Badly Hurt}
-    if ((sr = 4) or (sr = 5)) then begin
-      if LesserBanishment then sr := 6;
-      if LBanishment2 then sr := 3;
-    end;
-    if ((sr2 = 4) or (sr2 = 5)) then begin
-      if LesserBanishment then sr2 := 6;
-      if LBanishment2 then sr2 := 3;
-    end;
+
     s := Chr(sr + 48);
     Cas := sr;
     CAS2 := sr2;
     if (sr = 4) or (sr = 5) then begin
-      {Tom: if a player is Brittle than all Serious Injury rolls are
-         made with a +10 modifier}
-      if not Brittle then SIdie1 := Rnd(6,3) else SIdie1 := Rnd(6,3) + 1;
+
+      SIdie1 := Rnd(6,3);
       if SIdie1 > 5 then SIdie1 := 5;
       SIdie2 := Rnd(6,3);
       s := s + Chr(SIdie1 + 49) + Chr(SIdie2 + 49);
@@ -808,7 +794,7 @@ begin
     if (sr2 = 4) or (sr2 = 5) then begin
       {Tom: if a player is Brittle than all Serious Injury rolls are
          made with a +10 modifier}
-      if not Brittle then SIdie3 := Rnd(6,3) else SIdie3 := Rnd(6,3) + 1;
+      SIdie3 := Rnd(6,3) ;
       if SIdie3 > 5 then SIdie3 := 5;
       SIdie4 := Rnd(6,3);
       s := s + Chr(sr2 + 48) + Chr(SIdie3 + 49) + Chr(SIdie4 + 49);
@@ -832,8 +818,8 @@ begin
     end;
   end;
   if IronMan then IM := 'I' else IM := ' ';
-  if PulledPunches then PP := 'U' else PP := ' ';
-  if PoisonedDagger then PD := 'P' else PD := ' ';
+  PP := ' ';
+  PD := ' ';
   if ThickSkull then TS := 'T' else TS := ' ';
   InjuryRoll := PD + TS + IM + PP +
        Chr(injmod + 48) + Chr(r1 + 48) + Chr(r2 + 48) + s;
@@ -1180,7 +1166,7 @@ begin
     end;
   end;
   if PilingOn=0 then PO := 'O';
-  if PoisonedDagger then PD := 'P' else PD := ' ';
+  PD := ' ';
   if CrystalSkin then CS := 'C' else CS := ' ';
   ArmourRoll := PD + CS + PO + Chr(am + 48) + Chr(r1 + 48) + Chr(r2 + 48) + s;
   if not(InjuryFlag) and (DownTeam<> -1) and (DownPlayer<> -1) then begin
@@ -1199,8 +1185,8 @@ begin
 end;
 
 function FoulRoll(av, armod, injmod: integer; eye: boolean): string;
-var s, CS: string;
-    r1, r2, r3, am, im, v, c, ploc, qloc: integer;
+var s: string;
+    r1, r2, am, im, ploc, qloc: integer;
 begin
   // how is AVBreak set?
   if AVBreak then begin
@@ -2309,26 +2295,16 @@ begin
   if ((player[g,f].hasSkill('Razor Sharp Claws')) or
      (player[g,f].hasSkill('RSC'))) then
     frmArmourRoll.rbFangs.checked := true;
-  frmArmourRoll.cbPulledPunches.checked :=
-     (player[g,f].hasSkill('Pulled Punches'));
+
   if player[g0,f0].hasSkill('Running Chainsaw') then
     frmArmourRoll.cbChainsawKD.checked := true;
   frmArmourRoll.cbProSkill.checked := (player[g0,f0].hasSkill('Pro'));
   frmArmourRoll.cbThickSkull.checked := (player[g0,f0].hasSkill('Thick Skull'));
-  frmArmourRoll.cbCrystalSkin.checked :=
-      (player[g0,f0].hasSkill('Crystal Skin'));
-  frmArmourRoll.cbARDaura.checked := (player[g0,f0].hasSkill('Daemonic Aura'));
-  frmArmourRoll.cbIRDaura.checked := (player[g0,f0].hasSkill('Daemonic Aura'));
-  for t := 1 to team[g0].numplayers do begin
-    if (player[g0,t].hasSkill('Conjure 3+')) and (player[g0,t].status >= 1)
-          and (player[g0,t].status <= 4) then
-    frmArmourRoll.cbIRDaura.checked := False;
-  end;
+
   frmArmourRoll.cbNullField.checked :=  (player[g0,f0].hasSkill('Null Field'))
       or (player[g0,f0].hasSkill('Tattoos')) or
       (player[g0,f0].hasSkill('Waaagh Armour'));
-  frmArmourRoll.cbWaaaghArmour.checked := (
-      player[g0,f0].hasSkill('Waaagh Armour'));
+
   if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
@@ -2339,10 +2315,10 @@ begin
   end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
-  frmArmourRoll.cbBrittle.checked := (player[g0,f0].hasSkill('Brittle'));
+
   frmArmourRoll.cbNoDeath.checked := (player[g0,f0].hasSkill('Amateur'))
      or (player[g0,f0].hasSkill('NoDeath'));
-  frmArmourRoll.cbIronMan.checked := (player[g0,f0].hasSkill('Iron Man'));
+
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
   frmArmourRoll.rbAVNegOne.checked := false;
 
@@ -2364,7 +2340,7 @@ begin
 end;
 
 procedure WorkOutFoul(g, f, g0, f0: integer);
-var assa, assd, p, totspp, NiggleCount, t: integer;
+var assa, assd, p, totspp, NiggleCount: integer;
     tz, tz0: TackleZones;
     s: string;
     b, bx: boolean;
@@ -2451,25 +2427,16 @@ begin
     frmArmourRoll.rbDirtyPlayer.checked := true;
     frmArmourRoll.rbIRDirtyPlayer.checked := true;
   end;
-  frmArmourRoll.cbPulledPunches.checked :=
-     (player[g,f].hasSkill('Pulled Punches'));
+
   frmArmourRoll.cbThickSkull.checked :=
      (player[g0,f0].hasSkill('Thick Skull'));
   frmArmourRoll.cbProSkill.checked := (player[g0,f0].hasSkill('Pro'));
-  frmArmourRoll.cbCrystalSkin.checked :=
-      (player[g0,f0].hasSkill('Crystal Skin'));
-  frmArmourRoll.cbARDaura.checked := (player[g0,f0].hasSkill('Daemonic Aura'));
-  frmArmourRoll.cbIRDaura.checked := (player[g0,f0].hasSkill('Daemonic Aura'));
-  for t := 1 to team[g0].numplayers do begin
-    if (player[g0,t].hasSkill('Conjure 3+')) and (player[g0,t].status >= 1)
-          and (player[g0,t].status <= 4) then
-    frmArmourRoll.cbIRDaura.checked := False;
-  end;
+
+
   frmArmourRoll.cbNullField.checked :=  (player[g0,f0].hasSkill('Null Field'))
       or (player[g0,f0].hasSkill('Tattoos')) or
       (player[g0,f0].hasSkill('Waaagh Armour'));
-  frmArmourRoll.cbWaaaghArmour.checked := (
-      player[g0,f0].hasSkill('Waaagh Armour'));
+
   if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
@@ -2480,10 +2447,10 @@ begin
   end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
-  frmArmourRoll.cbBrittle.checked := (player[g0,f0].hasSkill('Brittle'));
+
   frmArmourRoll.cbNoDeath.checked := (player[g0,f0].hasSkill('Amateur'))
      or (player[g0,f0].hasSkill('NoDeath'));
-  frmArmourRoll.cbIronMan.checked := (player[g0,f0].hasSkill('Iron Man'));
+
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
   frmArmourRoll.cbIGMEOY.checked := (g = IGMEOY);
   totspp := player[g0,f0].GetStartingSPP() + player[g0,f0].GetMatchSPP();
@@ -2539,27 +2506,18 @@ begin
 end;
 
 procedure InjurySettings(g0, f0:integer);
-var p, totspp, NiggleCount, t: integer;
+var p, totspp, NiggleCount: integer;
     s: string;
 begin
   frmArmourRoll.rbARNoSkill.checked := true;
   frmArmourRoll.rbIRNoSkill.checked := true;
   frmArmourRoll.cbThickSkull.checked := (player[g0,f0].hasSkill('Thick Skull'));
   frmArmourRoll.cbProSkill.checked := (player[g0,f0].hasSkill('Pro'));
-  frmArmourRoll.cbCrystalSkin.checked :=
-      (player[g0,f0].hasSkill('Crystal Skin'));
-  frmArmourRoll.cbARDaura.checked := (player[g0,f0].hasSkill('Daemonic Aura'));
-  frmArmourRoll.cbIRDaura.checked := (player[g0,f0].hasSkill('Daemonic Aura'));
-  for t := 1 to team[g0].numplayers do begin
-    if (player[g0,t].hasSkill('Conjure 3+')) and (player[g0,t].status >= 1)
-          and (player[g0,t].status <= 4) then
-    frmArmourRoll.cbIRDaura.checked := False;
-  end;
+
   frmArmourRoll.cbNullField.checked :=  (player[g0,f0].hasSkill('Null Field'))
       or (player[g0,f0].hasSkill('Tattoos')) or
       (player[g0,f0].hasSkill('Waaagh Armour'));
-  frmArmourRoll.cbWaaaghArmour.checked := (
-      player[g0,f0].hasSkill('Waaagh Armour'));
+
   if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
@@ -2570,10 +2528,10 @@ begin
   end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
-  frmArmourRoll.cbBrittle.checked := (player[g0,f0].hasSkill('Brittle'));
+
   frmArmourRoll.cbNoDeath.checked := (player[g0,f0].hasSkill('Amateur'))
      or (player[g0,f0].hasSkill('NoDeath'));
-  frmArmourRoll.cbIronMan.checked := (player[g0,f0].hasSkill('Iron Man'));
+
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
 
   totspp := player[g0,f0].GetStartingSPP() +
@@ -2595,7 +2553,7 @@ begin
 end;
 
 procedure ArmourSettings(g, f, g0, f0, special:integer);
-var p2, totspp, NiggleCount, t: integer;
+var p2, totspp, NiggleCount: integer;
     s: string;
 
 begin
@@ -2613,8 +2571,7 @@ begin
     frmArmourRoll.rbAVNegOne.checked := true;
     frmArmourRoll.rbIRMightyBlow.checked := true;
     frmArmourRoll.txtAssists.text := IntToStr(0);
-    frmArmourRoll.cbPulledPunches.checked :=
-      (player[ActionTeam,ActionPlayer].hasSkill('Pulled Punches'));
+
   end else begin
     frmArmourRoll.rbARMightyBlow.checked := true;
     frmArmourRoll.rbIRMightyBlow.checked := true;
@@ -2624,24 +2581,12 @@ begin
   frmArmourRoll.cbProSkill.checked := (player[curteam,curplayer].hasSkill('Pro'));
   if player[curteam,curplayer].hasSkill('Running Chainsaw') then
     frmArmourRoll.cbChainsawKD.checked := true;
-  frmArmourRoll.cbCrystalSkin.checked :=
-    (player[curteam,curplayer].hasSkill('Crystal Skin'))
-    and (frmSettings.cbCrystalSkin.checked);
-  frmArmourRoll.cbARDaura.checked :=
-    (player[curteam,curplayer].hasSkill('Daemonic Aura'));
-  frmArmourRoll.cbIRDaura.checked :=
-    (player[curteam,curplayer].hasSkill('Daemonic Aura'));
-  for t := 1 to team[curteam].numplayers do begin
-    if (player[curteam,t].hasSkill('Conjure 3+')) and
-      (player[curteam,t].status >= 1) and (player[curteam,t].status <= 4) then
-    frmArmourRoll.cbIRDaura.checked := False;
-  end;
+
   frmArmourRoll.cbNullField.checked :=
     (player[curteam,curplayer].hasSkill('Null Field'))
     or (player[curteam,curplayer].hasSkill('Tattoos')) or
     (player[curteam,curplayer].hasSkill('Waaagh Armour'));
-  frmArmourRoll.cbWaaaghArmour.checked :=
-   (player[curteam,curplayer].hasSkill('Waaagh Armour'));
+
   if
    ((Pos('HALFLING', Uppercase(player[curteam,curplayer].position)) > 0) or
    ((Pos('GOBLIN', Uppercase(player[curteam,curplayer].position)) > 0)
@@ -2654,13 +2599,11 @@ begin
    then begin
      frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
-  frmArmourRoll.cbBrittle.checked :=
-    (player[curteam,curplayer].hasSkill('Brittle'));
+
   frmArmourRoll.cbNoDeath.checked :=
     (player[curteam,curplayer].hasSkill('Amateur'))
     or (player[curteam,curplayer].hasSkill('NoDeath'));
-  frmArmourRoll.cbIronMan.checked :=
-    (player[curteam,curplayer].hasSkill('Iron Man'));
+
   frmArmourRoll.cbDecay.checked := (player[curteam,curplayer].hasSkill('Decay'));
   totspp := player[curteam,curplayer].comp0 + 3 *
     player[curteam,curplayer].td0 +
