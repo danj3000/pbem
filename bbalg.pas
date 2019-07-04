@@ -88,6 +88,7 @@ procedure SetIGMEOY(g: integer);
 procedure InjurySettings(g0, f0: integer);
 procedure ArmourSettings(g, f, g0, f0, special: integer);
 procedure ResetPlayers;
+function GetR6Value(totspp: integer): integer;
 
 implementation
 
@@ -96,6 +97,20 @@ uses unitLog, bbunit, unitNotes, unitBall, unitPlayer, unitTeam,
      unitMessage;
 
 {$R *.DFM}
+function GetR6Value(totspp: integer): integer;
+var r6: integer;
+begin
+  if totspp >= 176 then r6 := 100 else
+    if totspp >= 76 then r6 := 126 - totspp else
+    if totspp >= 51 then r6 := 76 - totspp else
+    if totspp >= 31 then r6 := 51 - totspp else
+    if totspp >= 16 then r6 := 31 - totspp else
+    if totspp >= 6 then r6 := 16 - totspp else
+    r6 := 6 - totspp;
+
+    Result := r6;
+end;
+
 
 procedure NewPosInDir(var p, q: integer; d: integer);
 begin
@@ -2378,17 +2393,7 @@ begin
 
   totspp := player[g0,f0].GetStartingSPP + player[g0,f0].GetMatchSPP();
 
-  SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-  frmArmourRoll.cbLBanish.checked :=
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp < 26) and
-      not (SPP4th)) or
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp < 31) and
-      (SPP4th));
-  frmArmourRoll.cbLBanish2.checked :=
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp >= 26) and
-      not (SPP4th)) or
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp >= 31) and
-      (SPP4th));
+
   if frmSettings.cbNiggleUp.checked then begin
     s := player[g0,f0].inj;
     p := Pos('N', Uppercase(s));
@@ -2407,7 +2412,7 @@ procedure WorkOutFoul(g, f, g0, f0: integer);
 var assa, assd, p, totspp, NiggleCount, t: integer;
     tz, tz0: TackleZones;
     s: string;
-    b, bx, SPP4th: boolean;
+    b, bx: boolean;
 begin
   GetCAS := false;
   s := IntToStr(player[g,f].cnumber) + ' fouls ' +
@@ -2529,17 +2534,6 @@ begin
   frmArmourRoll.cbIGMEOY.checked := (g = IGMEOY);
   totspp := player[g0,f0].GetStartingSPP() + player[g0,f0].GetMatchSPP();
 
-  SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-  frmArmourRoll.cbLBanish.checked :=
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp < 26) and
-      not (SPP4th)) or
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp < 31) and
-      (SPP4th));
-  frmArmourRoll.cbLBanish2.checked :=
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp >= 26) and
-      not (SPP4th)) or
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp >= 31) and
-      (SPP4th));
   frmArmourRoll.rbDeathRoller.checked := (player[g,f].hasSkill('Deathroller'));
   if frmSettings.cbNiggleUp.checked then begin
     s := player[g0,f0].inj;
@@ -2593,7 +2587,6 @@ end;
 procedure InjurySettings(g0, f0:integer);
 var p, totspp, NiggleCount, t: integer;
     s: string;
-    SPP4th: boolean;
 begin
   frmArmourRoll.rbARNoSkill.checked := true;
   frmArmourRoll.rbIRNoSkill.checked := true;
@@ -2633,17 +2626,6 @@ begin
   totspp := player[g0,f0].GetStartingSPP() +
             player[g0,f0].GetMatchSPP();
 
-  SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-  frmArmourRoll.cbLBanish.checked :=
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp < 26) and
-      not (SPP4th)) or
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp < 31) and
-      (SPP4th));
-  frmArmourRoll.cbLBanish2.checked :=
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp >= 26) and
-      not (SPP4th)) or
-      ((player[g0,f0].hasSkill('Banishment')) and (totspp >= 31) and
-      (SPP4th));
   if frmSettings.cbNiggleUp.checked then begin
     s := player[g0,f0].inj;
     p := Pos('N', Uppercase(s));
@@ -2662,7 +2644,7 @@ end;
 procedure ArmourSettings(g, f, g0, f0, special:integer);
 var p, p2, totspp, NiggleCount, t: integer;
     s: string;
-    SPP4th: boolean;
+
 begin
   {special of 1 is a Mighty Blow hit, 2 is Mace Tail}
   ActionTeam := g;
@@ -2742,17 +2724,7 @@ begin
     bbalg.MVPValue * player[curteam,curplayer].mvp +
     player[curteam,curplayer].OtherSPP +
     player[curteam,curplayer].exp;
-  SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-  frmArmourRoll.cbLBanish.checked :=
-    ((player[curteam,curplayer].hasSkill('Banishment'))
-    and (totspp < 26) and not (SPP4th)) or
-    ((player[curteam,curplayer].hasSkill('Banishment'))
-    and (totspp < 31) and (SPP4th));
-  frmArmourRoll.cbLBanish2.checked :=
-    ((player[curteam,curplayer].hasSkill('Banishment')) and
-    (totspp >= 26) and not (SPP4th)) or
-    ((player[curteam,curplayer].hasSkill('Banishment'))
-     and (totspp >= 31) and (SPP4th));
+
   if frmSettings.cbNiggleUp.checked then begin
     s := player[curteam,curplayer].inj;
     p2 := Pos('N', Uppercase(s));

@@ -14,7 +14,6 @@ type
     TabSheet3: TTabSheet;
     Label11: TLabel;
     TabSheet4: TTabSheet;
-    rgSkillRollsAt: TRadioGroup;
     cbNoForcedMAandAG: TCheckBox;
     TabSheet5: TTabSheet;
     Label4: TLabel;
@@ -309,7 +308,7 @@ begin
   GetText;
 
   GetText;
-  frmSettings.rgSkillRollsAt.ItemIndex := Ord(s[1]) - 48;
+//  frmSettings.rgSkillRollsAt.ItemIndex := Ord(s[1]) - 48;
   frmSettings.cbNoForcedMAandAG.checked := (s[3] = 'F');
   frmSettings.cbCheerAC.checked := (s[4] = 'S');
   frmSettings.cbNoMVPs.checked := (s[5] = 'M');
@@ -432,7 +431,7 @@ begin
   st := st + '5';   // foul rule 5 (always)
   st := st + ' ';
   st := st + '*';
-  st := st + Chr(48 + rgSkillRollsAt.ItemIndex);
+  st := st + Chr(48 + 2);
   st := st + Chr(48);
   if cbNoForcedMAandAG.checked then st := st + 'F' else st := st + '.';
   if cbCheerAC.checked then st := st + 'S' else st := st + '.';
@@ -641,10 +640,10 @@ begin
         if Copy(s, 1, 9) = 'PilingOn=' then begin
           rbPO.ItemIndex := FVal(copy(s, 10, 1));
         end;
-        if Copy(s, 1, 27) = '4thEditionStarPlayerPoints=' then begin
-          if Copy(s, 28, 1) = 'Y' then rgSkillRollsAt.ItemIndex := 1
-                                  else rgSkillRollsAt.ItemIndex := 0;
-        end;
+//        if Copy(s, 1, 27) = '4thEditionStarPlayerPoints=' then begin
+//          if Copy(s, 28, 1) = 'Y' then rgSkillRollsAt.ItemIndex := 1
+//                                  else rgSkillRollsAt.ItemIndex := 0;
+//        end;
         if Copy(s, 1, 9) = 'PBJumpUp=' then begin
           cbPBJumpUp.checked := (Copy(s, 10, 1) = 'Y');
         end;

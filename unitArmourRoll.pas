@@ -44,7 +44,6 @@ type
     cbIRDaura: TCheckBox;
     cbNullField: TCheckBox;
     cbWaaaghArmour: TCheckBox;
-    cbLBanish: TCheckBox;
     cbLBanish2: TCheckBox;
     rbDeathRoller: TRadioButton;
     cbBrittle: TCheckBox;
@@ -157,7 +156,7 @@ begin
   PoisonedDagger := rbPDagger.checked;
   CrystalSkin := cbCrystalSkin.checked and frmSettings.cbCrystalSkin.checked;
   DaemonicAura := cbIRDaura.checked and frmSettings.cbDaemonicAura.checked;
-  LesserBanishment := cbLBanish.checked and frmSettings.cbBanishment.checked;
+//  LesserBanishment := cbLBanish.checked and frmSettings.cbBanishment.checked;
   LBanishment2 := cbLBanish2.checked and frmSettings.cbBanishment.checked;
   Brittle := cbBrittle.checked and frmSettings.cbBrittle.checked;
   NoDeath := cbNoDeath.checked;
@@ -231,7 +230,7 @@ begin
   cbWaaaghArmour.checked := false;
   rbChainsaw.checked := false;
   cbChainsawKD.checked := false;
-  cbLBanish.checked := false;
+//  cbLBanish.checked := false;
   cbLBanish2.checked := false;
   cbBrittle.checked := false;
   cbNoDeath.checked := false;
@@ -269,8 +268,8 @@ begin
      frmArmourRoll.cbWaaaghArmour.checked := false;
   end;
   if not (frmSettings.cbBanishment.checked) then begin
-     frmArmourRoll.cbLBanish.visible := false;
-     frmArmourRoll.cbLBanish.checked := false;
+//     frmArmourRoll.cbLBanish.visible := false;
+//     frmArmourRoll.cbLBanish.checked := false;
      frmArmourRoll.cbLBanish2.checked := false;
   end;
   if not (frmSettings.cbBrittle.checked) then begin

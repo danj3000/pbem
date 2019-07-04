@@ -995,7 +995,7 @@ var f, g, f0, g0, pb, k, l, targetaction, test1, test2, r, p,
     ascount, dist1, dist2, finaldist, t, u, v, w, ploc, qloc, arrow,
     dk1, dk2, dk3, TestP, TestQ, NewP, NewQ, NewP2, NewQ2, NewP3, NewQ3,
     FinalP, FinalQ, FinalDK, RollNeed, KickP, KickQ, DKRoll, HGazeTarget: integer;
-  test3, test4, test5, test6, SPP4th, b, bx, BThrow, bga, reroll, proskill,
+  test3, test4, test5, test6, b, bx, BThrow, bga, reroll, proskill,
     Ballscatter, UReroll: boolean;
   s, BlockDie, RerollAnswer, StatTemp: string;
   tz,  tz0: TackleZones;
@@ -2210,21 +2210,7 @@ begin
             player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].GetStartingSPP() +
             player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].GetMatchSPP();
 
-          SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-          frmArmourRoll.cbLBanish.checked :=
-            ((player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('Banishment')) and (totspp < 26) and
-            not (SPP4th)) or
-            ((player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('Banishment')) and (totspp < 31) and
-            (SPP4th));
-          frmArmourRoll.cbLBanish2.checked :=
-           ((player[(Sender as TPlayer).teamnr,
-           (Sender as Tplayer).number].hasSkill('Banishment')) and (totspp >= 26) and
-            not (SPP4th)) or
-           ((player[(Sender as TPlayer).teamnr,
-           (Sender as Tplayer).number].hasSkill('Banishment')) and (totspp >= 31) and
-           (SPP4th));
+          
           if frmSettings.cbNiggleUp.checked then begin
             s := player[(Sender as TPlayer).teamnr,
               (Sender as Tplayer).number].inj;

@@ -113,23 +113,13 @@ procedure CountSkillRolls(g, f: integer);
 var h, ha, hb, hg, i: integer;
     SPPNeeded: array [1..7] of integer;
 begin
-  if not (frmSettings.rgSkillRollsAt.ItemIndex = 1) then begin
-    SPPNeeded[1] := 5;
-    SPPNeeded[2] := 10;
-    SPPNeeded[3] := 25;
-    SPPNeeded[4] := 50;
-    SPPNeeded[5] := 100;
-    SPPNeeded[6] := 150;
-    SPPNeeded[7] := 250;
-  end else begin
     SPPNeeded[1] := 5;
     SPPNeeded[2] := 15;
     SPPNeeded[3] := 30;
     SPPNeeded[4] := 50;
     SPPNeeded[5] := 75;
-    SPPNeeded[6] := 125;
-    SPPNeeded[7] := 175;
-  end;
+    SPPNeeded[6] := 175;
+
   teamSK := g;
   h := 1;
   if (((player[g,f].BigGuy) and not (true)) or  // big guy
@@ -139,7 +129,7 @@ begin
   hg := player[g,f].GetMatchSPP();
   ha := hb + hg;
   player[g,f].skillrolls := 0;
-  for i := 1 to 7 do begin
+  for i := 1 to 6 do begin
     if (hb <= SPPNeeded[i] * h) and (ha > SPPNeeded[i] * h) then begin
       player[g,f].skillrolls := player[g,f].skillrolls + 1;
       player[g,f].SkillLevel[player[g,f].skillrolls] := i;

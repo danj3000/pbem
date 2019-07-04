@@ -284,7 +284,6 @@ end;
 procedure InjuryPlayer;
 var Injmod, totspp, NiggleCount, p, t: integer;
   s: string;
-  SPP4th: boolean;
 begin
   player[TeamCatcher,NumberCatcher].SetStatus(3);
   if (frmPass.rbQuickPass.checked) then Injmod := 2 else
@@ -329,17 +328,6 @@ begin
   totspp := player[TeamCatcher,NumberCatcher].GetStartingSPP() +
             player[TeamCatcher,NumberCatcher].GetMatchSPP();
 
-  SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-  frmArmourRoll.cbLBanish.checked :=
-      ((player[TeamCatcher,NumberCatcher].hasSkill('Banishment')) and (totspp < 26) and
-      not (SPP4th)) or
-      ((player[TeamCatcher,NumberCatcher].hasSkill('Banishment')) and (totspp < 31) and
-      (SPP4th));
-  frmArmourRoll.cbLBanish2.checked :=
-      ((player[TeamCatcher,NumberCatcher].hasSkill('Banishment')) and (totspp >= 26) and
-      not (SPP4th)) or
-      ((player[TeamCatcher,NumberCatcher].hasSkill('Banishment')) and (totspp >= 31) and
-      (SPP4th));
   if frmSettings.cbNiggleUp.checked then begin
     s := player[TeamCatcher,NumberCatcher].inj;
     p := Pos('N', Uppercase(s));
@@ -362,7 +350,7 @@ var
   h, besth, bestodds, r, r4, r5, r6, bestmove, bestst, bestspp, bptz, disttoTD,
     totspp: integer;
   s: string;
-  safethrow, pspiral, SPP4th, TZone, GoodPlayer, HMPPass: boolean;
+  safethrow, pspiral, TZone, GoodPlayer, HMPPass: boolean;
   tz: TackleZones;
 begin
   s := '';
@@ -495,45 +483,8 @@ begin
                 r4 := 8;
               r5 := 20 - loopPlayer.st;
               totspp := loopPlayer.GetStartingSPP() + loopPlayer.GetMatchSPP();
-              SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-              if SPP4th then
-              begin
-                if totspp >= 176 then
-                  r6 := 100
-                else if totspp >= 126 then
-                  r6 := 176 - totspp
-                else if totspp >= 76 then
-                  r6 := 126 - totspp
-                else if totspp >= 51 then
-                  r6 := 76 - totspp
-                else if totspp >= 31 then
-                  r6 := 51 - totspp
-                else if totspp >= 16 then
-                  r6 := 31 - totspp
-                else if totspp >= 6 then
-                  r6 := 16 - totspp
-                else
-                  r6 := 6 - totspp;
-              end
-              else
-              begin
-                if totspp >= 251 then
-                  r6 := 100
-                else if totspp >= 151 then
-                  r6 := 251 - totspp
-                else if totspp >= 101 then
-                  r6 := 151 - totspp
-                else if totspp >= 51 then
-                  r6 := 101 - totspp
-                else if totspp >= 26 then
-                  r6 := 51 - totspp
-                else if totspp >= 11 then
-                  r6 := 26 - totspp
-                else if totspp >= 6 then
-                  r6 := 11 - totspp
-                else
-                  r6 := 6 - totspp;
-              end;
+              r6 := bbalg.GetR6Value( totspp );
+
               if r6 = 1 then
                 r6 := 2
               else if r6 = 2 then
@@ -646,46 +597,8 @@ begin
                 r4 := 8;
               r5 := 20 - loopPlayer.st;
               totspp := loopPlayer.GetStartingSPP() + loopPlayer.GetMatchSPP();
+              r6 := bbalg.GetR6Value(totspp);
 
-              SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-              if SPP4th then
-              begin
-                if totspp >= 176 then
-                  r6 := 100
-                else if totspp >= 126 then
-                  r6 := 176 - totspp
-                else if totspp >= 76 then
-                  r6 := 126 - totspp
-                else if totspp >= 51 then
-                  r6 := 76 - totspp
-                else if totspp >= 31 then
-                  r6 := 51 - totspp
-                else if totspp >= 16 then
-                  r6 := 31 - totspp
-                else if totspp >= 6 then
-                  r6 := 16 - totspp
-                else
-                  r6 := 6 - totspp;
-              end
-              else
-              begin
-                if totspp >= 251 then
-                  r6 := 100
-                else if totspp >= 151 then
-                  r6 := 251 - totspp
-                else if totspp >= 101 then
-                  r6 := 151 - totspp
-                else if totspp >= 51 then
-                  r6 := 101 - totspp
-                else if totspp >= 26 then
-                  r6 := 51 - totspp
-                else if totspp >= 11 then
-                  r6 := 26 - totspp
-                else if totspp >= 6 then
-                  r6 := 11 - totspp
-                else
-                  r6 := 6 - totspp;
-              end;
               if r6 = 1 then
                 r6 := 2
               else if r6 = 2 then
@@ -719,7 +632,7 @@ var d, dp, dq, dist9, r2, r3, catchodds, bestplayer: real;
     g, h, besth, bestodds, r, r4, r5, r6, bestmove, bestst, bestspp, bptz,
     disttoTD, totspp, bestg: integer;
     s: string;
-    safethrow, pspiral, SPP4th, TZone, GoodPlayer, BlueTeam, RedTeam,
+    safethrow, pspiral, TZone, GoodPlayer, BlueTeam, RedTeam,
       DCCatch: boolean;
     tz: TackleZones;
 begin
@@ -806,24 +719,16 @@ begin
                 r5 := 20 - player[1-g,h].st;
                 totspp := player[1-g,h].GetStartingSPP() + player[1-g,h].GetMatchSPP();
 
-                SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-                if SPP4th then begin
+                begin
                   if totspp >= 176 then r6 := 100 else
-                    if totspp >= 126 then r6 := 176 - totspp else
                     if totspp >= 76 then r6 := 126 - totspp else
                     if totspp >= 51 then r6 := 76 - totspp else
                     if totspp >= 31 then r6 := 51 - totspp else
                     if totspp >= 16 then r6 := 31 - totspp else
-                    if totspp >= 6 then r6 := 16 - totspp else r6 := 6 - totspp;
-                end else begin
-                  if totspp >= 251 then r6 := 100 else
-                    if totspp >= 151 then r6 := 251 - totspp else
-                    if totspp >= 101 then r6 := 151 - totspp else
-                    if totspp >= 51 then r6 := 101 - totspp else
-                    if totspp >= 26 then r6 := 51 - totspp else
-                    if totspp >= 11 then r6 := 26 - totspp else
-                    if totspp >= 6 then r6 := 11 - totspp else r6 := 6 - totspp;
+                    if totspp >= 6 then r6 := 16 - totspp else
+                    r6 := 6 - totspp;
                 end;
+
                 if r6 = 1 then r6 := 2 else
                   if r6 = 2 then r6 := 1;
                 if (r2=catchodds) and (r3=bestplayer) and (r4=bestmove) and
@@ -906,24 +811,8 @@ begin
                 r5 := 20 - player[1-g,h].st;
                 totspp := player[1-g,h].GetStartingSPP() + player[1-g,h].GetMatchSPP();
 
-                SPP4th := (frmSettings.rgSkillRollsAt.ItemIndex = 1);
-                if SPP4th then begin
-                  if totspp >= 176 then r6 := 100 else
-                    if totspp >= 126 then r6 := 176 - totspp else
-                    if totspp >= 76 then r6 := 126 - totspp else
-                    if totspp >= 51 then r6 := 76 - totspp else
-                    if totspp >= 31 then r6 := 51 - totspp else
-                    if totspp >= 16 then r6 := 31 - totspp else
-                    if totspp >= 6 then r6 := 16 - totspp else r6 := 6 - totspp;
-                end else begin
-                  if totspp >= 251 then r6 := 100 else
-                    if totspp >= 151 then r6 := 251 - totspp else
-                    if totspp >= 101 then r6 := 151 - totspp else
-                    if totspp >= 51 then r6 := 101 - totspp else
-                    if totspp >= 26 then r6 := 51 - totspp else
-                    if totspp >= 11 then r6 := 26 - totspp else
-                    if totspp >= 6 then r6 := 11 - totspp else r6 := 6 - totspp;
-                end;
+                r6 := bbalg.GetR6Value(totspp);
+                
                 if r6 = 1 then r6 := 2 else
                   if r6 = 2 then r6 := 1;
                 bestodds := r;

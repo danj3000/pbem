@@ -63,7 +63,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 713
     Height = 545
-    ActivePage = TabSheet3
+    ActivePage = TabSheet5
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
@@ -358,7 +358,7 @@ object frmSettings: TfrmSettings
       end
       object rbPO: TRadioGroup
         Left = 16
-        Top = 176
+        Top = 88
         Width = 665
         Height = 65
         Caption = 'Piling On'
@@ -370,8 +370,8 @@ object frmSettings: TfrmSettings
         TabOrder = 0
       end
       object cbDC: TCheckBox
-        Left = 256
-        Top = 152
+        Left = 16
+        Top = 56
         Width = 153
         Height = 17
         Caption = 'Diving Catch (Vault rules)'
@@ -385,25 +385,13 @@ object frmSettings: TfrmSettings
     object TabSheet5: TTabSheet
       Caption = 'Player Advancement'
       ImageIndex = 4
-      object rgSkillRollsAt: TRadioGroup
-        Left = 8
-        Top = 16
-        Width = 217
-        Height = 81
-        Caption = 'Skill rolls at'
-        ItemIndex = 1
-        Items.Strings = (
-          '3rd edition: 6,11,26,51,101,151,251'
-          'BB2k1 edition: 6,16,31,51,76,126,176')
-        TabOrder = 0
-      end
       object cbNoForcedMAandAG: TCheckBox
         Left = 16
         Top = 248
         Width = 209
         Height = 17
         Caption = 'Allow a normal skill at a roll of 10 or 11'
-        TabOrder = 1
+        TabOrder = 0
       end
       object cbNoMVPs: TCheckBox
         Left = 16
@@ -413,7 +401,7 @@ object frmSettings: TfrmSettings
         Caption = 
           'Players with skill '#39'No MVPs'#39' and dead players can not get a MVP ' +
           'award.'
-        TabOrder = 2
+        TabOrder = 1
       end
       object cbMVPBench: TCheckBox
         Left = 16
@@ -423,7 +411,7 @@ object frmSettings: TfrmSettings
         Caption = 
           'Players not missing the match but not leaving the dugout can get' +
           ' the MVP'
-        TabOrder = 3
+        TabOrder = 2
       end
     end
     object TabSheet6: TTabSheet
