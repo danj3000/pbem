@@ -37,27 +37,21 @@ type
     rbTitchyPlayer: TRadioButton;
     cbThickSkull: TCheckBox;
     rbChainsaw: TRadioButton;
-    cbNullField: TCheckBox;
     rbDeathRoller: TRadioButton;
     cbChainsawKD: TCheckBox;
     rbNoStunty: TRadioButton;
     lblNiggles: TLabel;
     txtNiggles: TEdit;
-    cbNoDeath: TCheckBox;
     cbProSkill: TCheckBox;
     rbPilingOn: TCheckBox;
     cbDecay: TCheckBox;
-    rbFangs: TRadioButton;
     procedure rbPilingOnClick(Sender: TObject);
     procedure txtArmourValueChange(Sender: TObject);
     procedure butMakeRollClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure rbClawClick(Sender: TObject);
-    procedure rbChainsawClick(Sender: TObject);
     procedure rbPDaggerClick(Sender: TObject);
-    procedure rbARMightyBlowClick(Sender: TObject);
     procedure rbDirtyPlayerClick(Sender: TObject);
-    procedure rbFangsClick(Sender: TObject);
     procedure rbIRMightyBlowClick(Sender: TObject);
 
   private
@@ -131,7 +125,6 @@ begin
       Val(Trim(txtAssists.text), v, c);
       am := am + v + 1;
     end;
-    if cbNullField.checked then am := 0;
 
     s := s + ' +' + IntToStr(am);
   end;
@@ -141,13 +134,10 @@ begin
   ThickSkull := cbThickSkull.checked;
 
   Decay := cbDecay.Checked;
-
-  NoDeath := cbNoDeath.checked;
   DirtyPlayer4th := false;
 
   im := 0;
   ix := ' +';
-  if rbFangs.checked then im := 2;
   {Tom Change: Allow for Negative one injury modifier needs set
   at &7 to &9 so that it can be seperated from the mighty blow
   range of &1 to &3}
@@ -160,8 +150,7 @@ begin
     im := 1;
     MBPO := true;
     if (RollST <> 'I')
-      and rbARMightyBlow.checked
-      and not (cbNullField.checked) then ix := ' &';
+      and rbARMightyBlow.checked then ix := ' &';
   end;
   if rbIRDirtyPlayer.checked then begin
     Val(Trim(txtDPInjMod.text), v, c);
@@ -205,19 +194,16 @@ begin
 
   cbDecay.checked := false;
 
-  cbNullField.checked := false;
-
   rbChainsaw.checked := false;
   cbChainsawKD.checked := false;
 
-  cbNoDeath.checked := false;
   txtAssists.text := '';
   txtPilingOnST.text := '';
   txtNiggles.text := '';
   ModalResult := 1;
 
   frmArmourRoll.rbClaw.visible := true;
-  frmArmourRoll.rbFangs.visible := true;
+
   frmArmourRoll.rbARMightyBlow.visible := true;
   frmArmourRoll.rbIRMightyBlow.visible := true;
 
@@ -232,11 +218,6 @@ procedure ShowHurtForm(st: char);
 begin
   {st = A: Armour Roll, = I: Injury Roll, = F: Foul Roll}
   RollSt := st;
-
-  if not (frmSettings.cbNullField.checked) then begin
-     frmArmourRoll.cbNullField.visible := false;
-     frmArmourRoll.cbNullField.checked := false;
-  end;
 
   case st of
    'A': begin
@@ -262,10 +243,7 @@ begin
             frmArmourRoll.lblPilingOnST.visible := false;
             frmArmourRoll.txtPilingOnST.visible := false;
           end;
-          if frmSettings.cbNoInjMods.Checked then begin
-              frmArmourRoll.rbIRNoSkill.checked := true;
-              frmArmourRoll.rbNoStunty.checked := true;
-          end;
+
         end;
    'I': begin
           frmArmourRoll.caption := 'Injury Roll';
@@ -277,10 +255,7 @@ begin
           frmArmourRoll.pnlPlayerSize.left := frmArmourRoll.pnlAR.left;
           frmArmourRoll.width := frmArmourRoll.pnlIR.width;
           frmArmourRoll.butMakeRoll.enabled := true;
-          if frmSettings.cbNoInjMods.Checked then begin
-              frmArmourRoll.rbIRNoSkill.checked := true;
-              frmArmourRoll.rbNoStunty.checked := true;
-          end;
+
         end;
    'F': begin
           frmArmourRoll.caption := 'Foul Roll';
@@ -304,18 +279,14 @@ begin
           frmArmourRoll.pnlAR.width + frmArmourRoll.pnlIR.width;
 
           frmArmourRoll.rbClaw.checked := false;
-          frmArmourRoll.rbFangs.checked := false;
+
           frmArmourRoll.rbARMightyBlow.checked := false;
           frmArmourRoll.rbIRMightyBlow.checked := false;
           frmArmourRoll.rbClaw.visible := false;
-          frmArmourRoll.rbFangs.visible := false;
+
           frmArmourRoll.rbARMightyBlow.visible := false;
           frmArmourRoll.rbIRMightyBlow.visible := false;
 
-          if frmSettings.cbNoInjMods.Checked then begin
-              frmArmourRoll.rbIRNoSkill.checked := true;
-              frmArmourRoll.rbNoStunty.checked := true;
-          end;
         end;
   end;
   frmArmourRoll.ShowModal;
@@ -325,15 +296,6 @@ procedure TfrmArmourRoll.rbClawClick(Sender: TObject);
 begin
   if not(true) then
     rbIRNoSkill.checked := true;
-end;
-
-procedure TfrmArmourRoll.rbARMightyBlowClick(Sender: TObject);
-begin
-  {if not(frmSettings.cbSeparateARIR.checked) then}
-   rbIRMightyBlow.checked := true;
-   if frmSettings.cbNoInjMods.Checked then begin
-     frmArmourRoll.rbIRNoSkill.checked := true;
-   end;
 end;
 
 procedure TfrmArmourRoll.rbDirtyPlayerClick(Sender: TObject);
@@ -351,22 +313,9 @@ begin
     rbIRNoSkill.checked := true;   }
 end;
 
-procedure TfrmArmourRoll.rbChainsawClick(Sender: TObject);
-begin
-  {rbIRNoSkill.checked := true;}
-end;
-
 procedure TfrmArmourRoll.rbPDaggerClick(Sender: TObject);
 begin
   rbIRNoSkill.checked := true;
-end;
-
-procedure TfrmArmourRoll.rbFangsClick(Sender: TObject);
-begin
-  if rbChainsaw.checked then begin
-    rbChainsaw.checked := false;
-    rbARNoSkill.checked := true;
-  end;
 end;
 
 procedure TfrmArmourRoll.rbIRMightyBlowClick(Sender: TObject);

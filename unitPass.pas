@@ -239,9 +239,6 @@ begin
   frmArmourRoll.cbThickSkull.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Thick Skull'));
   frmArmourRoll.cbProSkill.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Pro'));
 
-  frmArmourRoll.cbNullField.checked :=  (player[TeamCatcher,NumberCatcher].hasSkill('Null Field'))
-      or (player[TeamCatcher,NumberCatcher].hasSkill('Tattoos')) or
-      (player[TeamCatcher,NumberCatcher].hasSkill('Waaagh Armour'));
 
   if ((Pos('HALFLING', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0)
@@ -253,8 +250,7 @@ begin
   end else if (player[TeamCatcher,NumberCatcher].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
-  frmArmourRoll.cbNoDeath.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Amateur'))
-     or (player[TeamCatcher,NumberCatcher].hasSkill('NoDeath'));
+  
   frmArmourRoll.cbDecay.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Decay'));
 
   totspp := player[TeamCatcher,NumberCatcher].GetStartingSPP() +
@@ -345,23 +341,18 @@ begin
             begin
               s := s + ', ';
               r := 7 - loopPlayer.ag + 2;
-              if player[g, f].hasSkill('Perfect Spiral') then
-                r := r - 1;
+
               if loopPlayer.hasSkill('Extra Arms') then
                 r := r - 1;
               if (loopPlayer.hasSkill('Very Long Legs')) or
                 (loopPlayer.hasSkill('VLL')) then
                 r := r - 1;
-              if loopPlayer.hasSkill('Elephant Trunk') then
-                r := r - 1;
-              if loopPlayer.hasSkill('House Fly Head') then
-                r := r + 2;
+
               if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12))
-                = 'POURING RAIN') and
-                not(loopPlayer.hasSkill('Weather Immunity')) then
+                = 'POURING RAIN') then
                 r := r + 1;
               if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10))
-                = 'EERIE MIST') and not(loopPlayer.hasSkill('Weather Immunity'))
+                = 'EERIE MIST')
               then
                 r := r + 1;
               tz := CountTZ(1 - g, h);
@@ -460,24 +451,18 @@ begin
             else
             begin
               r := 7 - loopPlayer.ag + 2;
-              if player[g, f].hasSkill('Perfect Spiral') then
-                r := r - 1;
+
               if loopPlayer.hasSkill('Extra Arms') then
                 r := r - 1;
               if (loopPlayer.hasSkill('Very Long Legs')) or
                 (loopPlayer.hasSkill('VLL')) then
                 r := r - 1;
-              if loopPlayer.hasSkill('Elephant Trunk') then
-                r := r - 1;
-              if loopPlayer.hasSkill('House Fly Head') then
-                r := r + 2;
+
               if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12))
-                = 'POURING RAIN') and
-                not(loopPlayer.hasSkill('Weather Immunity')) then
+                = 'POURING RAIN')        then
                 r := r + 1;
               if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10))
-                = 'EERIE MIST') and not(loopPlayer.hasSkill('Weather Immunity'))
-              then
+                = 'EERIE MIST') then
                 r := r + 1;
               tz := CountTZ(1 - g, h);
               if not(loopPlayer.hasSkill('Nerves of Steel')) then
@@ -546,7 +531,6 @@ begin
       Bloodbowl.comment.text := 'The pass can be intercepted by: ' + s;
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       safethrow := player[g, f].hasSkill('Safe Throw');
-      pspiral := player[g, f].hasSkill('Perfect Spiral');
       ShowCatchWindow(1 - g, besth, 2, pspiral, safethrow);
     end;
   end;
@@ -608,12 +592,11 @@ begin
                 s := s + ', ';
                 r := 7 - player[1-g, h].ag + 0;
                 if player[1-g, h].hasSkill('Extra Arms') then r := r - 1;
-                if player[1-g, h].hasSkill('Elephant Trunk') then r := r - 1;
-                if player[1-g, h].hasSkill('House Fly Head') then r := r + 2;
+
                 if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
-                  and not (player[1-g,h].hasSkill('Weather Immunity')) then r := r + 1;
+                  then r := r + 1;
                 if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
-                  and not (player[1-g,h].hasSkill('Weather Immunity')) then r := r + 1;
+                  then r := r + 1;
                 tz := CountTZ(1-g, h);
                 if not(player[1-g, h].hasSkill('Nerves of Steel')) then
                   r := r + tz.num;
@@ -700,13 +683,11 @@ begin
                 end;
               end else begin
                 r := 7 - player[1-g, h].ag + 0;
-                if player[1-g, h].hasSkill('Extra Arms') then r := r - 1;
-                if player[1-g, h].hasSkill('Elephant Trunk') then r := r - 1;
-                if player[1-g, h].hasSkill('House Fly Head') then r := r + 2;
+
                 if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
-                  and not (player[1-g,h].hasSkill('Weather Immunity')) then r := r + 1;
+                   then r := r + 1;
                 if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
-                  and not (player[1-g,h].hasSkill('Weather Immunity')) then r := r + 1;
+                   then r := r + 1;
                 tz := CountTZ(1-g, h);
                 if not(player[1-g, h].hasSkill('Nerves of Steel')) then
                    r := r + tz.num;

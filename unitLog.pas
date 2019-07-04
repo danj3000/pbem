@@ -217,7 +217,6 @@ end;
 }
 procedure LogWrite(s: string);
 var p: integer;
-    s2, t, t2: string;
 begin
   if logpos >= Length(gamelog) then begin
     if not(InEditMode) then begin

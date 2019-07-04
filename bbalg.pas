@@ -768,16 +768,6 @@ begin
       sr := Rnd(6,3) + 1;
       sr2 := Rnd(6,3) + 1;
     end;
-    {Tom: if NoDeath or Amateur then player is Seriously Injured
-      if Killed}
-    if (NoDeath) and (sr = 6) then begin
-      NoDdie := Rnd(6,3) + 1;
-      if NoDdie <= 3 then sr := 4 else sr := 5;
-    end;
-    if (NoDeath) and (sr2 = 6) then begin
-      NoDdie := Rnd(6,3) + 1;
-      if NoDdie <= 3 then sr2 := 4 else sr2 := 5;
-    end;
 
     s := Chr(sr + 48);
     Cas := sr;
@@ -792,8 +782,6 @@ begin
       s := s + '.' + '.';
     end;
     if (sr2 = 4) or (sr2 = 5) then begin
-      {Tom: if a player is Brittle than all Serious Injury rolls are
-         made with a +10 modifier}
       SIdie3 := Rnd(6,3) ;
       if SIdie3 > 5 then SIdie3 := 5;
       SIdie4 := Rnd(6,3);
@@ -2289,21 +2277,12 @@ begin
   end;
   if player[g,f].hasSkill('Claw') then
     frmArmourRoll.rbClaw.checked := true;
-  if ((player[g,f].hasSkill('Fangs')) or (player[g,f].hasSkill('RSF'))
-     or (player[g,f].hasSkill('Razor Sharp Fangs'))) then
-    frmArmourRoll.rbFangs.checked := true;
-  if ((player[g,f].hasSkill('Razor Sharp Claws')) or
-     (player[g,f].hasSkill('RSC'))) then
-    frmArmourRoll.rbFangs.checked := true;
+
 
   if player[g0,f0].hasSkill('Running Chainsaw') then
     frmArmourRoll.cbChainsawKD.checked := true;
   frmArmourRoll.cbProSkill.checked := (player[g0,f0].hasSkill('Pro'));
   frmArmourRoll.cbThickSkull.checked := (player[g0,f0].hasSkill('Thick Skull'));
-
-  frmArmourRoll.cbNullField.checked :=  (player[g0,f0].hasSkill('Null Field'))
-      or (player[g0,f0].hasSkill('Tattoos')) or
-      (player[g0,f0].hasSkill('Waaagh Armour'));
 
   if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
@@ -2315,9 +2294,6 @@ begin
   end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
-
-  frmArmourRoll.cbNoDeath.checked := (player[g0,f0].hasSkill('Amateur'))
-     or (player[g0,f0].hasSkill('NoDeath'));
 
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
   frmArmourRoll.rbAVNegOne.checked := false;
@@ -2415,12 +2391,7 @@ begin
   end;
   if player[g,f].hasSkill('Claw') then
     frmArmourRoll.rbClaw.checked := true;
-  if ((player[g,f].hasSkill('Fangs')) or (player[g,f].hasSkill('RSF'))
-     or (player[g,f].hasSkill('Razor Sharp Fangs'))) then
-    frmArmourRoll.rbFangs.checked := true;
-  if ((player[g,f].hasSkill('Razor Sharp Claws')) or
-     (player[g,f].hasSkill('RSC'))) then
-    frmArmourRoll.rbFangs.checked := true;
+
   if player[g,f].hasSkill('Running Chainsaw') then
     frmArmourRoll.rbChainsaw.checked := true;
   if player[g,f].hasSkill('Dirty Player') then begin
@@ -2432,11 +2403,6 @@ begin
      (player[g0,f0].hasSkill('Thick Skull'));
   frmArmourRoll.cbProSkill.checked := (player[g0,f0].hasSkill('Pro'));
 
-
-  frmArmourRoll.cbNullField.checked :=  (player[g0,f0].hasSkill('Null Field'))
-      or (player[g0,f0].hasSkill('Tattoos')) or
-      (player[g0,f0].hasSkill('Waaagh Armour'));
-
   if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
@@ -2447,9 +2413,6 @@ begin
   end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
-
-  frmArmourRoll.cbNoDeath.checked := (player[g0,f0].hasSkill('Amateur'))
-     or (player[g0,f0].hasSkill('NoDeath'));
 
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
   frmArmourRoll.cbIGMEOY.checked := (g = IGMEOY);
@@ -2514,10 +2477,6 @@ begin
   frmArmourRoll.cbThickSkull.checked := (player[g0,f0].hasSkill('Thick Skull'));
   frmArmourRoll.cbProSkill.checked := (player[g0,f0].hasSkill('Pro'));
 
-  frmArmourRoll.cbNullField.checked :=  (player[g0,f0].hasSkill('Null Field'))
-      or (player[g0,f0].hasSkill('Tattoos')) or
-      (player[g0,f0].hasSkill('Waaagh Armour'));
-
   if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
       ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
         and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
@@ -2528,9 +2487,6 @@ begin
   end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
-
-  frmArmourRoll.cbNoDeath.checked := (player[g0,f0].hasSkill('Amateur'))
-     or (player[g0,f0].hasSkill('NoDeath'));
 
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
 
@@ -2582,11 +2538,6 @@ begin
   if player[curteam,curplayer].hasSkill('Running Chainsaw') then
     frmArmourRoll.cbChainsawKD.checked := true;
 
-  frmArmourRoll.cbNullField.checked :=
-    (player[curteam,curplayer].hasSkill('Null Field'))
-    or (player[curteam,curplayer].hasSkill('Tattoos')) or
-    (player[curteam,curplayer].hasSkill('Waaagh Armour'));
-
   if
    ((Pos('HALFLING', Uppercase(player[curteam,curplayer].position)) > 0) or
    ((Pos('GOBLIN', Uppercase(player[curteam,curplayer].position)) > 0)
@@ -2599,10 +2550,6 @@ begin
    then begin
      frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
-
-  frmArmourRoll.cbNoDeath.checked :=
-    (player[curteam,curplayer].hasSkill('Amateur'))
-    or (player[curteam,curplayer].hasSkill('NoDeath'));
 
   frmArmourRoll.cbDecay.checked := (player[curteam,curplayer].hasSkill('Decay'));
   totspp := player[curteam,curplayer].comp0 + 3 *
@@ -2671,7 +2618,7 @@ function RangeRulerRange(p,q,p0,q0: integer): integer;
  distance for long bomb = 39.9 cm
 }
 var dist, dmod: real;
-    dp, dq, bigd, littled, TomTest: integer;
+    dp, dq, bigd, littled: integer;
 begin
 {abs used to force p0>p,q0>q}
   dp := abs(p0 - p);

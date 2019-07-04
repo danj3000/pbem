@@ -63,7 +63,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 713
     Height = 545
-    ActivePage = TabSheet8
+    ActivePage = TabSheet1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
@@ -219,6 +219,10 @@ object frmSettings: TfrmSettings
     object TabSheet2: TTabSheet
       Caption = 'Tables'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label12: TLabel
         Left = 8
         Top = 16
@@ -381,45 +385,18 @@ object frmSettings: TfrmSettings
     object TabSheet9: TTabSheet
       Caption = 'Armour/Injury'
       ImageIndex = 8
-      object cbNoInjMods: TCheckBox
-        Left = 8
-        Top = 192
-        Width = 241
-        Height = 17
-        Caption = 'No injury modifiers allowed'
-        TabOrder = 0
-      end
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cbDeStun: TCheckBox
         Left = 8
-        Top = 224
+        Top = 64
         Width = 425
         Height = 17
         Caption = 
           'Players automatically go from Stunned to Prone at the end of the' +
           ' turn after their injury'
-        Checked = True
-        State = cbChecked
-        TabOrder = 1
-      end
-    end
-    object TabSheet8: TTabSheet
-      Caption = 'New Skills'
-      ImageIndex = 7
-      ExplicitLeft = 8
-      ExplicitTop = 64
-      object Label19: TLabel
-        Left = 24
-        Top = 16
-        Width = 266
-        Height = 13
-        Caption = 'Select the new skills and abilities you want for this match'
-      end
-      object cbNullField: TCheckBox
-        Left = 312
-        Top = 208
-        Width = 129
-        Height = 17
-        Caption = 'Tattoos or Null Field'
         Checked = True
         State = cbChecked
         TabOrder = 0

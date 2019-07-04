@@ -1061,17 +1061,9 @@ begin
     ActionTeam := 0;
     ActionPlayer := 0;
 
-  end else if (GameStatus = 'ThrowTeamMate2') and
-    (player[ThrownTeam,ThrownPlayer].hasSkill('Flyer')) then begin
-    Bloodbowl.Endofmove1Click(Bloodbowl);
-    ShowThrowPlayer(ActionTeam, ActionPlayer, ThrownTeam, ThrownPlayer,
-       (player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].p),
-       (player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].q));
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
-
-  end else if GameStatus = 'Kick' then begin
+  end
+  else
+  if GameStatus = 'Kick' then begin
     pplace := abs((player[(Sender as TPlayer).teamnr,
                 (Sender as TPlayer).number].p) - (player[curteam,curplayer].p));
     qplace := abs((player[(Sender as TPlayer).teamnr,
@@ -2148,10 +2140,7 @@ begin
             frmArmourRoll.rbWeakPlayer.checked := true;
           end else frmArmourRoll.rbNoStunty.checked := true;
 
-          frmArmourRoll.cbNoDeath.checked := (player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('Amateur'))
-             or (player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('NoDeath'));
+
 
           frmArmourRoll.cbDecay.checked := (player[(Sender as TPlayer).teamnr,
             (Sender as Tplayer).number].hasSkill('Decay'));

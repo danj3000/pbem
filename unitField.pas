@@ -198,10 +198,12 @@ begin
                 (player[curteam,curplayer].ma = 0))
               or (player[curteam, curplayer].hasSkill('No GFI'))
               or (player[curteam, curplayer].hasSkill('Ball and Chain'))
-              or ((player[curteam, curplayer].hasSkill('Fragile')) and
-               (player[curteam, curplayer].status = 2)) then begin
+              then
+                begin
                    s := s + 'C';
-                end else begin
+                end
+                else
+                begin
                   if tz.num <> 0 then s := s + 'E' else s := s + 'B';
                 end;
             end;

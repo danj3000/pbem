@@ -492,7 +492,6 @@ type
     procedure BPB8Click(Sender: TObject);
     procedure BPB9Click(Sender: TObject);
     procedure BPB10Click(Sender: TObject);
-    procedure UseFirethrower1Click(Sender: TObject);
     procedure Stab1Click(Sender: TObject);
     procedure PickSideStep1Click(Sender: TObject);
 
@@ -529,7 +528,7 @@ var
   ThickSkull,  CrystalSkin,
   DirtyPlayer4th,   bbfullscreen,
    SmellingSalts, IronMan, Decay,
-  TIKSTPK, BribeTheAnnouncers, NoDeath, FixedRand, SaveGameAllowed,
+  TIKSTPK, BribeTheAnnouncers, FixedRand, SaveGameAllowed,
   FirstLoad, Touchback, SettingsLoaded, AccuratePassPlay, PalmedCoin,
   SideStepStop, ProSkill, KickOffNow, DodgeNoStand, GetCAS: boolean;
   AVBreak,
@@ -4646,7 +4645,7 @@ begin
 end;
 
 procedure TBloodbowl.CastZap1Click(Sender: TObject);
-var pplace, qplace, g, t, u, v, w, ploc, qloc, Zteam, Zplayer: integer;
+var pplace, qplace, g, v, w, ploc, qloc, Zteam, Zplayer: integer;
     Ballscatter, Zapped: boolean;
     s, s2: string;
 begin
@@ -5798,11 +5797,6 @@ var s: string;
 begin
   s := Bloodbowl.BPB10.hint;
   BPBCall(s);
-end;
-
-procedure TBloodbowl.UseFirethrower1Click(Sender: TObject);
-begin
-  Loglabel.caption := 'Feature not yet installed ... sorry!';
 end;
 
 procedure TBloodbowl.Stab1Click(Sender: TObject);

@@ -111,7 +111,7 @@ end;
 
 procedure CountSkillRolls(g, f: integer);
 var h, ha, hb, hg, i: integer;
-    SPPNeeded: array [1..7] of integer;
+    SPPNeeded: array [1..6] of integer;
 begin
     SPPNeeded[1] := 5;
     SPPNeeded[2] := 15;
@@ -122,8 +122,8 @@ begin
 
   teamSK := g;
   h := 1;
-  if (((player[g,f].BigGuy) and not (true)) or  // big guy
-      (player[g,f].hasSkill('DProg'))) then h := 2;
+  if (player[g,f].hasSkill('DProg')) then
+    h := 2;
 
   hb := player[g,f].GetStartingSPP();
   hg := player[g,f].GetMatchSPP();
@@ -161,7 +161,6 @@ end;
 
 procedure TfrmSkillRolls.lbPlayersClick(Sender: TObject);
 var i, r1, r2, a1, a2, ae1, ae2: integer;
-    AgingRoll: array [1..7] of integer;
     s: string;
 begin
   playerSK := Players[lbPlayers.ItemIndex];

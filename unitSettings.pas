@@ -50,14 +50,10 @@ type
     cbPassingRangesColored: TCheckBox;
     cbBlackIce: TCheckBox;
     rbPO: TRadioGroup;
-    cbNoInjMods: TCheckBox;
     cbWeatherPitch: TCheckBox;
     cbLRB4KO: TCheckBox;
     cbDeStun: TCheckBox;
     cbDC: TCheckBox;
-    TabSheet8: TTabSheet;
-    Label19: TLabel;
-    cbNullField: TCheckBox;
     procedure butAcceptClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -185,7 +181,7 @@ begin
 //  frmSettings.cbPerfectSpiral.checked := (s[16] = 'I');
 //  frmSettings.cbPulledPunches.checked := (s[17] = 'J');
 //  frmSettings.cbSingleEye.checked := (s[18] = 'K');
-  frmSettings.cbNullField.checked := (s[19] = 'O');
+//  frmSettings.cbNullField.checked := (s[19] = 'O');
 //  frmSettings.cbThirdEye.checked := (s[20] = 'T');
   //frmSettings.rgTitchy.ItemIndex := Ord(s[21]) - 48;
 //  frmSettings.cbWaaaghArmour.checked := (s[22] = 'W');
@@ -233,7 +229,7 @@ begin
 //  frmSettings.cbNoFieldGoals.checked := (s[69] = 'N');
 //  frmSettings.cbOnPitchSpellcasters.checked := (s[70] = 'O');
 //  frmSettings.cbNegativeWinnings.checked := (s[71] = 'P');
-  frmSettings.cbNoInjMods.checked := (s[73] = 'R');
+//  frmSettings.cbNoInjMods.checked := (s[73] = 'R');
 //  frmSettings.cbFirethrower.checked := (s[74] = 'S');
   GetText;
 //  frmSettings.rgWonMatchMod.ItemIndex := Ord(s[1]) - 48;
@@ -311,7 +307,7 @@ begin
   st := st + '.';
 
 
-  if cbNullField.checked then st := st + 'O' else st := st + '.';
+  st := st + '.';
   st := st + '.';
 
   st := st + Chr(48 + 2);
@@ -368,7 +364,7 @@ begin
   st := st + '.';
   st := st + '.';   // negative winnings
   st := st + '.';   // apoth
-  if cbNoInjMods.checked then st := st + 'R' else st := st + '.';
+  st := st + '.';
   st := st + '.';
 
   st := st + '*';
@@ -491,9 +487,9 @@ begin
 //        if Copy(s, 1, 11) = 'WildAnimal=' then begin
 //          rbWA.ItemIndex := FVal(copy(s, 12, 1));
 //        end;
-        if Copy(s, 1, 10) = 'NoInjMods=' then begin
-          cbNoInjMods.checked := (Copy(s, 11, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 10) = 'NoInjMods=' then begin
+//          cbNoInjMods.checked := (Copy(s, 11, 1) = 'Y');
+//        end;
         if Copy(s, 1, 15) = 'NewDivingCatch=' then begin
           cbDC.checked := (Copy(s, 16, 1) = 'Y');
         end;
@@ -525,9 +521,9 @@ begin
 //        if Copy(s, 1, 9) = 'MVPBench=' then begin
 //          cbMVPBench.checked := (Copy(s, 10, 1) = 'Y');
 //        end;
-        if Copy(s, 1, 9) = 'LRBHorns=' then begin
+//        if Copy(s, 1, 9) = 'LRBHorns=' then begin
           // cbLRBHorns.checked := (Copy(s, 10, 1) = 'Y');
-        end;
+//        end;
 //        if Copy(s, 1, 14) = 'SquarePassing=' then begin
 //          cbSquarePass.checked := (Copy(s, 15, 1) = 'Y');
 //        end;
@@ -658,9 +654,9 @@ begin
 //        if Copy(s, 1, 10) = 'SingleEye=' then begin
 //          cbSingleEye.checked := (Copy(s, 11, 1) = 'Y');
 //        end;
-        if Copy(s, 1, 10) = 'NullField=' then begin
-          cbNullField.checked := (Copy(s, 11, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 10) = 'NullField=' then begin
+//          cbNullField.checked := (Copy(s, 11, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 9) = 'ThirdEye=' then begin
 //          cbThirdEye.checked := (Copy(s, 10, 1) = 'Y');
 //        end;
