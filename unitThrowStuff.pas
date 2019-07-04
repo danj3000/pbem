@@ -107,9 +107,7 @@ begin
   if frmThrowStuff.cbHFHead.checked then m := m - 2;
   frmThrowStuff.cb3EyePlus.checked := false;
   frmThrowStuff.cb3EyeMinus.checked := false;
-  if (frmThrowStuff.cbThirdEye.checked) and (((dist <= 56) and
-    (not(frmSettings.cbSquarePass.checked))) or ((squaredist<=1) and
-    (frmSettings.cbSquarePass.checked))) then
+  if (frmThrowStuff.cbThirdEye.checked) and (squaredist<=1)  then
     frmThrowStuff.cb3EyePlus.checked := true else
     if (frmThrowStuff.cbThirdEye.checked) then frmThrowStuff.cb3EyeMinus.checked := true;
   if frmThrowStuff.cb3EyeMinus.checked then m := m - 1;
@@ -346,13 +344,7 @@ begin
   NumberPasser := f;
   frmThrowStuff.Height := 425;
   if (ThrowStuff = 4) or (BombTeam<>-1) then  frmThrowStuff.Height := 490;
-  if not(frmSettings.cbSquarePass.checked) then begin
-    if dist < 16 then frmThrowStuff.rbQuickPass.checked := true else
-    if dist <= 56 then frmThrowStuff.rbShortPass.checked := true else
-    if dist < 121 then frmThrowStuff.rbLongPass.checked := true else
-    if dist <= 182 then frmThrowStuff.rbLongBomb.checked := true else
-    frmThrowStuff.rbHailMaryPass.checked := true;
-  end else begin
+  begin
     if squaredist = 0 then frmThrowStuff.rbQuickPass.checked := true else
     if squaredist = 1 then frmThrowStuff.rbShortPass.checked := true else
     if squaredist = 2 then frmThrowStuff.rbLongPass.checked := true else
@@ -375,9 +367,8 @@ begin
   frmThrowStuff.cbThirdEye.checked := player[g,f].hasSkill('Third Eye');
   frmThrowStuff.cb3EyePlus.checked := false;
   frmThrowStuff.cb3EyeMinus.checked := false;
-  if (frmThrowStuff.cbThirdEye.checked) and (((dist <= 56) and
-    (not(frmSettings.cbSquarePass.checked))) or ((squaredist<=1) and
-    (frmSettings.cbSquarePass.checked))) then
+  if (frmThrowStuff.cbThirdEye.checked) and
+  ((squaredist<=1) ) then
     frmThrowStuff.cb3EyePlus.checked := true else
     if (frmThrowStuff.cbThirdEye.checked) then frmThrowStuff.cb3EyeMinus.checked := true;
   if not (frmSettings.cbHouseFlyHead.checked) then begin
@@ -406,12 +397,7 @@ begin
         begin
           if frmThrowStuff.cbTitchy.checked then
             begin
-              if not(frmSettings.cbSquarePass.checked) then begin
-                if dist < 16 then frmThrowStuff.rbShortPass.checked := true else
-                if dist <= 56 then frmThrowStuff.rbLongPass.checked := true else
-                if dist < 121 then frmThrowStuff.rbLongBomb.checked := true else
-                frmThrowStuff.rbHailMaryPass.checked := true;
-              end else begin
+              begin
                 if squaredist = 0 then frmThrowStuff.rbShortPass.checked := true else
                 if squaredist = 1 then frmThrowStuff.rbLongPass.checked := true else
                 if squaredist = 2 then frmThrowStuff.rbLongBomb.checked := true else
@@ -419,13 +405,7 @@ begin
               end;
           end else
             begin
-              if not(frmSettings.cbSquarePass.checked) then begin
-                if dist < 16 then frmThrowStuff.rbQuickPass.checked := true else
-                if dist <= 56 then frmThrowStuff.rbShortPass.checked := true else
-                if dist < 121 then frmThrowStuff.rbLongPass.checked := true else
-                if dist <= 182 then frmThrowStuff.rbLongBomb.checked := true else
-                frmThrowStuff.rbHailMaryPass.checked := true;
-              end else begin
+              begin
                 if squaredist = 0 then frmThrowStuff.rbQuickPass.checked := true else
                 if squaredist = 1 then frmThrowStuff.rbShortPass.checked := true else
                 if squaredist = 2 then frmThrowStuff.rbLongPass.checked := true else
@@ -461,13 +441,11 @@ begin
   CalculatePassRollNeeded;
 
   frmThrowStuff.cbImpossible.checked := false;
-  if (((dist > 56) and (not(frmSettings.cbSquarePass.checked))) or
-     ((squaredist > 1) and (frmSettings.cbSquarePass.checked)))
+  if (     ((squaredist > 1) ))
      and (((frmThrowStuff.cbBlizzard.checked) and not
      (player[g,f].hasSkill('Cold Resistant')) or (frmThrowStuff.cbNet.Checked)))
         then frmThrowStuff.cbImpossible.checked := true;
-  if (((dist >= 121) and (not(frmSettings.cbSquarePass.Checked))) or
-    ((squaredist >= 2) and (frmSettings.cbSquarePass.checked)))
+  if (   (squaredist >= 2) )
     and (frmThrowStuff.cbBlizzard.checked)
         then frmThrowStuff.cbImpossible.checked := true;
 
@@ -492,7 +470,7 @@ begin
   ThrowStuff := StuffType;
   dist := (player[g,f].p - player[g0,f0].p) * (player[g,f].p - player[g0,f0].p)
         + (player[g,f].q - player[g0,f0].q) * (player[g,f].q - player[g0,f0].q);
-  if frmSettings.cbSquarePass.checked then
+
     squaredist := RangeRulerRange(player[g,f].p, player[g,f].q,
       player[g0,f0].p, player[g0,f0].q);
   frmThrowStuff.lblCatcher.caption := player[g0,f0].GetPlayerName;
@@ -531,7 +509,7 @@ begin
   ThrowStuff := StuffType;
   dist := (player[g,f].p - p) * (player[g,f].p - p)
         + (player[g,f].q - q) * (player[g,f].q - q);
-  if frmSettings.cbSquarePass.checked then
+
     squaredist := RangeRulerRange(player[g,f].p, player[g,f].q, p, q);
   frmThrowStuff.lblCatcher.caption := 'Field position ' + Chr(65+q) + IntToStr(p+1);
   frmThrowStuff.lblCatcher.font.color := clPurple;
@@ -1035,12 +1013,7 @@ procedure TfrmThrowStuff.cbTitchyClick(Sender: TObject);
 begin
   if frmThrowStuff.cbTitchy.checked then
         begin
-          if not(frmSettings.cbSquarePass.checked) then begin
-            if dist < 16 then frmThrowStuff.rbShortPass.checked := true else
-            if dist <= 56 then frmThrowStuff.rbLongPass.checked := true else
-            if dist < 121 then frmThrowStuff.rbLongBomb.checked := true else
-            frmThrowStuff.rbHailMaryPass.checked := true;
-          end else begin
+begin
             if squaredist = 0 then frmThrowStuff.rbShortPass.checked := true else
             if squaredist = 1 then frmThrowStuff.rbLongPass.checked := true else
             if squaredist = 2 then frmThrowStuff.rbLongBomb.checked := true else
@@ -1049,13 +1022,7 @@ begin
       end
       else
         begin
-          if not(frmSettings.cbSquarePass.checked) then begin
-            if dist < 16 then frmThrowStuff.rbQuickPass.checked := true else
-            if dist <= 56 then frmThrowStuff.rbShortPass.checked := true else
-            if dist < 121 then frmThrowStuff.rbLongPass.checked := true else
-            if dist <= 182 then frmThrowStuff.rbLongBomb.checked := true else
-            frmThrowStuff.rbHailMaryPass.checked := true;
-          end else begin
+begin
             if squaredist = 0 then frmThrowStuff.rbQuickPass.checked := true else
             if squaredist = 1 then frmThrowStuff.rbShortPass.checked := true else
             if squaredist = 2 then frmThrowStuff.rbLongPass.checked := true else

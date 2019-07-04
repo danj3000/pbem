@@ -3765,7 +3765,8 @@ begin
     for f := 0 to 14 do
       for g := 0 to 25 do begin
         r := (p - f) * (p - f) + (q - g) * (q - g);
-        if frmSettings.cbSquarePass.checked then begin
+
+
           if (p<>f) or (q<>g) then begin
             squaredist := RangeRulerRange(p,q,f,g);
             if frmSettings.cbPassingRangesColored.checked then begin
@@ -3782,21 +3783,8 @@ begin
               if squaredist <= 3 then field[f,g].transparent := false;
             end;
           end;
-        end else begin
-          if frmSettings.cbPassingRangesColored.checked then begin
-            field[f,g].color := clSilver;
-            if (r >= 16) and (r <= 56) then field[f,g].color := clPurple;
-            if (r > 56) and (r < 121) then field[f,g].color := clYellow;
-            if (r >= 121) and (r <= 182) then field[f,g].color := clBlack;
-            if r <= 182 then field[f,g].transparent := false;
-          end else begin
-            field[f,g].color := clGreen;
-            if (r >= 16) and (r <= 56) then field[f,g].color := $006800;
-            if (r > 56) and (r < 121) then field[f,g].color := $005000;
-            if (r >= 121) and (r <= 182) then field[f,g].color := $003800;
-            if r <= 182 then field[f,g].transparent := false;
-          end;
-        end;
+
+
       end;
   end;
 end;

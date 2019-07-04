@@ -67,6 +67,10 @@ object frmSettings: TfrmSettings
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label18: TLabel
         Left = 16
         Top = 96
@@ -219,6 +223,10 @@ object frmSettings: TfrmSettings
     object TabSheet2: TTabSheet
       Caption = 'Tables'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label12: TLabel
         Left = 8
         Top = 16
@@ -349,6 +357,10 @@ object frmSettings: TfrmSettings
     object TabSheet3: TTabSheet
       Caption = 'LRB edition'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label11: TLabel
         Left = 16
         Top = 8
@@ -381,6 +393,10 @@ object frmSettings: TfrmSettings
     object TabSheet8: TTabSheet
       Caption = 'New Skills'
       ImageIndex = 7
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label19: TLabel
         Left = 24
         Top = 16
@@ -727,6 +743,10 @@ object frmSettings: TfrmSettings
     object TabSheet9: TTabSheet
       Caption = 'Armour/Injury'
       ImageIndex = 8
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cbNoInjMods: TCheckBox
         Left = 8
         Top = 192
@@ -751,6 +771,10 @@ object frmSettings: TfrmSettings
     object TabSheet7: TTabSheet
       Caption = 'Other'
       ImageIndex = 6
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cbPBJumpUp: TCheckBox
         Left = 8
         Top = 72
@@ -864,21 +888,13 @@ object frmSettings: TfrmSettings
         Caption = 'Field Goals and Touchdowns are both 1 point'
         TabOrder = 12
       end
-      object cbSquarePass: TCheckBox
-        Left = 344
-        Top = 400
-        Width = 337
-        Height = 17
-        Caption = 'Passing/Interception based on squares not bases'
-        TabOrder = 13
-      end
       object cbDiagMove: TCheckBox
         Left = 8
         Top = 360
         Width = 241
         Height = 17
         Caption = 'Throw-in Movement can be aimed diagonally'
-        TabOrder = 14
+        TabOrder = 13
       end
       object cbSWRef: TCheckBox
         Left = 8
@@ -886,7 +902,7 @@ object frmSettings: TfrmSettings
         Width = 313
         Height = 17
         Caption = 'Secret Weapons can be permantently taken by the Referee'
-        TabOrder = 15
+        TabOrder = 14
       end
       object cbNoFieldGoals: TCheckBox
         Left = 440
@@ -894,7 +910,7 @@ object frmSettings: TfrmSettings
         Width = 233
         Height = 17
         Caption = 'Kicking Skill without Field Goal scoring rules'
-        TabOrder = 16
+        TabOrder = 15
       end
       object cbOnPitchSpellcasters: TCheckBox
         Left = 8
@@ -902,7 +918,7 @@ object frmSettings: TfrmSettings
         Width = 313
         Height = 17
         Caption = 'On-Pitch Spellcasters instead of off pitch wizards'
-        TabOrder = 17
+        TabOrder = 16
       end
     end
   end

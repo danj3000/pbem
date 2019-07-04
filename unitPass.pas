@@ -101,9 +101,8 @@ begin
   if frmPass.cbHFHead.checked then m := m - 2;
   frmPass.cb3EyePlus.checked := false;
   frmPass.cb3EyeMinus.checked := false;
-  if (frmPass.cbThirdEye.checked) and (((dist <= 56) and
-    (not(frmSettings.cbSquarePass.checked))) or ((squaredist<=1) and
-    (frmSettings.cbSquarePass.checked))) then
+  if (frmPass.cbThirdEye.checked) and
+    (squaredist<=1 ) then
     frmPass.cb3EyePlus.checked := true else
     if (frmPass.cbThirdEye.checked) then frmPass.cb3EyeMinus.checked := true;
   if frmPass.cb3EyeMinus.checked then m := m - 1;
@@ -140,13 +139,7 @@ begin
   TeamPasser := g;
   NumberPasser := f;
   frmPass.Height := 428;
-  if not(frmSettings.cbSquarePass.checked) then begin
-    if dist < 16 then frmPass.rbQuickPass.checked := true else
-    if dist <= 56 then frmPass.rbShortPass.checked := true else
-    if dist < 121 then frmPass.rbLongPass.checked := true else
-    if dist <= 182 then frmPass.rbLongBomb.checked := true else
-    frmPass.rbHailMaryPass.checked := true;
-  end else begin
+  begin
     if squaredist = 0 then frmPass.rbQuickPass.checked := true else
     if squaredist = 1 then frmPass.rbShortPass.checked := true else
     if squaredist = 2 then frmPass.rbLongPass.checked := true else
@@ -170,9 +163,8 @@ begin
   frmPass.cbThirdEye.checked := player[g,f].hasSkill('Third Eye');
   frmPass.cb3EyePlus.checked := false;
   frmPass.cb3EyeMinus.checked := false;
-  if (frmPass.cbThirdEye.checked) and (((dist <= 56) and
-    (not(frmSettings.cbSquarePass.checked))) or ((squaredist<=1) and
-    (frmSettings.cbSquarePass.checked))) then
+  if (frmPass.cbThirdEye.checked) and
+   (squaredist<=1) then
     frmPass.cb3EyePlus.checked := true else
     if (frmPass.cbThirdEye.checked) then frmPass.cb3EyeMinus.checked := true;
   if not (frmSettings.cbPerfectSpiral.checked) then
@@ -205,26 +197,16 @@ begin
         begin
           if frmPass.cbTitchy.checked then
             begin
-              if not(frmSettings.cbSquarePass.checked) then begin
-                if dist < 16 then frmPass.rbShortPass.checked := true else
-                if dist <= 56 then frmPass.rbLongPass.checked := true else
-                if dist < 121 then frmPass.rbLongBomb.checked := true else
-                frmPass.rbHailMaryPass.checked := true;
-              end else begin
+              begin
                 if squaredist = 0 then frmPass.rbShortPass.checked := true else
                 if squaredist = 1 then frmPass.rbLongPass.checked := true else
                 if squaredist = 2 then frmPass.rbLongBomb.checked := true else
                 frmPass.rbHailMaryPass.checked := true;
               end;
-          end else
+          end
+          else
             begin
-              if not(frmSettings.cbSquarePass.checked) then begin
-                if dist < 16 then frmPass.rbQuickPass.checked := true else
-                if dist <= 56 then frmPass.rbShortPass.checked := true else
-                if dist < 121 then frmPass.rbLongPass.checked := true else
-                if dist <= 182 then frmPass.rbLongBomb.checked := true else
-                frmPass.rbHailMaryPass.checked := true;
-              end else begin
+              begin
                 if squaredist = 0 then frmPass.rbQuickPass.checked := true else
                 if squaredist = 1 then frmPass.rbShortPass.checked := true else
                 if squaredist = 2 then frmPass.rbLongPass.checked := true else
@@ -261,13 +243,13 @@ begin
     (player[g,f].hasSkill('HMP'))) and (frmPass.rbHailMaryPass.checked);
 
   frmPass.cbImpossible.checked := false;
-  if (((dist > 56) and (not(frmSettings.cbSquarePass.checked))) or
-     ((squaredist > 1) and (frmSettings.cbSquarePass.checked)))
+  if (((dist > 56) and ((false))) or
+     ((squaredist > 1) ))
      and (frmPass.cbBlizzard.checked) and not
      (player[g,f].hasSkill('Cold Resistant'))
         then frmPass.cbImpossible.checked := true;
-  if (((dist >= 121) and (not(frmSettings.cbSquarePass.Checked))) or
-    ((squaredist >= 2) and (frmSettings.cbSquarePass.checked)))
+  if (
+    ((squaredist >= 2)))
     and (frmPass.cbBlizzard.checked)
         then frmPass.cbImpossible.checked := true;
 
@@ -361,18 +343,12 @@ begin
   HMPPass := false;
   dist := (player[g, f].p - p) * (player[g, f].p - p) + (player[g, f].q - q) *
     (player[g, f].q - q);
-  if frmSettings.cbSquarePass.checked then
-    squaredist := RangeRulerRange(player[g, f].p, player[g, f].q, p, q);
-  if frmSettings.cbSquarePass.checked then
+  squaredist := RangeRulerRange(player[g, f].p, player[g, f].q, p, q);
   begin
     if squaredist > 3 then
       HMPPass := true;
-  end
-  else
-  begin
-    if dist > 182 then
-      HMPPass := true;
   end;
+
   if not(HMPPass) then
   begin
     for h := 1 to team[1 - g].numplayers do
@@ -405,7 +381,7 @@ begin
             can intercept... but squares are 1.1 inch wide so dist must be
             smaller than 1.45/1.1=1.318 }
           GoodPlayer := false;
-          if frmSettings.cbSquarePass.checked then
+
           begin
             GoodPlayer := CanIntercept(player[g, f].p, player[g, f].q, p, q,
               loopPlayer.p, loopPlayer.q);
@@ -856,7 +832,7 @@ begin
   AccuratePassPlay := false;
   dist := (player[g,f].p - player[g0,f0].p) * (player[g,f].p - player[g0,f0].p)
         + (player[g,f].q - player[g0,f0].q) * (player[g,f].q - player[g0,f0].q);
-  if frmSettings.cbSquarePass.checked then
+
     squaredist := RangeRulerRange(player[g,f].p, player[g,f].q,
       player[g0,f0].p, player[g0,f0].q);
   frmPass.lblCatcher.caption := player[g0,f0].GetPlayerName;
@@ -876,7 +852,7 @@ begin
   AccuratePassPlay := false;
   dist := (player[g,f].p - p) * (player[g,f].p - p)
         + (player[g,f].q - q) * (player[g,f].q - q);
-  if frmSettings.cbSquarePass.checked then
+
     squaredist := RangeRulerRange(player[g,f].p, player[g,f].q, p, q);
   frmPass.lblCatcher.caption := 'Field position ' + Chr(65+q) + IntToStr(p+1);
   frmPass.lblCatcher.font.color := clPurple;
@@ -1245,12 +1221,7 @@ begin
     begin
       if frmPass.cbTitchy.checked then
         begin
-          if not(frmSettings.cbSquarePass.checked) then begin
-            if dist < 16 then frmPass.rbShortPass.checked := true else
-            if dist <= 56 then frmPass.rbLongPass.checked := true else
-            if dist < 121 then frmPass.rbLongBomb.checked := true else
-            frmPass.rbHailMaryPass.checked := true;
-          end else begin
+          begin
             if squaredist = 0 then frmPass.rbShortPass.checked := true else
             if squaredist = 1 then frmPass.rbLongPass.checked := true else
             if squaredist = 2 then frmPass.rbLongBomb.checked := true else
@@ -1258,13 +1229,7 @@ begin
           end;
       end else
         begin
-          if not(frmSettings.cbSquarePass.checked) then begin
-            if dist < 16 then frmPass.rbQuickPass.checked := true else
-            if dist <= 56 then frmPass.rbShortPass.checked := true else
-            if dist < 121 then frmPass.rbLongPass.checked := true else
-            if dist <= 182 then frmPass.rbLongBomb.checked := true else
-            frmPass.rbHailMaryPass.checked := true;
-          end else begin
+          begin
             if squaredist = 0 then frmPass.rbQuickPass.checked := true else
             if squaredist = 1 then frmPass.rbShortPass.checked := true else
             if squaredist = 2 then frmPass.rbLongPass.checked := true else

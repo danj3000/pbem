@@ -102,7 +102,6 @@ type
     cbPassingRangesColored: TCheckBox;
     cbBlackIce: TCheckBox;
     cbFG1PT: TCheckBox;
-    cbSquarePass: TCheckBox;
     cbDiagMove: TCheckBox;
     cbSWRef: TCheckBox;
     cbHChefNew: TCheckBox;
@@ -340,7 +339,7 @@ begin
   frmSettings.cbFG1PT.checked := (s[56] = 'C');
 //  frmSettings.cbOPTakeRoot.checked := (s[61] = 'F');
   frmSettings.cbBlackIce.Checked := (s[62] = 'G');
-  frmSettings.cbSquarePass.checked := (s[63] = 'H');
+//  frmSettings.cbSquarePass.checked := (s[63] = 'H');
 //  frmSettings.cbBHAssist.checked := (s[64] = 'I');
   frmSettings.cbHChefNew.checked := (s[65] = 'J');
   frmSettings.cbDiagMove.checked := (s[66] = 'K');
@@ -469,7 +468,7 @@ begin
   st := st + '.';
   st := st + 'F'; // take root on pitch
   if cbBlackIce.checked then st := st + 'G' else st := st + '.';
-  if cbSquarePass.checked then st := st + 'H' else st := st + '.';
+  st := st + 'H' ;  // squares for passing range
   st := st + 'I'; // boneheads help really stupid
   if cbHChefNew.checked then st := st + 'J' else st := st + '.';
   if cbDiagMove.checked then st := st + 'K' else st := st + '.';
@@ -638,9 +637,9 @@ begin
         if Copy(s, 1, 9) = 'LRBHorns=' then begin
           // cbLRBHorns.checked := (Copy(s, 10, 1) = 'Y');
         end;
-        if Copy(s, 1, 14) = 'SquarePassing=' then begin
-          cbSquarePass.checked := (Copy(s, 15, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 14) = 'SquarePassing=' then begin
+//          cbSquarePass.checked := (Copy(s, 15, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 9) = 'BHAssist=' then begin
 //          cbBHAssist.checked := (Copy(s, 10, 1) = 'Y');
 //        end;

@@ -95,8 +95,8 @@ begin
   frmTTM.cb3EyePlus.checked := false;
   frmTTM.cb3EyeMinus.checked := false;
   if (frmTTM.cbThirdEye.checked) and (((dist <= 56) and
-    (not(frmSettings.cbSquarePass.checked))) or ((squaredist<=1) and
-    (frmSettings.cbSquarePass.checked))) then
+    (not(true))) or ((squaredist<=1) and
+    (true))) then
     frmTTM.cb3EyePlus.checked := true else
     if (frmTTM.cbThirdEye.checked) then frmTTM.cb3EyeMinus.checked := true;
   if frmTTM.cb3EyeMinus.checked then m := m - 1;
@@ -128,20 +128,12 @@ begin
   TeamThrowee := g2;
   NumberThrowee := f2;
   if (player[g,f].hasSkill('Toss Team-Mate')) then begin
-    if not(frmSettings.cbSquarePass.checked) then begin
-      if dist < 16 then frmTTM.rbShortPass.checked := true else
-      frmTTM.rbImpossible.checked := true;
-    end else begin
+    begin
       if squaredist = 0 then frmTTM.rbShortPass.checked := true else
       frmTTM.rbImpossible.checked := true;
     end;
   end else begin
-    if not(frmSettings.cbSquarePass.checked) then begin
-      if dist < 16 then frmTTM.rbShortPass.checked := true else
-      if dist <= 56 then frmTTM.rbLongPass.checked := true else
-      if dist < 121 then frmTTM.rbLongBomb.checked := true else
-      frmTTM.rbImpossible.checked := true;
-    end else begin
+    begin
       if squaredist = 0 then frmTTM.rbShortPass.checked := true else
       if squaredist = 1 then frmTTM.rbLongPass.checked := true else
       if squaredist = 2 then frmTTM.rbLongBomb.checked := true else
@@ -169,8 +161,8 @@ begin
   frmTTM.cb3EyePlus.checked := false;
   frmTTM.cb3EyeMinus.checked := false;
   if (frmTTM.cbThirdEye.checked) and (((dist <= 56) and
-    (not(frmSettings.cbSquarePass.checked))) or ((squaredist<=1) and
-    (frmSettings.cbSquarePass.checked))) then
+    (not(true))) or ((squaredist<=1) and
+    (true))) then
     frmTTM.cb3EyePlus.checked := true else
     if (frmTTM.cbThirdEye.checked) then frmTTM.cb3EyeMinus.checked := true;
   if not (frmSettings.cbHouseFlyHead.checked) then begin
@@ -192,31 +184,19 @@ begin
 
   if (not (frmTTM.cbStunty.checked)) and (frmSettings.cbThrowStunty.checked)
     then begin
-    if not(frmSettings.cbSquarePass.checked) then begin
-      if dist < 16 then frmTTM.rbLongPass.checked := true else
-      if dist <= 56 then frmTTM.rbLongBomb.checked := true else
-      frmTTM.rbImpossible.checked := true;
-    end else begin
+    begin
       if squaredist = 0 then frmTTM.rbLongPass.checked := true else
       if squaredist = 1 then frmTTM.rbLongBomb.checked := true else
       frmTTM.rbImpossible.checked := true;
     end;
   end else begin
     if (player[g,f].hasSkill('Toss Team-Mate')) then begin
-      if not(frmSettings.cbSquarePass.checked) then begin
-        if dist < 16 then frmTTM.rbShortPass.checked := true else
-          frmTTM.rbImpossible.checked := true;
-        end else begin
+      begin
         if squaredist = 0 then frmTTM.rbShortPass.checked := true else
         frmTTM.rbImpossible.checked := true;
       end;
     end else begin
-      if not(frmSettings.cbSquarePass.checked) then begin
-        if dist < 16 then frmTTM.rbShortPass.checked := true else
-        if dist <= 56 then frmTTM.rbLongPass.checked := true else
-        if dist < 121 then frmTTM.rbLongBomb.checked := true else
-        frmTTM.rbImpossible.checked := true;
-      end else begin
+      begin
         if squaredist = 0 then frmTTM.rbShortPass.checked := true else
         if squaredist = 1 then frmTTM.rbLongPass.checked := true else
         if squaredist = 2 then frmTTM.rbLongBomb.checked := true else
@@ -229,8 +209,8 @@ begin
     if frmTTM.rbShortPass.checked then frmTTM.rbQuickPass.checked := true else
     if frmTTM.rbLongPass.checked then frmTTM.rbShortPass.checked := true else
     if frmTTM.rbLongBomb.checked then frmTTM.rbLongPass.checked := true else
-    if (((dist <= 182) and (not(frmSettings.cbSquarePass.checked))) or
-       ((squaredist <= 3) and (frmSettings.cbSquarePass.checked)))
+    if (((dist <= 182) and (false)) or
+       ((squaredist <= 3) ))
       and ((frmTTM.cbStunty.checked) or
       (not(frmSettings.cbThrowStunty.checked))) then
       frmTTM.rbLongBomb.checked := true;
@@ -259,13 +239,13 @@ begin
   CalculateTTMRollNeeded;
 
   frmTTM.cbImpossible.checked := false;
-  if (((dist > 56) and (not(frmSettings.cbSquarePass.checked))) or
-     ((squaredist > 1) and (frmSettings.cbSquarePass.checked)))
+  if (((dist > 56) and (false)) or
+     ((squaredist > 1) ))
      and (frmTTM.cbBlizzard.checked) and not
      (player[g,f].hasSkill('Cold Resistant'))
         then frmTTM.cbImpossible.checked := true;
-  if (((dist >= 121) and (not(frmSettings.cbSquarePass.Checked))) or
-    ((squaredist >= 2) and (frmSettings.cbSquarePass.checked)))
+  if (((dist >= 121) and (false)) or
+    ((squaredist >= 2) ))
     and (frmTTM.cbBlizzard.checked)
         then frmTTM.cbImpossible.checked := true;
 
@@ -301,7 +281,8 @@ begin
   frmTTM.Height := 425;
   dist := (player[g,f].p - p) * (player[g,f].p - p)
         + (player[g,f].q - q) * (player[g,f].q - q);
-  if frmSettings.cbSquarePass.checked then
+
+
     squaredist := RangeRulerRange(player[g,f].p, player[g,f].q, p, q);
   frmTTM.lblCatcher.caption := 'Field position ' + Chr(65+q) + IntToStr(p+1);
   frmTTM.lblCatcher.font.color := clPurple;
@@ -864,7 +845,7 @@ procedure TfrmTTM.cbStuntyClick(Sender: TObject);
 begin
   if (not (frmTTM.cbStunty.checked)) and (frmSettings.cbThrowStunty.checked)
     then begin
-    if not(frmSettings.cbSquarePass.checked) then begin
+    if false then begin
       if dist < 16 then frmTTM.rbLongPass.checked := true else
       if dist <= 56 then frmTTM.rbLongBomb.checked := true else
       frmTTM.rbImpossible.checked := true;
@@ -875,7 +856,7 @@ begin
     end;
   end else begin
     if (player[ActionTeam,ActionPlayer].hasSkill('Toss Team-Mate')) then begin
-      if not(frmSettings.cbSquarePass.checked) then begin
+      if false then begin
         if dist < 16 then frmTTM.rbShortPass.checked := true else
         frmTTM.rbImpossible.checked := true;
       end else begin
@@ -883,7 +864,7 @@ begin
         frmTTM.rbImpossible.checked := true;
       end;
     end else begin
-      if not(frmSettings.cbSquarePass.checked) then begin
+      if false then begin
         if dist < 16 then frmTTM.rbShortPass.checked := true else
         if dist <= 56 then frmTTM.rbLongPass.checked := true else
         if dist < 121 then frmTTM.rbLongBomb.checked := true else
@@ -900,8 +881,8 @@ begin
     if frmTTM.rbShortPass.checked then frmTTM.rbQuickPass.checked := true else
     if frmTTM.rbLongPass.checked then frmTTM.rbShortPass.checked := true else
     if frmTTM.rbLongBomb.checked then frmTTM.rbLongPass.checked := true else
-    if (((dist <= 182) and (not(frmSettings.cbSquarePass.checked))) or
-       ((squaredist <= 3) and (frmSettings.cbSquarePass.checked)))
+    if (((dist <= 182) and (false)) or
+       ((squaredist <= 3) ))
       and ((frmTTM.cbStunty.checked) or
       (not(frmSettings.cbThrowStunty.checked))) then
       frmTTM.rbLongBomb.checked := true;

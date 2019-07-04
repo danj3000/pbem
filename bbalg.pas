@@ -1617,11 +1617,9 @@ begin
             if (littled = 0) or (bigd=0) then dmod := 4.999
               else if bigd=littled then dmod := 5.657
               else dmod := 4.999 + ((0.658/bigd)*littled);
-            if frmSettings.cbSquarePass.checked then begin
+
               if dist <= dmod then a := a + 1;
-            end else begin
-              if dist <= 4.95 then a := a + 1;
-            end;
+
           end;
         end;
       end;
@@ -1679,14 +1677,12 @@ begin
     for z := 1 to team[g0].numplayers do begin
       dist := (player[g0,z].p - player[g0,f0].p) * (player[g0,z].p - player[g0,f0].p)
         + (player[g0,z].q - player[g0,f0].q) * (player[g0,z].q - player[g0,f0].q);
-      if frmSettings.cbSquarePass.checked then
+
         squaredist := RangeRulerRange(player[g0,z].p, player[g0,z].q,
         player[g0,f0].p, player[g0,f0].q);
-      if not(frmSettings.cbSquarePass.checked) then begin
-        if dist < 16 then QuickPass := true else QuickPass := false;
-      end else begin
+
         if squaredist = 0 then QuickPass := true else QuickPass := false;
-      end;
+
       if (QuickPass) and (f0<>z) then NoDumpOff := false;
     end;
   end;
