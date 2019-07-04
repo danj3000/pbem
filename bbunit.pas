@@ -3845,7 +3845,6 @@ begin
           ' out of '+ InttoStr(KOInjTOTBlue)+' injury rolls.';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
 
-        if (frmSettings.cbNurglesRotters.checked) then NurgleRotRolls;
         {Begin Evil Git Rolls}
         for p := 0 to 1 do begin
           if (Uppercase(team[p].race) = 'EVIL GITS') then begin
@@ -5207,11 +5206,7 @@ begin
       ArgueRoll := ArgueRoll + ArgueMod;
       TotalMods := ArgueMod;
     end;
-  if (frmSettings.cbHobgoblin.checked) and
-    (Uppercase(team[curmove].race) = 'HOBGOBLIN') and (ArgueRoll<>1) then begin
-    ArgueRoll := ArgueRoll + 1;
-    TotalMods := TotalMods + 1;
-  end;
+
   if ArgueRoll>6 then ArgueRoll := 6;
   s := 'JC' + Chr(curmove + 48) + Chr(ArgueRoll + 48);
   LogWrite(s);

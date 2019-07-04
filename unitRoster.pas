@@ -586,8 +586,7 @@ begin
   frmRoster.butBuyAsstCoach.visible := true;
   frmRoster.butBuyCheerleader.visible := true;
   frmRoster.butBuyApo.visible := true;
-  frmRoster.butBuyWizard.visible := (PostGameActive) or
-    ((Uppercase(team[g].race) = 'HALFLING') and (frmSettings.cbHChefNew.checked));
+  frmRoster.butBuyWizard.visible := (PostGameActive) ;
   EnableDisableBuyButtons;
   {frmRoster.cmdChangeStats.visible := not(PostgameActive);}
 end;
@@ -729,13 +728,7 @@ begin
                end;
              end;
              team[g].wiz := team[g].wiz + 1;
-             if (frmSettings.cbHChefNew.checked) and
-               (Uppercase(team[g].race) = 'HALFLING') then
-                team[g].treasury := IntToStr(MoneyVal(team[g].treasury) -
-                            20) + 'k'
-             else
-               team[g].treasury := IntToStr(MoneyVal(team[g].treasury) -
-                            150) + 'k';
+             team[g].treasury := IntToStr(MoneyVal(team[g].treasury) - 150) + 'k';
            end;
         'X': begin
              if team[g].wiz >= 1 then wiz[g].visible := false;
@@ -775,11 +768,6 @@ begin
              if (not(Uppercase(team[g].race) = 'HALFLING')) then
                team[g].treasury := IntToStr(MoneyVal(team[g].treasury) +
                             50) + 'k' else
-             if (frmSettings.cbHChefNew.checked) and
-               (Uppercase(team[g].race) = 'HALFLING') then
-                team[g].treasury := IntToStr(MoneyVal(team[g].treasury) +
-                            20) + 'k'
-             else
                team[g].treasury := IntToStr(MoneyVal(team[g].treasury) +
                             150) + 'k';
            end;
@@ -853,7 +841,7 @@ var p: integer;
     s: string;
 begin
   Buy('W');
-  if (Uppercase(team[curroster].race) = 'HALFLING') and (not(frmSettings.cbHChefNew.checked))
+  if (Uppercase(team[curroster].race) = 'HALFLING')
     then begin
       LogWrite('tC' + Chr(curroster + 48));
       PlayActionStartHalf('tC' + Chr(curroster + 48), 1);
@@ -865,54 +853,7 @@ begin
       LogWrite(s);
       PlayActionStartHalf(s, 1);
   end;
-  if (Uppercase(team[curroster].race) = 'HALFLING') and (frmSettings.cbHChefNew.checked)
-    then begin
-      LogWrite('tC' + Chr(curroster + 48));
-      PlayActionStartHalf('tC' + Chr(curroster + 48), 1);
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-      {if (lastroll > 1) and (marker[1-curroster, MT_Reroll].value>0) then begin}
-      if (lastroll > 1) then begin
-        s := 'tR' + Chr(curroster + 48) + Chr(1 + 48);
-        LogWrite(s);
-        PlayActionStartHalf(s, 1);
-      end else begin
-        Bloodbowl.comment.Text := 'Halfling Chef roll fails';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end;
-  end;
-  if (Uppercase(team[curroster].race) = 'DWARF') and (frmSettings.cbHChefNew.checked)
-    then begin
-      Bloodbowl.comment.Text := 'Roll for Dwarven Runesmith';
-      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-      if lastroll = 1 then begin
-        Bloodbowl.comment.Text := 'Runesmith Spell Fizzles!  No effect!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 2 then begin
-        Bloodbowl.comment.Text := 'Runesmith casts Rune of Speed.  Player of '+
-          'choice gains Sprint and +1 MA for this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 3 then begin
-        Bloodbowl.comment.Text := 'Runesmith casts Rune of Might.  Player of '+
-          'choice gains +1 ST for this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 4 then begin
-        Bloodbowl.comment.Text := 'Runesmith casts Rune of Dexerity.  Player of '+
-          'choice gains +1 AG for this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 5 then begin
-        Bloodbowl.comment.Text := 'Runesmith casts Rune of Stone.  Player of '+
-          'choice gains +1 AV and Stand Firm for this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 6 then begin
-        Bloodbowl.comment.Text := 'Runesmith casts Rune of Courage.  Player of '+
-          'choice gains Dauntless and Frenzy for this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end;
-      s := 'W' + Chr(curroster + 48);
-      LogWrite(s);
-      PlayActionUseWiz(s, 1);
-  end;
+
 end;
 
 procedure TfrmRoster.butUpdateTeamRosterClick(Sender: TObject);

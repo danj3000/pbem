@@ -550,8 +550,7 @@ begin
         repeat begin
           r := Rnd(6,6) + 1;
           r2 := Rnd(6,6) + 1;
-          if ((Uppercase(team[g].race) = 'BRIGHT CRUSADERS')) and (r = 1) and
-            (r2 = 6) and (frmSettings.cbBrightCrusaders.checked) then r := r2;
+
           t := 'DN' + Chr(g + 48) + Chr(f + 64) + Chr(r + 48);
           if CanWriteToLog then begin
             AddLog(TranslateNiggle(t));

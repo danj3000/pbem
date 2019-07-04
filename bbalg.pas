@@ -2344,9 +2344,7 @@ begin
      or (player[g0,f0].hasSkill('NoDeath'));
   frmArmourRoll.cbIronMan.checked := (player[g0,f0].hasSkill('Iron Man'));
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
-  frmArmourRoll.rbAVNegOne.checked :=
-          (Uppercase(team[g].race) = 'BRIGHT CRUSADERS') and
-          (frmSettings.cbBrightCrusaders.checked);
+  frmArmourRoll.rbAVNegOne.checked := false;
 
   totspp := player[g0,f0].GetStartingSPP + player[g0,f0].GetMatchSPP();
 

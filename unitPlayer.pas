@@ -1138,17 +1138,7 @@ begin
        'Bloodbowl Hypnotic Gaze Warning', MB_OK);
     end else begin
       Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-      if ((Uppercase(team[ActionTeam].race) = 'VAMPIRE - LAHMIAN') or
-        (Uppercase(team[ActionTeam].race) = 'VAMPIRE-LAHMIAN')) and
-        (frmSettings.cbVampireLahmian.checked) and
-        (Pos('VAMPIRE', Uppercase(player[ActionTeam,ActionPlayer].position)) > 0)
-          then begin
-          if (lastroll<>1) and (lastroll<>6) then begin
-            lastroll := lastroll + 1;
-            Bloodbowl.comment.Text := '+1 bonus to dice roll for Lahmian Vampire team';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-      end;
+      
       bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
         (player[ActionTeam,ActionPlayer].Ally))
         and (true)); // bigguy

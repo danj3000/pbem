@@ -82,9 +82,7 @@ begin
     ffmod[g] := false; // fan factor modifier if > 10
     bigmatch[g] := false;
     premod[g] := false;
-    specteammod[g] := ((Uppercase(team[g].race) = 'EVIL GITS') or
-                      (Uppercase(team[g].race) = 'HEROES OF LAW')) and
-                      (frmSettings.cbEvilGits.checked);
+    specteammod[g] := false;
   end;
   for g := 0 to 1 do
    for f := 1 to 9 do

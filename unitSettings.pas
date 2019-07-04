@@ -29,6 +29,32 @@ type
     rgRandomAlgorithm: TRadioGroup;
     cmbLeague: TComboBox;
     Label20: TLabel;
+    GroupBox2: TGroupBox;
+    Label22: TLabel;
+    Label23: TLabel;
+    Button1: TButton;
+    lblHomeColor: TLabel;
+    lblAwayColor: TLabel;
+    butHomeColorChange: TButton;
+    butAwayColorChange: TButton;
+    cdColorDialog: TColorDialog;
+    TabSheet9: TTabSheet;
+    Label17: TLabel;
+    txtCardsIniFile: TEdit;
+    Label24: TLabel;
+    txtHandicapIniFile: TEdit;
+    lblLustrian: TLabel;
+    rgCardSystem: TRadioGroup;
+    butSelectFile: TButton;
+    dlgPic: TOpenDialog;
+    cbPassingRangesColored: TCheckBox;
+    cbBlackIce: TCheckBox;
+    rbPO: TRadioGroup;
+    cbNoInjMods: TCheckBox;
+    cbWeatherPitch: TCheckBox;
+    cbLRB4KO: TCheckBox;
+    cbDeStun: TCheckBox;
+    cbDC: TCheckBox;
     TabSheet8: TTabSheet;
     Label19: TLabel;
     cbFragile: TCheckBox;
@@ -46,13 +72,6 @@ type
     cbBless: TCheckBox;
     cbSingleEye: TCheckBox;
     cbThirdEye: TCheckBox;
-    Label21: TLabel;
-    cbBrightCrusaders: TCheckBox;
-    cbEvilGits: TCheckBox;
-    cbVampireNecrarch: TCheckBox;
-    cbVampireLahmian: TCheckBox;
-    cbNurglesRotters: TCheckBox;
-    cbHobgoblin: TCheckBox;
     cbWings: TCheckBox;
     cbWarCry: TCheckBox;
     cbThrowStinkBomb: TCheckBox;
@@ -67,37 +86,9 @@ type
     cbBearHug: TCheckBox;
     cbFlyer: TCheckBox;
     cbLanding: TCheckBox;
-    GroupBox2: TGroupBox;
-    Label22: TLabel;
-    Label23: TLabel;
-    Button1: TButton;
-    lblHomeColor: TLabel;
-    lblAwayColor: TLabel;
-    butHomeColorChange: TButton;
-    butAwayColorChange: TButton;
-    cdColorDialog: TColorDialog;
-    TabSheet9: TTabSheet;
-    Label17: TLabel;
-    txtCardsIniFile: TEdit;
-    Label24: TLabel;
-    txtHandicapIniFile: TEdit;
-    lblLustrian: TLabel;
-    rgCardSystem: TRadioGroup;
     cbDig: TCheckBox;
     cbButterfingers: TCheckBox;
-    butSelectFile: TButton;
-    dlgPic: TOpenDialog;
-    cbPassingRangesColored: TCheckBox;
-    cbBlackIce: TCheckBox;
-    cbHChefNew: TCheckBox;
-    cbGoblinWeapons: TCheckBox;
-    rbPO: TRadioGroup;
-    cbNoInjMods: TCheckBox;
     cbFirethrower: TCheckBox;
-    cbWeatherPitch: TCheckBox;
-    cbLRB4KO: TCheckBox;
-    cbDeStun: TCheckBox;
-    cbDC: TCheckBox;
     procedure butAcceptClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -274,12 +265,12 @@ begin
   frmSettings.cbThirdEye.checked := (s[20] = 'T');
   //frmSettings.rgTitchy.ItemIndex := Ord(s[21]) - 48;
   frmSettings.cbWaaaghArmour.checked := (s[22] = 'W');
-  frmSettings.cbBrightCrusaders.checked := (s[23] = 'X');
-  frmSettings.cbEvilGits.checked := (s[24] = 'U');
-  frmSettings.cbVampireNecrarch.checked := (s[25] = 'V');
-  frmSettings.cbVampireLahmian.checked := (s[26] = 'Y');
-  frmSettings.cbNurglesRotters.checked := (s[27] = 'Z');
-  frmSettings.cbHobgoblin.checked := (s[28] = 'A');
+//  frmSettings.cbBrightCrusaders.checked := (s[23] = 'X');
+//  frmSettings.cbEvilGits.checked := (s[24] = 'U');
+//  frmSettings.cbVampireNecrarch.checked := (s[25] = 'V');
+//  frmSettings.cbVampireLahmian.checked := (s[26] = 'Y');
+//  frmSettings.cbNurglesRotters.checked := (s[27] = 'Z');
+//  frmSettings.cbHobgoblin.checked := (s[28] = 'A');
 //  frmSettings.cbBiasedReferee.checked := (s[29] = 'C');
   frmSettings.cbBearHug.checked := (s[30] = 'D');
   frmSettings.cbBulletThrow.checked := (s[31] = 'E');
@@ -311,10 +302,10 @@ begin
   frmSettings.cbBlackIce.Checked := (s[62] = 'G');
 //  frmSettings.cbSquarePass.checked := (s[63] = 'H');
 //  frmSettings.cbBHAssist.checked := (s[64] = 'I');
-  frmSettings.cbHChefNew.checked := (s[65] = 'J');
+//  frmSettings.cbHChefNew.checked := (s[65] = 'J');
 //  frmSettings.cbDiagMove.checked := (s[66] = 'K');
 //  frmSettings.cbSWRef.checked := (s[67] = 'L');
-  frmSettings.cbGoblinWeapons.checked := (s[68] = 'M');
+//  frmSettings.cbGoblinWeapons.checked := (s[68] = 'M');
 //  frmSettings.cbNoFieldGoals.checked := (s[69] = 'N');
 //  frmSettings.cbOnPitchSpellcasters.checked := (s[70] = 'O');
 //  frmSettings.cbNegativeWinnings.checked := (s[71] = 'P');
@@ -398,12 +389,12 @@ begin
   if cbThirdEye.checked then st := st + 'T' else st := st + '.';
   st := st + Chr(48 + 2);
   if cbWaaaghArmour.checked then st := st + 'W' else st := st + '.';
-  if cbBrightCrusaders.checked then st := st + 'X' else st := st + '.';
-  if cbEvilGits.checked then st := st + 'U' else st := st + '.';
-  if cbVampireNecrarch.checked then st := st + 'V' else st := st + '.';
-  if cbVampireLahmian.checked then st := st + 'Y' else st := st + '.';
-  if cbNurglesRotters.checked then st := st + 'Z' else st := st + '.';
-  if cbHobgoblin.checked then st := st + 'A' else st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
+  st := st + '.';
   st := st + '.';
   if cbBearHug.checked then st := st + 'D' else st := st + '.';
   if cbBulletThrow.checked then st := st + 'E' else st := st + '.';
@@ -440,10 +431,10 @@ begin
   if cbBlackIce.checked then st := st + 'G' else st := st + '.';
   st := st + 'H' ;  // squares for passing range
   st := st + 'I'; // boneheads help really stupid
-  if cbHChefNew.checked then st := st + 'J' else st := st + '.';
   st := st + '.';
   st := st + '.';
-  if cbGoblinWeapons.checked then st := st + 'M' else st := st + '.';
+  st := st + '.';
+  st := st + '.';
   st := st + '.';
   st := st + '.';
   st := st + '.';   // negative winnings
@@ -613,9 +604,9 @@ begin
 //        if Copy(s, 1, 9) = 'BHAssist=' then begin
 //          cbBHAssist.checked := (Copy(s, 10, 1) = 'Y');
 //        end;
-        if Copy(s, 1, 16) = 'HalflingChefNew=' then begin
-          cbHChefNew.checked := (Copy(s, 17, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 16) = 'HalflingChefNew=' then begin
+//          cbHChefNew.checked := (Copy(s, 17, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 13) = 'DiagonalMove=' then begin
 //          cbDiagMove.checked := (Copy(s, 14, 1) = 'Y');
 //        end;
@@ -634,9 +625,9 @@ begin
 //        if Copy(s, 1, 6) = 'HGaze=' then begin
 //          rgHGaze.ItemIndex := FVal(copy(s, 7, 1));
 //        end;
-        if Copy(s, 1, 14) = 'GoblinWeapons=' then begin
-          cbGoblinWeapons.checked := (Copy(s, 15, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 14) = 'GoblinWeapons=' then begin
+//          cbGoblinWeapons.checked := (Copy(s, 15, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 16) = 'NoForcedMAandAG=' then begin
 //          cbNoForcedMAandAG.checked := (Copy(s, 17, 1) = 'Y');
 //        end;
@@ -749,24 +740,24 @@ begin
         if Copy(s, 1, 13) = 'WaaaghArmour=' then begin
           cbWaaaghArmour.checked := (Copy(s, 14, 1) = 'Y');
         end;
-        if Copy(s, 1, 16) = 'BrightCrusaders=' then begin
-          cbBrightCrusaders.checked := (Copy(s, 17, 1) = 'Y');
-        end;
-        if Copy(s, 1, 9) = 'EvilGits=' then begin
-          cbEvilGits.checked := (Copy(s, 10, 1) = 'Y');
-        end;
-        if Copy(s, 1, 16) = 'VampireNecrarch=' then begin
-          cbVampireNecrarch.checked := (Copy(s, 17, 1) = 'Y');
-        end;
-        if Copy(s, 1, 15) = 'VampireLahmian=' then begin
-          cbVampireLahmian.checked := (Copy(s, 16, 1) = 'Y');
-        end;
-        if Copy(s, 1, 15) = 'NurglesRotters=' then begin
-          cbNurglesRotters.checked := (Copy(s, 16, 1) = 'Y');
-        end;
-        if Copy(s, 1, 10) = 'Hobgoblin=' then begin
-          cbHobgoblin.checked := (Copy(s, 11, 1) = 'Y');
-        end;
+//        if Copy(s, 1, 16) = 'BrightCrusaders=' then begin
+//          cbBrightCrusaders.checked := (Copy(s, 17, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 9) = 'EvilGits=' then begin
+//          cbEvilGits.checked := (Copy(s, 10, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 16) = 'VampireNecrarch=' then begin
+//          cbVampireNecrarch.checked := (Copy(s, 17, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 15) = 'VampireLahmian=' then begin
+//          cbVampireLahmian.checked := (Copy(s, 16, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 15) = 'NurglesRotters=' then begin
+//          cbNurglesRotters.checked := (Copy(s, 16, 1) = 'Y');
+//        end;
+//        if Copy(s, 1, 10) = 'Hobgoblin=' then begin
+//          cbHobgoblin.checked := (Copy(s, 11, 1) = 'Y');
+//        end;
 //        if Copy(s, 1, 14) = 'BiasedReferee=' then begin
 //          cbBiasedReferee.checked := (Copy(s, 15, 1) = 'Y');
 //        end;

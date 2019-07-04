@@ -479,42 +479,6 @@ begin
     end;
   end;
 
-  for g := 0 to 1 do begin
-    if (Uppercase(team[g].race) = 'GOBLIN') and (HalfNo = 1) and
-      (frmSettings.cbGoblinWeapons.checked) then begin
-      s := 'tW' + Chr(g + 48);
-      LogWrite(s);
-      PlayActionStartHalf(s, 1);
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-      if lastroll = 1 then begin
-        Bloodbowl.comment.text := team[g].name + ' gains no free secret weapons ' +
-          'freebooters this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 2 then begin
-        Bloodbowl.comment.text := team[g].name + ' gains a free Ball and Chain ' +
-          'freebooter! (may take roster to 17 players)';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 3 then begin
-        Bloodbowl.comment.text := team[g].name + ' gains a free Pogo Stick ' +
-          'freebooter! (may take roster to 17 players)';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 4 then begin
-        Bloodbowl.comment.text := team[g].name + ' gains a free Bomb ' +
-          'freebooter! (may take roster to 17 players)';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 5 then begin
-        Bloodbowl.comment.text := team[g].name + ' gains a free Chainsaw ' +
-          'freebooter! (may take roster to 17 players)';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else begin
-        Bloodbowl.comment.text := team[g].name + ' gains a free ' +
-          'secret weapon freebooter of coachs choice! (may take to roster to 17 players)';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end;
-    end;
-
-  end;
-
   if IGMEOY <> -1 then begin
     s := 'E' + Chr(IGMEOY + 66) + 'A';
     LogWrite(s);
@@ -522,8 +486,7 @@ begin
   end;
 
   for g := 0 to 1 do begin
-   if (wiz[g].visible) and (wiz[g].caption = 'Chef') and
-     (not(frmSettings.cbHChefNew.checked)) then begin
+   if (wiz[g].visible) and (wiz[g].caption = 'Chef')  then begin
      LogWrite('tC' + Chr(g + 48));
      PlayActionStartHalf('tC' + Chr(g + 48), 1);
      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
@@ -533,66 +496,7 @@ begin
      LogWrite(s);
      PlayActionStartHalf(s, 1);
    end;
-   if (Uppercase(team[g].race) = 'HALFLING') and (frmSettings.cbHChefNew.checked)
-     and (HalfNo = 1) then begin
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-      {if (lastroll > 1) and (marker[1-g, MT_Reroll].value>0) then begin}
-      if (lastroll > 1) then begin
-        s := 'tR' + Chr(g + 48) + Chr(1 + 48);
-        LogWrite(s);
-        PlayActionStartHalf(s, 1);
-      end else begin
-        Bloodbowl.comment.Text := 'Halfling Chef roll fails';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end;
-   end;
-   if (Uppercase(team[g].race) = 'HALFLING') and (frmSettings.cbHChefNew.checked)
-     and (HalfNo <> 1) then begin
-       j := 1 + FVal(frmRoster.wiz.Caption);
-       for i := 1 to j do begin
-         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-         {if (lastroll > 1) and (marker[1-g, MT_Reroll].value>0) then begin}
-         if (lastroll > 1) then begin
-           s := 'tR' + Chr(g + 48) + Chr(1 + 48);
-           LogWrite(s);
-           PlayActionStartHalf(s, 1);
-         end else begin
-           Bloodbowl.comment.Text := 'Halfling Chef roll fails';
-           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-         end;
-       end;
-   end;
-   if (Uppercase(team[g].race) = 'DWARF') and (frmSettings.cbHChefNew.checked)
-    and (HalfNo=1) and (wiz[g].visible)
-    then begin
-      Bloodbowl.comment.Text := 'Roll for Dwarven Runesmith';
-      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-      if lastroll = 1 then begin
-        Bloodbowl.comment.Text := 'Runesmith Spell Fizzles!  No effect!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 2 then begin
-        Bloodbowl.comment.Text := 'Runesmith casts Rune of Speed.  Player of '+
-          'choice gains Sprint and +1 MA for this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 3 then begin
-        Bloodbowl.comment.Text := 'Runesmith casts Rune of Might.  Player of '+
-          'choice gains +1 ST for this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 4 then begin
-        Bloodbowl.comment.Text := 'Runesmith casts Rune of Dexerity.  Player of '+
-          'choice gains +1 AG for this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 5 then begin
-        Bloodbowl.comment.Text := 'Runesmith casts Rune of Stone.  Player of '+
-          'choice gains +1 AV and Stand Firm for this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else if lastroll = 6 then begin
-        Bloodbowl.comment.Text := 'Runesmith casts Rune of Courage.  Player of '+
-          'choice gains Dauntless and Frenzy for this game!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end;
-    end;
+
   end;
 
   for g := 0 to 1 do
@@ -820,16 +724,6 @@ begin
             player[g,f].UseSkill('Restoration');
         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
 
-
-        if ((Uppercase(team[g].race) = 'VAMPIRE - NECRARCH') or
-           (Uppercase(team[g].race) = 'VAMPIRE-NECRARCH')) and
-           (frmSettings.cbVampireNecrarch.checked) then
-           if (lastroll<>1) and (lastroll<>6) then begin
-              lastroll := lastroll + 1;
-              Bloodbowl.comment.Text :=
-                '+1 bonus to dice roll for Necrarch Vampire team';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-           end;
         if lastroll >= RegenRollNeeded then begin
           curteam := g;
           curplayer := f;

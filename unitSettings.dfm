@@ -63,7 +63,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 713
     Height = 545
-    ActivePage = TabSheet9
+    ActivePage = TabSheet8
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
@@ -378,6 +378,30 @@ object frmSettings: TfrmSettings
         TabOrder = 1
       end
     end
+    object TabSheet9: TTabSheet
+      Caption = 'Armour/Injury'
+      ImageIndex = 8
+      object cbNoInjMods: TCheckBox
+        Left = 8
+        Top = 192
+        Width = 241
+        Height = 17
+        Caption = 'No injury modifiers allowed'
+        TabOrder = 0
+      end
+      object cbDeStun: TCheckBox
+        Left = 8
+        Top = 224
+        Width = 425
+        Height = 17
+        Caption = 
+          'Players automatically go from Stunned to Prone at the end of the' +
+          ' turn after their injury'
+        Checked = True
+        State = cbChecked
+        TabOrder = 1
+      end
+    end
     object TabSheet8: TTabSheet
       Caption = 'New Skills'
       ImageIndex = 7
@@ -387,13 +411,6 @@ object frmSettings: TfrmSettings
         Width = 266
         Height = 13
         Caption = 'Select the new skills and abilities you want for this match'
-      end
-      object Label21: TLabel
-        Left = 24
-        Top = 256
-        Width = 261
-        Height = 13
-        Caption = 'Allow the following special rules for special teams/races'
       end
       object cbFragile: TCheckBox
         Left = 160
@@ -417,6 +434,8 @@ object frmSettings: TfrmSettings
         Width = 129
         Height = 17
         Caption = 'Tattoos or Null Field'
+        Checked = True
+        State = cbChecked
         TabOrder = 2
       end
       object cbGFIInjury: TCheckBox
@@ -515,67 +534,13 @@ object frmSettings: TfrmSettings
         Caption = 'Third Eye'
         TabOrder = 14
       end
-      object cbBrightCrusaders: TCheckBox
-        Left = 24
-        Top = 280
-        Width = 585
-        Height = 17
-        Caption = 
-          'Bright Crusaders teams recover from failed Niggles on a second D' +
-          '6 roll of 6 and get -1 to all Armour rolls they make'
-        TabOrder = 15
-      end
-      object cbEvilGits: TCheckBox
-        Left = 24
-        Top = 304
-        Width = 417
-        Height = 17
-        Caption = 
-          'Evil Gits and Heroes of Law teams get +1 to their Postgame Fan F' +
-          'actor roll'
-        TabOrder = 16
-      end
-      object cbVampireNecrarch: TCheckBox
-        Left = 24
-        Top = 328
-        Width = 417
-        Height = 17
-        Caption = 'Vampire-Necrarch teams get +1 to their Regeneration rolls'
-        TabOrder = 17
-      end
-      object cbVampireLahmian: TCheckBox
-        Left = 24
-        Top = 352
-        Width = 417
-        Height = 17
-        Caption = 
-          'Vampire-Lahmian team vampires get +1 to their Hypnotic Gaze roll' +
-          's'
-        TabOrder = 18
-      end
-      object cbNurglesRotters: TCheckBox
-        Left = 24
-        Top = 376
-        Width = 417
-        Height = 17
-        Caption = 'Nurgles Rotters teams rot at end of game'
-        TabOrder = 19
-      end
-      object cbHobgoblin: TCheckBox
-        Left = 24
-        Top = 400
-        Width = 417
-        Height = 17
-        Caption = 'Hobgoblin teams get +1 to Argue the Call rolls'
-        TabOrder = 20
-      end
       object cbWings: TCheckBox
         Left = 488
         Top = 208
         Width = 113
         Height = 17
         Caption = 'Wings'
-        TabOrder = 21
+        TabOrder = 15
       end
       object cbWarCry: TCheckBox
         Left = 488
@@ -583,7 +548,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'War Cry'
-        TabOrder = 22
+        TabOrder = 16
       end
       object cbThrowStinkBomb: TCheckBox
         Left = 488
@@ -591,7 +556,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Throw Stink Bombs'
-        TabOrder = 23
+        TabOrder = 17
       end
       object cbThrowNet: TCheckBox
         Left = 488
@@ -599,7 +564,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Throw Nets'
-        TabOrder = 24
+        TabOrder = 18
       end
       object cbThrowFireball: TCheckBox
         Left = 488
@@ -607,7 +572,7 @@ object frmSettings: TfrmSettings
         Width = 153
         Height = 17
         Caption = 'Throw Fireball (On-Pitch)'
-        TabOrder = 25
+        TabOrder = 19
       end
       object cbThrowBigBomb: TCheckBox
         Left = 488
@@ -615,7 +580,7 @@ object frmSettings: TfrmSettings
         Width = 161
         Height = 17
         Caption = 'Throw Big Bomb (Grab Bag)'
-        TabOrder = 26
+        TabOrder = 20
       end
       object cbPitchPlayer: TCheckBox
         Left = 312
@@ -623,7 +588,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Pitch Player'
-        TabOrder = 27
+        TabOrder = 21
       end
       object cbMaceTail: TCheckBox
         Left = 312
@@ -631,7 +596,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Mace Tail'
-        TabOrder = 28
+        TabOrder = 22
       end
       object cbEthereal: TCheckBox
         Left = 160
@@ -639,7 +604,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Ethereal'
-        TabOrder = 29
+        TabOrder = 23
       end
       object cbChill: TCheckBox
         Left = 24
@@ -647,7 +612,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Chill'
-        TabOrder = 30
+        TabOrder = 24
       end
       object cbBulletThrow: TCheckBox
         Left = 24
@@ -655,7 +620,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Bullet Throw'
-        TabOrder = 31
+        TabOrder = 25
       end
       object cbBearHug: TCheckBox
         Left = 24
@@ -663,7 +628,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Bear Hug'
-        TabOrder = 32
+        TabOrder = 26
       end
       object cbFlyer: TCheckBox
         Left = 160
@@ -671,7 +636,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Flyer'
-        TabOrder = 33
+        TabOrder = 27
       end
       object cbLanding: TCheckBox
         Left = 312
@@ -679,7 +644,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Landing'
-        TabOrder = 34
+        TabOrder = 28
       end
       object cbDig: TCheckBox
         Left = 160
@@ -687,7 +652,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Dig'
-        TabOrder = 35
+        TabOrder = 29
       end
       object cbButterfingers: TCheckBox
         Left = 24
@@ -695,25 +660,7 @@ object frmSettings: TfrmSettings
         Width = 113
         Height = 17
         Caption = 'Butterfingers'
-        TabOrder = 36
-      end
-      object cbHChefNew: TCheckBox
-        Left = 24
-        Top = 424
-        Width = 465
-        Height = 17
-        Caption = 
-          'Use Experimental Halfling Chef as Head Coach and Dwarven Runesmi' +
-          'th from BB Mag #7'
-        TabOrder = 37
-      end
-      object cbGoblinWeapons: TCheckBox
-        Left = 24
-        Top = 448
-        Width = 297
-        Height = 17
-        Caption = 'Goblin teams get a free weapon at start of matches'
-        TabOrder = 38
+        TabOrder = 30
       end
       object cbFirethrower: TCheckBox
         Left = 160
@@ -721,31 +668,7 @@ object frmSettings: TfrmSettings
         Width = 145
         Height = 17
         Caption = 'Chaos Dwarf Firethrower'
-        TabOrder = 39
-      end
-    end
-    object TabSheet9: TTabSheet
-      Caption = 'Armour/Injury'
-      ImageIndex = 8
-      object cbNoInjMods: TCheckBox
-        Left = 8
-        Top = 192
-        Width = 241
-        Height = 17
-        Caption = 'No injury modifiers allowed'
-        TabOrder = 0
-      end
-      object cbDeStun: TCheckBox
-        Left = 8
-        Top = 224
-        Width = 425
-        Height = 17
-        Caption = 
-          'Players automatically go from Stunned to Prone at the end of the' +
-          ' turn after their injury'
-        Checked = True
-        State = cbChecked
-        TabOrder = 1
+        TabOrder = 31
       end
     end
   end
