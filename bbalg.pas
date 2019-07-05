@@ -1303,9 +1303,8 @@ begin
   tz.num := 0;
   for f := 1 to team[1-g0].numplayers do begin
     if (player[1-g0,f].status = 1)
-    or (player[1-g0,f].status = 2)
-    or ((player[1-g0,f].status = 3) and
-       (player[1-g0,f].hasSkill('Trip Up'))) then begin
+    or (player[1-g0,f].status = 2) then
+       begin
       if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
       and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
       and (player[1-g0,f].tz = 0) then begin
@@ -1382,17 +1381,15 @@ begin
     if (((player[1-g0,f].status = 1) or (player[1-g0,f].status = 2))
       and ((player[1-g0,f].hasSkill('Shadow*')) or
            ((player[1-g0,f].hasSkill('Diving Tackle'))
-                               )))
-      or ((player[1-g0,f].status = 3) and (player[1-g0,f].hasSkill('Trip Up')))
-         then begin
+                               )))then
+                               begin
       if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
       and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
       and (player[1-g0,f].tz = 0) then begin
         if (player[1-g0,f].hasSkill('Diving Tackle')) and
           (player[1-g0,f].status = 1) then
-          tz.num := tz.num + 10 else
-          if (player[1-g0,f].hasSkill('Trip Up')) then
-            tz.num := tz.num + 100 else tz.num := tz.num + 1;
+          tz.num := tz.num + 10
+           else tz.num := tz.num + 1;
         {tz.pl[tz.num] := f;}
       end;
     end;
@@ -1510,11 +1507,10 @@ begin
           Rstupid := False;
           TZone := True;
           if (player[g0,f].HasSkill('Bonehead')) or
-             (player[g0,f].hasSkill('Bone-head')) or
-             (player[g0,f].HasSkill('Cold Natured')) or
-             (player[g0,f].HasSkill('Cold Blooded')) then Bhead := True;
-          if (player[g0,f].HasSkill('Really Stupid')) or
-             (player[g0,f].HasSkill('Stone Cold Stupid')) then RStupid := True;
+             (player[g0,f].hasSkill('Bone-head'))
+              then Bhead := True;
+          if (player[g0,f].HasSkill('Really Stupid')) then
+              RStupid := True;
           if (player[g0,f].tz > 0)
             then TZone := False;
           if TZone and not RStupid then
@@ -1716,148 +1712,6 @@ begin
     end;
   end;
 
-  {Tom Change:  Added code for Avoid roll}
-  avd := true;
-  {Ronald: only need to roll for Avoid if FA and Ball & Chain is passed}
-  if (fa) and (bnc) and (NoDumpOff) then begin
-  {Avoid}
-    if player[g0,f0].hasSkill('Avoid') then begin
-      avd := false;
-      tz := CountTZBlockCA(g0,f0);
-      p := player[g0,f0].ag - tz.num;
-      Bloodbowl.comment.text := player[g,f].GetPlayerName +
-        ' has to beat Avoid roll of (' + IntToStr(p) + '+)';
-      Bloodbowl.EnterButtonClick(Bloodbowl);
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-
-      if lastroll >= p then avd := true else begin
-        bga := (((player[g,f].BigGuy) or
-          (player[g,f].Ally))
-          and (true));
-        proskill := ((player[g,f].HasSkill('Pro')))
-          and (lastroll <= 1) and
-          (not (player[g,f].usedSkill('Pro')))
-          and (g = curmove);
-        reroll := CanUseTeamReroll(bga);
-        ReRollAnswer := 'Fail Roll';
-        if reroll and proskill then begin
-          ReRollAnswer := FlexMessageBox('Avoid roll has failed!'
-            , 'Avoid Failure',
-            'Use Pro,Team Reroll,Fail Roll');
-        end else if proskill then begin
-          ReRollAnswer := FlexMessageBox('Avoid roll has failed!'
-            , 'Avoid Failure',
-            'Use Pro,Fail Roll');
-        end else if reroll then begin
-          ReRollAnswer := FlexMessageBox('Avoid roll failed!'
-            , 'Avoid Failure', 'Fail Roll,Team Reroll');
-        end;
-        if ReRollAnswer='Team Reroll' then begin
-          UReroll := UseTeamReroll;
-          if UReroll then begin
-            Bloodbowl.comment.text := 'Avoid reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-        if ReRollAnswer='Use Pro' then begin
-          player[g,f].UseSkill('Pro');
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll <= 3 then TeamRerollPro(g,f);
-          if (lastroll <= 3) then lastroll := 0;
-          if (lastroll >= 4) then begin
-            Bloodbowl.comment.text := 'Pro reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-        if lastroll >= p then avd := true;
-      end;
-
-    end;
-  end;
-  {End addition of Avoid roll}
-
-  {Tom Change:  Added code for Jam roll}
-  jam := true;
-  {Only need to roll for Jam if FA, Ball & Chain, and Avoid passed}
-  if (fa) and (avd) and (bnc) and (NoDumpOff) then begin
-  {Jam}
-    HitJugger := (player[g,f].hasSkill('Juggernaut')) and
-      (player[g,f].FirstBlock = 1) and (player[g,f].LastAction = 1);
-    if (player[g,f].font.size <> 12) and (player[g,f].FirstBlock = 1)
-      and (player[g,f].LastAction = 1) and player[g0,f0].hasSkill('Jam')
-      and (player[g,f].SecondBlock = 0) then begin
-      if not(HitJugger) then begin
-        jam := false;
-        if player[g,f].st >= player[g,f].ag then p := player[g,f].st else
-           p := player[g,f].ag;
-        p := 3 + ((player[g0,f0].ag) - p);
-        if p < 1 then p := 1 else if p > 6 then p := 6;
-        Bloodbowl.comment.text := player[g,f].GetPlayerName +
-          ' has to beat Jam roll of (' + IntToStr(p) + '+)';
-        Bloodbowl.EnterButtonClick(Bloodbowl);
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        if lastroll >= p then jam := true else begin
-          bga := (((player[g,f].BigGuy) or
-            (player[g,f].Ally))
-            and (true));
-          proskill := ((player[g,f].HasSkill('Pro')))
-            and (lastroll <= 1) and
-            (not (player[g,f].usedSkill('Pro')))
-            and (g = curmove);
-          reroll := CanUseTeamReroll(bga);
-          ReRollAnswer := 'Fail Roll';
-          if reroll and proskill then begin
-            ReRollAnswer := FlexMessageBox('Jam roll has failed!'
-              , 'Jam Failure',
-              'Use Pro,Team Reroll,Fail Roll');
-          end else if proskill then begin
-            ReRollAnswer := FlexMessageBox('Jam roll has failed!'
-              , 'Jam Failure',
-              'Use Pro,Fail Roll');
-          end else if reroll then begin
-            ReRollAnswer := FlexMessageBox('Jam roll failed!'
-              , 'Jam Failure', 'Fail Roll,Team Reroll');
-          end;
-          if ReRollAnswer='Team Reroll' then begin
-            UReroll := UseTeamReroll;
-            if UReroll then begin
-              Bloodbowl.comment.text := 'Jam reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            end;
-          end;
-          if ReRollAnswer='Use Pro' then begin
-            player[g,f].UseSkill('Pro');
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then TeamRerollPro(g,f);
-            if (lastroll <= 3) then lastroll := 0;
-            if (lastroll >= 4) then begin
-              Bloodbowl.comment.text := 'Pro reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            end;
-          end;
-          if lastroll >= p then jam := true;
-        end;
-      end;
-    end;
-  end;
-  {End addition of Jam roll}
-
-  if not (jam) then begin
-    Bloodbowl.comment.text := player[g,f].GetPlayerName +
-      ' is jammed by ' + player[g0,f0].GetPlayerName +'!  No blitz allowed!';
-    Bloodbowl.EnterButtonClick(Bloodbowl);
-  end;
-
-  if not (avd) then begin
-    Bloodbowl.comment.text := player[g,f].GetPlayerName +
-      ' is too slow to make the block!';
-    Bloodbowl.EnterButtonClick(Bloodbowl);
-  end;
-
   if not(fa) then begin
     Bloodbowl.comment.text := player[g,f].GetPlayerName +
       ' is too revolted to make the block!';
@@ -1974,17 +1828,13 @@ begin
       s := s + IntToStr(player[g,f].st);
       stx := player[g,f].st;
     end;
-    {Tom Change:  Code added for Stiff Arm skill}
+
     if player[g,f].font.size = 12 then s := s + ') b ' else begin
       if (player[g,f].FirstBlock = 1)
-      and ((player[g,f].LastAction = 1) or ((player[g,f].LastAction = 2)
-      and (true))) then begin   // horns 2nd
-        if (player[g0,f0].hasSkill('Stiff Arm')) and
-        (player[g,f].SecondBlock = 0) then begin
-          s := s + ',stiff arm';
-          sa := -1;
-        end;
-        {End Stiff Arm skill add}
+      and ((player[g,f].LastAction = 1) or
+        (player[g,f].LastAction = 2)          ) then
+      begin   // horns 2nd
+
         if player[g,f].hasSkill('Horns') then begin
           s := s + ',horns';
           horns := 1;
@@ -2005,8 +1855,7 @@ begin
     end;
     assa := horns + sa;
   {count assists}
-    if (not((player[g,f].hasSkill('Ball and Chain')))) and
-       (not((player[g,f].hasSkill('Maniac')))) then begin
+    if (not((player[g,f].hasSkill('Ball and Chain')))) then begin
       tz := CountTZBlockA(g0, f0);
       bx := false;
       for p := 1 to tz.num do begin
@@ -2291,9 +2140,8 @@ begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else if (player[g0,f0].hasSkill('STUNTY')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
-          frmArmourRoll.rbWeakPlayer.checked := true;
-  end else frmArmourRoll.rbNoStunty.checked := true;
+  end else
+   frmArmourRoll.rbNoStunty.checked := true;
 
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
   frmArmourRoll.rbAVNegOne.checked := false;
@@ -2410,9 +2258,8 @@ begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else if (player[g0,f0].hasSkill('STUNTY')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
-          frmArmourRoll.rbWeakPlayer.checked := true;
-  end else frmArmourRoll.rbNoStunty.checked := true;
+  end else
+   frmArmourRoll.rbNoStunty.checked := true;
 
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
   frmArmourRoll.cbIGMEOY.checked := (g = IGMEOY);
@@ -2546,10 +2393,8 @@ begin
      frmArmourRoll.rbWeakPlayer.checked := true;
   end else if (player[curteam,curplayer].hasSkill('STUNTY')) then begin
     frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[curteam,curplayer].hasSkill('Easily Injured'))
-   then begin
-     frmArmourRoll.rbWeakPlayer.checked := true;
-  end else frmArmourRoll.rbNoStunty.checked := true;
+  end
+   else frmArmourRoll.rbNoStunty.checked := true;
 
   frmArmourRoll.cbDecay.checked := (player[curteam,curplayer].hasSkill('Decay'));
   totspp := player[curteam,curplayer].comp0 + 3 *

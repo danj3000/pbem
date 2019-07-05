@@ -373,15 +373,8 @@ begin
       ((player[g,f].HasSkill('Bone-head')) and
       (not (player[g,f].usedSkill('Bone-head'))) and (g = curmove)) or
       ((player[g,f].HasSkill('Really Stupid')) and
-      (not (player[g,f].usedSkill('Really Stupid'))) and (g = curmove)) or
-      ((player[g,f].HasSkill('Cold Blooded')) and
-      (not (player[g,f].usedSkill('Cold Blooded'))) and (g = curmove)) or
-      ((player[g,f].HasSkill('Cold Natured')) and
-      (not (player[g,f].usedSkill('Cold Natured'))) and (g = curmove)) or
-      ((player[g,f].HasSkill('Stone Cold Stupid')) and
-      (not (player[g,f].usedSkill('Stone Cold Stupid'))) and (g = curmove)) or
-      ((player[g,f].HasSkill('Pride')) and
-      (not (player[g,f].usedSkill('Pride'))) and (g = curmove)))
+      (not (player[g,f].usedSkill('Really Stupid'))) and (g = curmove))
+      )
       and (player[g,f].status >= 1) and (player[g,f].status <= StunNo)
       and (player[g,f].UsedMA <> 15)
       then begin
@@ -397,27 +390,13 @@ begin
           player[g,f].UseSkill('Really Stupid');
           Bhead := 3;
         end else
-        if (player[g,f].HasSkill('Pride')) then begin
-          player[g,f].UseSkill('Pride');
-          Bhead := 1;
-        end else
-        if (player[g,f].HasSkill('Cold Natured')) then begin
-          player[g,f].UseSkill('Cold Natured');
-          Bhead := 1;
-        end else
-        if (player[g,f].HasSkill('Cold Blooded')) then begin
-          player[g,f].UseSkill('Cold Blooded');
-          Bhead := 1;
-        end else
-        if (player[g,f].HasSkill('Stone Cold Stupid')) then begin
-          player[g,f].UseSkill('Stone Cold Stupid');
-          Bhead := 3;
-        end;
-        if (player[g,f].HasSkill('Really Stupid')) or
-          (player[g,f].HasSkill('Stone Cold Stupid')) then begin
+
+        if (player[g,f].HasSkill('Really Stupid'))  then
+        begin
           RSHelp := CountNoBhead(g, f);
           if RSHelp > 0 then Bhead := 1;
         end;
+
         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
         bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true));   // big guy
@@ -479,46 +458,7 @@ begin
         end;
       end;
     {End of Bone-head/Really Stupid}
-    {Greater Glory Check}
-    GGCheck := false;
-    if (not(player[g,f].HasSkill('Greater Glory'))) and (g = curmove) then begin
-      GGCheck := false;
-      for f0 := 1 to team[g].numplayers do begin
-        if (player[g,f0].status >= 1) and (player[g,f0].status <= StunNo) and
-          (player[g,f0].HasSkill('Greater Glory')) and
-          (player[g,f0].font.size = 12)
-          then GGCheck := true;
-      end;
-      if GGCheck then
-        Bloodbowl.Loglabel.caption :=
-          'YOU HAVE FORGOTTEN TO MOVE A GREATER GLORY PLAYER BEFORE THIS ' +
-          'PLAYER!';
-    end;
-    if (Bloodbowl.Loglabel.caption =
-      'YOU HAVE FORGOTTEN TO MOVE A GREATER GLORY PLAYER BEFORE THIS PLAYER!') and
-      not(GGCheck) then Bloodbowl.Loglabel.caption := '';
-    {End of Greater Glory Check}
-    {Wild Animal - Old Check}
-    WACheck := false;
-    if (not(player[g,f].HasSkill('Wild Animal')))
-      and ((not(player[g,f].HasSkill('Maniac')))
-      and (not(player[g,f].HasSkill('Easily Confused'))))
-      and (g = curmove) then begin
-      WACheck := false;
-      for f0 := 1 to team[g].numplayers do begin
-        if (player[g,f0].status >= 1) and (player[g,f0].status <= StunNo) and
-          (player[g,f0].HasSkill('Maniac')) and
-          (player[g,f0].font.size = 12)
-          then WACheck := true;
-      end;
-      if WACheck then
-        Bloodbowl.Loglabel.caption :=
-          'YOU HAVE FORGOTTEN TO MOVE A WILD ANIMAL or MANIAC PLAYER BEFORE THIS PLAYER!';
-    end;
-    if (Bloodbowl.Loglabel.caption =
-      'YOU HAVE FORGOTTEN TO MOVE A WILD ANIMAL PLAYER or MANIAC BEFORE THIS PLAYER!') and
-      not(WACheck) then Bloodbowl.Loglabel.caption := '';
-    {End of Wild Animal - Old Check}
+
     {Wild Animal - New Check}
     if (player[g,f].HasSkill('Wild Animal')) and
       (not (player[g,f].usedSkill('Wild Animal'))) and (g = curmove)
@@ -855,111 +795,7 @@ begin
         end;
       end;
     {End of Ball and Chain TZ check}
-    {Rooted, Swamped, Netted}
-    if (((player[g,f].HasSkill('Rooted')) and (not (player[g,f].usedSkill('Rooted'))))
-     or ((player[g,f].HasSkill('Swamped')) and (not (player[g,f].usedSkill('Swamped'))))
-     or ((player[g,f].HasSkill('Netted')) and (not (player[g,f].usedSkill('Netted')))))
-      and (g = curmove) and (player[g,f].status >= 1) and (player[g,f].status <= 3)
-      then begin
-        r := 7 - (player[g,f].st);
-        if player[g,f].HasSkill('Swamped') then begin
-          player[g,f].UseSkill('Swamped');
-        end else if player[g,f].HasSkill('Rooted') then begin
-          player[g,f].UseSkill('Rooted');
-        end else begin
-          player[g,f].UseSkill('Netted');
-        end;
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        if (player[g,f].HasSkill('Rooted')) and (lastroll<>1) and (lastroll<>6)
-          then begin
-            lastroll := lastroll - 1;
-            Bloodbowl.comment.text := '-1 modifier to roll for Call Roots spell';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-
-        bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-            and (true));    // bigguy
-        proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll < r) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
-        reroll := CanUseTeamReroll(bga);
-        if lastroll < r then begin
-           ReRollAnswer := 'Fail Roll';
-           if reroll and proskill then begin
-             ReRollAnswer := FlexMessageBox('Strength roll to move has failed!'
-               , 'Strength roll Failure',
-               'Use Pro,Team Reroll,Fail Roll');
-           end else if proskill then ReRollAnswer := 'Use Pro' else
-           if reroll then begin
-             ReRollAnswer := FlexMessageBox('Strength roll to move has failed!'
-               , 'Strength roll Failure', 'Fail Roll,Team Reroll');
-           end;
-         end;
-         if ReRollAnswer='Team Reroll' then begin
-           UReroll := UseTeamReroll;
-           if UReroll then begin
-             Bloodbowl.comment.text := 'Strength roll reroll';
-             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-             if (player[g,f].HasSkill('Rooted')) and (lastroll<>1) and (lastroll<>6)
-               then begin
-               lastroll := lastroll - 1;
-               Bloodbowl.comment.text := '-1 modifier to roll for Call Roots spell';
-               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-             end;
-           end;
-         end;
-         if ReRollAnswer='Use Pro' then begin
-            player[g,f].UseSkill('Pro');
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then TeamRerollPro(g,f);
-            if (lastroll <= 3) then lastroll := 1;
-            if (lastroll >= 4) then begin
-              Bloodbowl.comment.text := 'Pro reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-              if (player[g,f].HasSkill('Rooted')) and (lastroll<>1) and (lastroll<>6)
-                 then begin
-                 lastroll := lastroll - 1;
-                 Bloodbowl.comment.text := '-1 modifier to roll for Call Roots spell';
-                 Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              end;
-            end;
-         end;
-         if lastroll>=r then begin
-          if player[g,f].HasSkill('Swamped') then begin
-              Bloodbowl.comment.text := player[g,f].name + ' breaks free of the ' +
-                'of the Swamped spell, Stats Change to remove Swamped skill';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end else begin
-              Bloodbowl.comment.text := player[g,f].name + ' roll successful, player ' +
-                'moves normally this turn';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-        end else begin
-          if player[g,f].HasSkill('Netted') then begin
-            Bloodbowl.comment.text := player[g,f].name + ' roll FAILED!, player ' +
-             'movement halved this turn and player CANNOT GFI';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end else begin
-            Bloodbowl.comment.text := player[g,f].name + ' roll FAILED!, player ' +
-             'movement zero for this turn';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-          if player[g,f].HasSkill('Netted') then begin
-            playermovement := (player[g,f].ma div 2);
-            if (player[g,f].ma mod 2)<>0 then playermovement := playermovement + 1;
-          end else playermovement := player[g,f].ma + 3;
-          s := 'M' + Chr(g + 48) + Chr(f + 65) +
-             Chr(player[g,f].p + 65) +
-             Chr(player[g,f].q + 65) +
-             Chr(player[g,f].p + 65) + Chr(player[g,f].q + 65) +
-             Chr(player[g,f].UsedMA + 65) + Chr(playermovement + 65);
-          LogWrite(s);
-          PlayActionPlayerMove(s, 1);
-        end;
-    end;
-    {End of Rooted, Swamped, and Netted}
-  end;
+   end;
 end;
 
 function TPlayer.GetStartingSPP : Integer;
@@ -1985,8 +1821,7 @@ begin
       HitTeam := g;
       HitPlayer := f;
       {count assists}
-      if (not((player[g,f].hasSkill('Ball and Chain'))))
-        and (not((player[g,f].hasSkill('Maniac')))) then begin
+      if (not((player[g,f].hasSkill('Ball and Chain')))) then begin
         tz := CountTZBlockA(g0, f0);
         bx := false;
         for p := 1 to tz.num do begin
@@ -2135,10 +1970,8 @@ begin
             (Sender as Tplayer).number].hasSkill('STUNTY'))
              then begin
             frmArmourRoll.rbWeakPlayer.checked := true;
-          end else if (player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('Easily Injured')) then begin
-            frmArmourRoll.rbWeakPlayer.checked := true;
-          end else frmArmourRoll.rbNoStunty.checked := true;
+          end else
+           frmArmourRoll.rbNoStunty.checked := true;
 
 
 
@@ -2595,11 +2428,6 @@ begin
       if player[g,f].font.size <> 12 then begin
         if (FBlock = 1)
           then begin
-          if (player[g0,f0].hasSkill('Stiff Arm')) and
-          (player[g,f].SecondBlock = 0) then begin
-            sa := -1;
-          end;
-          {End Stiff Arm skill add}
           if player[g,f].hasSkill('Horns') then begin
             horns := 1;
           end;
@@ -2619,7 +2447,7 @@ begin
                 and (player[g,f].hasSkill('Wild Animal')))
                 )
         and (not(player[g,f].hasSkill('Ball and Chain')))
-        and (not(player[g,f].hasSkill('Maniac'))) then
+        then
         begin
         tz := CountTZBlockA(g0, f0);
         bx := false;
@@ -2669,9 +2497,7 @@ begin
         assa := 0;
       end;
       if (player[g,f].hasSkill('Dauntless')) then
-        daunt := ' -- Blocker Dauntless not applied' else
-        if (player[g0,f0].hasSkill('Double Dauntless')) then
-        daunt := daunt + ' -- Defender Double Dauntless not applied';
+        daunt := ' -- Blocker Dauntless not applied' ;
       if stx + assa > 2 * (std + assd) then begin
         Bloodbowl.comment.Text := '3 Dice Block' + daunt;
       end else if stx + assa > std + assd then begin
@@ -3884,86 +3710,15 @@ begin
          end;
        end;
     {End D6+1 Movement Code}
-    {TIKSTPK}
-    if ((player[g,f].HasSkill('TIKSTPK')) and
-      (not (player[g,f].usedSkill('TIKSTPK'))) and (g = curmove))
-      then begin
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-            and (true)); // bigguy
-        proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 1) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
-        reroll := CanUseTeamReroll(bga);
-        if lastroll <= 1 then begin
-           ReRollAnswer := 'Fail Roll';
-           if reroll and proskill then begin
-             ReRollAnswer := FlexMessageBox('TIKSTPK roll has failed!'
-               , 'TIKSTPK roll Failure',
-               'Use Pro,Team Reroll,Fail Roll');
-           end else if proskill then ReRollAnswer := 'Use Pro' else
-           if reroll then begin
-             ReRollAnswer := FlexMessageBox('TIKSTPK roll failed!'
-               , 'TIKSTPK Failure', 'Fail Roll,Team Reroll');
-           end;
-         end;
-         if ReRollAnswer='Team Reroll' then begin
-           UReroll := UseTeamReroll;
-           if UReroll then begin
-             Bloodbowl.comment.text := 'TIKSTPK reroll';
-             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-           end;
-         end;
-         if ReRollAnswer='Use Pro' then begin
-            player[g,f].UseSkill('Pro');
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then TeamRerollPro(g,f);
-            if (lastroll <= 3) then lastroll := 1;
-            if (lastroll >= 4) then begin
-              Bloodbowl.comment.text := 'Pro reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            end;
-         end;
-       if (lastroll <= 1) then begin
-          if CanWriteToLog then begin
-            s := 'U-' + Chr(g + 48) + Chr(f + 64);
-            LogWrite(s);
-            PlayActionToggleTackleZone(s, 1);
-            s := 'x' + Chr(g + 48) + Chr(f + 65) + Chr(player[g,f].UsedMA + 64);
-            LogWrite(s);
-            PlayActionEndOfMove(s, 1);
-          end;
-          curturn := 0;
-          for f2 := 1 to 8 do begin
-            if turn[g,f2].color = clYellow then curturn := (HalfNo * 10) + f2;
-          end;
-          BANG := '';
-          if curturn <= (player[g,f].TIKSTPK + 1) then begin
-            BANG := player[g,f].name + ' EXPLODES!!!';
-            Bloodbowl.comment.text := BANG;
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            player[g,f].SetStatus(8);
-          end;
-        end;
-        player[g,f].UseSkill('TIKSTPK');
-      end;
-     {End of TIKSTPK}
+
     {Bone-head/Really Stupid}
     if (((player[g,f].HasSkill('Bonehead')) and
       (not (player[g,f].usedSkill('Bonehead'))) and (g = curmove)) or
       ((player[g,f].HasSkill('Bone-head')) and
       (not (player[g,f].usedSkill('Bone-head'))) and (g = curmove)) or
       ((player[g,f].HasSkill('Really Stupid')) and
-      (not (player[g,f].usedSkill('Really Stupid'))) and (g = curmove)) or
-      ((player[g,f].HasSkill('Cold Blooded')) and
-      (not (player[g,f].usedSkill('Cold Blooded'))) and (g = curmove)) or
-      ((player[g,f].HasSkill('Cold Natured')) and
-      (not (player[g,f].usedSkill('Cold Natured'))) and (g = curmove)) or
-      ((player[g,f].HasSkill('Stone Cold Stupid')) and
-      (not (player[g,f].usedSkill('Stone Cold Stupid'))) and (g = curmove)) or
-      ((player[g,f].HasSkill('Pride')) and
-      (not (player[g,f].usedSkill('Pride'))) and (g = curmove)))
+      (not (player[g,f].usedSkill('Really Stupid'))) and (g = curmove))
+      )
       and (player[g,f].status >= 1) and (player[g,f].status <= StunNo)
       and (player[g,f].UsedMA <> 15) 
       then begin
@@ -3979,24 +3734,8 @@ begin
           player[g,f].UseSkill('Really Stupid');
           Bhead := 3;
         end else
-        if (player[g,f].HasSkill('Pride')) then begin
-          player[g,f].UseSkill('Pride');
-          Bhead := 1;
-        end else
-        if (player[g,f].HasSkill('Cold Natured')) then begin
-          player[g,f].UseSkill('Cold Natured');
-          Bhead := 1;
-        end else
-        if (player[g,f].HasSkill('Cold Blooded')) then begin
-          player[g,f].UseSkill('Cold Blooded');
-          Bhead := 1;
-        end else
-        if (player[g,f].HasSkill('Stone Cold Stupid')) then begin
-          player[g,f].UseSkill('Stone Cold Stupid');
-          Bhead := 3;
-        end;
-        if (player[g,f].HasSkill('Really Stupid')) or
-          (player[g,f].HasSkill('Stone Cold Stupid')) then begin
+
+        if (player[g,f].HasSkill('Really Stupid'))  then begin
           RSHelp := CountNoBhead(g, f);
           if RSHelp > 0 then Bhead := 1;
         end;
@@ -4061,47 +3800,6 @@ begin
         end;
       end;
     {End of Bone-head/Really Stupid}
-    {Greater Glory Check}
-    GGCheck := false;
-    if (not(player[g,f].HasSkill('Greater Glory'))) and (g = curmove) then begin
-      GGCheck := false;
-      for f0 := 1 to team[g].numplayers do begin
-        if (player[g,f0].status >= 1) and (player[g,f0].status <= StunNo) and
-          (player[g,f0].HasSkill('Greater Glory')) and
-          (player[g,f0].font.size = 12)
-          then GGCheck := true;
-      end;
-      if GGCheck then
-        Bloodbowl.Loglabel.caption :=
-          'YOU HAVE FORGOTTEN TO MOVE A GREATER GLORY PLAYER BEFORE THIS ' +
-          'PLAYER!';
-    end;
-    if (Bloodbowl.Loglabel.caption =
-      'YOU HAVE FORGOTTEN TO MOVE A GREATER GLORY PLAYER BEFORE THIS PLAYER!') and
-      not(GGCheck) then Bloodbowl.Loglabel.caption := '';
-    {End of Greater Glory Check}
-    {Wild Animal - Old Check}
-    WACheck := false;
-    if (not(player[g,f].HasSkill('Wild Animal')))
-      and ((not(player[g,f].HasSkill('Maniac')))
-      and (not(player[g,f].HasSkill('Easily Confused'))))
-      and (g = curmove) then begin
-      WACheck := false;
-      for f0 := 1 to team[g].numplayers do begin
-        if (player[g,f0].status >= 1) and (player[g,f0].status <= StunNo) and
-          (player[g,f0].HasSkill('Maniac')) and
-          (player[g,f0].font.size = 12)
-          then WACheck := true;
-      end;
-      if WACheck then
-        Bloodbowl.Loglabel.caption :=
-          'YOU HAVE FORGOTTEN TO MOVE A WILD ANIMAL or MANIAC PLAYER BEFORE THIS ' +
-          'PLAYER!';
-    end;
-    if (Bloodbowl.Loglabel.caption =
-      'YOU HAVE FORGOTTEN TO MOVE A WILD ANIMAL PLAYER or MANIAC BEFORE THIS PLAYER!') and
-      not(WACheck) then Bloodbowl.Loglabel.caption := '';
-    {End of Wild Animal - Old Check}
     {Wild Animal - New Check}
     if (player[g,f].HasSkill('Wild Animal')) and
       (not (player[g,f].usedSkill('Wild Animal'))) and (g = curmove)
@@ -4186,69 +3884,7 @@ begin
       'YOU HAVE FORGOTTEN TO MOVE A BALL AND CHAIN PLAYER BEFORE THIS PLAYER!') and
       not(BaCCheck) then Bloodbowl.Loglabel.caption := '';
     {End of Ball and Chain Check}
-    {Uncontrollable}
-    if ((player[g,f].HasSkill('Uncontrollable')) and
-      (not (player[g,f].usedSkill('Uncontrollable'))) and (g = curmove))
-      and (player[g,f].status >= 1) and (player[g,f].status <= 3) and
-      (player[g,f].UsedMA <> 15)
-      then begin
-         player[g,f].UseSkill('Uncontrollable');
-         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-         lostcontrol := '';
-         bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-             and (true)); // bigguy
-         proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 1) and
-             (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
-         reroll := CanUseTeamReroll(bga);
-         if lastroll <= 1 then begin
-            ReRollAnswer := 'Fail Roll';
-            if reroll and proskill then begin
-              ReRollAnswer := FlexMessageBox('Uncontrollable roll has failed!'
-                , 'Uncontrollable Failure',
-                'Use Pro,Team Reroll,Fail Roll');
-            end else if proskill then ReRollAnswer := 'Use Pro' else
-            if reroll then begin
-              ReRollAnswer := FlexMessageBox('Uncontrollable roll failed!'
-                , 'Uncontrollable Failure', 'Fail Roll,Team Reroll');
-            end;
-          end;
-          if ReRollAnswer='Team Reroll' then begin
-            UReroll := UseTeamReroll;
-            if UReroll then begin
-              Bloodbowl.comment.text := 'Uncontrollable reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            end;
-          end;
-          if ReRollAnswer='Use Pro' then begin
-             player[g,f].UseSkill('Pro');
-             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-             if lastroll <= 3 then TeamRerollPro(g,f);
-             if (lastroll <= 3) then lastroll := 1;
-             if (lastroll >= 4) then begin
-               Bloodbowl.comment.text := 'Pro reroll';
-               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-               Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-             end;
-          end;
-         if lastroll = 1 then begin
-           lastroll := Rnd(8,6) + 1;
-           lostcontrol := 'Uncontrollable roll failed -- Random Movement: ';
-           if lastroll = 1 then lostcontrol := lostcontrol + 'Up Left ' else
-           if lastroll = 2 then lostcontrol := lostcontrol + 'Up ' else
-           if lastroll = 3 then lostcontrol := lostcontrol + 'Up Right ' else
-           if lastroll = 4 then lostcontrol := lostcontrol + 'Left ' else
-           if lastroll = 5 then lostcontrol := lostcontrol + 'Right ' else
-           if lastroll = 6 then lostcontrol := lostcontrol + 'Down Left ' else
-           if lastroll = 7 then lostcontrol := lostcontrol + 'Down ' else
-           if lastroll = 8 then lostcontrol := lostcontrol + 'Down Right ';
-           lastroll := Rnd(6,6) + 1;
-           lostcontrol := lostcontrol + InttoStr(lastroll) + ' squares';
-           Bloodbowl.comment.text := lostcontrol;
-           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-         end;
-      end;
-    {End of Uncontrollable}
+
     {Blood Lust}
     if ((player[g,f].HasSkill('Blood Lust')) and
       (not (player[g,f].usedSkill('Blood Lust'))) and (g = curmove))
@@ -4437,110 +4073,7 @@ begin
         end;
       end;
     {End of Ball and Chain TZ check}
-    {Rooted, Swamped, Netted}
-    if (((player[g,f].HasSkill('Rooted')) and (not (player[g,f].usedSkill('Rooted'))))
-     or ((player[g,f].HasSkill('Swamped')) and (not (player[g,f].usedSkill('Swamped'))))
-     or ((player[g,f].HasSkill('Netted')) and (not (player[g,f].usedSkill('Netted')))))
-      and (g = curmove) and (player[g,f].status >= 1) and (player[g,f].status <= 3)
-      then begin
-        r := 7 - (player[g,f].st);
-        if player[g,f].HasSkill('Swamped') then begin
-          player[g,f].UseSkill('Swamped');
-        end else if player[g,f].HasSkill('Rooted') then begin
-          player[g,f].UseSkill('Rooted');
-        end else begin
-          player[g,f].UseSkill('Netted');
-        end;
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        if (player[g,f].HasSkill('Rooted')) and (lastroll<>1) and (lastroll<>6)
-          then begin
-            lastroll := lastroll - 1;
-            Bloodbowl.comment.text := '-1 modifier to roll for Call Roots spell';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-
-        bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-            and (true)); // bigguy
-        proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll < r) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
-        reroll := CanUseTeamReroll(bga);
-        if lastroll < r then begin
-           ReRollAnswer := 'Fail Roll';
-           if reroll and proskill then begin
-             ReRollAnswer := FlexMessageBox('Strength roll to move has failed!'
-               , 'Strength roll Failure',
-               'Use Pro,Team Reroll,Fail Roll');
-           end else if proskill then ReRollAnswer := 'Use Pro' else
-           if reroll then begin
-             ReRollAnswer := FlexMessageBox('Strength roll to move has failed!'
-               , 'Strength roll Failure', 'Fail Roll,Team Reroll');
-           end;
-         end;
-         if ReRollAnswer='Team Reroll' then begin
-           UReroll := UseTeamReroll;
-           if UReroll then begin
-             Bloodbowl.comment.text := 'Strength roll reroll';
-             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-             if (player[g,f].HasSkill('Rooted')) and (lastroll<>1) and (lastroll<>6)
-               then begin
-               lastroll := lastroll - 1;
-               Bloodbowl.comment.text := '-1 modifier to roll for Call Roots spell';
-               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-             end;
-           end;
-         end;
-         if ReRollAnswer='Use Pro' then begin
-            player[g,f].UseSkill('Pro');
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then TeamRerollPro(g,f);
-            if (lastroll <= 3) then lastroll := 1;
-            if (lastroll >= 4) then begin
-              Bloodbowl.comment.text := 'Pro reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-              if (player[g,f].HasSkill('Rooted')) and (lastroll<>1) and (lastroll<>6)
-                 then begin
-                 lastroll := lastroll - 1;
-                 Bloodbowl.comment.text := '-1 modifier to roll for Call Roots spell';
-                 Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              end;
-            end;
-         end;
-         if lastroll>=r then begin
-          if player[g,f].HasSkill('Swamped') then begin
-              Bloodbowl.comment.text := player[g,f].name + ' breaks free of the ' +
-                'of the Swamped spell, Stats Change to remove Swamped skill';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end else begin
-              Bloodbowl.comment.text := player[g,f].name + ' roll successful, player ' +
-                'moves normally this turn';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-        end else begin
-          if player[g,f].HasSkill('Netted') then begin
-            Bloodbowl.comment.text := player[g,f].name + ' roll FAILED!, player ' +
-             'movement halved this turn and player CANNOT GFI';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end else begin
-            Bloodbowl.comment.text := player[g,f].name + ' roll FAILED!, player ' +
-             'movement zero for this turn';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-          if player[g,f].HasSkill('Netted') then begin
-            playermovement := (player[g,f].ma div 2);
-            if (player[g,f].ma mod 2)<>0 then playermovement := playermovement + 1;
-          end else playermovement := player[g,f].ma + 3;
-          s := 'M' + Chr(g + 48) + Chr(f + 65) +
-             Chr(player[g,f].p + 65) +
-             Chr(player[g,f].q + 65) +
-             Chr(player[g,f].p + 65) + Chr(player[g,f].q + 65) +
-             Chr(player[g,f].UsedMA + 65) + Chr(playermovement + 65);
-          LogWrite(s);
-          PlayActionPlayerMove(s, 1);
-        end;
-    end;
-    {End of Rooted, Swamped, and Netted}
+    
   end;
 end;
 

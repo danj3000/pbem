@@ -38,7 +38,6 @@ uses
   unitGFI in 'unitGFI.pas' {frmGFI},
   unitThrowTeamMate in 'unitThrowTeamMate.pas' {frmTTM},
   unitCatch in 'unitCatch.pas' {frmCatch},
-  unitKick in 'unitKick.pas' {frmKick},
   unitMessage in 'unitMessage.pas' {frmMessage},
   unitMachineID in 'unitMachineID.pas' {MachID},
   unitLanguage in 'unitLanguage.pas',
@@ -82,7 +81,6 @@ begin
   Application.CreateForm(TfrmGFI, frmGFI);
   Application.CreateForm(TfrmTTM, frmTTM);
   Application.CreateForm(TfrmCatch, frmCatch);
-  Application.CreateForm(TfrmKick, frmKick);
   Application.CreateForm(TfrmMessage, frmMessage);
   Application.CreateForm(TMachID, MachID);
   Application.CreateForm(TfrmThrowStuff, frmThrowStuff);

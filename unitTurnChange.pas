@@ -137,15 +137,6 @@ begin
   for g := 0 to 1 do
   for f := 1 to team[g].numplayers do begin
     if (g = curmove) and (InEditMode) then begin
-      if (player[g,f].HasSkill('TIKSTPK')) and (player[g, f].tz > 0) then begin
-        TIKSTPK := true;
-        if CanWriteToLog then begin
-          s3 := 'U+' + Chr(g + 48) + Chr(f + 64);
-          LogWrite(s3);
-          PlayActionToggleTackleZone(s3, 1);
-        end;
-        TIKSTPK := false;
-      end;
       if (player[g,f].hasSkill('Side Step')) and
         (player[g,f].SideStep[1] = 1) then begin
         s3 := 'QF' + Chr(g + 48) + Chr(f + 64) + Chr(48) + Chr(64) + Chr(64)
@@ -154,79 +145,9 @@ begin
         LogWrite(s3);
         PlayActionSideStep(s3, 1);
       end;
-      if (player[g,f].HasSkill('Spontaneous Combustion')) and
-        (player[g,f].status >= 0) and (player[g,f].status <= 4) then begin
-        if CanWriteToLog then begin
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll > 1 then begin
-            Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-             ' Spontaneous Combustion roll successful';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end else begin
-            Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-              ' Spontaneous Combustion roll FAILED!   BA-BOOM!!!';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-        end;
-      end;
-      if (player[g,f].HasSkill('Temporal Instability')) and
-        (player[g,f].status >= 1) and (player[g,f].status <= 4) then begin
-        if CanWriteToLog then begin
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll > 1 then begin
-            Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-              ' Temporal Instability roll successful';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end else begin
-            Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-              ' Temporal Instability roll failed!  Randomly scatter player one '+
-              'square!';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-        end;
-      end;
+
       CTest := false;
-      if (player[g,f].HasSkill('Cruelty')) and
-        (player[g,f].status >= 1) and (player[g,f].status <= 2) then begin
-          for g2 := 0 to 1 do
-          for f2 := 1 to team[g2].numplayers do begin
-            if (abs((player[g,f].p)-(player[g2,f2].p))<=1) and
-               (abs((player[g,f].q)-(player[g2,f2].q))<=1) and
-               ((player[g2,f2].status = 3) or (player[g2,f2].status = 4)) then begin
-               if (CanWriteToLog) and (not(CTest)) then begin
-                 CTest := true;
-                 Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-                 if lastroll > 1 then begin
-                   Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-                     ' Cruelty roll successful';
-                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                 end else begin
-                   Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-                     ' Cruelty roll failed! You must foul an adjacent prone/stunned '+
-                     'player! If you currently have the IGMEOY marker return it to ' +
-                     'Neutral before making the foul.';
-                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                 end;
-               end;
-            end;
-          end;
-      end;
-      if (player[g,f].HasSkill('Not Worthy')) and
-        (player[g,f].status = 2) then begin
-        if CanWriteToLog then begin
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll > 1 then begin
-            Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-              ' We Are Not Worthy roll successful';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end else begin
-            Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-              ' We Are Not Worthy roll failed!  Player MUST move first and '+
-              'get rid of the ball without scoring!';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-        end;
-      end;
+
       if (player[g,f].status = 4) and (frmSettings.cbDeStun.checked) and
         (CanWriteToLog) then begin
         s3 := 'x' + Chr(g + 48) + Chr(f + 65) + Chr(player[g,f].UsedMA + 64);
@@ -244,33 +165,7 @@ begin
           if player[g,f].StunStatus = 0 then player[g,f].SetStatus(3);
         end;
       end;
-      if (player[g,f].HasSkill('Ball and Chain')) and
-        (player[g,f].status = 1) and (turn[g,1].font.size = 8) then begin
-        if CanWriteToLog then begin
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll > 1 then begin
-            Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-              ' Ball and Chain Exhaustion roll successful';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end else begin
-            Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-              ' Ball and Chain Exhaustion roll fails!  Rolling for result ...';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then begin
-              Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-                ' suffers Cardiac Arrest!!! ... Ball and Chain player dies!';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              player[g,f].SetStatus(8);
-            end else begin
-              Bloodbowl.comment.Text := player[g,f].GetPlayerName +
-                ' is just knackered ... he will be back for the next game!';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              player[g,f].SetStatus(6);
-            end;
-          end;
-        end;
-      end;
+
     end;
   end;
   s :='';
@@ -720,8 +615,7 @@ begin
             player[g,f].UseSkill('Regeneration');
         if player[g,f].hasSkill('RegenKO') then
             player[g,f].UseSkill('RegenKO');
-        if player[g,f].hasSkill('Restoration') then
-            player[g,f].UseSkill('Restoration');
+
         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
 
         if lastroll >= RegenRollNeeded then begin
@@ -1104,33 +998,13 @@ begin
       end;
       if (player[g,f].status > 0) and (player[g,f].status < 5) then begin
         if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) =
-             'SWELTERING HEAT') OR
-             (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 13)) =
-             'TROPICAL HEAT')) and (player[g,f].status <= 4)
-             and not ((player[g,f].HasSkill('Heat Resistant')) or
-             (player[g,f].HasSkill('Cold Natured')) or
-             (player[g,f].HasSkill('Stone Cold Stupid')) or
-             (player[g,f].hasSkill('Weather Immunity')))
-             then begin
+             'SWELTERING HEAT')) and (player[g,f].status <= 4) then
+        begin
           s0 := 'KW' + Chr(g + 48) + Chr(f + 64);
           LogWrite(s0);
           PlayActionPrepareForKickOff(s0, 1);
           heatroll := 1;
-          if player[g,f].HasSkill('Cold Resistant') then heatroll := 2;
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll <= heatroll then begin
-            player[g,f].SetStatus(14);
-          end;
-        end;
-        if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) =
-             'BLIZZARD')) and (player[g,f].status <= 4)
-             and (player[g,f].HasSkill('Heat Resistant'))
-             and not (player[g,f].HasSkill('Cold Blooded'))
-             then begin
-          s0 := 'Kw' + Chr(g + 48) + Chr(f + 64);
-          LogWrite(s0);
-          PlayActionPrepareForKickOff(s0, 1);
-          heatroll := 1;
+
           Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
           if lastroll <= heatroll then begin
             player[g,f].SetStatus(14);
@@ -1207,25 +1081,6 @@ begin
     end;
   end;
 
-  {The following for do loop handles the Easily Confused traits}
-  for g := 0 to 1 do begin
-    for f := 1 to team[g].numplayers do begin
-      if ((player[g,f].status <= 7) or (player[g,f].status = 13))
-          and (player[g,f].HasSkill('Easily Confused')) and (turnone = 0) then begin
-        s := 'KE' + Chr(g + 48) + Chr(f + 64);
-        LogWrite(s);
-        PlayActionPrepareForKickOff(s, 1);
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        if lastroll <= 3 then begin
-           player[g,f].SetStatus(10);
-           Bloodbowl.comment.text := 'Easily Confused switches and plays for your' +
-             ' opponent!';
-           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        end;
-      end;
-    end;
-  end;
-
   {The following for do loop handles the On Pitch Take Root trait}
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
@@ -1274,22 +1129,6 @@ begin
     end;
   end;
 
-  {The following for do loop handles the Will He Show? traits}
-  for g := 0 to 1 do begin
-    for f := 1 to team[g].numplayers do begin
-      if (player[g,f].status = 0) and (player[g,f].HasSkill('Will He Sho*'))
-          and (turnone = 1) and (HalfNo = 1) then begin
-        s := 'Kh' + Chr(g + 48) + Chr(f + 64);
-        LogWrite(s);
-        PlayActionPrepareForKickOff(s, 1);
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        if lastroll <= 1 then begin
-           player[g,f].SetStatus(13);
-        end;
-      end;
-    end;
-  end;
-
   {The following rolls for Off for a Bite and Gluttony}
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
@@ -1310,160 +1149,16 @@ begin
            end;
         end;
       end;
-      if ((player[g,f].status <= 4) or (player[g,f].status = 13))
-          and (player[g,f].HasSkill('Gluttony')) then begin
-        s := 'Kg' + Chr(g + 48) + Chr(f + 64);
-        LogWrite(s);
-        PlayActionPrepareForKickOff(s, 1);
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        if (lastroll <= 1) or ((lastroll <= 3) and
-           (player[g,f].HasSkill('Always Hungry'))) then begin
-           player[g,f].SetStatus(13);
-        end else begin
-           if player[g,f].status = 13 then begin
-             curteam := g;
-             curplayer := f;
-             Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
-           end;
-        end;
-      end;
+
     end;
   end;
 
-  {Were transformation rolls player}
-  ResetWerePlayers;
-  for g := 0 to 1 do begin
-    for f := 1 to team[g].numplayers do begin
-      if ((player[g,f].status <= 4) or (player[g,f].status = 13))
-        and (player[g,f].HasSkill('Were*')) then begin
-        s := 'KC' + Chr(g + 48) + Chr(f + 64);
-        LogWrite(s);
-        PlayActionPrepareForKickOff(s, 1);
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        if lastroll >= 5 then begin
-          if (Pos('WEREWOLF', Uppercase(player[g,f].position)) > 0) then begin
-            s2 := '';
-            s2 := 'u' + Chr(g + 48) + Chr(f + 64) +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-             Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$' +
-              player[g, f].GetSkillString(1) + '|' +
-              Chr(player[g, f].ma + 1 + 48) +
-              Chr(player[g, f].st + 1 + 48) +
-              Chr(player[g, f].ag - 1 + 48) +
-              Chr(player[g, f].av + 1 + 48) +
-              Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$';
-            s := '';
-            s := player[g, f].GetSkillString(1) + ', Outrage';
-            if player[g, f].HasSkill('Break Tackle') then s := s + ', Dodge'
-               else s := s + ', Break Tackle';
-            player[g, f].SetSkill(s);
-            s2 := s2 + player[g, f].GetSkillString(1);
-            LogWrite(s2);
-            PlayActionPlayerStatChange(s2, 1);
-          end;
-          if (Pos('WERECAT', Uppercase(player[g,f].position)) > 0) then begin
-            s2 := '';
-            s2 := 'u' + Chr(g + 48) + Chr(f + 64) +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-             Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$' +
-              player[g, f].GetSkillString(1) + '|' +
-              Chr(player[g, f].ma + 2 + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag - 1 + 48) +
-              Chr(player[g, f].av + 1 + 48) +
-              Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$';
-            s := '';
-            s := player[g, f].GetSkillString(1) + ', Sure Feet, Sprint, Outrage';
-            if player[g, f].HasSkill('Dodge') then s := s + ', Break Tackle'
-               else s := s + ', Dodge';
-            player[g, f].SetSkill(s);
-            s2 := s2 + player[g, f].GetSkillString(1);
-            LogWrite(s2);
-            PlayActionPlayerStatChange(s2, 1);
-          end;
-          if (Pos('WEREBEAR', Uppercase(player[g,f].position)) > 0) then begin
-            s2 := '';
-            s2 := 'u' + Chr(g + 48) + Chr(f + 64) +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-             Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$' +
-              player[g, f].GetSkillString(1) + '|' +
-              Chr(player[g, f].ma - 2 + 48) +
-              Chr(player[g, f].st + 2 + 48) +
-              Chr(player[g, f].ag - 1 + 48) +
-              Chr(player[g, f].av + 1 + 48) +
-                           Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$';
-            s := '';
-            s := player[g, f].GetSkillString(1) + ', Bear Hug, Outrage';
-            player[g, f].SetSkill(s);
-            s2 := s2 + player[g, f].GetSkillString(1);
-            LogWrite(s2);
-            PlayActionPlayerStatChange(s2, 1);
-          end;
-        end;
-      end;
-    end;
-  end;
-
-  {The following resets the Used this drive flag and rolls for
+    {The following resets the Used this drive flag and rolls for
   Secret Weapon penalties, and special Weather results}
   s := 'KD';
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) <>
-             'POURING RAIN')) and (player[g,f].HasSkill('Rusting'))
-             and (player[g,f].status = 14)
-             then begin
-             curteam := g;
-             curplayer := f;
-             Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
-      end;
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) <>
-             'VERY SUNNY')) and (player[g,f].HasSkill('Vampiric Change'))
-             and (player[g,f].status = 14)
-             then begin
-             curteam := g;
-             curplayer := f;
-             Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
-      end;
+
       if (not player[g,f].PlayedThisDrive) and
          ((player[g,f].status <= 4) or (player[g,f].status = 13)) and
          (turnone = 0) then begin
@@ -1509,40 +1204,7 @@ begin
           end;
         end;
       end;
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) =
-             'SWELTERING HEAT')) and ((player[g,f].HasSkill('Cold Natured')) or
-                (player[g,f].HasSkill('Stone Cold Stupid')))
-                and (player[g,f].status <= 4)
-             then player[g,f].SetStatus(14);
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) =
-             'BLIZZARD')) and (player[g,f].HasSkill('Cold Blooded'))
-             and (player[g,f].status <= 4)
-             then player[g,f].SetStatus(14);
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) <>
-             'SWELTERING HEAT')) and ((player[g,f].HasSkill('Cold Natured')) or
-                (player[g,f].HasSkill('Stone Cold Stupid')))
-                and (player[g,f].status = 14)
-             then begin
-               curteam := g;
-               curplayer := f;
-               Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
-      end;
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) <>
-             'BLIZZARD')) and (player[g,f].HasSkill('Cold Blooded'))
-             and (player[g,f].status = 14)
-             then begin
-             curteam := g;
-             curplayer := f;
-             Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
-      end;
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) =
-             'POURING RAIN')) and (player[g,f].HasSkill('Rusting'))
-                and (player[g,f].status <= 4)
-             then player[g,f].SetStatus(14);
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) =
-             'VERY SUNNY')) and (player[g,f].HasSkill('Vampiric Change'))
-                and (player[g,f].status <= 4)
-             then player[g,f].SetStatus(14);
+
     end;
   end;
   LogWrite(s);

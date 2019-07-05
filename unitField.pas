@@ -191,12 +191,10 @@ begin
               if (h > player[curteam, curplayer].ma + 2)
               or ((h = player[curteam, curplayer].ma + 2) and
                   not(player[curteam, curplayer].hasSkill('Sprint')))
-              or (player[curteam, curplayer].hasSkill('Obese'))
               or ((player[curteam, curplayer].HasSkill('Take Root')) and
                 (curteam = curmove) and (player[curteam,curplayer].status >= 1)
                 and (player[curteam,curplayer].status <= 4) and
                 (player[curteam,curplayer].ma = 0))
-              or (player[curteam, curplayer].hasSkill('No GFI'))
               or (player[curteam, curplayer].hasSkill('Ball and Chain'))
               then
                 begin

@@ -255,10 +255,7 @@ begin
   frmCatchStuff.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
       (player[g,f].Ally)) and (true)); // big guy
   frmCatchStuff.cbPouringRain.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
-     and not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
-     and not (player[g,f].hasSkill('Weather Immunity'));
+    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN');
 
   CalculateCatchRollNeeded;
 

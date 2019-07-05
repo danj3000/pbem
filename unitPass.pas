@@ -180,22 +180,10 @@ begin
 
 
   frmPass.cbVerySunny.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'VERY SUNNY') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 3)) = 'FOG') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLUSTERY') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 14)) = 'MOONLESS NIGHT') and
-    not (player[g,f].hasSkill('Weather Immunity'));
+    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'VERY SUNNY');
 
   frmPass.cbBlizzard.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 7)) = 'MONSOON') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 16)) = 'TORRENTIAL RAINS') and
-    not (player[g,f].hasSkill('Weather Immunity'));
+    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD') ;
 
   CalculatePassRollNeeded;
 
@@ -205,9 +193,8 @@ begin
   frmPass.cbImpossible.checked := false;
   if (((dist > 56) and ((false))) or
      ((squaredist > 1) ))
-     and (frmPass.cbBlizzard.checked) and not
-     (player[g,f].hasSkill('Cold Resistant'))
-        then frmPass.cbImpossible.checked := true;
+     and (frmPass.cbBlizzard.checked) then
+       frmPass.cbImpossible.checked := true;
   if (
     ((squaredist >= 2)))
     and (frmPass.cbBlizzard.checked)
@@ -247,9 +234,8 @@ begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else if (player[TeamCatcher,NumberCatcher].hasSkill('STUNTY')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[TeamCatcher,NumberCatcher].hasSkill('Easily Injured')) then begin
-          frmArmourRoll.rbWeakPlayer.checked := true;
-  end else frmArmourRoll.rbNoStunty.checked := true;
+  end else
+      frmArmourRoll.rbNoStunty.checked := true;
   
   frmArmourRoll.cbDecay.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Decay'));
 

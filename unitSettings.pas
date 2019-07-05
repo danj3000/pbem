@@ -117,12 +117,6 @@ begin
     Bloodbowl.butMakeHandicapRolls.visible := false;
   end;
 
-  begin
-    BloodBowl.MakeKickRoll1.Visible := false;
-    BloodBowl.DirtyKick1.Visible := false;
-    BloodBowl.Punt1.Visible := false;
-  end;
-
   ShowFieldImage(frmSettings.txtFieldImageFile.text);
 
   if (frmSettings.txtHandicapIniFile.text <> 'bbhandicap.ini') and

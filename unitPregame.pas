@@ -231,30 +231,6 @@ begin
         frmSettings.cbBlackIce.checked := True else
       frmSettings.cbBlackIce.Checked := False;
     end;
-    for g := 0 to 1 do begin
-      for f := 1 to team[g].numplayers do begin
-        if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) =
-             'SWELTERING HEAT')) and ((player[g,f].HasSkill('Cold Natured')) or
-                (player[g,f].HasSkill('Stone Cold Stupid')))
-                and (player[g,f].status <= 4)
-             then player[g,f].SetStatus(14);
-        if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) =
-             'BLIZZARD')) and (player[g,f].HasSkill('Cold Blooded'))
-             and (player[g,f].status <= 4)
-             then player[g,f].SetStatus(14);
-        if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) =
-             'POURING RAIN')) and (player[g,f].HasSkill('Rusting'))
-                and (player[g,f].status <= 4)
-             then player[g,f].SetStatus(14);
-        if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) =
-             'VERY SUNNY')) and (player[g,f].HasSkill('Vampiric Change'))
-                and (player[g,f].status <= 4)
-             then begin
-               if player[g,f].status >= 1 then ShowHurtForm('I');
-               player[g,f].SetStatus(14);
-        end;
-      end;
-    end;
   end;
 end;
 

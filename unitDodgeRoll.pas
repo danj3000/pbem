@@ -120,8 +120,7 @@ begin
       for f := 1 to team[1-g0].numplayers do begin
         if (player[1-g0,f].status = 1)
         or (player[1-g0,f].status = 2)
-        or ((player[1-g0,f].status = 3) and
-           (player[1-g0,f].hasSkill('Trip Up'))) then begin
+        then begin
           if (abs(player[1-g0,f].p - player[g0,f0].p - i) <= 1)
           and (abs(player[1-g0,f].q - player[g0,f0].q - j) <= 1) then begin
             if (player[1-g0,f].tz = 0) and

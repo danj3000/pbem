@@ -385,22 +385,10 @@ begin
 
 
   frmThrowStuff.cbVerySunny.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'VERY SUNNY') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 3)) = 'FOG') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLUSTERY') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 14)) = 'MOONLESS NIGHT') and
-    not (player[g,f].hasSkill('Weather Immunity'));
+    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'VERY SUNNY');
 
   frmThrowStuff.cbBlizzard.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 7)) = 'MONSOON') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 16)) = 'TORRENTIAL RAINS') and
-    not (player[g,f].hasSkill('Weather Immunity'));
+    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD');
 
   frmThrowStuff.cbNet.checked := ThrowStuff = 4;
 

@@ -69,13 +69,7 @@ begin
   frmGFI.lblPlayer.font.color := colorarray[g,0,0];
 
   frmGFI.cbBlizzard.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD')
-     and not ((player[g,f].hasSkill('Weather Immunity')) or
-     (player[g,f].hasSkill('Cold Resistant'))) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 7)) = 'MONSOON') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 16)) = 'TORRENTIAL RAINS') and
-    not (player[g,f].hasSkill('Weather Immunity'));
+    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD');
 
   frmGFI.cbSprint.Visible := false;
   frmGFI.cbSprint.Checked := (false);

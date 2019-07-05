@@ -89,10 +89,7 @@ begin
   frmPickUp.cbBigHand.checked := player[g,f].hasSkill('Big Hand');
 
   frmPickUp.cbPouringRain.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
-     and not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
-     and not (player[g,f].hasSkill('Weather Immunity'));
+    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN');
 
   frmPickUp.cbNBH.checked := player[g,f].hasSkill('Nonball Handler');
   frmPickUp.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or

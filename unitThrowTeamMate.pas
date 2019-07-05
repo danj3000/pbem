@@ -153,32 +153,17 @@ begin
 
   CalculateTTMRollNeeded;
 
-  frmTTM.cbVerySunny.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'VERY SUNNY') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 3)) = 'FOG') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLUSTERY') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 14)) = 'MOONLESS NIGHT') and
-    not (player[g,f].hasSkill('Weather Immunity'));
+  frmTTM.cbVerySunny.checked := (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'VERY SUNNY') ;
 
-  frmTTM.cbBlizzard.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 7)) = 'MONSOON') and
-    not (player[g,f].hasSkill('Weather Immunity')) OR
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 16)) = 'TORRENTIAL RAINS') and
-    not (player[g,f].hasSkill('Weather Immunity'));
+  frmTTM.cbBlizzard.checked :=  (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD');
 
   CalculateTTMRollNeeded;
 
   frmTTM.cbImpossible.checked := false;
   if (((dist > 56) and (false)) or
      ((squaredist > 1) ))
-     and (frmTTM.cbBlizzard.checked) and not
-     (player[g,f].hasSkill('Cold Resistant'))
-        then frmTTM.cbImpossible.checked := true;
+     and (frmTTM.cbBlizzard.checked) then
+        frmTTM.cbImpossible.checked := true;
   if (((dist >= 121) and (false)) or
     ((squaredist >= 2) ))
     and (frmTTM.cbBlizzard.checked)

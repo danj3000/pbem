@@ -208,9 +208,6 @@ type
     ThrowExplosiveBombs1: TMenuItem;
     ThrowinMovement1: TMenuItem;
     Shadowing1: TMenuItem;
-    MakeKickRoll1: TMenuItem;
-    DirtyKick1: TMenuItem;
-    Punt1: TMenuItem;
     AVInjRoll1: TMenuItem;
     lblPickWeather1: TMenuItem;
     PWeather1: TMenuItem;
@@ -264,7 +261,6 @@ type
     KO1: TMenuItem;
     DeclareAction1: TMenuItem;
     Blitz1: TMenuItem;
-    Cast1: TMenuItem;
     Foul1: TMenuItem;
     Pass1: TMenuItem;
     HandOff1: TMenuItem;
@@ -408,21 +404,9 @@ type
     procedure HGaze1Click(Sender: TObject);
     procedure Leap1Click(Sender: TObject);
     procedure MultipleBlock1Click(Sender: TObject);
-    procedure BearHug1Click(Sender: TObject);
-    procedure Chill1Click(Sender: TObject);
-    procedure Ethereal1Click(Sender: TObject);
     procedure ThrowTeamMate1Click(Sender: TObject);
     procedure ThrowBomb1Click(Sender: TObject);
-    procedure ThrowStinkBomb1Click(Sender: TObject);
     procedure ThrowinMovement1Click(Sender: TObject);
-    procedure MaceTail1Click(Sender: TObject);
-    procedure BulletThrow1Click(Sender: TObject);
-    procedure PitchPlayer1Click(Sender: TObject);
-    procedure ThrowNet1Click(Sender: TObject);
-    procedure ThrowBigBomb1Click(Sender: TObject);
-    procedure ThrowFireball1Click(Sender: TObject);
-    procedure Wings1Click(Sender: TObject);
-    procedure WingsLeap1Click(Sender: TObject);
     procedure WarCry1Click(Sender: TObject);
     procedure Shadowing1Click(Sender: TObject);
     procedure CastFireball1Click(Sender: TObject);
@@ -431,9 +415,7 @@ type
     procedure CastLBoltField1Click(Sender: TObject);
     procedure CastZap1Click(Sender: TObject);
     procedure MakeKickRoll1Click(Sender: TObject);
-    procedure Punt1Click(Sender: TObject);
     procedure HideBall1Click(Sender: TObject);
-    procedure DirtyKick1Click(Sender: TObject);
     procedure AVInjRoll1Click(Sender: TObject);
     procedure CrowdRoll1Click(Sender: TObject);
     procedure PickWeather1Click(Sender: TObject);
@@ -455,7 +437,6 @@ type
     procedure RemoveMVP1Click(Sender: TObject);
     procedure RemoveEXP1Click(Sender: TObject);
     procedure ArgueCallSBClick(Sender: TObject);
-    procedure Dig1Click(Sender: TObject);
     procedure ChangeGate1Click(Sender: TObject);
     procedure RemoveCHACClick(Sender: TObject);
     procedure PlayerShowDivingTackle1Click(Sender: TObject);
@@ -464,7 +445,6 @@ type
     procedure PlayerShowTackle1Click(Sender: TObject);
     procedure FieldShowTackleRanges1Click(Sender: TObject);
     procedure DeclareBlitz1Click(Sender: TObject);
-    procedure DeclareCast1Click(Sender: TObject);
     procedure DeclareFoul1Click(Sender: TObject);
     procedure DeclareHandOff1Click(Sender: TObject);
     procedure DeclarePass1Click(Sender: TObject);
@@ -1845,7 +1825,7 @@ begin
   ActionPlayer := curplayer;
   LeftClickPlayer(curteam,curplayer);
   if curteam = g then begin
-    if ((not(player[g,f].hasSkill('SLOW'))) and
+    if (
        (not((player[g,f].ma<=2)))) or
        (player[g,f].hasSkill('Jump Up'))
        then begin
@@ -1859,11 +1839,8 @@ begin
              if tz0.num=0 then StandUp := StandUp + 1;
           end;
         end;
-        if (player[g,f].hasSkill('SLOW')) then
-          Bloodbowl.comment.text := 'Stand Up roll with ' + IntToStr(StandUp) +
-          ' assists';
-        if (not (player[g,f].hasSkill('SLOW'))) and
-         ((player[g,f].ma)<=2) then begin
+
+        if ((player[g,f].ma) <= 2) then begin
             Bloodbowl.comment.text := 'Stand Up roll 4+ to succeed';
             StandUp := 0;
         end;
@@ -2366,19 +2343,7 @@ begin
     player[curteam, curplayer].td := player[curteam, curplayer].td + 1;
     LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'T');
     AddLog('Touchdown for ' + player[curteam, curplayer].GetPlayerName);
-    {Idleness}
-    if (player[curteam,curplayer].HasSkill('Idleness')) then begin
-      player[curteam,curplayer].UseSkill('Idleness');
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-      if lastroll = 1 then begin
-        AddLog('Idleness roll failure for ' +
-          player[curteam, curplayer].GetPlayerName);
-        player[curteam,curplayer].SetStatus(13);
-      end else begin
-        AddLog('Idleness roll success for ' +
-          player[curteam, curplayer].GetPlayerName);
-      end;
-    end;
+
     {increase score marker}
     marker[curteam, MT_Score].MarkerMouseUp(
               marker[curteam, MT_Score], mbLeft, [], 0, 0);
@@ -3938,52 +3903,7 @@ begin
     TZone := true;
     g := curteam;
     f := curplayer;
-    if player[curteam, curplayer].hasSkill('Greater Glory') then begin
-      player[g,f].UseSkill('Greater Glory');
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-      bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-         and (true));   // bigguy
-      proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 3) and
-         (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
-      reroll := CanUseTeamReroll(bga);
-      if lastroll <= 3 then begin
-        ReRollAnswer := 'Fail Roll';
-        if reroll and proskill then begin
-          ReRollAnswer := FlexMessageBox('Greater Glory roll failed!'
-            , 'Greater Glory Pass Failure', 'Use Pro,Team Reroll,Fail Roll');
-        end else if proskill then ReRollAnswer := 'Use Pro' else
-        if reroll then begin
-          ReRollAnswer := FlexMessageBox('Greater Glory roll failed!'
-            , 'Greater Glory Pass Failure', 'Team Reroll,Fail Roll');
-        end;
-      end;
-      if ReRollAnswer='Team Reroll' then begin
-        UReroll := UseTeamReroll;
-        if UReroll then begin
-          Bloodbowl.comment.text := 'Greater Glory reroll';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        end;
-      end;
-      if ReRollAnswer='Use Pro' then begin
-         player[g,f].UseSkill('Pro');
-         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-         if lastroll <= 3 then TeamRerollPro(g,f);
-         if (lastroll <= 3) then lastroll := 1;
-         if (lastroll >= 4) then begin
-           Bloodbowl.comment.text := 'Pro reroll';
-           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-           Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-         end;
-      end;
-      if lastroll <= 3 then begin
-         Bloodbowl.Endofmove1Click(Bloodbowl);
-         Bloodbowl.comment.text := player[g,f].name + ' fails his Greater Glory' +
-           ' roll and refuses to Pass the ball.   Pass action wasted!';
-         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-         PassFine := false;
-      end;
-    end;
+
     if (player[g,f].tz > 0)
       then TZone := False;
     if TZone then begin
@@ -4110,65 +4030,6 @@ begin
   Loglabel.caption := 'Feature not yet installed ... sorry!';
 end;
 
-procedure TBloodbowl.BearHug1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Bear Hug')) and
-   (player[curteam,curplayer].font.size = 12)
-  then begin
-    if not (player[curteam,curplayer].usedSkill('Bear Hug')) then begin
-      GameStatus := 'Bear Hug';
-      Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO BEAR HUG';
-      ActionTeam := curteam;
-      ActionPlayer := curplayer;
-    end else begin
-        Application.Messagebox('You can only use Bear Hug once per a turn!',
-                 'Bloodbowl Bear Hug Warning', MB_OK);
-    end;
-  end else begin
-        Application.Messagebox('You must have the Bear Hug skill and not have moved!',
-                 'Bloodbowl Bear Hug Warning', MB_OK);
-  end;
-end;
-
-procedure TBloodbowl.Chill1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Chill'))
-  then begin
-    if not (player[curteam,curplayer].usedSkill('Chill')) then begin
-      GameStatus := 'Chill';
-      Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO CHILL';
-      ActionTeam := curteam;
-      ActionPlayer := curplayer;
-    end else begin
-        Application.Messagebox('You can only use Chill once per a turn!',
-                 'Bloodbowl Chill Warning', MB_OK);
-    end;
-  end else begin
-        Application.Messagebox('You must have the Chill skill!',
-                 'Bloodbowl Chill Warning', MB_OK);
-  end;
-end;
-
-procedure TBloodbowl.Ethereal1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Ethereal'))
-    then begin
-    if not (player[curteam,curplayer].usedSkill('Ethereal'))
-      then begin
-      GameStatus := 'Ethereal';
-      Loglabel.caption := 'CLICK ON THE OPPONENT THAT YOU WISH TO PASS THROUGH';
-      ActionTeam := curteam;
-      ActionPlayer := curplayer;
-    end else begin
-      Application.Messagebox('You can only use Ethereal once per a turn!',
-                 'Bloodbowl Ethereal Warning', MB_OK);
-    end;
-  end else begin
-     Application.Messagebox('You must have the Ethereal skill!',
-                 'Bloodbowl Ethereal Warning', MB_OK);
-  end;
-end;
-
 procedure TBloodbowl.ThrowTeamMate1Click(Sender: TObject);
 begin
   if (player[curteam,curplayer].hasSkill('Throw TeamMate')) or
@@ -4213,121 +4074,12 @@ begin
   end;
 end;
 
-procedure TBloodbowl.ThrowStinkBomb1Click(Sender: TObject);
-begin
-  if ((player[curteam,curplayer].hasSkill('Stink Bomb')) and
-  (player[curteam,curplayer].font.size = 12)) or ((curteam=BombTeam) and
-  (curplayer=BombPlayer))
-  then begin
-    GameStatus := 'StinkBomb';
-    Loglabel.caption := 'CLICK ON THE PLAYER/SQUARE THAT YOU WISH TO THROW THE' +
-      ' BOMB AT';
-    ActionTeam := curteam;
-    ActionPlayer := curplayer;
-  end else begin
-    Application.Messagebox('You must have the skill STINK BOMB and not ' +
-      'have moved to throw one!','Bloodbowl Stink Bomb Warning', MB_OK);
-  end;
-end;
-
 procedure TBloodbowl.ThrowinMovement1Click(Sender: TObject);
 begin
   GameStatus := 'ThrowinMovement';
   Loglabel.caption := 'CLICK ON THE SQUARE THAT WOULD BE THE 3-4 DIRECTION';
   ActionTeam := curteam;
   ActionPlayer := curplayer;
-end;
-
-procedure TBloodbowl.MaceTail1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Mace Tail')) and
-   (player[curteam,curplayer].font.size = 12)
-  then begin
-    if not (player[curteam,curplayer].usedSkill('Mace Tail')) then begin
-      GameStatus := 'Mace Tail';
-      Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO MACE TAIL';
-      ActionTeam := curteam;
-      ActionPlayer := curplayer;
-    end else begin
-
-        Application.Messagebox('You can only use Mace Tail once per a turn!',
-                 'Bloodbowl Mace Tail Warning', MB_OK);
-    end;
-  end else begin
-        Application.Messagebox('You must have the Mace Tail skill and not have moved!',
-                 'Bloodbowl Mace Tail Warning', MB_OK);
-  end;
-end;
-
-procedure TBloodbowl.BulletThrow1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Bullet Throw')) then begin
-    if player[curteam, curplayer].status = 2 then begin
-      GameStatus := 'BulletThrow';
-      Loglabel.caption := 'CLICK ON THE PLAYER TO THROW THE BALL TO';
-    end else begin
-      Application.Messagebox('The player doesn''t have the ball so he can''t ' +
-      'make a pass!', 'Bloodbowl Pass Error', MB_OK);
-    end;
-  end else begin
-    Application.Messagebox('You must have the Bullet Throw skill!',
-                 'Bloodbowl Bullet Throw Warning', MB_OK);
-  end;
-end;
-
-procedure TBloodbowl.PitchPlayer1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Pitch Player'))
-    then begin
-    if not (player[curteam,curplayer].usedSkill('Pitch Player'))
-      then begin
-      GameStatus := 'PitchPlayer1';
-      Loglabel.caption := 'CLICK ON THE PLAYER THAT YOU WISH TO THROW';
-      ActionTeam := curteam;
-      ActionPlayer := curplayer;
-    end else begin
-      Application.Messagebox('You can only use Pitch Player once per a turn!',
-                 'Bloodbowl Pitch Player Warning', MB_OK);
-    end;
-  end else begin
-     Application.Messagebox('You must have the Pitch Player skill!',
-                 'Bloodbowl Pitch Player Warning', MB_OK);
-  end;
-end;
-
-procedure TBloodbowl.ThrowNet1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Netter'))
-  then begin
-    GameStatus := 'Net';
-    Loglabel.caption := 'CLICK ON THE PLAYER THAT YOU WISH TO THROW THE' +
-      ' NET AT';
-    ActionTeam := curteam;
-    ActionPlayer := curplayer;
-  end else begin
-     Application.Messagebox('You must have the Skill NETTER to throw a Net!',
-                 'Bloodbowl Netter Warning', MB_OK);
-  end;
-end;
-
-procedure TBloodbowl.ThrowBigBomb1Click(Sender: TObject);
-begin
-  if ((player[curteam,curplayer].font.size = 12)) or ((curteam=BombTeam) and
-  (curplayer=BombPlayer)) then begin
-    GameStatus := 'BigBomb';
-    Loglabel.caption := 'Click on the Player/Square that you wish to throw the' +
-      ' BIG bomb at';
-    ActionTeam := curteam;
-    ActionPlayer := curplayer;
-  end else begin
-    Application.Messagebox('You must not have moved to throw the BIG BOMB!',
-      'Bloodbowl BIG BOMB Warning', MB_OK);
-  end;
-end;
-
-procedure TBloodbowl.ThrowFireball1Click(Sender: TObject);
-begin
-  Loglabel.caption := 'Feature not yet installed ... sorry!';
 end;
 
 procedure TBloodbowl.CastFireball1Click(Sender: TObject);
@@ -4730,95 +4482,11 @@ begin
   end;
 end;
 
-procedure TBloodbowl.Wings1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Wings'))
-    then begin
-    if ((player[curteam,curplayer].LastAction = 1) and
-        (player[curteam,curplayer].UsedMA > 1)) then begin
-      if not (player[curteam,curplayer].usedSkill('Wings'))
-        then begin
-        GameStatus := 'Wings';
-        Loglabel.caption := 'CLICK ON THE SPOT ON THE FIELD ' +
-             'WHERE YOU WISH TO WING TO';
-      end else begin
-        Application.Messagebox('You can only use Wings once per a turn!',
-                   'Bloodbowl Wings Warning', MB_OK);
-      end;
-    end else begin
-      Application.Messagebox('You must move 2 square before using the Wings skill!',
-                 'Bloodbowl Wings Warning', MB_OK);
-    end;
-  end else begin
-     Application.Messagebox('You must have the Wings skill!',
-                 'Bloodbowl Wings Warning', MB_OK);
-  end;
-end;
-
-procedure TBloodbowl.WingsLeap1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Wings')) and
-     (player[curteam,curplayer].hasSkill('Leap'))
-    then begin
-    if ((player[curteam,curplayer].LastAction = 1) and
-        (player[curteam,curplayer].UsedMA > 1)) then begin
-      if not (player[curteam,curplayer].usedSkill('Wings')) and
-         not (player[curteam,curplayer].usedSkill('Leap'))
-        then begin
-        GameStatus := 'WingLeap';
-        Loglabel.caption := 'CLICK ON THE SPOT ON THE FIELD ' +
-             'WHERE YOU WISH TO WINGED LEAP TO';
-      end else begin
-        Application.Messagebox('You can only use Wings and Leap once per a turn!',
-                   'Bloodbowl Winged Leap Warning', MB_OK);
-      end;
-    end else begin
-      Application.Messagebox('You must move 2 squares before using the Wings skill!',
-                 'Bloodbowl Winged Leap Warning', MB_OK);
-    end;
-  end else begin
-     Application.Messagebox('You must have the Wings and Leap skills!',
-                 'Bloodbowl Winged Leap Warning', MB_OK);
-  end;
-end;
-
 procedure TBloodbowl.WarCry1Click(Sender: TObject);
 var i,j,k,l,ActionTeam,ActionPlayer: integer;
     s: string;
 begin
-  if (player[curteam,curplayer].hasSkill('War Cry')) and
-   (player[curteam,curplayer].font.size = 12)
-  then begin
-    if not (player[curteam,curplayer].usedSkill('War Cry')) then begin
-      ActionTeam := curteam;
-      ActionPlayer := curplayer;
-      for i := -1 to 1 do
-        for j := -1 to 1 do
-          for k := 0 to 1 do
-            for l := 1 to team[1-k].numplayers do begin
-              if (i<>0) or (j<>0) then begin
-                if (((player[ActionTeam,ActionPlayer].p)+i)=(player[k,l].p)) and
-                   (((player[ActionTeam,ActionPlayer].q)+j)=(player[k,l].q)) then begin
-                     s := 'U-' + Chr(k + 48) +  Chr(l + 64);
-                     LogWrite(s);
-                     PlayActionToggleTackleZone(s, 1);
-                     if (ActionTeam=k) and (player[k,l].font.size = 12) then begin
-                       s := 'x' + Chr(k + 48) + Chr(l + 65) +
-                         Chr(player[k,l].UsedMA + 64);
-                       LogWrite(s);
-                       PlayActionEndOfMove(s, 1);
-                     end;
-                end;
-              end;
-            end;
-    end else begin
-        Application.Messagebox('You can only use War Cry once per a turn!',
-                 'Bloodbowl War Cry Warning', MB_OK);
-    end;
-  end else begin
-        Application.Messagebox('You must have the War Cry skill and not have moved!',
-                 'Bloodbowl War Cry Warning', MB_OK);
-  end;
+
 end;
 
 procedure TBloodbowl.Shadowing1Click(Sender: TObject);
@@ -4838,46 +4506,6 @@ begin
   end else begin
     Application.Messagebox('The player doesn''t have the ball so he can''t ' +
     'make a kick!', 'Bloodbowl Kick Error', MB_OK);
-  end;
-end;
-
-procedure TBloodbowl.Punt1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Punt'))
-    then begin
-    if not (player[curteam,curplayer].usedSkill('Punt'))
-      then begin
-      GameStatus := 'Punt';
-      Loglabel.caption := 'CLICK ON THE SQUARE THAT YOU WISH TO PUNT TO';
-      ActionTeam := curteam;
-      ActionPlayer := curplayer;
-    end else begin
-      Application.Messagebox('You can only use Punt once per a turn!',
-                 'Bloodbowl Punt Warning', MB_OK);
-    end;
-  end else begin
-     Application.Messagebox('You must have the Punt skill!',
-                 'Bloodbowl Punt Warning', MB_OK);
-  end;
-end;
-
-procedure TBloodbowl.DirtyKick1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Dirty Kick'))
-    then begin
-    if not (player[curteam,curplayer].usedSkill('Dirty Kick'))
-      then begin
-      GameStatus := 'Dirty Kick';
-      Loglabel.caption := 'CLICK ON THE PLAYER THAT YOU WISH TO DIRTY KICK';
-      ActionTeam := curteam;
-      ActionPlayer := curplayer;
-    end else begin
-      Application.Messagebox('You can only use Dirty Kick once per a turn!',
-                 'Bloodbowl Dirty Kick Warning', MB_OK);
-    end;
-  end else begin
-     Application.Messagebox('You must have the Dirty Kick skill!',
-                 'Bloodbowl Dirty Kick Warning', MB_OK);
   end;
 end;
 
@@ -5202,24 +4830,6 @@ begin
     s := s + '... Argue the Call roll fails!';
   PlayActionComment(s, 1, 2);
   LogWrite(s);
-end;
-
-procedure TBloodbowl.Dig1Click(Sender: TObject);
-begin
-  if (player[curteam,curplayer].hasSkill('Dig')) and
-    (player[curteam,curplayer].status <> 2)
-    then begin
-      GameStatus := 'Dig1';
-      Loglabel.caption := 'CLICK ON THE SQUARE OR PLAYER THAT YOU WISH TO DIG UNDER';
-      ActionTeam := curteam;
-      ActionPlayer := curplayer;
-      DigP := 0;
-      DigQ := 0;
-      DigStrength := 0;
-  end else begin
-     Application.Messagebox('You must have the Dig skill and'
-      + ' cannot be holding the ball to use it!','Bloodbowl Dig Warning', MB_OK);
-  end;
 end;
 
 procedure TBloodbowl.RemoveCHACClick(Sender: TObject);
@@ -5599,11 +5209,6 @@ begin
 end;
 
 procedure TBloodbowl.DeclareBlitz1Click(Sender: TObject);
-begin
-  Loglabel.caption := 'Feature not yet installed ... sorry!';
-end;
-
-procedure TBloodbowl.DeclareCast1Click(Sender: TObject);
 begin
   Loglabel.caption := 'Feature not yet installed ... sorry!';
 end;

@@ -377,45 +377,51 @@ procedure MVP(tm: integer);
 var c, f, r, numEligible, GoodPlayer, ExtraMVPs: integer;
     gotMVP: array [1..MaxNumPlayersInTeam] of boolean;
     s: string;
-    NoMVPs, MVPBench: boolean;
 begin
   s := 'D' + Chr(tm + 48);
   c := 0;
   numEligible := 0;
-  noMVPs := false;
-  MVPBench := true;
+
   for f := 1 to team[tm].numplayers do
-    if ((player[tm,f].PlayedThisMatch) and not (NoMVPs)) or
-     ((player[tm,f].PlayedThisMatch) and (NoMVPs) and
-      not (player[tm,f].status = 8) and not (player[tm,f].HasSkill('No MVPs')))
-      or ((MVPBench) and (((player[tm,f].status <> 9) and (player[tm,f].status<>10)
+    if ((player[tm,f].PlayedThisMatch) and not (false)) or
+     ((((player[tm,f].status <> 9) and (player[tm,f].status<>10)
       and (player[tm,f].status<>11)) or (player[tm,f].PlayedThisMatch)))
       then numEligible := numEligible + 1;
-  for f := 1 to team[tm].numplayers do gotMVP[f] := false;
+  for f := 1 to team[tm].numplayers do
+    gotMVP[f] := false;
+
   if (Trim(frmSettings.txtHandicapTable.text)<>'H5') then
     ExtraMVPs := 0 else ExtraMVPs := team[tm].bonusMVP;
-  while (c <= ExtraMVPs) and (c < numEligible)
-    do begin
+
+  while (c <= ExtraMVPs) and (c < numEligible) do
+  begin
     r := Rnd(team[tm].numplayers, 6) + 1;
-    if (not MVPBench) and (not player[tm,r].PlayedThisMatch) then GoodPlayer := 0 else
-       if (MVPBench) and (player[tm,r].status >= 9) and (player[tm,r].status <= 10)
-         and not (player[tm,r].PlayedThisMatch) then GoodPlayer := 0 else
-       if (gotMVP[r]) then GoodPlayer := 0 else
-       if (player[tm,r].status = 8) and (NoMVPs) then GoodPlayer := 0 else
-       if (player[tm,r].status = 11) then GoodPlayer := 0 else
-       if (player[tm,r].HasSkill('No MVPs')) and (NoMVPs)
-       then GoodPlayer := 0 else GoodPlayer := 1;
-   while GoodPlayer = 0
-      do begin
+
+       if (player[tm,r].status >= 9) and (player[tm,r].status <= 10)
+         and not (player[tm,r].PlayedThisMatch) then
+         GoodPlayer := 0
+       else
+       if (gotMVP[r]) then
+          GoodPlayer := 0
+       else
+       if (player[tm,r].status = 11) then
+         GoodPlayer := 0
+       else
+         GoodPlayer := 1;
+
+   while GoodPlayer = 0          do
+   begin
         r := Rnd(team[tm].numplayers, 6) + 1;
-        if (not MVPBench) and (not player[tm,r].PlayedThisMatch) then GoodPlayer := 0 else
-          if (MVPBench) and (player[tm,r].status >= 9) and (player[tm,r].status <= 10)
-            and not (player[tm,r].PlayedThisMatch) then GoodPlayer := 0 else
-          if (gotMVP[r]) then GoodPlayer := 0 else
-          if (player[tm,r].status = 8) and (NoMVPs) then GoodPlayer := 0 else
-          if (player[tm,r].status = 11) then GoodPlayer := 0 else
-          if (player[tm,r].HasSkill('No MVPs')) and (NoMVPs)
-          then GoodPlayer := 0 else GoodPlayer := 1;
+        if (player[tm,r].status >= 9) and (player[tm,r].status <= 10)
+            and not (player[tm,r].PlayedThisMatch) then
+            GoodPlayer := 0 else
+          if (gotMVP[r]) then
+            GoodPlayer := 0
+          else
+          if (player[tm,r].status = 11) then
+          GoodPlayer := 0
+          else
+           GoodPlayer := 1;
       end;
     gotMVP[r] := true;
     s := s + Chr(r + 64);
