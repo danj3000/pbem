@@ -1601,334 +1601,354 @@ begin
 end;
 
 procedure WorkOutBlock(g, f, g0, f0: integer);
-var assa, assd, p, db, dd, st, sa, stx, std, st0, horns, dl, NiggleCount,
-    totspp, t, z, dist, squaredist: integer;
-    tz, tz0: TackleZones;
-    s, BlockAnswer, ReRollAnswer: string;
-    b, bx, fa, avd, jam, bga, bnc, SPP4th, HitBlock, VicBlock,
-    HitTackle, VicDodge, HitJugger, BlockCount, PowDCount, DownHeGoes,
-    proskill, reroll, UReroll, NoDumpOff, QuickPass: boolean;
-
+var
+  TargetPlayer: unitPlayer.TPlayer;
+  assa, assd, p, db, dd, st, sa, stx, std, st0, horns, dl, NiggleCount, totspp,
+    t, z, squaredist: integer;
+  tz, tz0: TackleZones;
+  s, BlockAnswer, ReRollAnswer: string;
+  b, bx, fa, avd, jam, bga, bnc, SPP4th, HitBlock, VicBlock, HitTackle,
+    VicDodge, HitJugger, BlockCount, PowDCount, DownHeGoes, ProSkill, reroll,
+    UReroll, NoDumpOff, QuickPass: boolean;
 begin
   dl := 0;
   dd := 0;
-  std := player[g0,f0].st;
+  std := player[g0, f0].st;
   assa := 0;
-  bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-            and (true));
+  bga := (((player[g, f].BigGuy) or (player[g, f].Ally)) and (true));
   BlockTeam := g0;
   BlockPlayer := f0;
   HitTeam := g;
   HitPlayer := f;
-  GetCAS := false;
+  GetCas := false;
   AVBreak := false;
   NoDumpOff := true;
   QuickPass := false;
-
-  if (player[g0,f0].hasSkill('Dump Off')) or (player[g0,f0].hasSkill('Dump-Off'))
-  then begin
-    for z := 1 to team[g0].numplayers do begin
-      dist := (player[g0,z].p - player[g0,f0].p) * (player[g0,z].p - player[g0,f0].p)
-        + (player[g0,z].q - player[g0,f0].q) * (player[g0,z].q - player[g0,f0].q);
-
-        squaredist := RangeRulerRange(player[g0,z].p, player[g0,z].q,
-        player[g0,f0].p, player[g0,f0].q);
-
-        if squaredist = 0 then QuickPass := true else QuickPass := false;
-
-      if (QuickPass) and (f0<>z) then NoDumpOff := false;
+  TargetPlayer := player[g0, f0];
+  if (TargetPlayer.hasSkill('Dump Off')) or (player[g0, f0].hasSkill('Dump-Off'))
+  then
+  begin
+    for z := 1 to team[g0].numplayers do
+    begin
+      squaredist := RangeRulerRange(player[g0, z].p,
+                                    player[g0, z].q,
+                                    TargetPlayer.p,
+                                    TargetPlayer.q);
+      if squaredist = 0 then
+        QuickPass := true
+      else
+        QuickPass := false;
+      if (QuickPass) and (f0 <> z) then
+        NoDumpOff := false;
     end;
   end;
-
-  if not(NoDumpOff) then begin
-    ReRollAnswer := FlexMessageBox('Player can use Dump Off!'
-            , 'Dump Off Warning', 'Stop,Continue');
-    if ReRollAnswer = 'Continue' then NoDumpOff := true;
+  if not(NoDumpOff) then
+  begin
+    ReRollAnswer := FlexMessageBox('Player can use Dump Off!',
+      'Dump Off Warning', 'Stop,Continue');
+    if ReRollAnswer = 'Continue' then
+      NoDumpOff := true;
   end;
-
-  {Ball and Chain}
-  if (player[g0,f0].hasSkill('Ball and Chain')) and not
-     (player[g,f].hasSkill('Ball and Chain')) then bnc := false
-     else bnc := true;
-
-  {Foul Appearance}
+  { Ball and Chain }
+  if (TargetPlayer.hasSkill('Ball and Chain')) and
+    not(player[g, f].hasSkill('Ball and Chain')) then
+    bnc := false
+  else
+    bnc := true;
+  { Foul Appearance }
   fa := true;
-  {only need to roll for FA if not Ball & Chain}
-  if (bnc) and (NoDumpOff) then begin
-    if player[g0,f0].hasSkill('Foul Appearanc*') then begin
+  { only need to roll for FA if not Ball & Chain }
+  if (bnc) and (NoDumpOff) then
+  begin
+    if TargetPlayer.hasSkill('Foul Appearanc*') then
+    begin
       fa := false;
-      if player[g0,f0].hasSkill('Foul Appearance L*') then begin
-        s := player[g0,f0].Get1Skill('Foul Appearance L*');
+      if TargetPlayer.hasSkill('Foul Appearance L*') then
+      begin
+        s := TargetPlayer.Get1Skill('Foul Appearance L*');
         p := FVal(Copy(s, 18, Length(s) - 17));
-      end else p := 2;
-      Bloodbowl.comment.text := player[g,f].GetPlayerName +
+      end
+      else
+        p := 2;
+      Bloodbowl.comment.text := player[g, f].GetPlayerName +
         ' has to beat Foul Appearance (' + IntToStr(p) + '+)';
       Bloodbowl.EnterButtonClick(Bloodbowl);
       Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-
-      if lastroll >= p then fa := true else begin
-        bga := (((player[g,f].BigGuy) or
-          (player[g,f].Ally))
-          and (true));
-        proskill := ((player[g,f].HasSkill('Pro')))
-          and (lastroll <= 1) and
-          (not (player[g,f].usedSkill('Pro')))
-          and (g = curmove);
+      if lastroll >= p then
+        fa := true
+      else
+      begin
+        bga := (((player[g, f].BigGuy) or (player[g, f].Ally)) and (true));
+        ProSkill := ((player[g, f].hasSkill('Pro'))) and (lastroll <= 1) and
+          (not(player[g, f].usedSkill('Pro'))) and (g = curmove);
         reroll := CanUseTeamReroll(bga);
         ReRollAnswer := 'Fail Roll';
-        if reroll and proskill then begin
-          ReRollAnswer := FlexMessageBox('Foul Appearance roll has failed!'
-            , 'Foul Appearance Failure',
-            'Use Pro,Team Reroll,Fail Roll');
-        end else if proskill then begin
-          ReRollAnswer := FlexMessageBox('Foul Appearance roll has failed!'
-            , 'Foul Appearance Failure',
-            'Use Pro,Fail Roll');
-        end else if reroll then begin
-          ReRollAnswer := FlexMessageBox('Foul Appearance roll failed!'
-            , 'Foul Appearance Failure', 'Fail Roll,Team Reroll');
+        if reroll and ProSkill then
+        begin
+          ReRollAnswer := FlexMessageBox('Foul Appearance roll has failed!',
+            'Foul Appearance Failure', 'Use Pro,Team Reroll,Fail Roll');
+        end
+        else if ProSkill then
+        begin
+          ReRollAnswer := FlexMessageBox('Foul Appearance roll has failed!',
+            'Foul Appearance Failure', 'Use Pro,Fail Roll');
+        end
+        else if reroll then
+        begin
+          ReRollAnswer := FlexMessageBox('Foul Appearance roll failed!',
+            'Foul Appearance Failure', 'Fail Roll,Team Reroll');
         end;
-        if ReRollAnswer='Team Reroll' then begin
+        if ReRollAnswer = 'Team Reroll' then
+        begin
           UReroll := UseTeamReroll;
-          if UReroll then begin
+          if UReroll then
+          begin
             Bloodbowl.comment.text := 'Foul Appearance reroll';
             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
           end;
         end;
-        if ReRollAnswer='Use Pro' then begin
-          player[g,f].UseSkill('Pro');
+        if ReRollAnswer = 'Use Pro' then
+        begin
+          player[g, f].UseSkill('Pro');
           Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll <= 3 then TeamRerollPro(g,f);
-          if (lastroll <= 3) then lastroll := 1;
-          if (lastroll >= 4) then begin
+          if lastroll <= 3 then
+            TeamRerollPro(g, f);
+          if (lastroll <= 3) then
+            lastroll := 1;
+          if (lastroll >= 4) then
+          begin
             Bloodbowl.comment.text := 'Pro reroll';
             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
           end;
         end;
-        if lastroll >= p then fa := true;
+        if lastroll >= p then
+          fa := true;
       end;
     end;
   end;
-
-  if not(fa) then begin
-    Bloodbowl.comment.text := player[g,f].GetPlayerName +
+  if not(fa) then
+  begin
+    Bloodbowl.comment.text := player[g, f].GetPlayerName +
       ' is too revolted to make the block!';
     Bloodbowl.EnterButtonClick(Bloodbowl);
   end;
-
-  if not(bnc) then begin
-    Bloodbowl.comment.text := player[g,f].GetPlayerName +
+  if not(bnc) then
+  begin
+    Bloodbowl.comment.text := player[g, f].GetPlayerName +
       ' cannot block a Ball and Chain player!';
     Bloodbowl.EnterButtonClick(Bloodbowl);
   end;
-
-  if (avd) and (fa) and (jam) and (bnc) and (NoDumpOff) then begin
-  {Dauntless}
-    if player[g0,f0].st > player[g,f].st then begin
-      if (player[g,f].hasSkill('Dauntless'))
-        or (player[g,f].hasSkill('Double Dauntless')) then begin
-        Bloodbowl.comment.text := player[g,f].GetPlayerName + ' Dauntless roll';
+  if (avd) and (fa) and (jam) and (bnc) and (NoDumpOff) then
+  begin
+    { Dauntless }
+    if TargetPlayer.st > player[g, f].st then
+    begin
+      if (player[g, f].hasSkill('Dauntless')) or
+        (player[g, f].hasSkill('Double Dauntless')) then
+      begin
+        Bloodbowl.comment.text := player[g, f].GetPlayerName +
+          ' Dauntless roll';
         Bloodbowl.EnterButtonClick(Bloodbowl);
         Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-        if lastroll > player[g0,f0].st then dl := 1 else begin
-          bga := (((player[g,f].BigGuy) or
-            (player[g,f].Ally))
-            and (true));
-          proskill := ((player[g,f].HasSkill('Pro')))
-            and (lastroll <= 1) and
-            (not (player[g,f].usedSkill('Pro')))
-            and (g = curmove);
+        if lastroll > player[g0, f0].st then
+          dl := 1
+        else
+        begin
+          bga := (((player[g, f].BigGuy) or (player[g, f].Ally)) and (true));
+          ProSkill := ((player[g, f].hasSkill('Pro'))) and (lastroll <= 1) and
+            (not(player[g, f].usedSkill('Pro'))) and (g = curmove);
           reroll := CanUseTeamReroll(bga);
           ReRollAnswer := 'Fail Roll';
-          if reroll and proskill then begin
-            ReRollAnswer := FlexMessageBox('Dauntless roll has failed!'
-              , 'Dauntless Failure',
-              'Use Pro,Team Reroll,Fail Roll');
-          end else if proskill then begin
-            ReRollAnswer := FlexMessageBox('Dauntless roll has failed!'
-              , 'Dauntless Failure',
-              'Use Pro,Fail Roll');
-          end else if reroll then begin
-            ReRollAnswer := FlexMessageBox('Dauntless roll failed!'
-              , 'Dauntless Failure', 'Fail Roll,Team Reroll');
+          if reroll and ProSkill then
+          begin
+            ReRollAnswer := FlexMessageBox('Dauntless roll has failed!',
+              'Dauntless Failure', 'Use Pro,Team Reroll,Fail Roll');
+          end
+          else if ProSkill then
+          begin
+            ReRollAnswer := FlexMessageBox('Dauntless roll has failed!',
+              'Dauntless Failure', 'Use Pro,Fail Roll');
+          end
+          else if reroll then
+          begin
+            ReRollAnswer := FlexMessageBox('Dauntless roll failed!',
+              'Dauntless Failure', 'Fail Roll,Team Reroll');
           end;
-          if ReRollAnswer='Team Reroll' then begin
+          if ReRollAnswer = 'Team Reroll' then
+          begin
             UReroll := UseTeamReroll;
-            if UReroll then begin
+            if UReroll then
+            begin
               Bloodbowl.comment.text := 'Dauntless reroll';
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
             end;
           end;
-          if ReRollAnswer='Use Pro' then begin
-            player[g,f].UseSkill('Pro');
+          if ReRollAnswer = 'Use Pro' then
+          begin
+            player[g, f].UseSkill('Pro');
             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then TeamRerollPro(g,f);
-            if (lastroll <= 3) then lastroll := 1;
-            if (lastroll >= 4) then begin
+            if lastroll <= 3 then
+              TeamRerollPro(g, f);
+            if (lastroll <= 3) then
+              lastroll := 1;
+            if (lastroll >= 4) then
+            begin
               Bloodbowl.comment.text := 'Pro reroll';
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
             end;
           end;
-          if lastroll > player[g0,f0].st then dl := 1 else dl := 0;
+          if lastroll > player[g0, f0].st then
+            dl := 1
+          else
+            dl := 0;
         end;
       end;
     end;
   end;
 
-  if (avd) and (fa) and (jam) and (bnc) and (NoDumpOff) then begin
-  {Double Dauntless}
-    if player[g,f].st > player[g0,f0].st then
-      if player[g0,f0].hasSkill('Double Dauntless') then begin
-        Bloodbowl.comment.text := player[g0,f0].GetPlayerName +
-           ' Double Dauntless roll';
-        Bloodbowl.EnterButtonClick(Bloodbowl);
-        Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-        if lastroll > player[g,f].st then begin
-          dd := 1;
-          std := player[g,f].st
-        end else begin
-          proskill := ((player[g0,f0].HasSkill('Pro')))
-            and (lastroll <= 1) and
-            (not (player[g0,f0].usedSkill('Pro')))
-            and (g = curmove);
-          if proskill then begin
-            player[g0,f0].UseSkill('Pro');
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then TeamRerollPro(g0,f0);
-            if (lastroll <= 3) then lastroll := 1;
-            if (lastroll >= 4) then begin
-              Bloodbowl.comment.text := 'Pro reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-            end;
-            if lastroll > player[g,f].st then begin
-              dd := 1;
-              std := player[g,f].st
-            end;
-          end;
-        end;
-      end;
-  end;
-
-  if (fa) and (avd) and (jam) and (bnc) and (NoDumpOff) and (dl < 2) then begin
+  if (fa) and (avd) and (jam) and (bnc) and (NoDumpOff) and (dl < 2) then
+  begin
     sa := 0;
     horns := 0;
-    s := '#' + IntToStr(player[g,f].cnumber) + ' (ST ';
-    if dl = 1 then begin
-      s := s + '*' + IntToStr(player[g0,f0].st) + '*';
-      stx := player[g0,f0].st;
-    end else if (player[g,f].hasSkill('Ball and Chain')) then begin
-       s := s + '*' + IntToStr(6) + '*';
-       stx := 6;
-    end else begin
-      s := s + IntToStr(player[g,f].st);
-      stx := player[g,f].st;
+    s := '#' + IntToStr(player[g, f].cnumber) + ' (ST ';
+    if dl = 1 then
+    begin
+      s := s + '*' + IntToStr(TargetPlayer.st) + '*';
+      stx := TargetPlayer.st;
+    end
+    else if (player[g, f].hasSkill('Ball and Chain')) then
+    begin
+      s := s + '*' + IntToStr(6) + '*';
+      stx := 6;
+    end
+    else
+    begin
+      s := s + IntToStr(player[g, f].st);
+      stx := player[g, f].st;
     end;
-
-    if player[g,f].font.size = 12 then s := s + ') b ' else begin
-      if (player[g,f].FirstBlock = 1)
-      and ((player[g,f].LastAction = 1) or
-        (player[g,f].LastAction = 2)          ) then
-      begin   // horns 2nd
-
-        if player[g,f].hasSkill('Horns') then begin
+    if player[g, f].font.size = 12 then
+      s := s + ') b '
+    else
+    begin
+      if (player[g, f].FirstBlock = 1) and
+        ((player[g, f].LastAction = 1) or (player[g, f].LastAction = 2)) then
+      begin // horns 2nd
+        if player[g, f].hasSkill('Horns') then
+        begin
           s := s + ',horns';
           horns := 1;
         end;
-        if player[g,f].hasSkill('Horn') then begin
+        if player[g, f].hasSkill('Horn') then
+        begin
           s := s + ',horn';
           horns := 1;
         end;
       end;
       s := s + ') blitz ';
     end;
-    if dd = 1 then begin
-      s := s + '#' + IntToStr(player[g0,f0].cnumber) +
-        ' (ST ' + '*' + IntToStr(player[g,f].st) + '*)';
-    end else begin
-      s := s + '#' + IntToStr(player[g0,f0].cnumber) +
-         ' (ST ' + IntToStr(player[g0,f0].st) + ')';
+    if dd = 1 then
+    begin
+      s := s + '#' + IntToStr(TargetPlayer.cnumber) + ' (ST ' + '*' +
+        IntToStr(player[g, f].st) + '*)';
+    end
+    else
+    begin
+      s := s + '#' + IntToStr(TargetPlayer.cnumber) + ' (ST ' +
+        IntToStr(TargetPlayer.st) + ')';
     end;
     assa := horns + sa;
-  {count assists}
-    if (not((player[g,f].hasSkill('Ball and Chain')))) then begin
+    { count assists }
+    if (not((player[g, f].hasSkill('Ball and Chain')))) then
+    begin
       tz := CountTZBlockA(g0, f0);
       bx := false;
-      for p := 1 to tz.num do begin
-        if tz.pl[p] <> f then begin
-          if player[g,tz.pl[p]].hasSkill('Guard') then b := true
-          else begin
+      for p := 1 to tz.num do
+      begin
+        if tz.pl[p] <> f then
+        begin
+          if player[g, tz.pl[p]].hasSkill('Guard') then
+            b := true
+          else
+          begin
             tz0 := CountTZBlockCA(g, tz.pl[p]);
             b := (tz0.num = 0);
-           { b := ((tz0.num = 1) and (player[g0,f0].tz = 0))
+            { b := ((tz0.num = 1) and (player[g0,f0].tz = 0))
               or ((tz0.num = 0) and (player[g0,f0].tz <> 0)) or
-              ((tz0.num = 1) and (frmSettings.cbNoTZAssist.checked));}
+              ((tz0.num = 1) and (frmSettings.cbNoTZAssist.checked)); }
           end;
-          if b then begin
+          if b then
+          begin
             assa := assa + 1;
-            if not(bx) then begin
+            if not(bx) then
+            begin
               s := s + ' a ';
               bx := true;
-            end else s := s + ',';
-            s := s + InttoStr(player[g,tz.pl[p]].cnumber);
+            end
+            else
+              s := s + ',';
+            s := s + IntToStr(player[g, tz.pl[p]].cnumber);
           end;
         end;
       end;
     end;
-
     assd := 0;
-    {count counterassists}
-    if (not((player[g,f].hasSkill('Ball and Chain')))) then begin
+    { count counterassists }
+    if (not((player[g, f].hasSkill('Ball and Chain')))) then
+    begin
       tz := CountTZBlockCA2(g, f);
       bx := false;
-      for p := 1 to tz.num do begin
-        if tz.pl[p] <> f0 then begin
-          if player[g0,tz.pl[p]].hasSkill('Guard') then b := true
-          else begin
+      for p := 1 to tz.num do
+      begin
+        if tz.pl[p] <> f0 then
+        begin
+          if player[g0, tz.pl[p]].hasSkill('Guard') then
+            b := true
+          else
+          begin
             tz0 := CountTZBlockCA(g0, tz.pl[p]);
             b := (tz0.num = 0);
-           { b := ((tz0.num = 1) and (player[g,f].tz = 0))
-              or ((tz0.num = 0) and (player[g,f].tz <> 0));}
+            { b := ((tz0.num = 1) and (player[g,f].tz = 0))
+              or ((tz0.num = 0) and (player[g,f].tz <> 0)); }
           end;
-          if b then begin
+          if b then
+          begin
             assd := assd + 1;
-            if not(bx) then begin
+            if not(bx) then
+            begin
               s := s + ' ca ';
               bx := true;
-            end else s := s + ',';
-            s := s + InttoStr(player[g0,tz.pl[p]].cnumber);
+            end
+            else
+              s := s + ',';
+            s := s + IntToStr(player[g0, tz.pl[p]].cnumber);
           end;
         end;
       end;
     end;
-
-    if (stx + assa < 1) and (player[g,f].st > 0) then begin
+    if (stx + assa < 1) and (player[g, f].st > 0) then
+    begin
       assa := 0;
     end;
-
     if stx + assa > 2 * (std + assd) then
     begin
       s := s + ' (3 block dice)';
       db := 3;
     end
-    else
-    if stx + assa > std + assd then
+    else if stx + assa > std + assd then
     begin
       s := s + ' (2 block dice)';
       db := 2;
     end
-    else
-    if stx + assa = std + assd then
+    else if stx + assa = std + assd then
     begin
       s := s + ' (1 block die)';
       db := 1;
     end
-    else
-    if 2 * (stx + assa) < std + assd then
+    else if 2 * (stx + assa) < std + assd then
     begin
       s := s + ' (3 block dice DEFENDER''S CHOICE)';
       db := -3;
@@ -1941,153 +1961,226 @@ begin
     // log action type
     Bloodbowl.comment.text := s;
     Bloodbowl.EnterButtonClick(Bloodbowl);
-
     lastroll := 0;
     lastroll2 := 0;
     lastroll3 := 0;
-    if db = 1 then Bloodbowl.OneDBButtonClick(Bloodbowl);
-    if abs(db) = 2 then Bloodbowl.TwoDBButtonClick(Bloodbowl);
-    if abs(db) = 3 then Bloodbowl.ThreeDBButtonClick(Bloodbowl);
-    HitBlock := player[g,f].hasSkill('Block');
-    VicBlock := player[g0,f0].hasSkill('Block');
-    HitTackle := player[g,f].hasSkill('Tackle');
-    VicDodge := player[g0,f0].hasSkill('Dodge');
-    HitJugger := (player[g,f].hasSkill('Juggernaut')) and
-      (player[g,f].FirstBlock = 1) and (player[g,f].LastAction = 1);
+    if db = 1 then
+      Bloodbowl.OneDBButtonClick(Bloodbowl);
+    if abs(db) = 2 then
+      Bloodbowl.TwoDBButtonClick(Bloodbowl);
+    if abs(db) = 3 then
+      Bloodbowl.ThreeDBButtonClick(Bloodbowl);
+    HitBlock := player[g, f].hasSkill('Block');
+    VicBlock := TargetPlayer.hasSkill('Block');
+    HitTackle := player[g, f].hasSkill('Tackle');
+    VicDodge := TargetPlayer.hasSkill('Dodge');
+    HitJugger := (player[g, f].hasSkill('Juggernaut')) and
+      (player[g, f].FirstBlock = 1) and (player[g, f].LastAction = 1);
     BlockCount := ((HitBlock) and not(VicBlock)) or (HitJugger);
     PowDCount := (not(VicDodge)) or (HitTackle);
     DownHeGoes := false;
-    if lastroll2 = 0 then begin
-      if (lastroll=6) or ((lastroll=5) and (PowDCount)) or ((lastroll=2) and
-        (BlockCount)) then DownHeGoes := true;
-    end else if (lastroll3 = 0) and (db=2) then begin
-      if (lastroll=6) or (lastroll2=6) then DownHeGoes := true else
-        if ((lastroll=5) or (lastroll2=5)) and (PowDCount) then
-          DownHeGoes := true else
-        if ((lastroll=2) or (lastroll2=2)) and (BlockCount) then
-          DownHeGoes := true;
-    end else if (lastroll3 <> 0) and (db=3) then begin
-      if (lastroll=6) or (lastroll2=6) or (lastroll3=6) then
-          DownHeGoes := true else
-        if ((lastroll=5) or (lastroll2=5) or (lastroll3=5)) and (PowDCount) then
-          DownHeGoes := true else
-        if ((lastroll=2) or (lastroll2=2) or (lastroll3=2)) and (BlockCount) then
-          DownHeGoes := true;
-    end else if (lastroll3 = 0) and (db=-2) then begin
-      if (lastroll=6) and (lastroll2=6) then DownHeGoes := true else
-        if (lastroll=6) and (lastroll2=5) and (PowDCount) then DownHeGoes := true else
-        if (lastroll=5) and (lastroll2=6) and (PowDCount) then DownHeGoes := true else
-        if (lastroll=5) and (lastroll2=5) and (PowDCount) then DownHeGoes := true else
-        if (lastroll=6) and (lastroll2=2) and (PowDCount) then DownHeGoes := true else
-        if (lastroll=2) and (lastroll2=6) and (PowDCount) then DownHeGoes := true else
-        if (lastroll=2) and (lastroll2=2) and (BlockCount) then DownHeGoes := true else
-        if (lastroll=2) and (lastroll2=5) and (BlockCount) and (PowDCount) then
-          DownHeGoes := true else
-        if (lastroll=5) and (lastroll2=2) and (BlockCount) and (PowDCount) then
-          DownHeGoes := true;
-    end else if (lastroll3 <> 0) and (db=-3) then begin
+    if lastroll2 = 0 then
+    begin
+      if (lastroll = 6) or ((lastroll = 5) and (PowDCount)) or
+        ((lastroll = 2) and (BlockCount)) then
+        DownHeGoes := true;
+    end
+    else if (lastroll3 = 0) and (db = 2) then
+    begin
+      if (lastroll = 6) or (lastroll2 = 6) then
+        DownHeGoes := true
+      else if ((lastroll = 5) or (lastroll2 = 5)) and (PowDCount) then
+        DownHeGoes := true
+      else if ((lastroll = 2) or (lastroll2 = 2)) and (BlockCount) then
+        DownHeGoes := true;
+    end
+    else if (lastroll3 <> 0) and (db = 3) then
+    begin
+      if (lastroll = 6) or (lastroll2 = 6) or (lastroll3 = 6) then
+        DownHeGoes := true
+      else if ((lastroll = 5) or (lastroll2 = 5) or (lastroll3 = 5)) and
+        (PowDCount) then
+        DownHeGoes := true
+      else if ((lastroll = 2) or (lastroll2 = 2) or (lastroll3 = 2)) and
+        (BlockCount) then
+        DownHeGoes := true;
+    end
+    else if (lastroll3 = 0) and (db = -2) then
+    begin
+      if (lastroll = 6) and (lastroll2 = 6) then
+        DownHeGoes := true
+      else if (lastroll = 6) and (lastroll2 = 5) and (PowDCount) then
+        DownHeGoes := true
+      else if (lastroll = 5) and (lastroll2 = 6) and (PowDCount) then
+        DownHeGoes := true
+      else if (lastroll = 5) and (lastroll2 = 5) and (PowDCount) then
+        DownHeGoes := true
+      else if (lastroll = 6) and (lastroll2 = 2) and (PowDCount) then
+        DownHeGoes := true
+      else if (lastroll = 2) and (lastroll2 = 6) and (PowDCount) then
+        DownHeGoes := true
+      else if (lastroll = 2) and (lastroll2 = 2) and (BlockCount) then
+        DownHeGoes := true
+      else if (lastroll = 2) and (lastroll2 = 5) and (BlockCount) and (PowDCount)
+      then
+        DownHeGoes := true
+      else if (lastroll = 5) and (lastroll2 = 2) and (BlockCount) and (PowDCount)
+      then
+        DownHeGoes := true;
+    end
+    else if (lastroll3 <> 0) and (db = -3) then
+    begin
       DownHeGoes := true;
-      if (lastroll=1) or (lastroll2=1) or (lastroll3=1) then DownHeGoes := false else
-      if ((lastroll=2) or (lastroll2=2) or (lastroll3=2)) and not(BlockCount)
-          then DownHeGoes := false else
-        if (lastroll=3) or (lastroll=4) or (lastroll2=3) or (lastroll2=4) or
-          (lastroll3=3) or (lastroll3=4) then DownHeGoes := false else
-        if ((lastroll=5) or (lastroll2=5) or (lastroll3=5)) and not(PowDCount)
-          then DownHeGoes := false;
+      if (lastroll = 1) or (lastroll2 = 1) or (lastroll3 = 1) then
+        DownHeGoes := false
+      else if ((lastroll = 2) or (lastroll2 = 2) or (lastroll3 = 2)) and
+        not(BlockCount) then
+        DownHeGoes := false
+      else if (lastroll = 3) or (lastroll = 4) or (lastroll2 = 3) or
+        (lastroll2 = 4) or (lastroll3 = 3) or (lastroll3 = 4) then
+        DownHeGoes := false
+      else if ((lastroll = 5) or (lastroll2 = 5) or (lastroll3 = 5)) and
+        not(PowDCount) then
+        DownHeGoes := false;
     end;
-    if not(DownHeGoes) then begin
-      if CanUseTeamReroll(bga) or ((player[g,f].hasSkill('Pro')) and
-        not(player[g,f].usedSkill('Pro'))) then begin
+    if not(DownHeGoes) then
+    begin
+      if CanUseTeamReroll(bga) or ((player[g, f].hasSkill('Pro')) and
+        not(player[g, f].usedSkill('Pro'))) then
+      begin
         BlockAnswer := 'No';
-        if (player[g,f].hasSkill('Pro')) and not(player[g,f].usedSkill('Pro'))
+        if (player[g, f].hasSkill('Pro')) and not(player[g, f].usedSkill('Pro'))
           and (CanUseTeamReroll(bga)) then
-          BlockAnswer := FlexMessageBox('Block fails to knock down and/or knocked down '+
-           'your player! Use Team Reroll or Pro?'
-               , 'Knock Down Failure', 'No,Team Reroll,Pro')
+          BlockAnswer := FlexMessageBox
+            ('Block fails to knock down and/or knocked down ' +
+            'your player! Use Team Reroll or Pro?', 'Knock Down Failure',
+            'No,Team Reroll,Pro')
+        else if (player[g, f].hasSkill('Pro')) and
+          not(player[g, f].usedSkill('Pro')) then
+          BlockAnswer := FlexMessageBox
+            ('Block fails to knock down and/or knocked down ' +
+            'your player! Use Pro?', 'Knock Down Failure', 'No,Pro')
         else
-          if (player[g,f].hasSkill('Pro')) and not(player[g,f].usedSkill('Pro'))
-          then
-          BlockAnswer := FlexMessageBox('Block fails to knock down and/or knocked down '+
-           'your player! Use Pro?'
-               , 'Knock Down Failure', 'No,Pro')
-        else
-          BlockAnswer := FlexMessageBox('Block fails to knock down and/or knocked down '+
-           'your player! Use Team Reroll?'
-               , 'Knock Down Failure', 'No,Team Reroll');
-        if BlockAnswer = 'Team Reroll' then begin
+          BlockAnswer := FlexMessageBox
+            ('Block fails to knock down and/or knocked down ' +
+            'your player! Use Team Reroll?', 'Knock Down Failure',
+            'No,Team Reroll');
+        if BlockAnswer = 'Team Reroll' then
+        begin
           UReroll := UseTeamReroll;
-          if UReroll then begin
-            if (lastroll3=0) and (lastroll2=0) then
-              Bloodbowl.OneDBButtonClick(Bloodbowl) else
-              if (lastroll3=0) then Bloodbowl.TwoDBButtonClick(Bloodbowl) else
+          if UReroll then
+          begin
+            if (lastroll3 = 0) and (lastroll2 = 0) then
+              Bloodbowl.OneDBButtonClick(Bloodbowl)
+            else if (lastroll3 = 0) then
+              Bloodbowl.TwoDBButtonClick(Bloodbowl)
+            else
               Bloodbowl.ThreeDBButtonClick(Bloodbowl);
           end;
-        end else if BlockAnswer = 'Pro' then begin
-          player[g,f].UseSkill('Pro');
+        end
+        else if BlockAnswer = 'Pro' then
+        begin
+          player[g, f].UseSkill('Pro');
           Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll <= 3 then TeamRerollPro(g,f);
-          if (lastroll >= 4) then begin
+          if lastroll <= 3 then
+            TeamRerollPro(g, f);
+          if (lastroll >= 4) then
+          begin
             Bloodbowl.comment.text := 'Pro reroll';
             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            if (lastroll3=0) and (lastroll2=0) then
-              Bloodbowl.OneDBButtonClick(Bloodbowl) else
-              if (lastroll3=0) then Bloodbowl.TwoDBButtonClick(Bloodbowl) else
+            if (lastroll3 = 0) and (lastroll2 = 0) then
+              Bloodbowl.OneDBButtonClick(Bloodbowl)
+            else if (lastroll3 = 0) then
+              Bloodbowl.TwoDBButtonClick(Bloodbowl)
+            else
               Bloodbowl.ThreeDBButtonClick(Bloodbowl);
           end;
         end;
       end;
     end;
-    if lastroll2 = 0 then begin
-      if (lastroll=6) or ((lastroll=5) and (PowDCount)) or ((lastroll=2) and
-        (BlockCount)) then DownHeGoes := true;
-    end else if (lastroll3 = 0) and (db=2) then begin
-      if (lastroll=6) or (lastroll2=6) then DownHeGoes := true else
-        if ((lastroll=5) or (lastroll2=5)) and (PowDCount) then
-          DownHeGoes := true else
-        if ((lastroll=2) or (lastroll2=2)) and (BlockCount) then
-          DownHeGoes := true;
-    end else if (lastroll3 <> 0) and (db=3) then begin
-      if (lastroll=6) or (lastroll2=6) or (lastroll3=6) then
-          DownHeGoes := true else
-        if ((lastroll=5) or (lastroll2=5) or (lastroll3=5)) and (PowDCount) then
-          DownHeGoes := true else
-        if ((lastroll=2) or (lastroll2=2) or (lastroll3=2)) and (BlockCount) then
-          DownHeGoes := true;
-    end else if (lastroll3 = 0) and (db=-2) then begin
-      if (lastroll=6) and (lastroll2=6) then DownHeGoes := true else
-        if (lastroll=6) and (lastroll2=5) and (PowDCount) then DownHeGoes := true else
-        if (lastroll=5) and (lastroll2=6) and (PowDCount) then DownHeGoes := true else
-        if (lastroll=5) and (lastroll2=5) and (PowDCount) then DownHeGoes := true else
-        if (lastroll=6) and (lastroll2=2) and (PowDCount) then DownHeGoes := true else
-        if (lastroll=2) and (lastroll2=6) and (PowDCount) then DownHeGoes := true else
-        if (lastroll=2) and (lastroll2=2) and (BlockCount) then DownHeGoes := true else
-        if (lastroll=2) and (lastroll2=5) and (BlockCount) and (PowDCount) then
-          DownHeGoes := true else
-        if (lastroll=5) and (lastroll2=2) and (BlockCount) and (PowDCount) then
-          DownHeGoes := true;
-    end else if (lastroll3 <> 0) and (db=-3) then begin
+    if lastroll2 = 0 then
+    begin
+      if (lastroll = 6) or ((lastroll = 5) and (PowDCount)) or
+        ((lastroll = 2) and (BlockCount)) then
+        DownHeGoes := true;
+    end
+    else if (lastroll3 = 0) and (db = 2) then
+    begin
+      if (lastroll = 6) or (lastroll2 = 6) then
+        DownHeGoes := true
+      else if ((lastroll = 5) or (lastroll2 = 5)) and (PowDCount) then
+        DownHeGoes := true
+      else if ((lastroll = 2) or (lastroll2 = 2)) and (BlockCount) then
+        DownHeGoes := true;
+    end
+    else if (lastroll3 <> 0) and (db = 3) then
+    begin
+      if (lastroll = 6) or (lastroll2 = 6) or (lastroll3 = 6) then
+        DownHeGoes := true
+      else if ((lastroll = 5) or (lastroll2 = 5) or (lastroll3 = 5)) and
+        (PowDCount) then
+        DownHeGoes := true
+      else if ((lastroll = 2) or (lastroll2 = 2) or (lastroll3 = 2)) and
+        (BlockCount) then
+        DownHeGoes := true;
+    end
+    else if (lastroll3 = 0) and (db = -2) then
+    begin
+      if (lastroll = 6) and (lastroll2 = 6) then
+        DownHeGoes := true
+      else if (lastroll = 6) and (lastroll2 = 5) and (PowDCount) then
+        DownHeGoes := true
+      else if (lastroll = 5) and (lastroll2 = 6) and (PowDCount) then
+        DownHeGoes := true
+      else if (lastroll = 5) and (lastroll2 = 5) and (PowDCount) then
+        DownHeGoes := true
+      else if (lastroll = 6) and (lastroll2 = 2) and (PowDCount) then
+        DownHeGoes := true
+      else if (lastroll = 2) and (lastroll2 = 6) and (PowDCount) then
+        DownHeGoes := true
+      else if (lastroll = 2) and (lastroll2 = 2) and (BlockCount) then
+        DownHeGoes := true
+      else if (lastroll = 2) and (lastroll2 = 5) and (BlockCount) and (PowDCount)
+      then
+        DownHeGoes := true
+      else if (lastroll = 5) and (lastroll2 = 2) and (BlockCount) and (PowDCount)
+      then
+        DownHeGoes := true;
+    end
+    else if (lastroll3 <> 0) and (db = -3) then
+    begin
       DownHeGoes := true;
-      if (lastroll=1) or (lastroll2=1) or (lastroll3=1) then DownHeGoes := false else
-      if ((lastroll=2) or (lastroll2=2) or (lastroll3=2)) and not(BlockCount)
-          then DownHeGoes := false else
-        if (lastroll=3) or (lastroll=4) or (lastroll2=3) or (lastroll2=4) or
-          (lastroll3=3) or (lastroll3=4) then DownHeGoes := false else
-        if ((lastroll=5) or (lastroll2=5) or (lastroll3=5)) and not(PowDCount)
-          then DownHeGoes := false;
+      if (lastroll = 1) or (lastroll2 = 1) or (lastroll3 = 1) then
+        DownHeGoes := false
+      else if ((lastroll = 2) or (lastroll2 = 2) or (lastroll3 = 2)) and
+        not(BlockCount) then
+        DownHeGoes := false
+      else if (lastroll = 3) or (lastroll = 4) or (lastroll2 = 3) or
+        (lastroll2 = 4) or (lastroll3 = 3) or (lastroll3 = 4) then
+        DownHeGoes := false
+      else if ((lastroll = 5) or (lastroll2 = 5) or (lastroll3 = 5)) and
+        not(PowDCount) then
+        DownHeGoes := false;
     end;
-    if DownHeGoes then begin
-      if curmove = 0 then begin
+    if DownHeGoes then
+    begin
+      if curmove = 0 then
+      begin
         KDownRed := KDownRed + 1;
-      end else if curmove = 1 then begin
+      end
+      else if curmove = 1 then
+      begin
         KDownBlue := KDownBlue + 1;
       end;
       BashTeam := g;
       BashPlayer := f;
       DownTeam := g0;
       DownPlayer := f0;
-      GetCAS := true;
+      GetCas := true;
       AVBreak := true;
-    end else begin
+    end
+    else
+    begin
       HitTeam := -1;
       HitPlayer := -1;
       BlockTeam := -1;
@@ -2096,11 +2189,13 @@ begin
       BashPlayer := -1;
       DownTeam := -1;
       DownPlayer := -1;
-      GetCAS := false;
+      GetCas := false;
       AVBreak := false;
     end;
-    player[g,f].LastAction := 2;
-  end else begin
+    player[g, f].LastAction := 2;
+  end
+  else
+  begin
     HitTeam := -1;
     HitPlayer := -1;
     BlockTeam := -1;
@@ -2109,62 +2204,64 @@ begin
     BashPlayer := -1;
     DownTeam := -1;
     DownPlayer := -1;
-    GetCAS := false;
+    GetCas := false;
   end;
-  if curmove = 0 then begin
+  if curmove = 0 then
+  begin
     KDownTOTRed := KDownTOTRed + 1;
-  end else if curmove = 1 then begin
+  end
+  else if curmove = 1 then
+  begin
     KDownTOTBlue := KDownTOTBlue + 1;
   end;
-  frmArmourRoll.txtArmourValue.text := IntToStr(player[g0,f0].av);
+  frmArmourRoll.txtArmourValue.text := IntToStr(TargetPlayer.av);
   frmArmourRoll.txtAssists.text := IntToStr(assa);
   frmArmourRoll.rbARNoSkill.checked := true;
   frmArmourRoll.rbIRNoSkill.checked := true;
-  if player[g,f].hasSkill('Mighty Blow') then begin
+  if player[g, f].hasSkill('Mighty Blow') then
+  begin
     frmArmourRoll.rbARMightyBlow.checked := true;
     frmArmourRoll.rbIRMightyBlow.checked := true;
   end;
-  if player[g,f].hasSkill('Claw') then
+  if player[g, f].hasSkill('Claw') then
     frmArmourRoll.rbClaw.checked := true;
-
-
-  if player[g0,f0].hasSkill('Running Chainsaw') then
+  if TargetPlayer.hasSkill('Running Chainsaw') then
     frmArmourRoll.cbChainsawKD.checked := true;
-  frmArmourRoll.cbProSkill.checked := (player[g0,f0].hasSkill('Pro'));
-  frmArmourRoll.cbThickSkull.checked := (player[g0,f0].hasSkill('Thick Skull'));
-
-  if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
-      ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
-        and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
-        then begin
-          frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[g0,f0].hasSkill('STUNTY')) then begin
-          frmArmourRoll.rbWeakPlayer.checked := true;
-  end else
-   frmArmourRoll.rbNoStunty.checked := true;
-
-  frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
+  frmArmourRoll.cbProSkill.checked := (TargetPlayer.hasSkill('Pro'));
+  frmArmourRoll.cbThickSkull.checked :=
+    (TargetPlayer.hasSkill('Thick Skull'));
+  if ((Pos('HALFLING', Uppercase(TargetPlayer.position)) > 0) or
+    ((Pos('GOBLIN', Uppercase(TargetPlayer.position)) > 0) and
+    not(Pos('HOBGOBLIN', Uppercase(TargetPlayer.position)) > 0))) then
+  begin
+    frmArmourRoll.rbWeakPlayer.checked := true;
+  end
+  else if (TargetPlayer.hasSkill('STUNTY')) then
+  begin
+    frmArmourRoll.rbWeakPlayer.checked := true;
+  end
+  else
+    frmArmourRoll.rbNoStunty.checked := true;
+  frmArmourRoll.cbDecay.checked := (TargetPlayer.hasSkill('Decay'));
   frmArmourRoll.rbAVNegOne.checked := false;
-
-  totspp := player[g0,f0].GetStartingSPP + player[g0,f0].GetMatchSPP();
-
-
-
-    s := player[g0,f0].inj;
+  totspp := TargetPlayer.GetStartingSPP + TargetPlayer.GetMatchSPP();
+  s := TargetPlayer.inj;
+  p := Pos('N', Uppercase(s));
+  { roll for each N until all done, or 1 rolled }
+  NiggleCount := 0;
+  repeat
+  begin
+    if p <> 0 then
+      NiggleCount := NiggleCount + 1;
+    s := Copy(s, p + 1, Length(s) - p);
     p := Pos('N', Uppercase(s));
-    {roll for each N until all done, or 1 rolled}
-    NiggleCount := 0;
-    repeat begin
-      if p<>0 then NiggleCount := NiggleCount + 1;
-      s := Copy(s, p+1, Length(s) - p);
-      p := Pos('N', Uppercase(s));
-    end until (p = 0);
-    frmArmourRoll.txtNiggles.text := IntToStr(NiggleCount);
-
+  end
+  until (p = 0);
+  frmArmourRoll.txtNiggles.text := IntToStr(NiggleCount);
 end;
 
 procedure WorkOutFoul(g, f, g0, f0: integer);
-var assa, assd, p, totspp, NiggleCount: integer;
+var assa, assd, p,  NiggleCount: integer;
     tz, tz0: TackleZones;
     s: string;
     b, bx: boolean;
@@ -2263,8 +2360,6 @@ begin
 
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
   frmArmourRoll.cbIGMEOY.checked := (g = IGMEOY);
-  totspp := player[g0,f0].GetStartingSPP() + player[g0,f0].GetMatchSPP();
-
   frmArmourRoll.rbDeathRoller.checked := (player[g,f].hasSkill('Deathroller'));
 
     s := player[g0,f0].inj;
@@ -2316,7 +2411,7 @@ begin
 end;
 
 procedure InjurySettings(g0, f0:integer);
-var p, totspp, NiggleCount: integer;
+var p, NiggleCount: integer;
     s: string;
 begin
   frmArmourRoll.rbARNoSkill.checked := true;
@@ -2337,10 +2432,6 @@ begin
 
   frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
 
-  totspp := player[g0,f0].GetStartingSPP() +
-            player[g0,f0].GetMatchSPP();
-
-
     s := player[g0,f0].inj;
     p := Pos('N', Uppercase(s));
     {roll for each N until all done, or 1 rolled}
@@ -2356,7 +2447,7 @@ begin
 end;
 
 procedure ArmourSettings(g, f, g0, f0, special:integer);
-var p2, totspp, NiggleCount: integer;
+var p2, NiggleCount: integer;
     s: string;
 
 begin
@@ -2397,21 +2488,6 @@ begin
    else frmArmourRoll.rbNoStunty.checked := true;
 
   frmArmourRoll.cbDecay.checked := (player[curteam,curplayer].hasSkill('Decay'));
-  totspp := player[curteam,curplayer].comp0 + 3 *
-    player[curteam,curplayer].td0 +
-    2 * player[curteam,curplayer].cas0 + 2 *
-    player[curteam,curplayer].int0 +
-    bbalg.MVPValue * player[curteam,curplayer].mvp0 +
-    player[curteam,curplayer].OtherSPP0 +
-    player[curteam,curplayer].exp0 +
-    player[curteam,curplayer].comp + 3 *
-    player[curteam,curplayer].td +
-    2 * player[curteam,curplayer].cas + 2 *
-    player[curteam,curplayer].int +
-    bbalg.MVPValue * player[curteam,curplayer].mvp +
-    player[curteam,curplayer].OtherSPP +
-    player[curteam,curplayer].exp;
-
 
     s := player[curteam,curplayer].inj;
     p2 := Pos('N', Uppercase(s));

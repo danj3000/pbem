@@ -131,22 +131,6 @@ object frmPass: TfrmPass
     Height = 13
     Caption = '# Foul Appearance:'
   end
-  object txtBulletThrow: TLabel
-    Left = 16
-    Top = 296
-    Width = 139
-    Height = 20
-    Caption = 'Bullet Throw Pass!'
-    Color = clNavy
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clRed
-    Font.Height = -16
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsItalic]
-    ParentColor = False
-    ParentFont = False
-    Visible = False
-  end
   object gbPass: TGroupBox
     Left = 176
     Top = 120
@@ -346,15 +330,6 @@ object frmPass: TfrmPass
     TabOrder = 12
     OnClick = PassSkillClick
   end
-  object cbImpossible: TCheckBox
-    Left = 8
-    Top = 432
-    Width = 129
-    Height = 17
-    Caption = 'Impossbile'
-    TabOrder = 13
-    Visible = False
-  end
   object butPro: TButton
     Left = 272
     Top = 432
@@ -362,7 +337,16 @@ object frmPass: TfrmPass
     Height = 25
     Caption = 'Use Pro'
     Enabled = False
-    TabOrder = 14
+    TabOrder = 13
     OnClick = butProClick
+  end
+  object cbImpossible: TCheckBox
+    Left = 8
+    Top = 432
+    Width = 129
+    Height = 17
+    Caption = 'Impossbile'
+    TabOrder = 14
+    Visible = False
   end
 end

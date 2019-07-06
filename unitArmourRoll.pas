@@ -160,11 +160,6 @@ begin
       DirtyPlayer4th := true;
     end;
   end;
-  if (frmPass.txtBulletThrow.Visible) and (im>=0) then ix := ' +';
-  if (frmPass.txtBulletThrow.Visible) and (im=(-1)) then begin
-    im := 7;
-    ix := ' &';
-  end;
 
   if rbWeakPlayer.checked then im := im + 1;
   if rbTitchyPlayer.checked then im := im + 2;

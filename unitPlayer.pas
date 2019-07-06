@@ -3,7 +3,7 @@ unit unitPlayer;
 interface
 
 uses Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls;
+  StdCtrls, ExtCtrls, bbalg;
 
 const STATUS_BALL_CARRIER = 2;
 
@@ -21,6 +21,15 @@ var
 type TPlayer = class(TLabel)
   private
     function GetPlayerSPP() : Integer;
+    procedure DoHypnoticGazeEndDrag(Sender: TObject; var test1: Integer; var test2: Integer; var test3: Boolean; var test4: Boolean; var bga: Boolean; var proskill: Boolean; var reroll: Boolean;
+    var tz: TackleZones;
+    var RerollAnswer: string; var UReroll: Boolean; var s: string);
+    procedure DoShadowingEndDrag(Sender: TObject; test1: Integer; test2: Integer; test3: Boolean; test4: Boolean; test5: Boolean);
+    procedure DoThrowInMovementEndDrag(Sender: TObject; g: Integer; f: Integer; pplace: Integer; qplace: Integer);
+    procedure DoThrowTeamMateEndDrag(Sender: TObject; var test1: Integer; var test2: Integer; var test3: Boolean; var test4: Boolean; var test5: Boolean);
+    procedure DoAccurateKickEndDrag(Sender: TObject; var g: Integer; var f: Integer);
+    procedure DoStabEndDrag(Sender: TObject; var test1: Integer; var test2: Integer; var test3: Boolean; var test4: Boolean);
+    procedure DoKickEndDrag(Sender: TObject; var g: Integer; var f: Integer; pb: Integer; var pplace: Integer; var qplace: Integer);
 public
 
   {default things}
@@ -134,7 +143,7 @@ procedure LeftClickPlayer(g,f: integer);
 
 implementation
 
-uses bbunit, bbalg, unitLog, unitPlayAction, unitBall, unitField,
+uses bbunit, unitLog, unitPlayAction, unitBall, unitField,
      unitMarker, unitPass, unitKick, unitPickUp, unitSettings, unitRandom,
      unitCatch, unitArmourRoll, unitTeam, unitLanguage, unitThrowTeamMate,
      unitThrowStuff, unitMessage;
@@ -302,71 +311,7 @@ begin
          end;
        end;
     {End D6+1 Movement Code}
-    {TIKSTPK}
-    if ((player[g,f].HasSkill('TIKSTPK')) and
-      (not (player[g,f].usedSkill('TIKSTPK'))) and (g = curmove))
-      then begin
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-            and (true));   // big guy
-        proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 1) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
-        reroll := CanUseTeamReroll(bga);
-        if lastroll <= 1 then begin
-           ReRollAnswer := 'Fail Roll';
-           if reroll and proskill then begin
-             ReRollAnswer := FlexMessageBox('TIKSTPK roll has failed!'
-               , 'TIKSTPK roll Failure',
-               'Use Pro,Team Reroll,Fail Roll');
-           end else if proskill then ReRollAnswer := 'Use Pro' else
-           if reroll then begin
-             ReRollAnswer := FlexMessageBox('TIKSTPK roll failed!'
-               , 'TIKSTPK Failure', 'Fail Roll,Team Reroll');
-           end;
-         end;
-         if ReRollAnswer='Team Reroll' then begin
-           UReroll := UseTeamReroll;
-           if UReroll then begin
-             Bloodbowl.comment.text := 'TIKSTPK reroll';
-             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-           end;
-         end;
-         if ReRollAnswer='Use Pro' then begin
-            player[g,f].UseSkill('Pro');
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then TeamRerollPro(g,f);
-            if (lastroll <= 3) then lastroll := 1;
-            if (lastroll >= 4) then begin
-              Bloodbowl.comment.text := 'Pro reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            end;
-         end;
-       if (lastroll <= 1) then begin
-          if CanWriteToLog then begin
-            s := 'U-' + Chr(g + 48) + Chr(f + 64);
-            LogWrite(s);
-            PlayActionToggleTackleZone(s, 1);
-            s := 'x' + Chr(g + 48) + Chr(f + 65) + Chr(player[g,f].UsedMA + 64);
-            LogWrite(s);
-            PlayActionEndOfMove(s, 1);
-          end;
-          curturn := 0;
-          for f2 := 1 to 8 do begin
-            if turn[g,f2].color = clYellow then curturn := (HalfNo * 10) + f2;
-          end;
-          BANG := '';
-          if curturn <= (player[g,f].TIKSTPK + 1) then begin
-            BANG := player[g,f].name + ' EXPLODES!!!';
-            Bloodbowl.comment.text := BANG;
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            player[g,f].SetStatus(8);
-          end;
-        end;
-        player[g,f].UseSkill('TIKSTPK');
-      end;
-     {End of TIKSTPK}
+
     {Bone-head/Really Stupid}
     if (((player[g,f].HasSkill('Bonehead')) and
       (not (player[g,f].usedSkill('Bonehead'))) and (g = curmove)) or
@@ -543,69 +488,7 @@ begin
       'YOU HAVE FORGOTTEN TO MOVE A BALL AND CHAIN PLAYER BEFORE THIS PLAYER!') and
       not(BaCCheck) then Bloodbowl.Loglabel.caption := '';
     {End of Ball and Chain Check}
-    {Uncontrollable}
-    if ((player[g,f].HasSkill('Uncontrollable')) and
-      (not (player[g,f].usedSkill('Uncontrollable'))) and (g = curmove))
-      and (player[g,f].status >= 1) and (player[g,f].status <= 3) and
-      (player[g,f].UsedMA <> 15)
-      then begin
-         player[g,f].UseSkill('Uncontrollable');
-         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-         lostcontrol := '';
-         bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
-             and (true));   // bigguy
-         proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 1) and
-             (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
-         reroll := CanUseTeamReroll(bga);
-         if lastroll <= 1 then begin
-            ReRollAnswer := 'Fail Roll';
-            if reroll and proskill then begin
-              ReRollAnswer := FlexMessageBox('Uncontrollable roll has failed!'
-                , 'Uncontrollable Failure',
-                'Use Pro,Team Reroll,Fail Roll');
-            end else if proskill then ReRollAnswer := 'Use Pro' else
-            if reroll then begin
-              ReRollAnswer := FlexMessageBox('Uncontrollable roll failed!'
-                , 'Uncontrollable Failure', 'Fail Roll,Team Reroll');
-            end;
-          end;
-          if ReRollAnswer='Team Reroll' then begin
-            UReroll := UseTeamReroll;
-            if UReroll then begin
-              Bloodbowl.comment.text := 'Uncontrollable reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            end;
-          end;
-          if ReRollAnswer='Use Pro' then begin
-             player[g,f].UseSkill('Pro');
-             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-             if lastroll <= 3 then TeamRerollPro(g,f);
-             if (lastroll <= 3) then lastroll := 1;
-             if (lastroll >= 4) then begin
-               Bloodbowl.comment.text := 'Pro reroll';
-               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-               Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-             end;
-          end;
-         if lastroll = 1 then begin
-           lastroll := Rnd(8,6) + 1;
-           lostcontrol := 'Uncontrollable roll failed -- Random Movement: ';
-           if lastroll = 1 then lostcontrol := lostcontrol + 'Up Left ' else
-           if lastroll = 2 then lostcontrol := lostcontrol + 'Up ' else
-           if lastroll = 3 then lostcontrol := lostcontrol + 'Up Right ' else
-           if lastroll = 4 then lostcontrol := lostcontrol + 'Left ' else
-           if lastroll = 5 then lostcontrol := lostcontrol + 'Right ' else
-           if lastroll = 6 then lostcontrol := lostcontrol + 'Down Left ' else
-           if lastroll = 7 then lostcontrol := lostcontrol + 'Down ' else
-           if lastroll = 8 then lostcontrol := lostcontrol + 'Down Right ';
-           lastroll := Rnd(6,6) + 1;
-           lostcontrol := lostcontrol + InttoStr(lastroll) + ' squares';
-           Bloodbowl.comment.text := lostcontrol;
-           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-         end;
-      end;
-    {End of Uncontrollable}
+    
     {Blood Lust}
     if ((player[g,f].HasSkill('Blood Lust')) and
       (not (player[g,f].usedSkill('Blood Lust'))) and (g = curmove))
@@ -826,18 +709,14 @@ end;
 
 procedure TPlayer.PlayerEndDrag(Sender, Target: TObject; X,
   Y: Integer);
-var f, g, f0, g0, pb, k, l, targetaction, test1, test2, r, p,
-    NiggleCount, totspp, Shadowroll, pplace, qplace, assa, assd,
-    ascount, dist1, dist2, finaldist, t, u, v, w, ploc, qloc, arrow,
-    dk1, dk2, dk3, TestP, TestQ, NewP, NewQ, NewP2, NewQ2, NewP3, NewQ3,
-    FinalP, FinalQ, FinalDK, RollNeed, KickP, KickQ, DKRoll, HGazeTarget: integer;
-  test3, test4, test5, test6, b, bx, BThrow, bga, reroll, proskill,
-    Ballscatter, UReroll: boolean;
-  s, BlockDie, RerollAnswer, StatTemp: string;
+var f, g, f0, g0, pb, targetaction, test1, test2, p,
+    NiggleCount, totspp, pplace, qplace, assa, assd,
+    ascount, t, u, arrow, RollNeed, DKRoll: integer;
+  test3, test4, test5, b, bx, bga, reroll, proskill, UReroll: boolean;
+  s, BlockDie, RerollAnswer: string;
   tz,  tz0: TackleZones;
 begin
-  if (GameStatus = 'Pass') or (GameStatus = 'BulletThrow') then begin
-    Bthrow := GameStatus = 'BulletThrow';
+  if (GameStatus = 'Pass')  then begin
     if ((Sender as TPlayer).status = 1) then begin
       g := 0;
       while (g <= 1) do begin
@@ -848,19 +727,18 @@ begin
             pb := CountPB(g, f, player[(Sender as TPlayer).teamnr,
               (Sender as TPlayer).number].p, player[(Sender as TPlayer).teamnr,
               (Sender as TPlayer).number].q, true);
-            if (pb > 0) and not(Bthrow) then begin
+            if (pb > 0) then begin
               Application.Messagebox('Opponent might be able to Pass Block!',
                'Bloodbowl Pass Block Warning', MB_OK);
             end;
             ActionTeam := g;
             ActionPlayer := f;
-            if  (not(Bthrow)) then
-              DetermineInterceptors(g, f, player[(Sender as TPlayer).teamnr,
+            DetermineInterceptors(g, f, player[(Sender as TPlayer).teamnr,
               (Sender as TPlayer).number].p, player[(Sender as TPlayer).teamnr,
               (Sender as TPlayer).number].q);
             if player[g,f].status = 2 then
               ShowPassPlayerToPlayer(g, f,
-              (Sender as TPlayer).teamnr, (Sender as TPlayer).number, Bthrow);
+              (Sender as TPlayer).teamnr, (Sender as TPlayer).number);
             g := 2;
             f := 99;
             ActionTeam := 0;
@@ -872,274 +750,36 @@ begin
       end;
     end;
     GameStatus := '';
-    if frmPass.txtBulletThrow.Visible then begin
-      frmPass.txtBulletThrow.Visible := false;
+
       frmArmourRoll.txtDPInjMod.text := '+' + bbAlg.DirtyPlayerInjuryModifier.ToString();
-    end;
 
-  end else if (GameStatus = 'Bomb') or (GameStatus = 'BigBomb') or
-    (GameStatus = 'Net') or (GameStatus = 'StinkBomb') then begin
-    StatTemp := GameStatus;
+
+  end else if (GameStatus = 'Bomb') then
+  begin
     Bloodbowl.Endofmove1Click(Bloodbowl);
-    if StatTemp = 'Bomb' then
+    if GameStatus = 'Bomb' then
       ShowStuffPlayerToPlayer(ActionTeam, ActionPlayer,
-        (Sender as TPlayer).teamnr, (Sender as TPlayer).number, 1)
-    else if StatTemp = 'StinkBomb' then
-      ShowStuffPlayerToPlayer(ActionTeam, ActionPlayer,
-        (Sender as TPlayer).teamnr, (Sender as TPlayer).number, 2)
-    else if StatTemp = 'BigBomb' then
-      ShowStuffPlayerToPlayer(ActionTeam, ActionPlayer,
-        (Sender as TPlayer).teamnr, (Sender as TPlayer).number, 3)
-    else if StatTemp = 'Net' then
-      ShowStuffPlayerToPlayer(ActionTeam, ActionPlayer,
-        (Sender as TPlayer).teamnr, (Sender as TPlayer).number, 4);
+        (Sender as TPlayer).teamnr, (Sender as TPlayer).number, 1);
+
     GameStatus := '';
     ActionTeam := 0;
     ActionPlayer := 0;
 
-  end
-  else
-  if GameStatus = 'Kick' then begin
-    pplace := abs((player[(Sender as TPlayer).teamnr,
-                (Sender as TPlayer).number].p) - (player[curteam,curplayer].p));
-    qplace := abs((player[(Sender as TPlayer).teamnr,
-                (Sender as TPlayer).number].q) - (player[curteam,curplayer].q));
-    if (pplace <= 1) and (qplace<=1) and not((pplace=0) and (qplace=0)) then
-    begin
-      if ((Sender as TPlayer).status >= 1) and ((Sender as TPlayer).status <= 4)
-      then begin
-        g := 0;
-        while (g <= 1) do begin
-          f := 1;
-          while (g <= 1) and (f <= team[g].numplayers) do begin
-            if player[g,f].status = 2 then begin
-              Bloodbowl.Endofmove1Click(Bloodbowl);
-              pb := CountPB(g, f, player[g,f].p, player[g,f].q, false);
-              if pb > 0 then begin
-                Application.Messagebox('Opponent might be able to Pass Block!',
-                 'Bloodbowl Pass Block Warning', MB_OK);
-              end;
-              ShowKickToField(g, f, player[(Sender as TPlayer).teamnr,
-                (Sender as TPlayer).number].p, player[(Sender as TPlayer).teamnr,
-                (Sender as TPlayer).number].q);
-              g := 2;
-              f := 99;
-              if GameStatus = 'Field Goal' then begin
-               Bloodbowl.Loglabel.caption := 'FIELD GOAL!!!!  Set-up for new drive';
-              end;
-            end;
-            f := f + 1;
-          end;
-          g := g + 1;
-        end;
-      end;
-      frmKick.cbFGAttempt.Checked := false;
-      if (GameStatus <> 'AccurateKick') and (GameStatus<>'PoochKick') then begin
-        for g := 0 to 14 do begin
-          for f := 0 to 25 do begin
-            KickField[g,f] := 0;
-            field[g,f].color := clGreen;
-            field[g,f].transparent := true;
-          end;
-        end;
-        GameStatus := '';
-        ActionTeam := 0;
-        ActionPlayer := 0;
-      end else begin
-        Bloodbowl.Loglabel.caption := 'Click the Yellow square or player in the '
-          + 'identified range to kick to.  Squares less than the distance kicked '
-          + 'next to sideline if selected indicates the ball is kicked out of bounds';
-      end;
-    end;
+  end else if GameStatus = 'Kick' then begin
+    DoKickEndDrag(Sender, g, f, pb, pplace, qplace);
 
-  end else if GameStatus='HGaze' then begin
-    test1 := ((abs(player[ActionTeam,ActionPlayer].p-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)));
-    test2 := ((abs(player[ActionTeam,ActionPlayer].q-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)));
-    test3 :=  ((player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].status <> 1) and (player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].status <> 2));
-    test4 := ActionTeam = (Sender as Tplayer).teamnr;
-    if (test1>1) or (test2>1) or (test3) or (test4) then begin
-       Application.Messagebox('You must be gazing an adjacent standing opponent',
-       'Bloodbowl Hypnotic Gaze Warning', MB_OK);
-    end else begin
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-      
-      bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
-        (player[ActionTeam,ActionPlayer].Ally))
-        and (true)); // bigguy
-      proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
-        and (lastroll <= 1) and
-        (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-        and (ActionTeam = curmove);
-      reroll := CanUseTeamReroll(bga);
-      tz := CountTZBlockCA(ActionTeam,ActionPlayer);
-      if (true) then
-        HGazeTarget := 6 - player[ActionTeam,ActionPlayer].ag + (tz.num - 1) else
-        HGazeTarget := player[(Sender as TPlayer).teamnr,
-        (Sender as Tplayer).number].ag;
-      if lastroll <= HGazeTarget then begin
-        ReRollAnswer := 'Fail Roll';
-        if reroll and proskill then begin
-          ReRollAnswer := FlexMessageBox('Hypnotic Gaze roll has failed!'
-            , 'Hypnotic Gaze Failure',
-            'Use Pro,Team Reroll,Fail Roll');
-        end else if proskill then begin
-          ReRollAnswer := FlexMessageBox('Hypnotic Gaze roll has failed!'
-            , 'Hypnotic Gaze Failure',
-            'Use Pro,Fail Roll');
-        end else if reroll then begin
-          ReRollAnswer := FlexMessageBox('Hypnotic Gaze roll failed!'
-            , 'Hypnotic Gaze Failure', 'Fail Roll,Team Reroll');
-        end;
-        if ReRollAnswer='Team Reroll' then begin
-          UReroll := UseTeamReroll;
-          if UReroll then begin
-            Bloodbowl.comment.text := 'Hypnotic Gaze reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-        if ReRollAnswer='Use Pro' then begin
-          player[ActionTeam,ActionPlayer].UseSkill('Pro');
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
-          if (lastroll <= 3) then lastroll := 1;
-          if (lastroll >= 4) then begin
-            Bloodbowl.comment.text := 'Pro reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-      end;
-      if lastroll>HGazeTarget then begin
-        player[ActionTeam,ActionPlayer].UseSkill('Hypnotic Gaze');
-        Bloodbowl.comment.text := 'Hypnotic Gaze successful';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        s := 'U-' + Chr((Sender as Tplayer).teamnr + 48) +
-           Chr((Sender as Tplayer).number + 64);
-        LogWrite(s);
-        PlayActionToggleTackleZone(s, 1);
-      end else begin
-        player[ActionTeam,ActionPlayer].UseSkill('Hypnotic Gaze');
-        Bloodbowl.comment.text := 'Hypnotic Gaze failed';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end;
-      if (true) then begin     // hypnogaze
-        s := 'x' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 65) +
-          Chr(player[ActionTeam,ActionPlayer].UsedMA + 64);
-        LogWrite(s);
-        PlayActionEndOfMove(s, 1);
-      end;
-    end;
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
+  end else if GameStatus='HGaze' then
+  begin
+    DoHypnoticGazeEndDrag(Sender, test1, test2, test3, test4, bga, proskill, reroll, tz, RerollAnswer, UReroll, s);
 
   end else if GameStatus='Stab' then begin
-    test1 := ((abs(player[ActionTeam,ActionPlayer].p-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)));
-    test2 := ((abs(player[ActionTeam,ActionPlayer].q-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)));
-    test3 :=  ((player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].status <> 1) and (player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].status <> 2));
-    test4 := ActionTeam = (Sender as Tplayer).teamnr;
-    if (test1>1) or (test2>1) or (test3) or (test4) then begin
-       Application.Messagebox('You must be stabbing an adjacent standing opponent',
-       'Bloodbowl Stab Gaze Warning', MB_OK);
-    end else begin
-      BallScatter := false;
-      v:= (Sender as TPlayer).teamnr;
-      w:= (Sender as Tplayer).number;
-      ArmourSettings(ActionTeam,ActionPlayer,v,w,0);
-      if InjuryStatus = 3 then begin
-        BloodBowl.comment.Text :=
-          'Prone result means that Stab fails to break armour and has no effect!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end;
-      if InjuryStatus >= 4 then begin
-        if player[v,w].status < InjuryStatus then begin
-          if player[v,w].status=2 then begin
-            ploc := player[v,w].p;
-            qloc := player[v,w].q;
-            player[v,w].SetStatus(InjuryStatus);
-            BallScatter := true;
-          end else player[v,w].SetStatus(InjuryStatus);
-        end;
-      end;
-      InjuryStatus := 0;
-      if BallScatter then ScatterBallFrom(ploc, qloc, 1, 0);
-    end;
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
+    DoStabEndDrag(Sender, test1, test2, test3, test4);
 
   end else if GameStatus='AccurateKick' then begin
-    KickP := player[(Sender as TPlayer).teamnr, (Sender as TPlayer).number].p;
-    KickQ := player[(Sender as TPlayer).teamnr, (Sender as TPlayer).number].q;
-    if KickField[KickP, KickQ] = 2 then
-      begin
-        dist1 := abs(player[ActionTeam,ActionPlayer].p - KickP);
-        dist2 := abs(player[ActionTeam,ActionPlayer].q - KickQ);
-        if dist1 >= dist2 then finaldist := dist1 else finaldist := dist2;
-        if finaldist<KickDist then begin
-          if (KickP = 0) and (KickQ = 0) then
-            ScatterBallFrom(KickP, KickQ, 1, 1) else
-          if (KickP = 0) and (KickQ = 25) then
-             ScatterBallFrom(KickP, KickQ, 1, 3) else
-          if (KickP = 14) and (KickQ = 0) then
-             ScatterBallFrom(KickP, KickQ, 1, 6) else
-          if (KickP = 14) and (KickQ = 25) then
-             ScatterBallFrom(KickP, KickQ, 1, 8) else
-          if (KickP = 0) then
-             ScatterBallFrom(KickP, KickQ, 1, 2) else
-          if (KickP = 14) then
-             ScatterBallFrom(KickP, KickQ, 1, 7) else
-          if (KickQ = 0) then
-             ScatterBallFrom(KickP, KickQ, 1, 4) else
-          if (KickQ = 25) then
-             ScatterBallFrom(KickP, KickQ, 1, 5);
-        end else
-           ShowCatchWindow((Sender as TPlayer).teamnr, (Sender as TPlayer).number,
-             0, false, false);
-        for g := 0 to 14 do begin
-          for f := 0 to 25 do begin
-            KickField[g,f] := 0;
-            field[g,f].color := clGreen;
-            field[g,f].transparent := true;
-          end;
-        end;
-        GameStatus := '';
-        ActionTeam := 0;
-        ActionPlayer := 0;
-        Bloodbowl.Loglabel.caption := ' ';
-      end;
+    DoAccurateKickEndDrag(Sender, g, f);
 
-  end else if GameStatus='PoochKick' then begin
-    KickP := player[(Sender as TPlayer).teamnr, (Sender as TPlayer).number].p;
-    KickQ := player[(Sender as TPlayer).teamnr, (Sender as TPlayer).number].q;
-    if KickField[KickP, KickQ] = 2 then
-      begin
-        ShowCatchWindow((Sender as TPlayer).teamnr, (Sender as TPlayer).number,
-           0, false, false);
-        for g := 0 to 14 do begin
-          for f := 0 to 25 do begin
-            KickField[g,f] := 0;
-            field[g,f].color := clGreen;
-            field[g,f].transparent := true;
-          end;
-        end;
-        GameStatus := '';
-        ActionTeam := 0;
-        ActionPlayer := 0;
-        Bloodbowl.Loglabel.caption := ' ';
-      end;
-
-  end else if (GameStatus='Apoth1')
-  then begin
+  end else if (GameStatus='Apoth1') then
+  begin
     if CanWriteToLog then begin
       if not (player[(Sender as TPlayer).teamnr,
       (Sender as TPlayer).number].hasSkill('Undead')) then begin
@@ -1185,277 +825,12 @@ begin
       end;
     end;
 
-  end else if (GameStatus='Apoth2')
-  then begin
-    if not (player[(Sender as TPlayer).teamnr,
-    (Sender as TPlayer).number].hasSkill('Undead')) then begin
-      if (player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].status = 9)
-      then begin
-        if CanWriteToLog then begin
-          LogWrite('a' + Chr(ActionTeam + 48) + '2');
-          AddLog(ffcl[ActionTeam] + ' uses the Level 2 Apothecary');
-          apo2[ActionTeam].color := colorarray[ActionTeam, 4, 0];
-          apo2[ActionTeam].font.color := colorarray[ActionTeam, 4, 1];
-          player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].SetStatus(0);
-          GameStatus := '';
-          ActionTeam := -1;
-        end;
-      end;
-    end else begin
-      Bloodbowl.Loglabel.caption := 'APOTHECARIES CANNOT HEAL THE UNDEAD';
-      GameStatus := '';
-      ActionTeam := -1;
-    end;
-
-  end else if (GameStatus='Apoth4')
-  then begin
-    if not (player[(Sender as TPlayer).teamnr,
-    (Sender as TPlayer).number].hasSkill('Undead')) then begin
-      if (player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].status = 7)
-      then begin
-        if CanWriteToLog then begin
-          LogWrite('a' + Chr(ActionTeam + 48) + '4');
-          AddLog(ffcl[(Sender as TPlayer).teamnr] + ' uses the Level 4 Apothecary');
-          apo4[ActionTeam].color := colorarray[ActionTeam, 4, 0];
-          apo4[ActionTeam].font.color := colorarray[ActionTeam, 4, 1];
-          player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].SetStatus(6);
-          GameStatus := '';
-          ActionTeam := -1;
-        end;
-      end;
-    end else begin
-      Bloodbowl.Loglabel.caption := 'APOTHECARIES CANNOT HEAL THE UNDEAD';
-      GameStatus := '';
-      ActionTeam := -1;
-    end;
-
-  end else if (GameStatus='Apoth5')
-  then begin
-    if not (player[(Sender as TPlayer).teamnr,
-    (Sender as TPlayer).number].hasSkill('Undead')) then begin
-      if (player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].status = 8)
-      then begin
-        if CanWriteToLog then begin
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if (Uppercase(team[(Sender as TPlayer).teamnr].race) = 'SHALLYA') and
-              (lastroll<=3) then lastroll := 4;
-          if lastroll <= 3 then begin
-            LogWrite('a' + Chr(ActionTeam + 48) + '5');
-            AddLog(ffcl[ActionTeam] + ' uses the Level 5 Apothecary');
-            apo5[ActionTeam].color := colorarray[ActionTeam, 4, 0];
-            apo5[ActionTeam].font.color := colorarray[ActionTeam, 4, 1];
-            BloodBowl.comment.Text := 'Apothecary FAILS!  Hes dead, Jim!';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            GameStatus := '';
-            ActionTeam := -1;
-          end else begin
-            LogWrite('a' + Chr(ActionTeam + 48) + '5');
-            AddLog(ffcl[ActionTeam] + ' uses the Level 5 Apothecary');
-            apo5[ActionTeam].color := colorarray[ActionTeam, 4, 0];
-            apo5[ActionTeam].font.color := colorarray[ActionTeam, 4, 1];
-            player[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].SetStatus(70);
-            BloodBowl.comment.Text := 'SUCCESS!  The Apothecary earns his paycheck!'+
-              '  This dead player will play again after a one game rest period!';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            GameStatus := '';
-            ActionTeam := -1;
-          end;
-        end;
-      end;
-    end else begin
-      Bloodbowl.Loglabel.caption := 'APOTHECARIES CANNOT HEAL THE UNDEAD';
-      GameStatus := '';
-      ActionTeam := -1;
-    end;
-
-  end else if GameStatus='ThrowinMovement' then begin
-    ThrownTeam := (Sender as TPlayer).teamnr;
-    ThrownPlayer := (Sender as TPlayer).number;
-    pplace := player[ThrownTeam,ThrownPlayer].p -
-             player[ActionTeam,ActionPlayer].p;
-    qplace := player[ThrownTeam,ThrownPlayer].q -
-             player[ActionTeam,ActionPlayer].q;
-    TestP := player[ActionTeam,ActionPlayer].p;
-    TestQ := player[ActionTeam,ActionPlayer].q;
-    NewP := TestP + pplace;
-    NewQ := TestQ + qplace;
-    dk1 := 1;
-    if (NewP<0) or (NewP>14) or (NewQ<0) or (NewQ>25) then dk1 := 3;
-    for g := 0 to 1 do begin
-      for f := 1 to team[g].numplayers do begin
-        if (player[g,f].p = NewP) and (player[g,f].q = NewQ) then begin
-          dk1 := 2;
-        end;
-       end;
-    end;
-    if (qplace = 0) and (pplace = -1) then begin
-      NewP2 := TestP - 1;
-      NewQ2 := TestQ - 1;
-      NewP3 := TestP - 1;
-      NewQ3 := TestQ + 1;
-    end else if (qplace = 0) and (pplace = 1) then begin
-      NewP2 := TestP + 1;
-      NewQ2 := TestQ + 1;
-      NewP3 := TestP + 1;
-      NewQ3 := TestQ - 1;
-    end else if (qplace = 1) and (pplace = 0) then begin
-      NewP2 := TestP - 1;
-      NewQ2 := TestQ + 1;
-      NewP3 := TestP + 1;
-      NewQ3 := TestQ + 1;
-    end else if (qplace = -1) and (pplace = 0) then begin
-      NewP2 := TestP + 1;
-      NewQ2 := TestQ - 1;
-      NewP3 := TestP - 1;
-      NewQ3 := TestQ - 1;
-    end else if (qplace = 1) and (pplace = -1) then begin
-      NewP2 := TestP - 1;
-      NewQ2 := TestQ + 0;
-      NewP3 := TestP + 0;
-      NewQ3 := TestQ + 1;
-    end else if (qplace = 1) and (pplace = 1) then begin
-      NewP2 := TestP + 0;
-      NewQ2 := TestQ + 1;
-      NewP3 := TestP + 1;
-      NewQ3 := TestQ + 0;
-    end else if (qplace = -1) and (pplace = 1) then begin
-      NewP2 := TestP + 1;
-      NewQ2 := TestQ + 0;
-      NewP3 := TestP + 0;
-      NewQ3 := TestQ - 1;
-    end else if (qplace = -1) and (pplace = -1) then begin
-      NewP2 := TestP + 0;
-      NewQ2 := TestQ - 1;
-      NewP3 := TestP - 1;
-      NewQ3 := TestQ + 0;
-    end;
-    dk2 := 1;
-    dk3 := 1;
-    if (NewP2<0) or (NewP2>14) or (NewQ2<0) or (NewQ2>25) then dk2 := 3;
-    if (NewP3<0) or (NewP3>14) or (NewQ3<0) or (NewQ3>25) then dk3 := 3;
-    for g := 0 to 1 do begin
-      for f := 1 to team[g].numplayers do begin
-        if (player[g,f].p = NewP2) and (player[g,f].q = NewQ2) then begin
-          dk2 := 2;
-        end;
-        if (player[g,f].p = NewP3) and (player[g,f].q = NewQ3) then begin
-          dk3 := 2;
-        end;
-      end;
-    end;
-    Bloodbowl.comment.text := 'Throw-in Movement roll';
-    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-    Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-    if lastroll<3 then begin
-      FinalP := NewP2;
-      FinalQ := NewQ2;
-      FinalDK := dk2;
-    end else if (lastroll>2) and (lastroll<5) then begin
-      FinalP := NewP;
-      FinalQ := NewQ;
-      FinalDK := dk1;
-    end else begin
-      FinalP := NewP3;
-      FinalQ := NewQ3;
-      FinalDK := dk3;
-    end;
-    if FinalDK=1 then PlacePlayer(ActionPlayer, ActionTeam, FinalP, FinalQ) else
-    if FinalDK=3 then begin
-      Bloodbowl.comment.text := 'Player runs out of bounds!  Roll for injury';
-      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-    end else begin
-      for g := 0 to 1 do begin
-        for f := 1 to team[g].numplayers do begin
-          if (player[g,f].p = FinalP) and (player[g,f].q = FinalQ) then begin
-            BloodBowl.comment.Text := 'You must throw a block at #'
-              +InttoStr(player[g,f].cnumber)+'-'+player[g,f].name;
-          end;
-        end;
-      end;
-      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-    end;
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
-
-  end else if GameStatus='Chill' then begin
-    test1 := ((abs(player[ActionTeam,ActionPlayer].p-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)));
-    test2 := ((abs(player[ActionTeam,ActionPlayer].q-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)));
-    test3 :=  player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].status <> 3;
-    test4 := ActionTeam = (Sender as Tplayer).teamnr;
-    if (test1>1) or (test2>1) or (test3) or (test4) then begin
-       Application.Messagebox('You must be using Chill an adjacent prone opponent',
-       'Bloodbowl Chill Warning', MB_OK);
-    end else begin
-      player[ActionTeam,ActionPlayer].UseSkill('Chill');
-      Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-      if lastroll>player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].av then begin
-        Bloodbowl.comment.text := 'Chill successful';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].SetStatus(4);
-      end else begin
-        Bloodbowl.comment.text := 'Chill failed';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end;
-    end;
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
-
-  end else if GameStatus='Dig1' then begin
-    if (ABS((player[ActionTeam,ActionPlayer].p)-
-       player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)<=1) and
-      (ABS((player[ActionTeam,ActionPlayer].q)-
-      player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)<=1) and
-      ((ABS((player[ActionTeam,ActionPlayer].p)-
-      player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)<>0) or
-      (ABS((player[ActionTeam,ActionPlayer].q)-
-      player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)<>0))
-      then begin
-        DigP := player[(Sender as TPlayer).teamnr,
-          (Sender as Tplayer).number].p;
-        DigQ := player[(Sender as TPlayer).teamnr,
-           (Sender as Tplayer).number].q;
-        DigStrength := player[(Sender as TPlayer).teamnr,
-         (Sender as Tplayer).number].st;
-        GameStatus := 'Dig2';
-        Bloodbowl.Loglabel.caption :=
-          'CLICK ON THE EMPTY SQUARE TO DIG TO';
-    end else
-      Application.Messagebox('You must dig under an adjacent square!',
-       'Bloodbowl Dig Warning', MB_OK);
+  end
+  else if GameStatus='ThrowinMovement' then begin
+    DoThrowInMovementEndDrag(Sender, g, f, pplace, qplace);
 
   end else if GameStatus='ThrowTeamMate1' then begin
-    test1 := ((abs(player[ActionTeam,ActionPlayer].p-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)));
-    test2 := ((abs(player[ActionTeam,ActionPlayer].q-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)));
-    test3 :=  (player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].status <> 1) and
-      (player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].status <> 2);
-    test4 := ActionTeam <> (Sender as Tplayer).teamnr;
-    test5 := not (player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].hasSkill('Right Stuff'));
-    if (test1>1) or (test2>1) or (test3) or (test4) or (test5) then begin
-       Application.Messagebox('You must be throwing an adjacent standing teammate'+
-       ' that has Right Stuff','Bloodbowl Throw Team-Mate Warning', MB_OK);
-       GameStatus := '';
-       ActionTeam := 0;
-       ActionPlayer := 0;
-    end else begin
-      ThrownTeam := (Sender as TPlayer).teamnr;
-      ThrownPlayer := (Sender as Tplayer).number;
-      GameStatus := 'ThrowTeamMate2';
-      Bloodbowl.Loglabel.caption := 'CLICK ON THE SQUARE TO THROW THE PLAYER TO';
-    end;
+    DoThrowTeamMateEndDrag(Sender, test1, test2, test3, test4, test5);
 
   end else if GameStatus='PitchPlayer1' then begin
     test1 := ((abs(player[ActionTeam,ActionPlayer].p-player[(Sender as TPlayer).teamnr,
@@ -1479,810 +854,8 @@ begin
       Bloodbowl.Loglabel.caption := 'CLICK ON THE SQUARE TO THROW THE PLAYER TO';
     end;
 
-  end else if GameStatus='Dirty Kick' then begin
-    test1 := ((abs(player[ActionTeam,ActionPlayer].p-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)));
-    test2 := ((abs(player[ActionTeam,ActionPlayer].q-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)));
-    test3 :=  (player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].status < 1) or
-      (player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].status > 2);
-    test4 := ActionTeam = (Sender as Tplayer).teamnr;
-    if (test1>1) or (test2>1) or (test3) or (test4) then begin
-       Application.Messagebox('You must be using Dirty Kick on an adjacent standing opponent',
-       'Bloodbowl Dirty Kick Warning', MB_OK);
-    end else begin
-      ThrownTeam := (Sender as TPlayer).teamnr;
-      ThrownPlayer := (Sender as Tplayer).number;
-      Bloodbowl.OneDBButtonClick(Bloodbowl);
-      if lastroll = 1 then BlockDie := 'Kicker Down';
-      if lastroll = 2 then BlockDie := 'Nothing Happened';
-      if (lastroll = 3) or (lastroll = 4) then BlockDie := 'Opponent Pushed';
-      if lastroll = 5 then BlockDie := 'Opponent Prone';
-      if lastroll = 6 then BlockDie := 'Opponent Stunned';
-      Bloodbowl.comment.text := BlockDie;
-      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
-        (player[ActionTeam,ActionPlayer].Ally))
-        and (true)); // bigguy
-      proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
-        and (lastroll <= 1) and
-        (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-        and (ActionTeam = curmove);
-      reroll := CanUseTeamReroll(bga);
-      if lastroll<6 then begin
-        DKRoll := lastroll;
-        ReRollAnswer := 'Continue';
-        if reroll and proskill then begin
-          ReRollAnswer := FlexMessageBox('Reroll Dirty Kick?'
-            , 'Dirty Kick Question',
-            'Use Pro,Team Reroll,Continue');
-        end else if proskill then begin
-          ReRollAnswer := FlexMessageBox('Reroll Dirty Kick?'
-            , 'Dirty Kick Question',
-            'Use Pro,Continue');
-        end else if reroll then begin
-          ReRollAnswer := FlexMessageBox('Reroll Dirty Kick?'
-            , 'Dirty Kick Question', 'Team Reroll,Continue');
-        end;
-        if ReRollAnswer='Team Reroll' then begin
-          UReroll := UseTeamReroll;
-          if UReroll then begin
-            Bloodbowl.comment.text := 'Dirty Kick reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-        if ReRollAnswer='Use Pro' then begin
-          player[ActionTeam,ActionPlayer].UseSkill('Pro');
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
-          if (lastroll <= 3) then lastroll := DKRoll;
-          if (lastroll >= 4) then begin
-            Bloodbowl.comment.text := 'Pro reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-        if lastroll = 1 then BlockDie := 'Kicker Down';
-        if lastroll = 2 then BlockDie := 'Nothing Happened';
-        if (lastroll = 3) or (lastroll = 4) then BlockDie := 'Opponent Pushed';
-        if lastroll = 5 then BlockDie := 'Opponent Prone';
-        if lastroll = 6 then BlockDie := 'Opponent Stunned';
-        Bloodbowl.comment.text := BlockDie;
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end;
-      player[ActionTeam,ActionPlayer].UseSkill('Dirty Kick');
-      if BlockDie = 'Kicker Down' then
-        player[ActionTeam, ActionPlayer].SetStatus(3)
-      else if BlockDie = 'Opponent Prone' then
-        player[ThrownTeam,ThrownPlayer].SetStatus(3)
-      else if BlockDie = 'Opponent Stunned' then
-        player[ThrownTeam,ThrownPlayer].SetStatus(4)
-      else if BlockDie = 'Opponent Pushed' then begin
-        lastroll := Rnd(6,6)+1;
-        pplace := player[ThrownTeam,ThrownPlayer].p -
-           player[ActionTeam,ActionPlayer].p;
-        qplace := player[ThrownTeam,ThrownPlayer].q -
-           player[ActionTeam,ActionPlayer].q;
-        TestP := player[ThrownTeam,ThrownPlayer].p;
-        TestQ := player[ThrownTeam,ThrownPlayer].q;
-        NewP := TestP + pplace;
-        NewQ := TestQ + qplace;
-        dk1 := 1;
-        if (NewP<0) or (NewP>14) or (NewQ<0) or (NewQ>25) then dk1 := 3;
-        for g := 0 to 1 do begin
-          for f := 1 to team[g].numplayers do begin
-            if (player[g,f].p = NewP) and (player[g,f].q = NewQ) then begin
-              dk1 := 2;
-            end;
-          end;
-        end;
-        if (qplace = 0) and (pplace = -1) then begin
-           NewP2 := TestP - 1;
-           NewQ2 := TestQ - 1;
-           NewP3 := TestP - 1;
-           NewQ3 := TestQ + 1;
-        end else if (qplace = 0) and (pplace = 1) then begin
-           NewP2 := TestP + 1;
-           NewQ2 := TestQ + 1;
-           NewP3 := TestP + 1;
-           NewQ3 := TestQ - 1;
-        end else if (qplace = 1) and (pplace = 0) then begin
-           NewP2 := TestP + 1;
-           NewQ2 := TestQ + 1;
-           NewP3 := TestP - 1;
-           NewQ3 := TestQ + 1;
-        end else if (qplace = -1) and (pplace = 0) then begin
-           NewP2 := TestP + 1;
-           NewQ2 := TestQ - 1;
-           NewP3 := TestP - 1;
-           NewQ3 := TestQ - 1;
-        end else if (qplace = 1) and (pplace = -1) then begin
-           NewP2 := TestP + 0;
-           NewQ2 := TestQ + 1;
-           NewP3 := TestP - 1;
-           NewQ3 := TestQ + 0;
-        end else if (qplace = 1) and (pplace = 1) then begin
-           NewP2 := TestP + 1;
-           NewQ2 := TestQ + 0;
-           NewP3 := TestP + 0;
-           NewQ3 := TestQ + 1;
-        end else if (qplace = -1) and (pplace = 1) then begin
-           NewP2 := TestP + 1;
-           NewQ2 := TestQ + 0;
-           NewP3 := TestP + 0;
-           NewQ3 := TestQ - 1;
-        end else if (qplace = -1) and (pplace = -1) then begin
-           NewP2 := TestP - 1;
-           NewQ2 := TestQ + 0;
-           NewP3 := TestP + 0;
-           NewQ3 := TestQ - 1;
-        end;
-        dk2 := 1;
-        dk3 := 1;
-        if (NewP2<0) or (NewP2>14) or (NewQ2<0) or (NewQ2>25) then dk2 := 3;
-        if (NewP3<0) or (NewP3>14) or (NewQ3<0) or (NewQ3>25) then dk3 := 3;
-        for g := 0 to 1 do begin
-          for f := 1 to team[g].numplayers do begin
-            if (player[g,f].p = NewP2) and (player[g,f].q = NewQ2) then begin
-              dk2 := 2;
-            end;
-            if (player[g,f].p = NewP3) and (player[g,f].q = NewQ3) then begin
-              dk3 := 2;
-            end;
-          end;
-        end;
-        if ((dk1=1) and ((dk2=2) or (dk2=3)) and ((dk3=2) or (dk3=3))) or
-          ((dk1=1) and (dk2=1) and ((dk3=2) or (dk3=3)) and (lastroll<4)) or
-          ((dk1=1) and ((dk2=2) or (dk2=3)) and (dk3=1) and (lastroll<4)) or
-          ((dk1=1) and (dk2=1) and (dk3=1) and (lastroll<3)) then begin
-            FinalP := NewP;
-            FinalQ := NewQ;
-        end else
-        if ((dk2=1) and ((dk1=2) or (dk1=3)) and ((dk3=2) or (dk3=3))) or
-          ((dk2=1) and (dk1=1) and ((dk3=2) or (dk3=3)) and (lastroll>3)) or
-          ((dk2=1) and ((dk1=2) or (dk1=3)) and (dk3=1) and (lastroll<4)) or
-          ((dk2=1) and (dk1=1) and (dk3=1) and (lastroll>2) and (lastroll<4)) then begin
-            FinalP := NewP2;
-            FinalQ := NewQ2;
-        end else
-        if ((dk3=1) and ((dk2=2) or (dk2=3)) and ((dk1=2) or (dk1=3))) or
-          ((dk3=1) and (dk2=1) and ((dk1=2) or (dk1=3)) and (lastroll>3)) or
-          ((dk3=1) and ((dk2=2) or (dk2=3)) and (dk1=1) and (lastroll>3)) or
-          ((dk3=1) and (dk2=1) and (dk1=1) and (lastroll>4)) then begin
-            FinalP := NewP3;
-            FinalQ := NewQ3;
-        end else
-        if ((dk1=3) and ((dk2=3) or (dk2=2)) and ((dk3=3) or (dk3=2))) or
-           ((dk2=3) and ((dk1=3) or (dk1=2)) and ((dk3=3) or (dk3=2))) or
-           ((dk3=3) and ((dk2=3) or (dk2=2)) and ((dk1=3) or (dk1=2)))
-         then begin
-            FinalP := 99;
-            FinalQ := 99;
-        end else begin
-            FinalP := 100;
-            FinalQ := 100;
-        end;
-        if FinalP = 100 then begin
-          Bloodbowl.comment.text := 'All squares blocked, Dirty Kick has no Effect';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        end else if FinalP = 99 then begin
-          Bloodbowl.comment.text := 'Player is Dirty Kicked out of bounds';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        end else begin
-          PlacePlayer(ThrownPlayer, ThrownTeam, FinalP, FinalQ);
-        end;
-      end;
-      s := 'x' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 65) +
-        Chr(player[ActionTeam,ActionPlayer].UsedMA + 64);
-      LogWrite(s);
-      PlayActionEndOfMove(s, 1);
-      if FinalP = 100 then
-        Bloodbowl.Loglabel.caption := 'All squares blocked, Dirty Kick has no Effect';
-      if FinalP = 99 then begin
-        InjurySettings(curteam, curplayer);
-        if InjuryStatus = 4 then InjuryStatus := 0;
-        if player[curteam,curplayer].status=2 then begin
-          ploc := player[curteam,curplayer].p;
-          qloc := player[curteam,curplayer].q;
-          player[curteam,curplayer].SetStatus(InjuryStatus);
-          if ploc = 0 then arrow := 2;
-          if ploc = 14 then arrow := 7;
-          if qloc = 0 then arrow := 4;
-          if qloc = 25 then arrow := 5;
-          ScatterBallFrom(ploc, qloc, 1, arrow);
-        end else player[curteam,curplayer].SetStatus(InjuryStatus);
-        InjuryStatus := 0;
-      end;
-    end;
-
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
-
-  end else if GameStatus='Mace Tail' then begin
-    test1 := ((abs(player[ActionTeam,ActionPlayer].p-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)));
-    test2 := ((abs(player[ActionTeam,ActionPlayer].q-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)));
-    test3 :=  (player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].status < 1) or
-      (player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].status > 2);
-    test4 := ActionTeam = (Sender as Tplayer).teamnr;
-    if (test1>1) or (test2>1) or (test3) or (test4) then begin
-       Application.Messagebox('You must be using Mace Tail on an adjacent standing opponent',
-       'Bloodbowl Mace Tail Warning', MB_OK);
-    end else begin
-      if lastroll<(4 + (player[(Sender as TPlayer).teamnr,
-        (Sender as Tplayer).number].ag) - (player[ActionTeam,ActionPlayer].ag))
-        then begin
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
-          (player[ActionTeam,ActionPlayer].Ally))
-          and (true)); // bigguy
-        proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
-          and (lastroll <= 1) and
-          (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-          and (ActionTeam = curmove);
-        reroll := CanUseTeamReroll(bga);
-        ReRollAnswer := 'Fail Roll';
-        if reroll and proskill then begin
-          ReRollAnswer := FlexMessageBox('Mace Tail roll has failed!'
-            , 'Mace Tail Failure',
-            'Use Pro,Team Reroll,Fail Roll');
-        end else if proskill then begin
-          ReRollAnswer := FlexMessageBox('Mace Tail roll has failed!'
-            , 'Mace Tail Failure',
-            'Use Pro,Fail Roll');
-        end else if reroll then begin
-          ReRollAnswer := FlexMessageBox('Mace Tail roll failed!'
-            , 'Mace Tail Failure', 'Fail Roll,Team Reroll');
-        end;
-        if ReRollAnswer='Team Reroll' then begin
-          UReroll := UseTeamReroll;
-          if UReroll then begin
-            Bloodbowl.comment.text := 'Mace Tail reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-        if ReRollAnswer='Use Pro' then begin
-          player[ActionTeam,ActionPlayer].UseSkill('Pro');
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
-          if (lastroll <= 3) then lastroll := 1;
-          if (lastroll >= 4) then begin
-            Bloodbowl.comment.text := 'Pro reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-      end;
-      if lastroll>=(4 + (player[(Sender as TPlayer).teamnr,
-       (Sender as Tplayer).number].ag) - (player[ActionTeam,ActionPlayer].ag))
-       then begin
-       player[ActionTeam,ActionPlayer].UseSkill('Mace Tail');
-       Bloodbowl.comment.text := 'Mace Tail successful';
-       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-       Ballscatter := false;
-       v := (Sender as TPlayer).teamnr;
-       w := (Sender as TPlayer).number;
-       AVBreak := true;
-       ArmourSettings(Actionteam,Actionplayer,v,w,2);
-       AVBreak := false;
-       if player[v,w].status < InjuryStatus then begin
-         if player[v,w].status=2 then begin
-           ploc := player[v,w].p;
-           qloc := player[v,w].q;
-           player[v,w].SetStatus(InjuryStatus);
-           BallScatter := true;
-         end else player[v,w].SetStatus(InjuryStatus);
-       end;
-       InjuryStatus := 0;
-       if BallScatter then ScatterBallFrom(ploc, qloc, 1, 0);
-       s := 'x' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 65) +
-       Chr(player[ActionTeam,ActionPlayer].UsedMA + 64);
-       LogWrite(s);
-       PlayActionEndOfMove(s, 1);
-      end else begin
-        player[ActionTeam,ActionPlayer].UseSkill('Mace Tail');
-        Bloodbowl.comment.text := 'Mace Tail failed';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        s := 'x' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 65) +
-           Chr(player[ActionTeam,ActionPlayer].UsedMA + 64);
-        LogWrite(s);
-        PlayActionEndOfMove(s, 1);
-      end;
-    end;
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
-
-  end else if GameStatus='Bear Hug' then begin
-    test1 := ((abs(player[ActionTeam,ActionPlayer].p-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)));
-    test2 := ((abs(player[ActionTeam,ActionPlayer].q-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)));
-    test3 :=  (player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].status < 1) or
-      (player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].status > 2);
-    test4 := ActionTeam = (Sender as Tplayer).teamnr;
-    if (test1>1) or (test2>1) or (test3) or (test4) then begin
-       Application.Messagebox('You must be using Bear Hug on an adjacent standing opponent',
-       'Bloodbowl Bear Hug Warning', MB_OK);
-    end else begin
-      g := ActionTeam;
-      f := ActionPlayer;
-      g0 := (Sender as TPlayer).teamnr;
-      f0 := (Sender as Tplayer).number;
-      BlockTeam := g0;
-      BlockPlayer := f0;
-      HitTeam := g;
-      HitPlayer := f;
-      {count assists}
-      if (not((player[g,f].hasSkill('Ball and Chain')))) then begin
-        tz := CountTZBlockA(g0, f0);
-        bx := false;
-        for p := 1 to tz.num do begin
-          if tz.pl[p] <> f then begin
-            if player[g,tz.pl[p]].hasSkill('Guard') then b := true
-            else begin
-              tz0 := CountTZBlockCA(g, tz.pl[p]);
-              b := (tz0.num = 0);
-         {     b := ((tz0.num = 1) and (player[g0,f0].tz = 0))
-                or ((tz0.num = 0) and (player[g0,f0].tz <> 0)) or
-                ((tz0.num = 1) and (frmSettings.cbNoTZAssist.checked));  }
-            end;
-            if b then begin
-              assa := assa + 1;
-              if not(bx) then begin
-                bx := true;
-              end;
-            end;
-          end;
-        end;
-      end;
-      assd := 0;
-      {count counterassists}
-      if (not((player[g,f].hasSkill('Ball and Chain')))) then begin
-        tz := CountTZBlockCA2(g, f);
-        bx := false;
-        for p := 1 to tz.num do begin
-          if tz.pl[p] <> f0 then begin
-            if player[g0,tz.pl[p]].hasSkill('Guard') then b := true
-            else begin
-              tz0 := CountTZBlockCA(g0, tz.pl[p]);
-              b := (tz0.num = 0);
-              {b := ((tz0.num = 1) and (player[g,f].tz = 0))
-                or ((tz0.num = 0) and (player[g,f].tz <> 0));}
-            end;
-            if b then begin
-              assd := assd + 1;
-              if not(bx) then begin
-                bx := true;
-              end;
-            end;
-          end;
-        end;
-      end;
-      RollNeed := (4 + (player[(Sender as TPlayer).teamnr,
-        (Sender as Tplayer).number].st) - (player[ActionTeam,ActionPlayer].st)
-        + (assd) - (assa));
-      If RollNeed>6 then RollNeed := 6;
-      if RollNeed<2 then RollNeed := 2;
-      s := 'Bear Hug roll needed: ' + InttoStr(RollNeed) + '+';
-      Bloodbowl.comment.text := s;
-      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-
-      if lastroll<(4 + (player[(Sender as TPlayer).teamnr,
-        (Sender as Tplayer).number].st) - (player[ActionTeam,ActionPlayer].st)
-        + (assd) - (assa))
-        then begin
-        bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
-          (player[ActionTeam,ActionPlayer].Ally))
-          and (true)); // bigguy
-        proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
-          and (lastroll <= 1) and
-          (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-          and (ActionTeam = curmove);
-        reroll := CanUseTeamReroll(bga);
-        ReRollAnswer := 'Fail Roll';
-        if reroll and proskill then begin
-          ReRollAnswer := FlexMessageBox('Bear Hug roll has failed!'
-            , 'Bear Hug Failure',
-            'Use Pro,Team Reroll,Fail Roll');
-        end else if proskill then begin
-          ReRollAnswer := FlexMessageBox('Bear Hug roll has failed!'
-            , 'Bear Hug Failure',
-            'Use Pro,Fail Roll');
-        end else if reroll then begin
-          ReRollAnswer := FlexMessageBox('Bear Hug roll failed!'
-            , 'Bear Hug Failure', 'Fail Roll,Team Reroll');
-        end;
-        if ReRollAnswer='Team Reroll' then begin
-          UReroll := UseTeamReroll;
-          if UReroll then begin
-            Bloodbowl.comment.text := 'Bear Hug reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-        if ReRollAnswer='Use Pro' then begin
-          player[ActionTeam,ActionPlayer].UseSkill('Pro');
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
-          if (lastroll <= 3) then lastroll := 1;
-          if (lastroll >= 4) then begin
-            Bloodbowl.comment.text := 'Pro reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-      end;
-
-      if lastroll>=(4 + (player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].st) - (player[ActionTeam,ActionPlayer].st)
-      + (assd) - (assa))
-      then begin
-        player[ActionTeam,ActionPlayer].UseSkill('Bear Hug');
-        Bloodbowl.comment.text := 'Bear Hug Armour Roll';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-        if curmove = 0 then begin
-          AVBreakTOTRed := AVBreakTOTRed + 1;
-        end else if curmove = 1 then begin
-          AVBreakTOTBlue := AVBreakTOTBlue + 1;
-        end;
-        if (player[(Sender as TPlayer).teamnr,
-          (Sender as Tplayer).number].av) >= lastroll then begin
-          Bloodbowl.comment.text := 'Bear Hug fails to break armour; nothing happens!';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        end else begin
-          if curmove = 0 then begin
-            AVBreakRed := AVBreakRed + 1;
-          end else if curmove = 1 then begin
-            AVBreakBlue := AVBreakBlue + 1;
-          end;
-          Bloodbowl.comment.text := 'Bear Hug successful and breaks armour';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          frmArmourRoll.txtArmourValue.text :=
-            IntToStr(player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].av);
-          frmArmourRoll.txtAssists.text := IntToStr(0);
-
-          frmArmourRoll.cbThickSkull.checked :=
-           (player[(Sender as TPlayer).teamnr,
-           (Sender as Tplayer).number].hasSkill('Thick Skull'));
-          frmArmourRoll.cbProSkill.checked := (player[(Sender as TPlayer).teamnr,
-           (Sender as Tplayer).number].hasSkill('Pro'));
-
-          if ((Pos('HALFLING', Uppercase(player[(Sender as TPlayer).teamnr,
-             (Sender as Tplayer).number].position)) > 0) or
-             ((Pos('GOBLIN', Uppercase(player[(Sender as TPlayer).teamnr,
-             (Sender as Tplayer).number].position)) > 0)
-             and not (Pos('HOBGOBLIN', Uppercase(player[(Sender as TPlayer).teamnr,
-             (Sender as Tplayer).number].position)) > 0)))
-           then begin
-             frmArmourRoll.rbWeakPlayer.checked := true;
-          end else if (player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('STUNTY'))
-             then begin
-            frmArmourRoll.rbWeakPlayer.checked := true;
-          end else
-           frmArmourRoll.rbNoStunty.checked := true;
-
-
-
-          frmArmourRoll.cbDecay.checked := (player[(Sender as TPlayer).teamnr,
-            (Sender as Tplayer).number].hasSkill('Decay'));
-          totspp :=
-            player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].GetStartingSPP() +
-            player[(Sender as TPlayer).teamnr,(Sender as Tplayer).number].GetMatchSPP();
-
-          
-
-            s := player[(Sender as TPlayer).teamnr,
-              (Sender as Tplayer).number].inj;
-            p := Pos('N', Uppercase(s));
-            {roll for each N until all done, or 1 rolled}
-            NiggleCount := 0;
-            repeat begin
-              if p<>0 then NiggleCount := NiggleCount + 1;
-              s := Copy(s, p+1, Length(s) - p);
-              p := Pos('N', Uppercase(s));
-            end until (p = 0);
-            frmArmourRoll.txtNiggles.text := IntToStr(NiggleCount);
-
-          s := 'x' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 65) +
-          Chr(player[ActionTeam,ActionPlayer].UsedMA + 64);
-          LogWrite(s);
-          PlayActionEndOfMove(s, 1);
-          ShowHurtForm('I');
-          BallScatter := false;
-          v:= (Sender as TPlayer).teamnr;
-          w:= (Sender as Tplayer).number;
-          if player[v,w].status < InjuryStatus then begin
-            if player[v,w].status=2 then begin
-              ploc := player[v,w].p;
-              qloc := player[v,w].q;
-              player[v,w].SetStatus(InjuryStatus);
-              BallScatter := true;
-            end else player[v,w].SetStatus(InjuryStatus);
-          end;
-          InjuryStatus := 0;
-          if BallScatter then ScatterBallFrom(ploc, qloc, 1, 0);
-        end;
-      end else begin
-        player[ActionTeam,ActionPlayer].UseSkill('Bear Hug');
-        Bloodbowl.comment.text := 'Bear Hug failed';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        s := 'x' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 65) +
-           Chr(player[ActionTeam,ActionPlayer].UsedMA + 64);
-        LogWrite(s);
-        PlayActionEndOfMove(s, 1);
-      end;
-    end;
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
-
-  end else if GameStatus = 'Punt' then begin
-    Bloodbowl.Endofmove1Click(Bloodbowl);
-    {tz := CountTZ(ActionTeam, ActionPlayer);}
-    Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-    {if lastroll-tz.num >= 2 then begin}
-
-    if lastroll<2 then begin
-      bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
-        (player[ActionTeam,ActionPlayer].Ally))
-        and (true)); // bigguy
-      proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
-        and (lastroll <= 1) and
-        (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-        and (ActionTeam = curmove);
-      reroll := CanUseTeamReroll(bga);
-      ReRollAnswer := 'Fail Roll';
-      if reroll and proskill then begin
-        ReRollAnswer := FlexMessageBox('Punt roll has failed!'
-          , 'Punt Failure',
-          'Use Pro,Team Reroll,Fail Roll');
-      end else if proskill then begin
-        ReRollAnswer := FlexMessageBox('Punt roll has failed!'
-          , 'Punt Failure',
-          'Use Pro,Fail Roll');
-      end else if reroll then begin
-        ReRollAnswer := FlexMessageBox('Punt roll failed!'
-          , 'Punt Failure', 'Fail Roll,Team Reroll');
-      end;
-      if ReRollAnswer='Team Reroll' then begin
-        UReroll := UseTeamReroll;
-        if UReroll then begin
-          Bloodbowl.comment.text := 'Punt reroll';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        end;
-      end;
-      if ReRollAnswer='Use Pro' then begin
-        player[ActionTeam,ActionPlayer].UseSkill('Pro');
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
-        if (lastroll <= 3) then lastroll := 1;
-        if (lastroll >= 4) then begin
-          Bloodbowl.comment.text := 'Pro reroll';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        end;
-      end;
-    end;
-
-    if lastroll >= 2 then begin
-      Bloodbowl.comment.text := 'Punt is successful';
-      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      ScatterD8D6(player[(Sender as TPlayer).teamnr,
-        (Sender as Tplayer).number].p, player[(Sender as TPlayer).teamnr,
-        (Sender as Tplayer).number].q,false,false);
-    end else begin
-      Bloodbowl.comment.text := 'Punt is fumbled!';
-      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      ScatterBallFrom(player[ActionTeam, ActionPlayer].p,
-        player[ActionTeam, ActionPlayer].q, 1, 0);
-    end;
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
-
-  end else if GameStatus='Ethereal' then begin
-    test1 := (((player[ActionTeam,ActionPlayer].p-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)));
-    test2 := (((player[ActionTeam,ActionPlayer].q-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)));
-    test3 := false;
-    for k := 0 to 1 do
-    for l := 1 to team[1-k].numplayers do begin
-       if (player[k,l].p = player[ActionTeam,ActionPlayer].p+(-2*test1)) and
-          (player[k,l].q = player[ActionTeam,ActionPlayer].q+(-2*test2)) then
-            test3 := true;
-    end;
-    if (player[ActionTeam,ActionPlayer].p+(-2*test1) < 0) or
-       (player[ActionTeam,ActionPlayer].p+(-2*test1) > 14) then test3 := true;
-    if (player[ActionTeam,ActionPlayer].q+(-2*test2) < 0) or
-       (player[ActionTeam,ActionPlayer].q+(-2*test2) > 25) then test3 := true;
-    test4 := ActionTeam = (Sender as Tplayer).teamnr;
-    if (abs(test1)>1) or (abs(test2)>1) or (test3) or (test4) then begin
-       Application.Messagebox('Ethereal moves must pass straight through an adjacent '+
-       'opponent into an empty square on the pitch',
-       'Bloodbowl Ethereal Warning', MB_OK);
-    end else begin
-      r := 7 - (player[ActionTeam,ActionPlayer].ag);
-      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-
-      if lastroll<r then begin
-        bga := false; // bigguy
-        proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
-          and (lastroll <= 1) and
-          (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-          and (ActionTeam = curmove);
-        reroll := CanUseTeamReroll(bga);
-        ReRollAnswer := 'Fail Roll';
-        if reroll and proskill then begin
-          ReRollAnswer := FlexMessageBox('Ethereal roll has failed!'
-            , 'Ethereal Failure',
-            'Use Pro,Team Reroll,Fail Roll');
-        end else if proskill then begin
-          ReRollAnswer := FlexMessageBox('Ethereal roll has failed!'
-            , 'Ethereal Failure',
-            'Use Pro,Fail Roll');
-        end else if reroll then begin
-          ReRollAnswer := FlexMessageBox('Ethereal roll failed!'
-            , 'Ethereal Failure', 'Fail Roll,Team Reroll');
-        end;
-        if ReRollAnswer='Team Reroll' then begin
-          UReroll := UseTeamReroll;
-          if UReroll then begin
-            Bloodbowl.comment.text := 'Ethereal reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-        if ReRollAnswer='Use Pro' then begin
-          player[ActionTeam,ActionPlayer].UseSkill('Pro');
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
-          if (lastroll <= 3) then lastroll := 1;
-          if (lastroll >= 4) then begin
-            Bloodbowl.comment.text := 'Pro reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          end;
-        end;
-      end;
-
-      if lastroll>=r then begin
-        player[ActionTeam,ActionPlayer].UseSkill('Ethereal');
-        Bloodbowl.comment.text := 'Ethereal successful';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        PlacePlayer(ActionPlayer, ActionTeam,
-          (player[ActionTeam,ActionPlayer].p+(-2*test1)),
-          (player[ActionTeam,ActionPlayer].q+(-2*test2)));
-      end else begin
-        Bloodbowl.comment.text := 'Ethereal failed!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        player[ActionTeam,ActionPlayer].UseSkill('Ethereal');
-        s := 'x' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 65) +
-           Chr(player[ActionTeam,ActionPlayer].UsedMA + 64);
-        LogWrite(s);
-        PlayActionEndOfMove(s, 1);
-      end;
-    end;
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
-
   end else if GameStatus='Shadow' then begin
-    test1 := (((player[ActionTeam,ActionPlayer].p-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].p)));
-    test2 := (((player[ActionTeam,ActionPlayer].q-player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].q)));
-    test3 := false;
-    for k := 0 to 1 do
-    for l := 1 to team[1-k].numplayers do begin
-       if (player[k,l].p = LastFieldP) and
-          (player[k,l].q = LastFieldQ) then
-            test3 := true;
-    end;
-    test4 := ActionTeam = (Sender as Tplayer).teamnr;
-    test5 := true;
-    test6 := (player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].hasSkill('Shado*'));
-    if (abs(test1)<=2) and (abs(test2)<=2) and (LastFieldP<>-1)
-      then test5 := false;
-    if (test5) or (test3) or (test4) then begin
-       Application.Messagebox('Opponent must have Shadowing and be moving into '+
-       'the empty square you just left',
-       'Bloodbowl Shadowing Warning', MB_OK);
-    end else begin
-      r := 8 + (player[(Sender as TPlayer).teamnr,
-      (Sender as Tplayer).number].ma) - (player[ActionTeam,ActionPlayer].ma);
-      Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-      Shadowroll := lastroll;
-      if (player[(Sender as TPlayer).teamnr,
-        (Sender as Tplayer).number].hasSkill('Pro')) and (lastroll>=r) and not
-        (player[(Sender as TPlayer).teamnr,
-        (Sender as Tplayer).number].usedSkill('Pro')) then begin
-            player[(Sender as TPlayer).teamnr,
-             (Sender as Tplayer).number].UseSkill('Pro');
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then TeamRerollPro((Sender as TPlayer).teamnr,
-              (Sender as TPlayer).number);
-            if (lastroll <= 3) then lastroll := Shadowroll;
-            if (lastroll >= 4) then begin
-              Bloodbowl.comment.text := 'Opponent Pro skill forces reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-            end;
-      end;
-
-      if lastroll<r then begin
-        bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
-          (player[ActionTeam,ActionPlayer].Ally))
-          and (true)); // bigguy
-        proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
-          and (lastroll <= 1) and
-          (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-          and (ActionTeam = curmove);
-        reroll := CanUseTeamReroll(bga);
-        ReRollAnswer := 'Fail Roll';
-        if reroll and proskill then begin
-          ReRollAnswer := FlexMessageBox('Shadowing Escape roll has failed!'
-            , 'Shadowing Failure',
-            'Use Pro,Team Reroll,Fail Roll');
-        end else if proskill then begin
-          ReRollAnswer := FlexMessageBox('Shadowing Escape roll has failed!'
-            , 'Shadowing Failure',
-            'Use Pro,Fail Roll');
-        end else if reroll then begin
-          ReRollAnswer := FlexMessageBox('Shadowing Escape roll failed!'
-            , 'Shadowing Failure', 'Fail Roll,Team Reroll');
-        end;
-        if ReRollAnswer='Team Reroll' then begin
-          UReroll := UseTeamReroll;
-          if UReroll then begin
-            Bloodbowl.comment.text := 'Shadowing reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);;
-          end;
-        end;
-        if ReRollAnswer='Use Pro' then begin
-          player[ActionTeam,ActionPlayer].UseSkill('Pro');
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
-          if (lastroll <= 3) then lastroll := 1;
-          if (lastroll >= 4) then begin
-            Bloodbowl.comment.text := 'Pro reroll';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-          end;
-        end;
-      end;
-
-      if lastroll>=r then begin
-        Bloodbowl.comment.text := InttoStr(r)+'+ roll successful. ' +
-          'You avoid the Shadowing player';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      end else begin
-        Bloodbowl.comment.text := InttoStr(r)+'+ Shadow roll failed!';
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        PlacePlayer((Sender as Tplayer).number, (Sender as TPlayer).teamnr,
-          LastFieldP, LastFieldQ);
-        LastFieldP := -1;
-        LastFieldQ := -1;
-      end;
-    end;
-    GameStatus := '';
-    ActionTeam := 0;
-    ActionPlayer := 0;
+    DoShadowingEndDrag(Sender, test1, test2, test3, test4, test5);
 
   end else begin
     if (Target is TPlayer) then begin
@@ -3606,6 +2179,573 @@ begin
   s0 := s0 + Chr(value div 10 + 48) + Chr(cnumber + 48);
   s0 := s0 + Chr(255) + picture;
   GetSaveString := s0;
+end;
+
+procedure TPlayer.DoKickEndDrag(Sender: TObject; var g: Integer; var f: Integer; pb: Integer; var pplace: Integer; var qplace: Integer);
+var
+  Local_g: Integer;
+  Local_f: Integer;
+begin
+  pplace := abs((player[(Sender as TPlayer).teamnr, (Sender as TPlayer).number].p) - (player[curteam, curplayer].p));
+  qplace := abs((player[(Sender as TPlayer).teamnr, (Sender as TPlayer).number].q) - (player[curteam, curplayer].q));
+  if (pplace <= 1) and (qplace <= 1) and not ((pplace = 0) and (qplace = 0)) then
+  begin
+    if ((Sender as TPlayer).status >= 1) and ((Sender as TPlayer).status <= 4) then
+    begin
+      g := 0;
+      while (g <= 1) do
+      begin
+        f := 1;
+        while (g <= 1) and (f <= team[g].numplayers) do
+        begin
+          if player[g, f].status = 2 then
+          begin
+            Bloodbowl.Endofmove1Click(Bloodbowl);
+            pb := CountPB(g, f, player[g, f].p, player[g, f].q, false);
+            if pb > 0 then
+            begin
+              Application.Messagebox('Opponent might be able to Pass Block!', 'Bloodbowl Pass Block Warning', MB_OK);
+            end;
+            ShowKickToField(g, f, player[(Sender as TPlayer).teamnr, (Sender as TPlayer).number].p, player[(Sender as TPlayer).teamnr, (Sender as TPlayer).number].q);
+            g := 2;
+            f := 99;
+            if GameStatus = 'Field Goal' then
+            begin
+              Bloodbowl.Loglabel.caption := 'FIELD GOAL!!!!  Set-up for new drive';
+            end;
+          end;
+          f := f + 1;
+        end;
+        g := g + 1;
+      end;
+    end;
+    frmKick.cbFGAttempt.Checked := false;
+    if (GameStatus <> 'AccurateKick') and (GameStatus <> 'PoochKick') then
+    begin
+      for Local_g := 0 to 14 do
+      begin
+        for Local_f := 0 to 25 do
+        begin
+          KickField[Local_g, Local_f] := 0;
+          field[Local_g, Local_f].color := clGreen;
+          field[Local_g, Local_f].transparent := true;
+        end;
+      end;
+      GameStatus := '';
+      ActionTeam := 0;
+      ActionPlayer := 0;
+    end
+    else
+    begin
+      Bloodbowl.Loglabel.caption := 'Click the Yellow square or player in the ' + 'identified range to kick to.  Squares less than the distance kicked ' + 'next to sideline if selected indicates the ball is kicked out of bounds';
+    end;
+  end;
+end;
+
+procedure TPlayer.DoStabEndDrag(Sender: TObject; var test1: Integer; var test2: Integer; var test3: Boolean; var test4: Boolean);
+var
+  Ballscatter: Boolean;
+  v: Integer;
+  w: Integer;
+  ploc: Integer;
+  qloc: Integer;
+begin
+  test1 := ((abs(player[ActionTeam, ActionPlayer].p - player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].p)));
+  test2 := ((abs(player[ActionTeam, ActionPlayer].q - player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].q)));
+  test3 := ((player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].status <> 1) and (player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].status <> 2));
+  test4 := ActionTeam = (Sender as Tplayer).teamnr;
+  if (test1 > 1) or (test2 > 1) or (test3) or (test4) then
+  begin
+    Application.Messagebox('You must be stabbing an adjacent standing opponent', 'Bloodbowl Stab Gaze Warning', MB_OK);
+  end
+  else
+  begin
+    BallScatter := false;
+    v := (Sender as TPlayer).teamnr;
+    w := (Sender as Tplayer).number;
+    ArmourSettings(ActionTeam, ActionPlayer, v, w, 0);
+    if InjuryStatus = 3 then
+    begin
+      BloodBowl.comment.Text := 'Prone result means that Stab fails to break armour and has no effect!';
+      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+    end;
+    if InjuryStatus >= 4 then
+    begin
+      if player[v, w].status < InjuryStatus then
+      begin
+        if player[v, w].status = 2 then
+        begin
+          ploc := player[v, w].p;
+          qloc := player[v, w].q;
+          player[v, w].SetStatus(InjuryStatus);
+          BallScatter := true;
+        end
+        else
+          player[v, w].SetStatus(InjuryStatus);
+      end;
+    end;
+    InjuryStatus := 0;
+    if BallScatter then
+      ScatterBallFrom(ploc, qloc, 1, 0);
+  end;
+  GameStatus := '';
+  ActionTeam := 0;
+  ActionPlayer := 0;
+end;
+
+procedure TPlayer.DoAccurateKickEndDrag(Sender: TObject; var g: Integer; var f: Integer);
+var
+  KickP: Integer;
+  KickQ: Integer;
+  dist1: Integer;
+  dist2: Integer;
+  finaldist: Integer;
+  Local_g: Integer;
+  Local_f: Integer;
+begin
+  KickP := player[(Sender as TPlayer).teamnr, (Sender as TPlayer).number].p;
+  KickQ := player[(Sender as TPlayer).teamnr, (Sender as TPlayer).number].q;
+  if KickField[KickP, KickQ] = 2 then
+  begin
+    dist1 := abs(player[ActionTeam, ActionPlayer].p - KickP);
+    dist2 := abs(player[ActionTeam, ActionPlayer].q - KickQ);
+    if dist1 >= dist2 then
+      finaldist := dist1
+    else
+      finaldist := dist2;
+    if finaldist < KickDist then
+    begin
+      if (KickP = 0) and (KickQ = 0) then
+        ScatterBallFrom(KickP, KickQ, 1, 1)
+      else if (KickP = 0) and (KickQ = 25) then
+        ScatterBallFrom(KickP, KickQ, 1, 3)
+      else if (KickP = 14) and (KickQ = 0) then
+        ScatterBallFrom(KickP, KickQ, 1, 6)
+      else if (KickP = 14) and (KickQ = 25) then
+        ScatterBallFrom(KickP, KickQ, 1, 8)
+      else if (KickP = 0) then
+        ScatterBallFrom(KickP, KickQ, 1, 2)
+      else if (KickP = 14) then
+        ScatterBallFrom(KickP, KickQ, 1, 7)
+      else if (KickQ = 0) then
+        ScatterBallFrom(KickP, KickQ, 1, 4)
+      else if (KickQ = 25) then
+        ScatterBallFrom(KickP, KickQ, 1, 5);
+    end
+    else
+      ShowCatchWindow((Sender as TPlayer).teamnr, (Sender as TPlayer).number, 0, false, false);
+    for Local_g := 0 to 14 do
+    begin
+      for Local_f := 0 to 25 do
+      begin
+        KickField[Local_g, Local_f] := 0;
+        field[Local_g, Local_f].color := clGreen;
+        field[Local_g, Local_f].transparent := true;
+      end;
+    end;
+    GameStatus := '';
+    ActionTeam := 0;
+    ActionPlayer := 0;
+    Bloodbowl.Loglabel.caption := ' ';
+  end;
+end;
+
+procedure TPlayer.DoThrowTeamMateEndDrag(Sender: TObject; var test1: Integer; var test2: Integer; var test3: Boolean; var test4: Boolean; var test5: Boolean);
+begin
+  test1 := ((abs(player[ActionTeam, ActionPlayer].p - player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].p)));
+  test2 := ((abs(player[ActionTeam, ActionPlayer].q - player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].q)));
+  test3 := (player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].status <> 1) and (player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].status <> 2);
+  test4 := ActionTeam <> (Sender as Tplayer).teamnr;
+  test5 := not (player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].hasSkill('Right Stuff'));
+  if (test1 > 1) or (test2 > 1) or (test3) or (test4) or (test5) then
+  begin
+    Application.Messagebox('You must be throwing an adjacent standing teammate' + ' that has Right Stuff', 'Bloodbowl Throw Team-Mate Warning', MB_OK);
+    GameStatus := '';
+    ActionTeam := 0;
+    ActionPlayer := 0;
+  end
+  else
+  begin
+    ThrownTeam := (Sender as TPlayer).teamnr;
+    ThrownPlayer := (Sender as Tplayer).number;
+    GameStatus := 'ThrowTeamMate2';
+    Bloodbowl.Loglabel.caption := 'CLICK ON THE SQUARE TO THROW THE PLAYER TO';
+  end;
+end;
+
+procedure TPlayer.DoThrowInMovementEndDrag(Sender: TObject; g: Integer; f: Integer; pplace: Integer; qplace: Integer);
+var
+  TestP: Integer;
+  TestQ: Integer;
+  NewP: Integer;
+  NewQ: Integer;
+  dk1: Integer;
+  NewP2: Integer;
+  NewQ2: Integer;
+  NewP3: Integer;
+  NewQ3: Integer;
+  dk2: Integer;
+  dk3: Integer;
+  FinalP: Integer;
+  FinalQ: Integer;
+  FinalDK: Integer;
+  Local_g: Integer;
+  Local_f: Integer;
+  Local_g1: Integer;
+  Local_f1: Integer;
+  Local_g2: Integer;
+  Local_f2: Integer;
+begin
+  ThrownTeam := (Sender as TPlayer).teamnr;
+  ThrownPlayer := (Sender as TPlayer).number;
+  pplace := player[ThrownTeam, ThrownPlayer].p - player[ActionTeam, ActionPlayer].p;
+  qplace := player[ThrownTeam, ThrownPlayer].q - player[ActionTeam, ActionPlayer].q;
+  TestP := player[ActionTeam, ActionPlayer].p;
+  TestQ := player[ActionTeam, ActionPlayer].q;
+  NewP := TestP + pplace;
+  NewQ := TestQ + qplace;
+  dk1 := 1;
+  if (NewP < 0) or (NewP > 14) or (NewQ < 0) or (NewQ > 25) then
+    dk1 := 3;
+  for Local_g := 0 to 1 do
+  begin
+    for Local_f := 1 to team[Local_g].numplayers do
+    begin
+      if (player[Local_g, Local_f].p = NewP) and (player[Local_g, Local_f].q = NewQ) then
+      begin
+        dk1 := 2;
+      end;
+    end;
+  end;
+  if (qplace = 0) and (pplace = -1) then
+  begin
+    NewP2 := TestP - 1;
+    NewQ2 := TestQ - 1;
+    NewP3 := TestP - 1;
+    NewQ3 := TestQ + 1;
+  end
+  else if (qplace = 0) and (pplace = 1) then
+  begin
+    NewP2 := TestP + 1;
+    NewQ2 := TestQ + 1;
+    NewP3 := TestP + 1;
+    NewQ3 := TestQ - 1;
+  end
+  else if (qplace = 1) and (pplace = 0) then
+  begin
+    NewP2 := TestP - 1;
+    NewQ2 := TestQ + 1;
+    NewP3 := TestP + 1;
+    NewQ3 := TestQ + 1;
+  end
+  else if (qplace = -1) and (pplace = 0) then
+  begin
+    NewP2 := TestP + 1;
+    NewQ2 := TestQ - 1;
+    NewP3 := TestP - 1;
+    NewQ3 := TestQ - 1;
+  end
+  else if (qplace = 1) and (pplace = -1) then
+  begin
+    NewP2 := TestP - 1;
+    NewQ2 := TestQ + 0;
+    NewP3 := TestP + 0;
+    NewQ3 := TestQ + 1;
+  end
+  else if (qplace = 1) and (pplace = 1) then
+  begin
+    NewP2 := TestP + 0;
+    NewQ2 := TestQ + 1;
+    NewP3 := TestP + 1;
+    NewQ3 := TestQ + 0;
+  end
+  else if (qplace = -1) and (pplace = 1) then
+  begin
+    NewP2 := TestP + 1;
+    NewQ2 := TestQ + 0;
+    NewP3 := TestP + 0;
+    NewQ3 := TestQ - 1;
+  end
+  else if (qplace = -1) and (pplace = -1) then
+  begin
+    NewP2 := TestP + 0;
+    NewQ2 := TestQ - 1;
+    NewP3 := TestP - 1;
+    NewQ3 := TestQ + 0;
+  end;
+  dk2 := 1;
+  dk3 := 1;
+  if (NewP2 < 0) or (NewP2 > 14) or (NewQ2 < 0) or (NewQ2 > 25) then
+    dk2 := 3;
+  if (NewP3 < 0) or (NewP3 > 14) or (NewQ3 < 0) or (NewQ3 > 25) then
+    dk3 := 3;
+  for Local_g1 := 0 to 1 do
+  begin
+    for Local_f1 := 1 to team[Local_g1].numplayers do
+    begin
+      if (player[Local_g1, Local_f1].p = NewP2) and (player[Local_g1, Local_f1].q = NewQ2) then
+      begin
+        dk2 := 2;
+      end;
+      if (player[Local_g1, Local_f1].p = NewP3) and (player[Local_g1, Local_f1].q = NewQ3) then
+      begin
+        dk3 := 2;
+      end;
+    end;
+  end;
+  Bloodbowl.comment.text := 'Throw-in Movement roll';
+  Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+  Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
+  if lastroll < 3 then
+  begin
+    FinalP := NewP2;
+    FinalQ := NewQ2;
+    FinalDK := dk2;
+  end
+  else if (lastroll > 2) and (lastroll < 5) then
+  begin
+    FinalP := NewP;
+    FinalQ := NewQ;
+    FinalDK := dk1;
+  end
+  else
+  begin
+    FinalP := NewP3;
+    FinalQ := NewQ3;
+    FinalDK := dk3;
+  end;
+  if FinalDK = 1 then
+    PlacePlayer(ActionPlayer, ActionTeam, FinalP, FinalQ)
+  else if FinalDK = 3 then
+  begin
+    Bloodbowl.comment.text := 'Player runs out of bounds!  Roll for injury';
+    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+  end
+  else
+  begin
+    for Local_g2 := 0 to 1 do
+    begin
+      for Local_f2 := 1 to team[Local_g2].numplayers do
+      begin
+        if (player[Local_g2, Local_f2].p = FinalP) and (player[Local_g2, Local_f2].q = FinalQ) then
+        begin
+          BloodBowl.comment.Text := 'You must throw a block at #' + InttoStr(player[Local_g2, Local_f2].cnumber) + '-' + player[Local_g2, Local_f2].name;
+        end;
+      end;
+    end;
+    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+  end;
+  GameStatus := '';
+  ActionTeam := 0;
+  ActionPlayer := 0;
+end;
+
+procedure TPlayer.DoShadowingEndDrag(Sender: TObject; test1: Integer; test2: Integer; test3: Boolean; test4: Boolean; test5: Boolean);
+var
+  bga: Boolean;
+  proskill: Boolean;
+  reroll: Boolean;
+  RerollAnswer: string;
+  UReroll: Boolean;
+  k: Integer;
+  l: Integer;
+  test6: Boolean;
+  r: Integer;
+  Shadowroll: Integer;
+begin
+  test1 := (((player[ActionTeam, ActionPlayer].p - player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].p)));
+  test2 := (((player[ActionTeam, ActionPlayer].q - player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].q)));
+  test3 := false;
+  for k := 0 to 1 do
+    for l := 1 to team[1 - k].numplayers do
+    begin
+      if (player[k, l].p = LastFieldP) and (player[k, l].q = LastFieldQ) then
+        test3 := true;
+    end;
+  test4 := ActionTeam = (Sender as Tplayer).teamnr;
+  test5 := true;
+  test6 := (player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].hasSkill('Shado*'));
+  if (abs(test1) <= 2) and (abs(test2) <= 2) and (LastFieldP <> -1) then
+    test5 := false;
+  if (test5) or (test3) or (test4) then
+  begin
+    Application.Messagebox('Opponent must have Shadowing and be moving into ' + 'the empty square you just left', 'Bloodbowl Shadowing Warning', MB_OK);
+  end
+  else
+  begin
+    r := 8 + (player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].ma) - (player[ActionTeam, ActionPlayer].ma);
+    Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
+    Shadowroll := lastroll;
+    if (player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].hasSkill('Pro')) and (lastroll >= r) and not (player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].usedSkill('Pro')) then
+    begin
+      player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].UseSkill('Pro');
+      Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
+      if lastroll <= 3 then
+        TeamRerollPro((Sender as TPlayer).teamnr, (Sender as TPlayer).number);
+      if (lastroll <= 3) then
+        lastroll := Shadowroll;
+      if (lastroll >= 4) then
+      begin
+        Bloodbowl.comment.text := 'Opponent Pro skill forces reroll';
+        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+        Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
+      end;
+    end;
+    if lastroll < r then
+    begin
+      bga := (((player[ActionTeam, ActionPlayer].BigGuy) or (player[ActionTeam, ActionPlayer].Ally)) and (true));
+      // bigguy
+      proskill := ((player[ActionTeam, ActionPlayer].HasSkill('Pro'))) and (lastroll <= 1) and (not (player[ActionTeam, ActionPlayer].usedSkill('Pro'))) and (ActionTeam = curmove);
+      reroll := CanUseTeamReroll(bga);
+      ReRollAnswer := 'Fail Roll';
+      if reroll and proskill then
+      begin
+        ReRollAnswer := FlexMessageBox('Shadowing Escape roll has failed!', 'Shadowing Failure', 'Use Pro,Team Reroll,Fail Roll');
+      end
+      else if proskill then
+      begin
+        ReRollAnswer := FlexMessageBox('Shadowing Escape roll has failed!', 'Shadowing Failure', 'Use Pro,Fail Roll');
+      end
+      else if reroll then
+      begin
+        ReRollAnswer := FlexMessageBox('Shadowing Escape roll failed!', 'Shadowing Failure', 'Fail Roll,Team Reroll');
+      end;
+      if ReRollAnswer = 'Team Reroll' then
+      begin
+        UReroll := UseTeamReroll;
+        if UReroll then
+        begin
+          Bloodbowl.comment.text := 'Shadowing reroll';
+          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+          Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
+        end;
+      end;
+      if ReRollAnswer = 'Use Pro' then
+      begin
+        player[ActionTeam, ActionPlayer].UseSkill('Pro');
+        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
+        if lastroll <= 3 then
+          TeamRerollPro(ActionTeam, ActionPlayer);
+        if (lastroll <= 3) then
+          lastroll := 1;
+        if (lastroll >= 4) then
+        begin
+          Bloodbowl.comment.text := 'Pro reroll';
+          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+          Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
+        end;
+      end;
+    end;
+    if lastroll >= r then
+    begin
+      Bloodbowl.comment.text := InttoStr(r) + '+ roll successful. ' + 'You avoid the Shadowing player';
+      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+    end
+    else
+    begin
+      Bloodbowl.comment.text := InttoStr(r) + '+ Shadow roll failed!';
+      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+      PlacePlayer((Sender as Tplayer).number, (Sender as TPlayer).teamnr, LastFieldP, LastFieldQ);
+      LastFieldP := -1;
+      LastFieldQ := -1;
+    end;
+  end;
+  GameStatus := '';
+  ActionTeam := 0;
+  ActionPlayer := 0;
+end;
+
+procedure TPlayer.DoHypnoticGazeEndDrag(Sender: TObject; var test1: Integer; var test2: Integer; var test3: Boolean; var test4: Boolean; var bga: Boolean; var proskill: Boolean; var reroll: Boolean; var tz: TackleZones; var RerollAnswer: string; var UReroll: Boolean; var s: string);
+var
+  HGazeTarget: Integer;
+begin
+  test1 := ((abs(player[ActionTeam, ActionPlayer].p - player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].p)));
+  test2 := ((abs(player[ActionTeam, ActionPlayer].q - player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].q)));
+  test3 := ((player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].status <> 1) and (player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].status <> 2));
+  test4 := ActionTeam = (Sender as Tplayer).teamnr;
+  if (test1 > 1) or (test2 > 1) or (test3) or (test4) then
+  begin
+    Application.Messagebox('You must be gazing an adjacent standing opponent', 'Bloodbowl Hypnotic Gaze Warning', MB_OK);
+  end
+  else
+  begin
+    Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
+    bga := (((player[ActionTeam, ActionPlayer].BigGuy) or (player[ActionTeam, ActionPlayer].Ally)) and (true));
+    // bigguy
+    proskill := ((player[ActionTeam, ActionPlayer].HasSkill('Pro'))) and (lastroll <= 1) and (not (player[ActionTeam, ActionPlayer].usedSkill('Pro'))) and (ActionTeam = curmove);
+    reroll := CanUseTeamReroll(bga);
+    tz := CountTZBlockCA(ActionTeam, ActionPlayer);
+    if (true) then
+      HGazeTarget := 6 - player[ActionTeam, ActionPlayer].ag + (tz.num - 1)
+    else
+      HGazeTarget := player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].ag;
+    if lastroll <= HGazeTarget then
+    begin
+      ReRollAnswer := 'Fail Roll';
+      if reroll and proskill then
+      begin
+        ReRollAnswer := FlexMessageBox('Hypnotic Gaze roll has failed!', 'Hypnotic Gaze Failure', 'Use Pro,Team Reroll,Fail Roll');
+      end
+      else if proskill then
+      begin
+        ReRollAnswer := FlexMessageBox('Hypnotic Gaze roll has failed!', 'Hypnotic Gaze Failure', 'Use Pro,Fail Roll');
+      end
+      else if reroll then
+      begin
+        ReRollAnswer := FlexMessageBox('Hypnotic Gaze roll failed!', 'Hypnotic Gaze Failure', 'Fail Roll,Team Reroll');
+      end;
+      if ReRollAnswer = 'Team Reroll' then
+      begin
+        UReroll := UseTeamReroll;
+        if UReroll then
+        begin
+          Bloodbowl.comment.text := 'Hypnotic Gaze reroll';
+          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
+        end;
+      end;
+      if ReRollAnswer = 'Use Pro' then
+      begin
+        player[ActionTeam, ActionPlayer].UseSkill('Pro');
+        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
+        if lastroll <= 3 then
+          TeamRerollPro(ActionTeam, ActionPlayer);
+        if (lastroll <= 3) then
+          lastroll := 1;
+        if (lastroll >= 4) then
+        begin
+          Bloodbowl.comment.text := 'Pro reroll';
+          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
+        end;
+      end;
+    end;
+    if lastroll > HGazeTarget then
+    begin
+      player[ActionTeam, ActionPlayer].UseSkill('Hypnotic Gaze');
+      Bloodbowl.comment.text := 'Hypnotic Gaze successful';
+      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+      s := 'U-' + Chr((Sender as Tplayer).teamnr + 48) + Chr((Sender as Tplayer).number + 64);
+      LogWrite(s);
+      PlayActionToggleTackleZone(s, 1);
+    end
+    else
+    begin
+      player[ActionTeam, ActionPlayer].UseSkill('Hypnotic Gaze');
+      Bloodbowl.comment.text := 'Hypnotic Gaze failed';
+      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+    end;
+    if (true) then
+    begin
+      // hypnogaze
+      s := 'x' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 65) + Chr(player[ActionTeam, ActionPlayer].UsedMA + 64);
+      LogWrite(s);
+      PlayActionEndOfMove(s, 1);
+    end;
+  end;
+  GameStatus := '';
+  ActionTeam := 0;
+  ActionPlayer := 0;
 end;
 
 function TPlayer.GetPlayerSPP(): integer;

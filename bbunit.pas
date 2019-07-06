@@ -518,7 +518,7 @@ var
   CardsBox: array [0..1] of TScrollBox;
   lblCardsBox: array [0..1] of TLabel;
   TeamTextColor, OrgTeamTextColor: array [0..1] of TColor;
-  apo, wiz, apo1, apo2, apo3, apo4, apo5: array [0..1] of TLabel;
+  apo, wiz: array [0..1] of TLabel;
   team: array [0..1] of TTeam;
   player: array [0..1, 1..MaxNumPlayersInTeam] of TPlayer;
   pnlDugOut: array [0..1, 1..3] of TScrollBox;

@@ -39,9 +39,8 @@ type
     txtPassFA: TEdit;
     cbBigGuyAlly: TCheckBox;
     cbBlizzard: TCheckBox;
-    cbImpossible: TCheckBox;
-    txtBulletThrow: TLabel;
     butPro: TButton;
+    cbImpossible: TCheckBox;
     procedure PassSkillClick(Sender: TObject);
     procedure butPassRollClick(Sender: TObject);
     procedure butPassSkillClick(Sender: TObject);
@@ -58,7 +57,7 @@ type
 var
   frmPass: TfrmPass;
 
-procedure ShowPassPlayerToPlayer(g, f, g0, f0: integer; Bthrow: boolean);
+procedure ShowPassPlayerToPlayer(g, f, g0, f0: integer);
 procedure ShowPassPlayerToField(g, f, p, q: integer);
 procedure DetermineInterceptors(g, f, p, q: integer);
 function DetermineDivingCatch(p, q, cancatch, catchtype: integer): boolean;
@@ -92,9 +91,9 @@ begin
     and not(frmPass.rbQuickPass.checked) then m := m + 1;
   end;
   if frmPass.cbVerySunny.checked then m := m - 1;
-    if not(frmPass.cbBlizzard.checked) then frmPass.cbImpossible.checked := false;
-  if (frmPass.rbHailMaryPass.checked) and (frmPass.txtBulletThrow.visible) then
-    frmPass.cbImpossible.checked := true;
+  if not(frmPass.cbBlizzard.checked) then
+    frmPass.cbImpossible.checked := false;
+
   PassTZMod := 0;
   if not(frmPass.cbNervesOfSteel.checked) then begin
       m := m - FVal(frmPass.txtPassTZ.text);
@@ -740,7 +739,7 @@ begin
   end;
 end;
 
-procedure ShowPassPlayerToPlayer(g, f, g0, f0: integer; Bthrow: boolean);
+procedure ShowPassPlayerToPlayer(g, f, g0, f0: integer);
 {(g,f) passes to (g0,f0)}
 begin
   squaredist := -1;
@@ -755,8 +754,6 @@ begin
       player[g0,f0].p, player[g0,f0].q);
   frmPass.lblCatcher.caption := player[g0,f0].GetPlayerName;
   frmPass.lblCatcher.font.color := colorarray[g0,0,0];
-  if Bthrow then frmPass.txtBulletThrow.Visible := true else
-     frmPass.txtBulletThrow.Visible := false;
   ShowPass(g,f);
 end;
 
@@ -842,7 +839,7 @@ end;
 
 procedure TfrmPass.butPassRollClick(Sender: TObject);
 var s: string;
-    PassResult, BTCheck, DCCheck: boolean;
+    PassResult, DCCheck: boolean;
 begin
   DCCheck := false;
   s := lblPasser.caption + ' passes to ' + lblCatcher.caption + '(';
@@ -882,23 +879,12 @@ begin
         if player[TeamPasser, NumberPasser].status = 2 then
           ScatterBallFrom(FieldP, FieldQ, 1, 0);
       end else begin
-        BTCheck := true;
-        if frmPass.txtBulletThrow.Visible then BTCheck := BulletThrowCheck;
-        if BTCheck then begin
-          if player[TeamPasser, NumberPasser].status = 2 then begin
-            AccuratePassPlay := true;
-            AccurateTeam := TeamPasser;
-            AccuratePlayer := NumberPasser;
-            ShowCatchWindow(TeamCatcher, NumberCatcher, 1,
-              false, false);
-          end;
-        end else begin
+
           AVBreak := true;
           InjuryPlayer;
           AVBreak := false;
           ScatterBallFrom((player[TeamCatcher,NumberCatcher].p),
           (player[TeamCatcher,NumberCatcher].q), 1, 0);
-        end;
       end;
     end;
   end
@@ -937,7 +923,7 @@ begin
           ScatterBallFrom(FieldP, FieldQ, 1, 0);
       end else begin
         BTCheck := true;
-        if frmPass.txtBulletThrow.Visible then BTCheck := BulletThrowCheck;
+
         if BTCheck then begin
           if player[TeamPasser, NumberPasser].status = 2 then begin
             AccuratePassPlay := true;

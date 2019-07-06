@@ -512,48 +512,11 @@ begin
   end;
   for f := team[g].numplayers + 1 to MaxNumPlayersInTeam
    do player[g,f].SetStatusDef(11);
+
+  apo[g].Enabled := (team[g].apot > 0 );
+
+  if team[g].wiz > 0 then
   begin
-    if team[g].apot = 0 then begin
-      apo1[g].visible := false;
-      apo2[g].visible := false;
-      apo3[g].visible := false;
-      apo4[g].visible := false;
-      apo5[g].Visible := false;
-    end else begin
-      apo1[g].visible := true;
-      apo1[g].color := colorarray[g, 0, 0];
-      apo1[g].font.color := colorarray[g, 0, 1];
-      apo2[g].visible := true;
-      apo2[g].color := colorarray[g, 4, 0];
-      apo2[g].font.color := colorarray[g, 4, 1];
-      apo3[g].visible := true;
-      apo3[g].color := colorarray[g, 4, 0];
-      apo3[g].font.color := colorarray[g, 4, 1];
-      apo4[g].visible := true;
-      apo4[g].color := colorarray[g, 4, 0];
-      apo4[g].font.color := colorarray[g, 4, 1];
-      apo5[g].visible := true;
-      apo5[g].color := colorarray[g, 4, 0];
-      apo5[g].font.color := colorarray[g, 4, 1];
-      if team[g].apot >= 2 then begin
-        apo2[g].color := colorarray[g, 0, 0];
-        apo2[g].font.color := colorarray[g, 0, 1];
-      end;
-      if team[g].apot >= 3 then begin
-        apo3[g].color := colorarray[g, 0, 0];
-        apo3[g].font.color := colorarray[g, 0, 1];
-      end;
-      if team[g].apot >= 4 then begin
-        apo4[g].color := colorarray[g, 0, 0];
-        apo4[g].font.color := colorarray[g, 0, 1];
-      end;
-      if team[g].apot = 5 then begin
-        apo5[g].color := colorarray[g, 0, 0];
-        apo5[g].font.color := colorarray[g, 0, 1];
-      end;
-    end;
-  end;
-  if team[g].wiz > 0 then begin
     wiz[g].color := colorarray[g, 0, 0];
     wiz[g].font.color := colorarray[g, 0, 1];
     wiz[g].visible := true;
@@ -562,7 +525,10 @@ begin
       wiz[g].font.color := colorarray[g, 4, 1];
       wiz[g].caption := 'Chef';
     end;
-  end else wiz[g].visible := false;
+  end
+  else
+    wiz[g].visible := false;
+
   marker[g, MT_Reroll].SetValue(team[g].reroll);
   LoadSaveDir := GetDirOfFileName(fn);
 end;
