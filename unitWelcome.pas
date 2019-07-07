@@ -68,8 +68,6 @@ begin
 end;
 
 procedure TfrmWelcome.ButLoadClick(Sender: TObject);
-var p, p2, p3: integer;
-    t, t2, s2: string;
 begin
   CheckName;
   if Bloodbowl.Viewlog1.Checked then frmLog.Show;

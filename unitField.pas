@@ -192,7 +192,7 @@ begin
               or ((h = player[curteam, curplayer].ma + 2) and
                   not(player[curteam, curplayer].hasSkill('Sprint')))
               or ((player[curteam, curplayer].HasSkill('Take Root')) and
-                (curteam = curmove) and (player[curteam,curplayer].status >= 1)
+                (curteam = activeTeam) and (player[curteam,curplayer].status >= 1)
                 and (player[curteam,curplayer].status <= 4) and
                 (player[curteam,curplayer].ma = 0))
               or (player[curteam, curplayer].hasSkill('Ball and Chain'))
@@ -477,7 +477,7 @@ begin
           proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
             and (lastroll <= 1) and
             (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-            and (ActionTeam = curmove);
+            and (ActionTeam = activeTeam);
           reroll := CanUseTeamReroll(bga);
           ReRollAnswer := 'Fail Roll';
           if reroll and proskill then begin
@@ -577,7 +577,7 @@ begin
             proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
               and (lastroll <= 1) and
               (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-              and (ActionTeam = curmove);
+              and (ActionTeam = activeTeam);
             reroll := CanUseTeamReroll(bga);
             ReRollAnswer := 'Fail Roll';
             if reroll and proskill then begin
@@ -709,7 +709,7 @@ begin
           proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
             and (lastroll <= 1) and
             (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-            and (ActionTeam = curmove);
+            and (ActionTeam = activeTeam);
           reroll := CanUseTeamReroll(bga);
           ReRollAnswer := 'Fail Roll';
           if reroll and proskill then begin
@@ -792,7 +792,7 @@ begin
             proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro')))
               and (lastroll <= 1) and
               (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-              and (ActionTeam = curmove);
+              and (ActionTeam = activeTeam);
             reroll := CanUseTeamReroll(bga);
             ReRollAnswer := 'Fail Roll';
             if reroll and proskill then begin
@@ -888,9 +888,9 @@ end;
 
 procedure TFieldLabel.FieldDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
-var l: TLabel;
+// var l: TLabel;
 begin
-  l := (Sender as TLabel);
+  // l := (Sender as TLabel);
 end;
 
 procedure TFieldLabel.FieldDragDrop(Sender, Source: TObject; X, Y: Integer);

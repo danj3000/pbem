@@ -224,39 +224,39 @@ function CanUseTeamReroll(bga: boolean): boolean;
 var b: boolean;
     f: integer;
 begin
-  if not(bga) and (marker[curmove, MT_Reroll].Font.size = 12) then begin
-    if (marker[curmove, MT_Reroll].value > 0) then CanUseTeamReroll := true
+  if not(bga) and (marker[activeTeam, MT_Reroll].Font.size = 12) then begin
+    if (marker[activeTeam, MT_Reroll].value > 0) then CanUseTeamReroll := true
     else begin
-      b := ((marker[curmove, MT_Leader].value > 0)
-            and not(team[curmove].UsedLeaderReroll));
+      b := ((marker[activeTeam, MT_Leader].value > 0)
+            and not(team[activeTeam].UsedLeaderReroll));
       if b then begin
         b := false;
-        for f := 1 to team[curmove].numplayers do begin
-          if (player[curmove, f].status >= 1)
-           and (player[curmove, f].status <= 3)
-           and (player[curmove, f].HasSkill('Leader')) then b := true;
+        for f := 1 to team[activeTeam].numplayers do begin
+          if (player[activeTeam, f].status >= 1)
+           and (player[activeTeam, f].status <= 3)
+           and (player[activeTeam, f].HasSkill('Leader')) then b := true;
         end;
       end;
       CanUseTeamReroll := b;
     end;
   end else
-  if (bga) and (marker[curmove, MT_Reroll].Font.size = 12) then begin
+  if (bga) and (marker[activeTeam, MT_Reroll].Font.size = 12) then begin
     if (true) then // big guy
     begin
-      b := ((marker[curmove, MT_Leader].value > 0)
-            and not(team[curmove].UsedLeaderReroll));
+      b := ((marker[activeTeam, MT_Leader].value > 0)
+            and not(team[activeTeam].UsedLeaderReroll));
       if b then begin
         b := false;
-        for f := 1 to team[curmove].numplayers do begin
-          if (player[curmove, f].status >= 1)
-           and (player[curmove, f].status <= 3)
-           and (player[curmove, f].HasSkill('Leader')) then b := true;
+        for f := 1 to team[activeTeam].numplayers do begin
+          if (player[activeTeam, f].status >= 1)
+           and (player[activeTeam, f].status <= 3)
+           and (player[activeTeam, f].HasSkill('Leader')) then b := true;
         end;
       end;
       CanUseTeamReroll := b;
     end;
-    if (player[curmove,curplayer].BigGuy) then CanUseTeamReRoll := false;
-    if (player[curmove,curplayer].Ally) then CanUseTeamReRoll := true;
+    if (player[activeTeam,curplayer].BigGuy) then CanUseTeamReRoll := false;
+    if (player[activeTeam,curplayer].Ally) then CanUseTeamReRoll := true;
   end else CanUseTeamReroll := false;
 end;
 
@@ -264,9 +264,9 @@ function UseTeamReroll: boolean;
 var b: boolean;
     f, curmove2, r2, r3: integer;
 begin
-  if (curteam<>-1) and (curmove=-1) then curmove2 := curteam else
-  if (curteam=-1) and (curmove=-1) then curmove2 := 0 else
-    curmove2 := curmove;
+  if (curteam<>-1) and (activeTeam=-1) then curmove2 := curteam else
+  if (curteam=-1) and (activeTeam=-1) then curmove2 := 0 else
+    curmove2 := activeTeam;
   b := ((marker[curmove2, MT_Leader].value > 0)
         and not(team[curmove2].UsedLeaderReroll));
   if b then begin

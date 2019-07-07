@@ -180,7 +180,7 @@ begin
 end;
 
 procedure WeatherTableClick;
-var r1, r2, p, g, f: integer;
+var r1, r2, p: integer;
     s0: string;
 begin
   if CanWriteToLog then begin

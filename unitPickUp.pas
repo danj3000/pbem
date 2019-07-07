@@ -171,7 +171,7 @@ begin
        player[TeamPlayer, NumberPlayer].hasSkill('Pro') and
        not(player[TeamPlayer,NumberPlayer].usedSkill('Pro'));
     butTeamReroll.enabled := false;
-    if (TeamPlayer = curmove) and CanUseTeamReroll(cbBigGuyAlly.checked)
+    if (TeamPlayer = activeTeam) and CanUseTeamReroll(cbBigGuyAlly.checked)
       then butTeamReroll.enabled := true;
     height := 463;
   end;

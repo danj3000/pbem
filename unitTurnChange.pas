@@ -124,19 +124,19 @@ begin
   TurnChange := s;
   {reset FollowUp indicator}
   FollowUp := '';
-  if not(team[curmove].HeadCoach) then Bloodbowl.ArgueCallSB.Visible := false
+  if not(team[activeTeam].HeadCoach) then Bloodbowl.ArgueCallSB.Visible := false
     else Bloodbowl.ArgueCallSB.Visible := true;
 end;
 
 function StartTurnNegativeSkills: string;
-var f, g, f2, g2: integer;
+var f, g: integer;
     s, s3: string;
     CTest: boolean;
 begin
   {reset TIKSTPK tackle zones and roll for beginning of turn negative skills}
   for g := 0 to 1 do
   for f := 1 to team[g].numplayers do begin
-    if (g = curmove) and (InEditMode) then begin
+    if (g = activeTeam) and (InEditMode) then begin
       if (player[g,f].hasSkill('Side Step')) and
         (player[g,f].SideStep[1] = 1) then begin
         s3 := 'QF' + Chr(g + 48) + Chr(f + 64) + Chr(48) + Chr(64) + Chr(64)
@@ -155,7 +155,7 @@ begin
         PlayActionEndOfMove(s3, 1);
       end;
     end;
-    if (g <> curmove) and (InEditMode) then begin
+    if (g <> activeTeam) and (InEditMode) then begin
       if (player[g,f].StunStatus > 0) and (frmSettings.cbDeStun.Checked)
         then begin
         if CanWriteToLog then begin
@@ -178,7 +178,7 @@ var s: string;
     p: ^rij;
 begin
   if CanWriteToLog then begin
-    curmove := team;
+    activeTeam := team;
     s := TurnChange;
     color := clYellow;
     {add Randseed to Turn-log; not used anymore
@@ -213,7 +213,7 @@ begin
   g := Ord(s[4]) - 48;
   f := FVal(s[5]);
   if dir = 1 then begin
-    curmove := g;
+    activeTeam := g;
     s0 := TurnChange;
     AddLog(UPPERCASE('Turn: ' + ffcl[g] + ' ' + turn[g,f].caption));
     if WaitLength > 0 then begin
@@ -224,7 +224,7 @@ begin
     turn[g,f].color := clYellow;
     if WaitLength > 0 then turn[g,f].Refresh;
     SWSafeRef := 3;
-    if not(team[curmove].HeadCoach) then Bloodbowl.ArgueCallSB.Visible := false
+    if not(team[activeTeam].HeadCoach) then Bloodbowl.ArgueCallSB.Visible := false
       else Bloodbowl.ArgueCallSB.Visible := true;
     {to restore the RandSeed at a turnclick:}
 {            p := Pos('~', s);
@@ -276,16 +276,16 @@ begin
       g := Ord(s[2]) - 48;
       f := FVal(s[3]);
       turn[g,f].color := clYellow;
-      curmove := g;
+      activeTeam := g;
     end;
-    if not(team[curmove].HeadCoach) then Bloodbowl.ArgueCallSB.Visible := false
+    if not(team[activeTeam].HeadCoach) then Bloodbowl.ArgueCallSB.Visible := false
       else Bloodbowl.ArgueCallSB.Visible := true;
   end;
 end;
 
 procedure PrepareStartHalf;
 var s: string;
-    f, g, p, i, j, r, r2, done: integer;
+    f, g, p, r, r2, done: integer;
 begin
   if Bloodbowl.PregamePanel.visible then s := 'tP' else s := 't ';
   LogWrite(s);
@@ -957,8 +957,8 @@ begin
 end;
 
 procedure PrepareForKickoff;
-var s, s0, s2, s3, jtest: string;
-    f, g, sw, turnone, extratitchy, heatroll, koroll, jwtest, h, stest: integer;
+var s, s0, s3, jtest: string;
+    f, g, sw, turnone, heatroll, koroll, jwtest, h, stest: integer;
 begin
   s := ClearBall + UnCurSub;
   LogWrite('KB' + s);
@@ -1406,7 +1406,7 @@ begin
   if dir = 1 then begin
     if ((Ord(s[5])-48)<>0) and ((Ord(s[5])-48)<9) then begin
       turn[(Ord(s[4])-48),(Ord(s[5])-48)].Color := clYellow;
-      curmove := Ord(s[4])-48;
+      activeTeam := Ord(s[4])-48;
     end;
     g := Ord(s[4]) - 48;
     f := Ord(s[5]) - 48;
@@ -1417,7 +1417,7 @@ begin
     if s[t] = 'B' then begin
       turn[g,(f-1)].color := colorarray[g,0,0];
       turn[g,f].Color := clYellow;
-      curmove := g;
+      activeTeam := g;
     end;
   end else begin
     if ((Ord(s[5])-48)<>0) and ((Ord(s[5])-48)<9) then begin
@@ -1426,14 +1426,14 @@ begin
     if ((Ord(s[3])-48)<>0) and ((Ord(s[3])-48)<9) then begin
       turn[(Ord(s[2])-48),(Ord(s[3])-48)].color := clYellow;
       turn[(Ord(s[2])-48),(Ord(s[3])-48)].Font.Size := 12;
-      curmove := Ord(s[2])-48;
+      activeTeam := Ord(s[2])-48;
     end;
     g := Ord(s[2]) - 48;
     f := Ord(s[3]) - 48;
     if s[t] = 'B' then begin
       turn[g,f].color := colorarray[g,0,0];
       turn[g,(f-1)].Color := clYellow;
-      curmove := g;
+      activeTeam := g;
     end;
   end;
 end;

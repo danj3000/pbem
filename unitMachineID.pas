@@ -79,7 +79,7 @@ end;
 
 function GetMachineID: integer;
 var
-  DecPos, StringLoop, TestValue, Code, MachineID, g: integer;
+  StringLoop, TestValue, MachineID: integer;
   TestString, TestItem, SerialTest: string;
 begin
 {  GetIpList (MachID.Memo1.Lines);

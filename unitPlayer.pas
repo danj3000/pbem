@@ -211,24 +211,20 @@ end;
 
 procedure TPlayer.PlayerStartDrag(Sender: TObject;
   var DragObject: TDragObject);
-var s, lostcontrol, BANG, RerollAnswer, s2, WAAnswer: string;
-    f, g, f0, f2, Bhead, RSHelp, curturn, playermovement, r, StunNo,
+var s,  RerollAnswer, s2, WAAnswer: string;
+    f, g, f0, Bhead, RSHelp, StunNo,
       WATarget: integer;
-    WACheck, GGCheck, BaCCheck, bga, proskill, reroll,  UReroll: boolean;
+      BaCCheck, bga, proskill, reroll,  UReroll: boolean;
 begin
   if (GameStatus <> 'Pass') and (GameStatus <> 'HGaze')
-    and (GameStatus <> 'Chill') and (GameStatus <> 'Ethereal')
-    and (GameStatus <> 'Mace Tail') and (GameStatus <> 'Shadow')
-    and (GameStatus <> 'ThrowTeamMate1') and (GameStatus <> 'ThrowTeamMate2') and
-    (GameStatus <> 'Kick') and (GameStatus <> 'PitchPlayer1') and
-    (GameStatus <> 'Dirty Kick') and (GameStatus <> 'Bear Hug') and
-    (GameStatus <> 'Punt') and (GameStatus <> 'BulletThrow') and
-    (GameStatus <> 'Dig1') and (GameStatus <> 'Bomb') and
-    (GameStatus <> 'StinkBomb') and (GameStatus <> 'BigBomb') and
-    (GameStatus <> 'Net') and  (GameStatus <> 'Stab') and
-    (GameStatus <> 'ThrowinMovement') and (GameStatus <> 'AccurateKick') and
-    (GameStatus <> 'Apoth1') and (GameStatus <> 'Apoth2') and
-    (GameStatus <> 'Apoth4') and (GameStatus <> 'Apoth5')
+    and(GameStatus <> 'Shadow')
+    and (GameStatus <> 'ThrowTeamMate1')
+    and (GameStatus <> 'ThrowTeamMate2') and
+    (GameStatus <> 'Kick') and
+    (GameStatus <> 'Bomb') and
+    (GameStatus <> 'Stab') and
+    (GameStatus <> 'ThrowinMovement')
+
     then begin
     Bloodbowl.comment.Text := '';
     curbefore := 50 * curteam + curplayer;
@@ -240,7 +236,7 @@ begin
     s := (Sender As TPlayer).MakeCurrent;
     if (s <> '') and CanWriteToLog then LogWrite(s);
     if (player[g,f].HasSkill('MA D6')) and
-     (not (player[g,f].usedSkill('MA D6'))) and (g = curmove)
+     (not (player[g,f].usedSkill('MA D6'))) and (g = activeTeam)
        then begin
          Bloodbowl.comment.text := 'Roll for D6 Movement for this player:';
          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
@@ -276,7 +272,7 @@ begin
        end;
     {End D6 Movement Code}
     if (player[g,f].HasSkill('MA D6+1')) and
-     (not (player[g,f].usedSkill('MA D6+1'))) and (g = curmove)
+     (not (player[g,f].usedSkill('MA D6+1'))) and (g = activeTeam)
        then begin
          Bloodbowl.comment.text := 'Roll for D6+1 Movement for this player:';
          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
@@ -314,11 +310,11 @@ begin
 
     {Bone-head/Really Stupid}
     if (((player[g,f].HasSkill('Bonehead')) and
-      (not (player[g,f].usedSkill('Bonehead'))) and (g = curmove)) or
+      (not (player[g,f].usedSkill('Bonehead'))) and (g = activeTeam)) or
       ((player[g,f].HasSkill('Bone-head')) and
-      (not (player[g,f].usedSkill('Bone-head'))) and (g = curmove)) or
+      (not (player[g,f].usedSkill('Bone-head'))) and (g = activeTeam)) or
       ((player[g,f].HasSkill('Really Stupid')) and
-      (not (player[g,f].usedSkill('Really Stupid'))) and (g = curmove))
+      (not (player[g,f].usedSkill('Really Stupid'))) and (g = activeTeam))
       )
       and (player[g,f].status >= 1) and (player[g,f].status <= StunNo)
       and (player[g,f].UsedMA <> 15)
@@ -346,7 +342,7 @@ begin
         bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true));   // big guy
         proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= Bhead) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
+            (not (player[g,f].usedSkill('Pro'))) and (g = activeTeam);
         reroll := CanUseTeamReroll(bga);
         if lastroll <= Bhead then begin
            ReRollAnswer := 'Fail Roll';
@@ -406,7 +402,7 @@ begin
 
     {Wild Animal - New Check}
     if (player[g,f].HasSkill('Wild Animal')) and
-      (not (player[g,f].usedSkill('Wild Animal'))) and (g = curmove)
+      (not (player[g,f].usedSkill('Wild Animal'))) and (g = activeTeam)
       and (player[g,f].status >= 1) and (player[g,f].status <= StunNo) and
       (true)  // Wild animal
       and (player[g,f].UsedMA <> 15)
@@ -424,7 +420,7 @@ begin
         bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true));    // bigguy
         proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll < WATarget) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
+            (not (player[g,f].usedSkill('Pro'))) and (g = activeTeam);
         reroll := CanUseTeamReroll(bga);
         if lastroll < WATarget then begin
           ReRollAnswer := 'Fail Roll';
@@ -471,7 +467,7 @@ begin
     {End of Wild Animal - New Check}
     {Ball and Chain Check}
     BaCCheck := false;
-    if (not(player[g,f].HasSkill('Ball and Chain'))) and (g = curmove) then begin
+    if (not(player[g,f].HasSkill('Ball and Chain'))) and (g = activeTeam) then begin
       BaCCheck := false;
       for f0 := 1 to team[g].numplayers do begin
         if (player[g,f0].status >= 1) and (player[g,f0].status <= StunNo) and
@@ -491,7 +487,7 @@ begin
     
     {Blood Lust}
     if ((player[g,f].HasSkill('Blood Lust')) and
-      (not (player[g,f].usedSkill('Blood Lust'))) and (g = curmove))
+      (not (player[g,f].usedSkill('Blood Lust'))) and (g = activeTeam))
       and (player[g,f].status >= 1) and (player[g,f].status <= 3)
       then begin
          player[g,f].UseSkill('Blood Lust');
@@ -499,7 +495,7 @@ begin
          bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true));     // bigguy
          proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 1) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
+            (not (player[g,f].usedSkill('Pro'))) and (g = activeTeam);
          reroll := CanUseTeamReroll(bga);
          if lastroll = 1 then begin
            ReRollAnswer := 'Fail Roll';
@@ -541,7 +537,7 @@ begin
     {End of Blood Lust}
     {Bloodthirst}
     if ((player[g,f].HasSkill('Bloodthirst')) and
-      (not (player[g,f].usedSkill('Bloodthirst'))) and (g = curmove))
+      (not (player[g,f].usedSkill('Bloodthirst'))) and (g = activeTeam))
       and (player[g,f].status >= 1) and (player[g,f].status <= 3)
       then begin
          player[g,f].UseSkill('Bloodthirst');
@@ -549,7 +545,7 @@ begin
          bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true));    // bigguy
          proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 1) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
+            (not (player[g,f].usedSkill('Pro'))) and (g = activeTeam);
          reroll := CanUseTeamReroll(bga);
          if lastroll = 1 then begin
            ReRollAnswer := 'Fail Roll';
@@ -591,7 +587,7 @@ begin
     {End of Bloodthirst}
     {On Pitch Take Root}
     if ((player[g,f].HasSkill('Take Root')) and
-      (not (player[g,f].usedSkill('Take Root'))) and (g = curmove))
+      (not (player[g,f].usedSkill('Take Root'))) and (g = activeTeam))
       and (player[g,f].status >= 1) and (player[g,f].status <= StunNo)
        and (player[g,f].ma <> 0) and
       (player[g,f].font.size = 12)
@@ -601,7 +597,7 @@ begin
          bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true));          // bigguy
          proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 1) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
+            (not (player[g,f].usedSkill('Pro'))) and (g = activeTeam);
          reroll := CanUseTeamReroll(bga);
          if lastroll = 1 then begin
            ReRollAnswer := 'Fail Roll';
@@ -709,12 +705,10 @@ end;
 
 procedure TPlayer.PlayerEndDrag(Sender, Target: TObject; X,
   Y: Integer);
-var f, g, f0, g0, pb, targetaction, test1, test2, p,
-    NiggleCount, totspp, pplace, qplace, assa, assd,
-    ascount, t, u, arrow, RollNeed, DKRoll: integer;
-  test3, test4, test5, b, bx, bga, reroll, proskill, UReroll: boolean;
-  s, BlockDie, RerollAnswer: string;
-  tz,  tz0: TackleZones;
+var f, g, pb, test1, test2, pplace, qplace: integer;
+  test3, test4, test5, bga, reroll, proskill, UReroll: boolean;
+  s, RerollAnswer: string;
+  tz: TackleZones;
 begin
   if (GameStatus = 'Pass')  then begin
     if ((Sender as TPlayer).status = 1) then begin
@@ -1146,7 +1140,7 @@ begin
     g := teamnr;
     f := number;
     if (st0 = 2) or (newStatus = 2) then s := ClearBall else s := '';
-    if (teamnr = curmove) and (font.size > 8) then begin
+    if (teamnr = activeTeam) and (font.size > 8) then begin
       if not(((st0 = 3) and (newStatus = 1) and hasSkill('JUMP UP'))
              or (st0 = 2) or (newStatus = 2))
       then s := s + '-';
@@ -1158,14 +1152,14 @@ begin
       PlayActionSetStatus(s, 1);
     end;
     if (newStatus = 4) and (frmSettings.cbDeStun.Checked) then begin
-      if (g=curmove) then
+      if (g=activeTeam) then
         s2 := 'QS' + Chr(g + 48) + Chr(f + 64) + Chr(50)
         else if (turn[0,1].Font.Size = 12) and (turn[1,1].Font.Size = 12) and
           (g=(1-KickOffTeam)) then s2 := 'QS' + Chr(g + 48) + Chr(f + 64) + Chr(50)
         else s2 := 'QS' + Chr(g + 48) + Chr(f + 64) + Chr(49);
       LogWrite(s2);
       PlayActionDeStun(s2, 1);
-      if (g=curmove) then begin
+      if (g=activeTeam) then begin
         s2 := 'x' + Chr(g + 48) + Chr(f + 65) + Chr(player[g,f].UsedMA + 64);
         LogWrite(s2);
         PlayActionEndOfMove(s2, 1);
@@ -1297,15 +1291,6 @@ var c: TColor;
 begin
   c := ci;
   r := Addr(c);
-{  i := -1;
-  if (r^[0] = 255) and (r^[1] = 0) and (r^[2] = 0) and (r^[3] = 0) then i := 0
-  else
-   if (r^[0] = 0) and (r^[1] = 0) and (r^[2] = 255) and (r^[3] = 0) then i := 2;
-  if (i >= 0) and (player[g,f].st > 2) and (player[g,f].st < 9) then
-             r^[i] := 255 - 32 * (player[g,f].st - 2);
-  if (i >= 0) and (player[g,f].st > 8) then
-             r^[i] := 255 - 32 * 6;
-  STinColor := c;}
 
   if player[g,f].st > 2 then begin
     st := 10 - player[g,f].st;
@@ -1330,7 +1315,7 @@ begin
   end;}
   if (status <= 1) or ((status >= 5) and (status <= 8)) then
     color := STinColor(number, teamnr,
-                     colorarray[teamnr, player[teamnr,number].status, 0])
+                       colorarray[teamnr, player[teamnr,number].status, 0])
   else color := colorarray[teamnr, player[teamnr,number].status, 0];
   font.color := colorarray[teamnr, player[teamnr,number].status, 1];
   if (status < 5) and (tz > 0) then
@@ -1878,8 +1863,8 @@ begin
         end;
       end;
     end;
-    if ((player[g, f].hasSkill('Stand Firm')) and (g <> curmove)) or
-       ((player[g, f].hasSkill('Side Step')) and (g <> curmove) and
+    if ((player[g, f].hasSkill('Stand Firm')) and (g <> activeTeam)) or
+       ((player[g, f].hasSkill('Side Step')) and (g <> activeTeam) and
        (SideStepStop)) then begin
          Application.Messagebox('Opponent just moved has Stand Firm' +
                 ' or Side Step!', 'Bloodbowl Movement Warning', MB_OK);
@@ -1887,13 +1872,13 @@ begin
     if not(SideStepStop) then SideStepStop := true;
     tz := CountTZDTS(g, f);
     if ((tz.num > 0) and ((tz.num < 10) or (tz.num >= 100))
-      and (g = curmove)) then begin
+      and (g = activeTeam)) then begin
           Application.Messagebox('Adjacent opponent had Trip Up or ' +
                  'Shadowing!', 'Bloodbowl Movement Warning', MB_OK);
           LastFieldP := player[g,f].p;
           LastFieldQ := player[g,f].q;
     end;
-    if ((tz.num >= 10) and (tz.num < 100) and (g = curmove)) then
+    if ((tz.num >= 10) and (tz.num < 100) and (g = activeTeam)) then
         Application.Messagebox('Reminder:  Place Diving Tackle opponent prone' +
                 ' in the square you LEFT if the skill was used!',
                 'Bloodbowl Movement Warning', MB_OK);
@@ -1912,7 +1897,7 @@ begin
           end;  
         end;
       end;
-      if (g = curmove)
+      if (g = activeTeam)
        and (player[g,f].font.size > 8) then begin
         player[g,f].font.size := 8;
         s := s + '-';
@@ -2564,7 +2549,6 @@ begin
     end;
   test4 := ActionTeam = (Sender as Tplayer).teamnr;
   test5 := true;
-  test6 := (player[(Sender as TPlayer).teamnr, (Sender as Tplayer).number].hasSkill('Shado*'));
   if (abs(test1) <= 2) and (abs(test2) <= 2) and (LastFieldP <> -1) then
     test5 := false;
   if (test5) or (test3) or (test4) then
@@ -2595,7 +2579,7 @@ begin
     begin
       bga := (((player[ActionTeam, ActionPlayer].BigGuy) or (player[ActionTeam, ActionPlayer].Ally)) and (true));
       // bigguy
-      proskill := ((player[ActionTeam, ActionPlayer].HasSkill('Pro'))) and (lastroll <= 1) and (not (player[ActionTeam, ActionPlayer].usedSkill('Pro'))) and (ActionTeam = curmove);
+      proskill := ((player[ActionTeam, ActionPlayer].HasSkill('Pro'))) and (lastroll <= 1) and (not (player[ActionTeam, ActionPlayer].usedSkill('Pro'))) and (ActionTeam = activeTeam);
       reroll := CanUseTeamReroll(bga);
       ReRollAnswer := 'Fail Roll';
       if reroll and proskill then
@@ -2672,7 +2656,7 @@ begin
     Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
     bga := (((player[ActionTeam, ActionPlayer].BigGuy) or (player[ActionTeam, ActionPlayer].Ally)) and (true));
     // bigguy
-    proskill := ((player[ActionTeam, ActionPlayer].HasSkill('Pro'))) and (lastroll <= 1) and (not (player[ActionTeam, ActionPlayer].usedSkill('Pro'))) and (ActionTeam = curmove);
+    proskill := ((player[ActionTeam, ActionPlayer].HasSkill('Pro'))) and (lastroll <= 1) and (not (player[ActionTeam, ActionPlayer].usedSkill('Pro'))) and (ActionTeam = activeTeam);
     reroll := CanUseTeamReroll(bga);
     tz := CountTZBlockCA(ActionTeam, ActionPlayer);
     if (true) then
@@ -2759,10 +2743,9 @@ begin
 end;
 
 procedure LeftClickPlayer(g,f: integer);
-var s, lostcontrol, BANG, RerollAnswer, s2, WAAnswer: string;
-    f0, f2, Bhead, RSHelp, curturn, playermovement, r, StunNo,
-      WATarget: integer;
-    WACheck, GGCheck, BaCCheck, bga, proskill, reroll, UReroll: boolean;
+var s, RerollAnswer, s2, WAAnswer: string;
+    f0, Bhead, RSHelp, StunNo, WATarget: integer;
+    BaCCheck, bga, proskill, reroll, UReroll: boolean;
 begin
   if (GameStatus <> 'Pass') and (GameStatus <> 'HGaze')
     and (GameStatus <> 'Chill') and (GameStatus <> 'Ethereal')
@@ -2779,7 +2762,7 @@ begin
     {D6 Movement code}
     Bhead := 0;
     if (player[g,f].HasSkill('MA D6')) and
-     (not (player[g,f].usedSkill('MA D6'))) and (g = curmove)
+     (not (player[g,f].usedSkill('MA D6'))) and (g = activeTeam)
        then begin
          Bloodbowl.comment.text := 'Roll for D6 Movement for this player:';
          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
@@ -2815,7 +2798,7 @@ begin
        end;
     {End D6 Movement Code}
     if (player[g,f].HasSkill('MA D6+1')) and
-     (not (player[g,f].usedSkill('MA D6+1'))) and (g = curmove)
+     (not (player[g,f].usedSkill('MA D6+1'))) and (g = activeTeam)
        then begin
          Bloodbowl.comment.text := 'Roll for D6+1 Movement for this player:';
          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
@@ -2853,11 +2836,11 @@ begin
 
     {Bone-head/Really Stupid}
     if (((player[g,f].HasSkill('Bonehead')) and
-      (not (player[g,f].usedSkill('Bonehead'))) and (g = curmove)) or
+      (not (player[g,f].usedSkill('Bonehead'))) and (g = activeTeam)) or
       ((player[g,f].HasSkill('Bone-head')) and
-      (not (player[g,f].usedSkill('Bone-head'))) and (g = curmove)) or
+      (not (player[g,f].usedSkill('Bone-head'))) and (g = activeTeam)) or
       ((player[g,f].HasSkill('Really Stupid')) and
-      (not (player[g,f].usedSkill('Really Stupid'))) and (g = curmove))
+      (not (player[g,f].usedSkill('Really Stupid'))) and (g = activeTeam))
       )
       and (player[g,f].status >= 1) and (player[g,f].status <= StunNo)
       and (player[g,f].UsedMA <> 15) 
@@ -2883,7 +2866,7 @@ begin
         bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true)); // bigguy
         proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= Bhead) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
+            (not (player[g,f].usedSkill('Pro'))) and (g = activeTeam);
         reroll := CanUseTeamReroll(bga);
         if lastroll <= Bhead then begin
            ReRollAnswer := 'Fail Roll';
@@ -2942,7 +2925,7 @@ begin
     {End of Bone-head/Really Stupid}
     {Wild Animal - New Check}
     if (player[g,f].HasSkill('Wild Animal')) and
-      (not (player[g,f].usedSkill('Wild Animal'))) and (g = curmove)
+      (not (player[g,f].usedSkill('Wild Animal'))) and (g = activeTeam)
       and (player[g,f].status >= 1) and (player[g,f].status <= StunNo) and
       (true)        // Wild animal
       and (player[g,f].UsedMA <> 15)
@@ -2960,7 +2943,7 @@ begin
         bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true)); // bigguy
         proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll < WATarget) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
+            (not (player[g,f].usedSkill('Pro'))) and (g = activeTeam);
         reroll := CanUseTeamReroll(bga);
         if lastroll < WATarget then begin
           ReRollAnswer := 'Fail Roll';
@@ -3007,7 +2990,7 @@ begin
     {End of Wild Animal - New Check}
     {Ball and Chain Check}
     BaCCheck := false;
-    if (not(player[g,f].HasSkill('Ball and Chain'))) and (g = curmove) then begin
+    if (not(player[g,f].HasSkill('Ball and Chain'))) and (g = activeTeam) then begin
       BaCCheck := false;
       for f0 := 1 to team[g].numplayers do begin
         if (player[g,f0].status >= 1) and (player[g,f0].status <= StunNo) and
@@ -3027,7 +3010,7 @@ begin
 
     {Blood Lust}
     if ((player[g,f].HasSkill('Blood Lust')) and
-      (not (player[g,f].usedSkill('Blood Lust'))) and (g = curmove))
+      (not (player[g,f].usedSkill('Blood Lust'))) and (g = activeTeam))
       and (player[g,f].status >= 1) and (player[g,f].status <= 3)
       then begin
          player[g,f].UseSkill('Blood Lust');
@@ -3035,7 +3018,7 @@ begin
          bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true)); // bigguy
          proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 1) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
+            (not (player[g,f].usedSkill('Pro'))) and (g = activeTeam);
          reroll := CanUseTeamReroll(bga);
          if lastroll = 1 then begin
            ReRollAnswer := 'Fail Roll';
@@ -3077,7 +3060,7 @@ begin
     {End of Blood Lust}
     {Bloodthirst}
     if ((player[g,f].HasSkill('Bloodthirst')) and
-      (not (player[g,f].usedSkill('Bloodthirst'))) and (g = curmove))
+      (not (player[g,f].usedSkill('Bloodthirst'))) and (g = activeTeam))
       and (player[g,f].status >= 1) and (player[g,f].status <= 3)
       then begin
          player[g,f].UseSkill('Bloodthirst');
@@ -3085,7 +3068,7 @@ begin
          bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true)); // bigguy
          proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 1) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
+            (not (player[g,f].usedSkill('Pro'))) and (g = activeTeam);
          reroll := CanUseTeamReroll(bga);
          if lastroll = 1 then begin
            ReRollAnswer := 'Fail Roll';
@@ -3127,7 +3110,7 @@ begin
     {End of Bloodthirst}
     {On Pitch Take Root}
     if ((player[g,f].HasSkill('Take Root')) and
-      (not (player[g,f].usedSkill('Take Root'))) and (g = curmove))
+      (not (player[g,f].usedSkill('Take Root'))) and (g = activeTeam))
       and (player[g,f].status >= 1) and (player[g,f].status <= StunNo) and (player[g,f].ma <> 0) and
       (player[g,f].font.size = 12)
       then begin
@@ -3136,7 +3119,7 @@ begin
          bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
             and (true)); // bigguy
          proskill := ((player[g,f].HasSkill('Pro'))) and (lastroll <= 1) and
-            (not (player[g,f].usedSkill('Pro'))) and (g = curmove);
+            (not (player[g,f].usedSkill('Pro'))) and (g = activeTeam);
          reroll := CanUseTeamReroll(bga);
          if lastroll = 1 then begin
            ReRollAnswer := 'Fail Roll';

@@ -10,7 +10,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Buttons, Menus, ComCtrls, jpeg,
-  bbalg, unitDodgeRoll, unitTeam, unitPlayer, unitMarker, unitCards;
+  bbalg, unitDodgeRoll, unitTeam, unitPlayer, unitMarker, unitCards, Weather;
 
 type
   TBloodbowl = class(TForm)
@@ -299,8 +299,7 @@ type
     procedure Movetofield1Click(Sender: TObject);
     procedure BallMouseDown(Sender: TObject;
       Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-    procedure BallDragOver(Sender, Source: TObject; X,
-                    Y: Integer; State: TDragState; var Accept: Boolean);
+
     procedure ApoWizClick(Sender: TObject);
     procedure MovetoReserve1Click(Sender: TObject);
     procedure Placeball1Click(Sender: TObject);
@@ -407,7 +406,6 @@ type
     procedure ThrowTeamMate1Click(Sender: TObject);
     procedure ThrowBomb1Click(Sender: TObject);
     procedure ThrowinMovement1Click(Sender: TObject);
-    procedure WarCry1Click(Sender: TObject);
     procedure Shadowing1Click(Sender: TObject);
     procedure CastFireball1Click(Sender: TObject);
     procedure CastFireballField1Click(Sender: TObject);
@@ -474,7 +472,7 @@ type
     procedure BPB10Click(Sender: TObject);
     procedure Stab1Click(Sender: TObject);
     procedure PickSideStep1Click(Sender: TObject);
-
+     function GetWeather(): TWeather;
   private
     { Private declarations }
   public
@@ -489,7 +487,7 @@ var
     AwayPic, LustrianRoll, LustrianRoll2: string; {fn=filename, LDFILEDT=File Date/Time}
   ff: file of char;
   curteam, curplayer:  integer;
-  curmove, IGMEOY, HalfNo, lastroll, lastroll2, lastroll3,
+  activeTeam, IGMEOY, HalfNo, lastroll, lastroll2, lastroll3,
   NumHandicaps, ActionTeam, ActionPlayer, ArgueMod, RefMod,
   ThrownTeam, ThrownPlayer, LastFieldP, LastFieldQ, DigP, DigQ,
   DigStrength, RandCnt1, RandCnt2, RandCnt3, RandCnt4, RandCnt5,
@@ -527,6 +525,7 @@ var
   CurrentComputer,LoadedFile: string;
   RedPlaybook, BluePlaybook: array [1..10] of string;
 
+
 procedure RepaintColor(g: integer);
 procedure SetSpeakLabel(g: integer);
 procedure GotoEntry(e: integer);
@@ -535,6 +534,7 @@ procedure ShowFieldImage(PitchName: string);
 procedure PlayOne(w: integer);
 procedure PlayOneBack;
 procedure ApoWizCreate(g: integer);
+
 
 implementation
 
@@ -546,6 +546,11 @@ uses unitRoster, unitLog, unitAbout, unitArmourRoll, unitNotes,
   unitSettings, unitMessage;
 
 {$R *.DFM}
+
+function TBloodbowl.GetWeather(): TWeather;
+begin
+  Result := TWeather.Create((Copy(Bloodbowl.WeatherLabel.caption, 1, 10)));
+end;
 
 procedure SetSpeakLabel(g: integer);
 begin
@@ -563,7 +568,7 @@ var f, g: integer;
 
 begin
   UnCur;
-  curmove := -1;
+  activeTeam := -1;
   ffcl[0] := 'Home';
   ffcl[1] := 'Away';
   for g := 0 to 1 do begin
@@ -696,7 +701,7 @@ begin
 end;
 
 procedure TBloodbowl.FormCreate(Sender: TObject);
-var f, g, y, z: integer;
+var f, g: integer;
     gg: textfile;
     s: string;
 
@@ -1139,7 +1144,7 @@ begin
   ballImage.visible := false;
   if ref then ballImage.Refresh;
   curteam := -1;
-  curmove := -1;
+  activeTeam := -1;
 
   PregamePanel.top := TurnLabel.top;
   PregamePanel.left := field[0,0].left;
@@ -1471,7 +1476,10 @@ function GetNextInLog: string;
 var s: string;
 begin
   s := LogRead;
-  if s = '' then GetNextInLog := ' ' else GetNextInLog := s;
+  if s = '' then
+    Result := ' '
+  else
+    GetNextInLog := s;
 end;
 
 procedure PlayOne(w: integer);
@@ -1482,7 +1490,8 @@ var s: string;
 begin
   WaitLength := w;
   done := EOGameLog;
-  if not(done) then s := GetNextInLog;
+  if not(done) then
+    s := GetNextInLog;
   while not(done) do begin
     done := true;
     if s[1] = ')' then begin
@@ -1754,13 +1763,6 @@ begin
   end;
 end;
 
-procedure TBloodbowl.BallDragOver(Sender, Source: TObject; X,
-  Y: Integer; State: TDragState; var Accept: Boolean);
-var i: TImage;
-begin
-  i := (Sender as TImage);
-end;
-
 procedure TBloodbowl.MovetoReserve1Click(Sender: TObject);
 begin
   if player[curteam,curplayer].status = 12 then begin
@@ -1815,9 +1817,9 @@ end;
 
 procedure TBloodbowl.Standing1Click(Sender: TObject);
 var tz, tz0: TackleZones;
-    p, StandUp, r2, targetaction, g, f, WATarget: integer;
-    s, ReRollAnswer, WAAnswer: string;
-    bga, reroll, proskill, WAPass, WACheck, UReroll: boolean;
+    p, StandUp, r2, g, f, WATarget: integer;
+    s, ReRollAnswer: string;
+    bga, reroll, proskill, UReroll: boolean;
 begin
   g := curteam;
   f := curplayer;
@@ -1855,7 +1857,7 @@ begin
             and (true));   // bigguy
           proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro'))) and
             (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
-            and (ActionTeam = curmove);
+            and (ActionTeam = activeTeam);
           reroll := CanUseTeamReroll(bga);
           ReRollAnswer := 'Fail Roll';
           if reroll and proskill then begin
@@ -1922,7 +1924,7 @@ begin
     if player[g,f].status=2 then begin
       player[g,f].SetStatus(3);
       ScatterBallFrom((player[g,f].p), (player[g,f].q), 1, 0);
-    end else player[g,f].SetStatus(3);
+    end else player[g,f].SetStatus(PLAYER_STATUS_PRONE);
   end;
 end;
 
@@ -2157,10 +2159,10 @@ begin
     PlayActionRoll1Die(s, 1);
   end;
   EnterButton.SetFocus;
-  if curmove = 0 then begin
+  if activeTeam = 0 then begin
     if lastroll >= 3 then D3RollRed := D3RollRed + 1;
     D3RollTOTRed := D3RollTOTRed + 1;
-  end else if curmove = 1 then begin
+  end else if activeTeam = 1 then begin
     if lastroll >= 3 then D3RollBlue := D3RollBlue + 1;
     D3RollTOTBlue := D3RollTOTBlue + 1;
   end;
@@ -3375,7 +3377,7 @@ begin
 end;
 
 procedure ShowPassBlockRanges(p, q: integer);
-var f, g, r, t, m: integer;
+var f, g, t, m: integer;
 begin
   if PassBlockRangeShowing then begin
     PassBlockRangeShowing := false;
@@ -3894,7 +3896,7 @@ begin
 end;
 
 procedure TBloodbowl.MakePass1Click(Sender: TObject);
-var PassFine, TZone, bga, proskill, reroll, UReroll: Boolean;
+var PassFine, TZone: Boolean;
     g, f: integer;
     ReRollAnswer: string;
 begin
@@ -4086,11 +4088,11 @@ procedure TBloodbowl.CastFireball1Click(Sender: TObject);
 var pplace, qplace, g, t, u, v, w, ploc, qloc: integer;
     Ballscatter: boolean;
 begin
-  if (wiz[curmove].color = colorarray[curmove, 0, 0]) and
-  (team[curmove].wiz=1)
+  if (wiz[activeTeam].color = colorarray[activeTeam, 0, 0]) and
+  (team[activeTeam].wiz=1)
     then begin
     Ballscatter := false;
-    g := curmove;
+    g := activeTeam;
     ActionTeam := curteam;
     ActionPlayer := curplayer;
     pplace := player[ActionTeam,ActionPlayer].p;
@@ -4143,11 +4145,11 @@ procedure TBloodbowl.CastFireballField1Click(Sender: TObject);
 var pplace, qplace, f, g, t, u, v, w, z, ploc, qloc: integer;
     Ballscatter: boolean;
 begin
-  if (wiz[curmove].color = colorarray[curmove, 0, 0]) and
-  (team[curmove].wiz=1)
+  if (wiz[activeTeam].color = colorarray[activeTeam, 0, 0]) and
+  (team[activeTeam].wiz=1)
     then begin
     Ballscatter := false;
-    z := curmove;
+    z := activeTeam;
     LogWrite('W' + Chr(z + 48));
     AddLog(ffcl[z] + '''s Wizard casts a spell');
     wiz[z].color := colorarray[z, 4, 0];
@@ -4203,8 +4205,8 @@ var pplace, qplace, g, t, v, w, ploc, qloc, testp1, testq1, testq2,
     Ballscatter, Zapped: boolean;
     LeftRight: string;
 begin
-  if (wiz[curmove].color = colorarray[curmove, 0, 0]) and
-  (team[curmove].wiz=1)
+  if (wiz[activeTeam].color = colorarray[activeTeam, 0, 0]) and
+  (team[activeTeam].wiz=1)
   then begin
     if (player[curteam,curplayer].p=0) or (player[curteam,curplayer].p=14)
     then begin
@@ -4218,7 +4220,7 @@ begin
       end;
       Ballscatter := false;
       Zapped := false;
-      g := curmove;
+      g := activeTeam;
       ActionTeam := curteam;
       ActionPlayer := curplayer;
       pplace := player[ActionTeam,ActionPlayer].p;
@@ -4302,8 +4304,8 @@ var pplace, qplace, g, f, t, v, w, ploc, qloc, testp1, testq1, testq2,
     Ballscatter, Zapped: boolean;
     LeftRight: string;
 begin
-  if (wiz[curmove].color = colorarray[curmove, 0, 0]) and
-  (team[curmove].wiz=1)
+  if (wiz[activeTeam].color = colorarray[activeTeam, 0, 0]) and
+  (team[activeTeam].wiz=1)
   then begin
     for f := 0 to 14 do
       for g := 0 to 25 do if fieldPopup.PopupComponent = field[f,g] then begin
@@ -4322,7 +4324,7 @@ begin
       end;
       Ballscatter := false;
       Zapped := false;
-      g := curmove;
+      g := activeTeam;
       LogWrite('W' + Chr(g + 48));
       AddLog(ffcl[g] + '''s Wizard casts a spell');
       wiz[g].color := colorarray[g, 4, 0];
@@ -4401,12 +4403,12 @@ var pplace, qplace, g, v, w, ploc, qloc, Zteam, Zplayer: integer;
     Ballscatter, Zapped: boolean;
     s, s2: string;
 begin
-  if (wiz[curmove].color = colorarray[curmove, 0, 0]) and
-  (team[curmove].wiz=1)
+  if (wiz[activeTeam].color = colorarray[activeTeam, 0, 0]) and
+  (team[activeTeam].wiz=1)
   then begin
     Ballscatter := false;
     Zapped := false;
-    g := curmove;
+    g := activeTeam;
     ActionTeam := curteam;
     ActionPlayer := curplayer;
     pplace := player[ActionTeam,ActionPlayer].p;
@@ -4482,13 +4484,6 @@ begin
   end;
 end;
 
-procedure TBloodbowl.WarCry1Click(Sender: TObject);
-var i,j,k,l,ActionTeam,ActionPlayer: integer;
-    s: string;
-begin
-
-end;
-
 procedure TBloodbowl.Shadowing1Click(Sender: TObject);
 begin
   GameStatus := 'Shadow';
@@ -4511,8 +4506,7 @@ end;
 
 procedure TBloodbowl.AVInjRoll1Click(Sender: TObject);
 var p, NiggleCount, totspp, ploc, qloc, v, w: integer;
-    s: string;
-    SPP4th, BallScatter: boolean;
+    BallScatter: boolean;
 begin
   Ballscatter := false;
   v := curteam;
@@ -4809,7 +4803,7 @@ var ArgueRoll, TotalMods: integer;
 begin
   ArgueRoll := Rnd(6,1) + 1;
   TotalMods := 0;
-  if (ArgueMod<>0) and ((team[curmove].tr) < (team[1-curmove].tr)) and
+  if (ArgueMod<>0) and ((team[activeTeam].tr) < (team[1-activeTeam].tr)) and
     (ArgueRoll<>1)
     then begin
       ArgueRoll := ArgueRoll + ArgueMod;
@@ -4817,7 +4811,7 @@ begin
     end;
 
   if ArgueRoll>6 then ArgueRoll := 6;
-  s := 'JC' + Chr(curmove + 48) + Chr(ArgueRoll + 48);
+  s := 'JC' + Chr(activeTeam + 48) + Chr(ArgueRoll + 48);
   LogWrite(s);
   PlayActionCoachRef(s, 1);
   s := Chr(255) + 'Hey REF! Argue the Call! ';
@@ -4835,41 +4829,41 @@ end;
 procedure TBloodbowl.RemoveCHACClick(Sender: TObject);
 var RemoveQues, s: string;
 begin
-  if (CanWriteToLog) and (curmove<>-1) then begin
-    if (team[curmove].cheerleaders > 0) and (team[curmove].asstcoaches > 0)
+  if (CanWriteToLog) and (activeTeam<>-1) then begin
+    if (team[activeTeam].cheerleaders > 0) and (team[activeTeam].asstcoaches > 0)
     then begin
       RemoveQues := 'Cancel';
       RemoveQues := FlexMessageBox('Remove Assistant Coach or Cheerleader from '+
-        'Team: '+ team[curmove].name + '?','Remove Support Staff',
+        'Team: '+ team[activeTeam].name + '?','Remove Support Staff',
         'Cancel,Assist. Coach,Cheerleader');
       if RemoveQues<>'Cancel' then begin
         if RemoveQues='Assist. Coach' then
-          s := 'j' + Chr(curmove + 48) + 'A' else
-          s := 'j' + Chr(curmove + 48) + 'C';
+          s := 'j' + Chr(activeTeam + 48) + 'A' else
+          s := 'j' + Chr(activeTeam + 48) + 'C';
         Logwrite(s);
         PlayActionRemoveACCH(s,1);
       end;
     end else
-    if (team[curmove].cheerleaders > 0)
+    if (team[activeTeam].cheerleaders > 0)
     then begin
       RemoveQues := 'Cancel';
       RemoveQues := FlexMessageBox('Remove Cheerleader from '+
-        'Team: '+ team[curmove].name + '?','Remove Cheerleader',
+        'Team: '+ team[activeTeam].name + '?','Remove Cheerleader',
         'Cancel,Cheerleader');
       if RemoveQues<>'Cancel' then begin
-        s := 'j' + Chr(curmove + 48) + 'C';
+        s := 'j' + Chr(activeTeam + 48) + 'C';
         Logwrite(s);
         PlayActionRemoveACCH(s,1);
       end;
     end else
-    if (team[curmove].asstcoaches > 0)
+    if (team[activeTeam].asstcoaches > 0)
     then begin
       RemoveQues := 'Cancel';
       RemoveQues := FlexMessageBox('Remove Assistant Coach from '+
-        'Team: '+ team[curmove].name + '?','Remove Assistant Coach',
+        'Team: '+ team[activeTeam].name + '?','Remove Assistant Coach',
         'Cancel,Assist. Coach');
       if RemoveQues<>'Cancel' then begin
-        s := 'j' + Chr(curmove + 48) + 'A';
+        s := 'j' + Chr(activeTeam + 48) + 'A';
         Logwrite(s);
         PlayActionRemoveACCH(s,1);
       end;
@@ -4895,7 +4889,7 @@ begin
 end;
 
 procedure ShowDivingTackleRanges(p, q: integer);
-var f, g, r, t, m: integer;
+var f, g, t, m: integer;
 begin
   if DivingTackleRangeShowing then begin
     DivingTackleRangeShowing := false;
@@ -5166,7 +5160,7 @@ begin
 end;
 
 procedure ShowTackleRanges(p, q: integer);
-var f, g, r, t, m: integer;
+var f, g, t, m: integer;
 begin
   if TackleRangeShowing then begin
     TackleRangeShowing := false;

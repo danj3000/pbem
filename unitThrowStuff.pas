@@ -523,7 +523,7 @@ end;
 
 procedure TfrmThrowStuff.butPassRollClick(Sender: TObject);
 var s: string;
-    PassResult, BTCheck: boolean;
+    PassResult: boolean;
 begin
   s := lblPasser.caption + ' throws a '+TheThing+' at '+ lblCatcher.caption + '(';
   if cbHailMaryPass.checked then s := s + 'Hail Mary Pass, ' else begin
@@ -590,8 +590,7 @@ begin
 end;
 
 procedure MakePassReroll;
-var PassResult, BTcheck: boolean;
-    v, w: integer;
+var PassResult: boolean;
 begin
   PassResult := WorkOutPassResult;
   if (PassResult)  then begin

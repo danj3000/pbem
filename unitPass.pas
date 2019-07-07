@@ -70,7 +70,7 @@ uses bbunit, bbalg, unitPlayer, unitMarker, unitBall, unitLog, unitCatch,
 {$R *.DFM}
 
 var PassRollNeeded, PassRollMod, PassTZMod, TeamPasser, NumberPasser,
-    TeamCatcher, NumberCatcher, dist, FieldP, FieldQ, squaredist: integer;
+    TeamCatcher, NumberCatcher, FieldP, FieldQ, squaredist: integer;
 
 procedure CalculatePassRollNeeded;
 var r, m: integer;
@@ -178,8 +178,7 @@ begin
     end;
 
 
-  frmPass.cbVerySunny.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'VERY SUNNY');
+  frmPass.cbVerySunny.checked := Bloodbowl.GetWeather().IsVerySunny();
 
   frmPass.cbBlizzard.checked :=
     (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD') ;
@@ -189,21 +188,10 @@ begin
   frmPass.cbHailMaryPass.checked := ((player[g,f].hasSkill('Hail Mary Pass')) or
     (player[g,f].hasSkill('HMP'))) and (frmPass.rbHailMaryPass.checked);
 
-  frmPass.cbImpossible.checked := false;
-  if (((dist > 56) and ((false))) or
-     ((squaredist > 1) ))
-     and (frmPass.cbBlizzard.checked) then
-       frmPass.cbImpossible.checked := true;
-  if (
-    ((squaredist >= 2)))
-    and (frmPass.cbBlizzard.checked)
-        then frmPass.cbImpossible.checked := true;
+  // can't throw in a blizzard
+  frmPass.cbImpossible.checked := (squaredist > 1) and (frmPass.cbBlizzard.checked);
 
-  frmPass.butPassRoll.enabled :=
-         ((frmPass.cbHailMaryPass.checked) and
-         not(frmPass.cbImpossible.checked)) or
-         (not(frmPass.rbHailMaryPass.checked) and
-         not(frmPass.cbImpossible.checked));
+  frmPass.butPassRoll.enabled := frmPass.cbImpossible.checked;
 
   frmPass.lblPassFailed.visible := true;
   frmPass.ShowModal;
@@ -273,8 +261,7 @@ begin
   r2 := 0;
   r3 := 0;
   HMPPass := false;
-  dist := (player[g, f].p - p) * (player[g, f].p - p) + (player[g, f].q - q) *
-    (player[g, f].q - q);
+  //dist := (player[g, f].p - p) * (player[g, f].p - p) + (player[g, f].q - q) * (player[g, f].q - q);
   squaredist := RangeRulerRange(player[g, f].p, player[g, f].q, p, q);
   begin
     if squaredist > 3 then
@@ -312,14 +299,12 @@ begin
             so if the distance is at most 2.9/2 = 1.45 inch then the opponent
             can intercept... but squares are 1.1 inch wide so dist must be
             smaller than 1.45/1.1=1.318 }
-          GoodPlayer := false;
 
-          begin
-            GoodPlayer := CanIntercept(player[g, f].p, player[g, f].q, p, q,
-              loopPlayer.p, loopPlayer.q);
-            if GoodPlayer then
-              dist9 := 1;
-          end;
+          GoodPlayer := CanIntercept(player[g, f].p, player[g, f].q, p, q,
+            loopPlayer.p, loopPlayer.q);
+          if GoodPlayer then
+            dist9 := 1;
+
           if dist9 <= 1.318 then
           begin
             if s <> '' then
@@ -336,10 +321,7 @@ begin
               if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12))
                 = 'POURING RAIN') then
                 r := r + 1;
-              if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10))
-                = 'EERIE MIST')
-              then
-                r := r + 1;
+
               tz := CountTZ(1 - g, h);
               if not(loopPlayer.hasSkill('Nerves of Steel')) then
                 r := r + tz.num;
@@ -353,10 +335,12 @@ begin
               r3 := r;
               if loopPlayer.hasSkill('Catch') then
                 r2 := r2 - 1.5;
+
               if bptz = 0 then
                 r3 := r3 - 2;
               if (bptz <> 0) and (loopPlayer.hasSkill('Dodge')) then
                 r3 := r3 - 1;
+
               if g = 0 then
                 disttoTD := 25 - loopPlayer.q
               else
@@ -382,7 +366,9 @@ begin
                 r4 := 7
               else
                 r4 := 8;
+
               r5 := 20 - loopPlayer.st;
+
               totspp := loopPlayer.GetStartingSPP() + loopPlayer.GetMatchSPP();
               r6 := bbalg.GetR6Value( totspp );
 
@@ -747,8 +733,8 @@ begin
   NumberCatcher := f0;
   frmPass.Height := 425;
   AccuratePassPlay := false;
-  dist := (player[g,f].p - player[g0,f0].p) * (player[g,f].p - player[g0,f0].p)
-        + (player[g,f].q - player[g0,f0].q) * (player[g,f].q - player[g0,f0].q);
+//  dist := (player[g,f].p - player[g0,f0].p) * (player[g,f].p - player[g0,f0].p)
+//        + (player[g,f].q - player[g0,f0].q) * (player[g,f].q - player[g0,f0].q);
 
     squaredist := RangeRulerRange(player[g,f].p, player[g,f].q,
       player[g0,f0].p, player[g0,f0].q);
@@ -765,8 +751,8 @@ begin
   FieldP := p;
   FieldQ := q;
   AccuratePassPlay := false;
-  dist := (player[g,f].p - p) * (player[g,f].p - p)
-        + (player[g,f].q - q) * (player[g,f].q - q);
+//  dist := (player[g,f].p - p) * (player[g,f].p - p)
+//        + (player[g,f].q - q) * (player[g,f].q - q);
 
     squaredist := RangeRulerRange(player[g,f].p, player[g,f].q, p, q);
   frmPass.lblCatcher.caption := 'Field position ' + Chr(65+q) + IntToStr(p+1);

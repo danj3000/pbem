@@ -326,7 +326,7 @@ begin
       Bloodbowl.comment.Text := player[TeamCatcher, NumberCatcher].GetPlayerName
         + ' has caught the '+TheThing+' and may throw it!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      if curmove <> TeamCatcher then begin
+      if activeTeam <> TeamCatcher then begin
         Bloodbowl.comment.Text := 'Send game to opponent to resolve Bomb toss';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       end;
@@ -343,7 +343,7 @@ begin
        player[TeamCatcher, NumberCatcher].hasSkill('Pro') and
        not(player[TeamCatcher,NumberCatcher].usedSkill('Pro'));
     butTeamReroll.enabled := false;
-    if (TeamCatcher = curmove) and CanUseTeamReroll(cbBigGuyAlly.checked)
+    if (TeamCatcher = activeTeam) and CanUseTeamReroll(cbBigGuyAlly.checked)
       then butTeamReroll.enabled := true;
     height := 570;
     frmCatchStuff.butBounce.enabled := true;
@@ -367,7 +367,7 @@ begin
       Bloodbowl.comment.Text := player[TeamCatcher, NumberCatcher].GetPlayerName
         + ' has caught the bomb and may throw it!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      if curmove <> TeamCatcher then begin
+      if activeTeam <> TeamCatcher then begin
         Bloodbowl.comment.Text := 'Send game to opponent to resolve Bomb toss';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       end;

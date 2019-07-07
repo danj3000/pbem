@@ -215,7 +215,7 @@ begin
 end;
 
 procedure MakeHandicapRolls3;
-var f, g, numrolls, j, TestThis, i, t, z: integer;
+var f, g, numrolls, TestThis, i, t, z: integer;
     s: string;
     KeepGoing: Boolean;
 begin
@@ -275,7 +275,7 @@ begin
 end;
 
 procedure MakeHandicapRolls4;
-var f, g, numrolls, j, TestThis, i: integer;
+var f, g, numrolls, TestThis: integer;
 begin
   for f := 1 to 5 do
     for g := 1 to 66 do

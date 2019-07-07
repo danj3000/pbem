@@ -15,6 +15,8 @@ const
   DirtyPlayerInjuryModifier = 1;
   RegenRollNeeded = 4;
 
+  PLAYER_STATUS_PRONE = 3;
+
 
 type
   TmodAlg = class(TDataModule)
@@ -812,16 +814,16 @@ begin
   InjuryRoll := PD + TS + IM + PP +
        Chr(injmod + 48) + Chr(r1 + 48) + Chr(r2 + 48) + s;
   if AVBreak then begin
-    if curmove = 0 then begin
+    if activeTeam = 0 then begin
       KOInjTOTRed := KOInjTOTRed + 1;
-    end else if curmove = 1 then begin
+    end else if activeTeam = 1 then begin
       KOInjTOTBlue := KOInjTOTBlue + 1;
     end;
     if (r1 + r2 + injmod >= 8) then begin
       if ((ThickSkull) and (sr<=3)) or (not(ThickSkull)) then begin
-        if curmove = 0 then begin
+        if activeTeam = 0 then begin
           KOInjRed := KOInjRed + 1;
-        end else if curmove = 1 then begin
+        end else if activeTeam = 1 then begin
           KOInjBlue := KOInjBlue + 1;
         end;
       end
@@ -1076,9 +1078,9 @@ var s, PD, CS, PO, t: string;
 begin
   InjuryFlag := false;
   if AVBreak then begin
-    if curmove = 0 then begin
+    if activeTeam = 0 then begin
       AVBreakTOTRed := AVBreakTOTRed + 1;
-    end else if curmove = 1 then begin
+    end else if activeTeam = 1 then begin
       AVBreakTOTBlue := AVBreakTOTBlue + 1;
     end;
   end;
@@ -1096,9 +1098,9 @@ begin
     s := InjuryRoll(im);
     InjuryFlag := true;
     if AVBreak then begin
-      if curmove = 0 then begin
+      if activeTeam = 0 then begin
         AVBreakRed := AVBreakRed + 1;
-      end else if curmove = 1 then begin
+      end else if activeTeam = 1 then begin
         AVBreakBlue := AVBreakBlue + 1;
       end;
     end;
@@ -1142,9 +1144,9 @@ begin
       s := InjuryRoll(im);
       InjuryFlag := true;
       if AVBreak then begin
-        if curmove = 0 then begin
+        if activeTeam = 0 then begin
           AVBreakRed := AVBreakRed + 1;
-        end else if curmove = 1 then begin
+        end else if activeTeam = 1 then begin
           AVBreakBlue := AVBreakBlue + 1;
         end;
       end;
@@ -1178,9 +1180,9 @@ var s: string;
 begin
   // how is AVBreak set?
   if AVBreak then begin
-    if curmove = 0 then begin
+    if activeTeam = 0 then begin
       AVBreakTOTRed := AVBreakTOTRed + 1;
-    end else if curmove = 1 then begin
+    end else if activeTeam = 1 then begin
       AVBreakTOTBlue := AVBreakTOTBlue + 1;
     end;
   end;
@@ -1197,9 +1199,9 @@ begin
     im := abs(injmod) - 1;
     s := InjuryRoll(im);
     if AVBreak then begin
-      if curmove = 0 then begin
+      if activeTeam = 0 then begin
         AVBreakRed := AVBreakRed + 1;
-      end else if curmove = 1 then begin
+      end else if activeTeam = 1 then begin
         AVBreakBlue := AVBreakBlue + 1;
       end;
     end;
@@ -1680,7 +1682,7 @@ begin
       begin
         bga := (((player[g, f].BigGuy) or (player[g, f].Ally)) and (true));
         ProSkill := ((player[g, f].hasSkill('Pro'))) and (lastroll <= 1) and
-          (not(player[g, f].usedSkill('Pro'))) and (g = curmove);
+          (not(player[g, f].usedSkill('Pro'))) and (g = activeTeam);
         reroll := CanUseTeamReroll(bga);
         ReRollAnswer := 'Fail Roll';
         if reroll and ProSkill then
@@ -1758,7 +1760,7 @@ begin
         begin
           bga := (((player[g, f].BigGuy) or (player[g, f].Ally)) and (true));
           ProSkill := ((player[g, f].hasSkill('Pro'))) and (lastroll <= 1) and
-            (not(player[g, f].usedSkill('Pro'))) and (g = curmove);
+            (not(player[g, f].usedSkill('Pro'))) and (g = activeTeam);
           reroll := CanUseTeamReroll(bga);
           ReRollAnswer := 'Fail Roll';
           if reroll and ProSkill then
@@ -2164,11 +2166,11 @@ begin
     end;
     if DownHeGoes then
     begin
-      if curmove = 0 then
+      if activeTeam = 0 then
       begin
         KDownRed := KDownRed + 1;
       end
-      else if curmove = 1 then
+      else if activeTeam = 1 then
       begin
         KDownBlue := KDownBlue + 1;
       end;
@@ -2206,11 +2208,11 @@ begin
     DownPlayer := -1;
     GetCas := false;
   end;
-  if curmove = 0 then
+  if activeTeam = 0 then
   begin
     KDownTOTRed := KDownTOTRed + 1;
   end
-  else if curmove = 1 then
+  else if activeTeam = 1 then
   begin
     KDownTOTBlue := KDownTOTBlue + 1;
   end;

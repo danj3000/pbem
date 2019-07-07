@@ -687,7 +687,7 @@ procedure PlayActionBuy(s: string; dir: integer);
 var g: integer;
 begin
   g := Ord(s[3]) - 48;
-  curmove := g;
+  activeTeam := g;
   if dir = DIR_FORWARD then begin
     case s[2] of
       'R': begin

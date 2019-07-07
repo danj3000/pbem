@@ -72,7 +72,7 @@ uses bbunit, bbalg, unitPlayer, unitMarker, unitBall, unitLog,
 {$R *.DFM}
 
 var TTMRollNeeded, TTMRollMod, TTMTZMod, TeamPasser, NumberPasser, TeamThrowee,
-    NumberThrowee, TeamCatcher, NumberCatcher, dist, squaredist, FieldP,
+    NumberThrowee, TeamCatcher, dist, squaredist, FieldP,
     FieldQ: integer;
 
 procedure CalculateTTMRollNeeded;
@@ -365,7 +365,6 @@ begin
 end;
 
 procedure MakeFailedProTTMReroll;
-var TTMResult: boolean;
 begin
   frmTTM.butPassRoll.enabled := false;
   frmTTM.butPassSkill.enabled := false;
@@ -497,10 +496,9 @@ begin
 end;
 
 procedure TfrmTTM.butFumbleInaccurateClick(Sender: TObject);
-var totspp, p2, NiggleCount, p, q, g0, f0, k, l, k2, l2, i, acc, v, w,
+var p, q, k, l, k2, l2, i, acc, v, w,
     ploc, qloc: integer;
-    SPP4th, ballhandler, test3, outofbounds, BallScatter: boolean;
-    s: string;
+    ballhandler, test3, outofbounds, BallScatter: boolean;
 begin
   ballhandler := false;
   if player[TeamThrowee,NumberThrowee].status = 2 then ballhandler := true;

@@ -144,7 +144,7 @@ begin
       Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
       if ((player[ActionTeam,ActionPlayer].HasSkill('Pro')) and (lastroll <= 1) and
         (not (player[ActionTeam,ActionPlayer].usedSkill('Pro'))) and
-        (ActionTeam = curmove)) then begin
+        (ActionTeam = activeTeam)) then begin
             player[ActionTeam,ActionPlayer].UseSkill('Pro');
             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
             if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
@@ -274,7 +274,7 @@ begin
        player[TeamCatcher, NumberCatcher].hasSkill('Pro') and
        not(player[TeamCatcher,NumberCatcher].usedSkill('Pro'));
     butTeamReroll.enabled := false;
-    if (TeamCatcher = curmove) and CanUseTeamReroll(cbBigGuyAlly.checked)
+    if (TeamCatcher = activeTeam) and CanUseTeamReroll(cbBigGuyAlly.checked)
       and (not(KickOffNow)) then butTeamReroll.enabled := true;
     height := 570;
     frmCatch.butBounce.enabled := true;

@@ -148,7 +148,7 @@ begin
     Hide;
   end else begin
     butTeamReroll.enabled := false;
-    if (TeamLandinger = curmove) and CanUseTeamReroll(cbBigGuyAlly.checked)
+    if (TeamLandinger = activeTeam) and CanUseTeamReroll(cbBigGuyAlly.checked)
       then butTeamReroll.enabled := true;
     butProSkill.enabled := player[TeamLandinger, NumberLandinger].hasSkill('Pro')
       and (not (player[TeamLandinger,NumberLandinger].usedSkill('Pro')));

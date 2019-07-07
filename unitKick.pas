@@ -676,7 +676,7 @@ begin
 end;
 
 procedure TfrmKick.butFumbleInaccurateClick(Sender: TObject);
-  var arrowp, arrowq, pplace, qplace, lastp, lastq, scat, g, f, g0, f0,
+  var arrowp, arrowq, pplace, qplace, lastp, lastq, scat, g, f,
         dist1, dist2, finaldist: integer;
       oob, catchit: boolean;
       s: string;

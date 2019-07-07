@@ -1096,7 +1096,7 @@ end;
 procedure RecordInRegistry(gameid: string; len: integer);
 var Reg: TRegistry;
     KeyInfo: TRegKeyInfo;
-    curval, s, s2, t2, t: string;
+    curval, s, t: string;
     f, p, p2, p3, q, r, prevlen, curnr, freenr, cnt: integer;
     found: boolean;
     checkdate: TDateTime;

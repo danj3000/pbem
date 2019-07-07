@@ -402,7 +402,7 @@ begin
 end;
 
 procedure PlayActionComputerID(s: string; dir: integer);
-var g, f: integer;
+var g: integer;
     nextopenSlot: boolean;
 begin
   if dir = DIR_FORWARD then begin

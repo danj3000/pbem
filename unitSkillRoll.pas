@@ -52,7 +52,7 @@ var Players: array [0..MaxNumPlayersInTeam] of integer;
     teamSK, playerSK, numSK: integer;
 
 function TranslateActionSkillRoll(s: string): string;
-var f, g, CurExp, EXPRoll, AgeRoll, Ageroll1, AgeRoll2: integer;
+var f, g: integer;
     sk, t: string;
 begin
   case s[2] of
@@ -65,15 +65,13 @@ begin
             TranslateActionSkillRoll := player[g,f].GetPlayerName + ' gains ' + sk + t;
          end;
     'E': begin
-            g := Ord(s[3]) - 48;
-            f := Ord(s[4]) - 64;
             TranslateActionSkillRoll := t;
          end;
   end;
 end;
 
 procedure PlayActionSkillRoll(s: string; dir: integer);
-var f, g, num, CurExp, EXPRoll: integer;
+var f, g, num: integer;
 begin
   g := Ord(s[3]) - 48;
   f := Ord(s[4]) - 64;
@@ -221,7 +219,6 @@ end;
 
 procedure TfrmSkillRolls.butAcceptClick(Sender: TObject);
 var s, t, sk: string;
-    r: integer;
 begin
   sk := player[teamSK, playerSK].GetSkillString(1);
   s := '(u' + Chr(teamSK + 48) + Chr(playerSK + 64) +
