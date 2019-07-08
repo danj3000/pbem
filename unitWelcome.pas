@@ -61,8 +61,6 @@ begin
   RLCoach[0] := '';
   RLCoach[1] := '';
   LRoll := Rnd(8,6)+3;
-  LustrianRoll := 'W'+ InttoStr(LRoll);
-  LustrianRoll2 := 'KO' + InttoStr(Lroll);
   frmSettings.ShowModal;
   frmSettings.BringToFront;
 end;

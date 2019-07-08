@@ -63,7 +63,7 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 713
     Height = 545
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
@@ -219,10 +219,6 @@ object frmSettings: TfrmSettings
     object TabSheet2: TTabSheet
       Caption = 'Tables'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label12: TLabel
         Left = 8
         Top = 16
@@ -385,10 +381,6 @@ object frmSettings: TfrmSettings
     object TabSheet9: TTabSheet
       Caption = 'Armour/Injury'
       ImageIndex = 8
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cbDeStun: TCheckBox
         Left = 8
         Top = 64

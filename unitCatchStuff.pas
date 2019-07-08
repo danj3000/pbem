@@ -67,7 +67,7 @@ var TeamCatcher, NumberCatcher, CatchRollNeeded, ThrowStuff: integer;
 procedure CalculateCatchRollNeeded;
 var r: integer;
 begin
-  r := 7 - player[TeamCatcher, NumberCatcher].ag;
+  r := 7 - allPlayers[TeamCatcher, NumberCatcher].ag;
   if frmCatchStuff.rgAccPassBB.ItemIndex = 0 then r := r - 1;
   if frmCatchStuff.cbExtraArms.checked then r := r - 1;
 
@@ -101,42 +101,42 @@ begin
       for u := 1 to 3 do begin
         for v := 0 to 1 do begin
           for w := 1 to team[v].numplayers do begin
-            if (player[v,w].p = pplace + (t-2)) and (player[v,w].q = qplace + (u-2))
+            if (allPlayers[v,w].p = pplace + (t-2)) and (allPlayers[v,w].q = qplace + (u-2))
               then begin
                 Whiff := false;
                 if (t=2) and (u=2) then begin
                   Bloodbowl.comment.Text := 'Bomb blast HITS #' +
-                    player[v,w].GetPlayerName;
+                    allPlayers[v,w].GetPlayerName;
                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                   ArmourSettings(v,w,v,w,0);
-                  if player[v,w].status < InjuryStatus then begin
-                    if player[v,w].status=2 then begin
-                      ploc := player[v,w].p;
-                      qloc := player[v,w].q;
-                      player[v,w].SetStatus(InjuryStatus);
+                  if allPlayers[v,w].status < InjuryStatus then begin
+                    if allPlayers[v,w].status=2 then begin
+                      ploc := allPlayers[v,w].p;
+                      qloc := allPlayers[v,w].q;
+                      allPlayers[v,w].SetStatus(InjuryStatus);
                       BallScatter := true;
-                    end else player[v,w].SetStatus(InjuryStatus);
+                    end else allPlayers[v,w].SetStatus(InjuryStatus);
                   end;
                   InjuryStatus := 0;
                 end else begin
                   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
                   if lastroll > 3 then begin
                      Bloodbowl.comment.Text := 'Bomb blast HITS #' +
-                       player[v,w].GetPlayerName;
+                       allPlayers[v,w].GetPlayerName;
                      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                      ArmourSettings(v,w,v,w,0);
-                     if player[v,w].status < InjuryStatus then begin
-                       if player[v,w].status=2 then begin
-                         ploc := player[v,w].p;
-                         qloc := player[v,w].q;
-                         player[v,w].SetStatus(InjuryStatus);
+                     if allPlayers[v,w].status < InjuryStatus then begin
+                       if allPlayers[v,w].status=2 then begin
+                         ploc := allPlayers[v,w].p;
+                         qloc := allPlayers[v,w].q;
+                         allPlayers[v,w].SetStatus(InjuryStatus);
                          BallScatter := true;
-                       end else player[v,w].SetStatus(InjuryStatus);
+                       end else allPlayers[v,w].SetStatus(InjuryStatus);
                      end;
                      InjuryStatus := 0;
                   end else begin
                     Bloodbowl.comment.Text := 'Bomb blast misses #' +
-                      player[v,w].GetPlayerName;
+                      allPlayers[v,w].GetPlayerName;
                     Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                   end;
                 end;
@@ -151,20 +151,20 @@ begin
       for u := 1 to 3 do begin
         for v := 0 to 1 do begin
           for w := 1 to team[v].numplayers do begin
-            if (player[v,w].p = pplace + (t-2)) and (player[v,w].q = qplace + (u-2))
+            if (allPlayers[v,w].p = pplace + (t-2)) and (allPlayers[v,w].q = qplace + (u-2))
             then begin
               Whiff := false;
               Bloodbowl.comment.Text := 'Stink Bomb blast HITS #' +
-                player[v,w].GetPlayerName;
+                allPlayers[v,w].GetPlayerName;
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               InjuryStatus := 3;
-              if player[v,w].status < InjuryStatus then begin
-                if player[v,w].status=2 then begin
-                  ploc := player[v,w].p;
-                  qloc := player[v,w].q;
-                  player[v,w].SetStatus(InjuryStatus);
+              if allPlayers[v,w].status < InjuryStatus then begin
+                if allPlayers[v,w].status=2 then begin
+                  ploc := allPlayers[v,w].p;
+                  qloc := allPlayers[v,w].q;
+                  allPlayers[v,w].SetStatus(InjuryStatus);
                   BallScatter := true;
-                end else player[v,w].SetStatus(InjuryStatus);
+                end else allPlayers[v,w].SetStatus(InjuryStatus);
               end;
               InjuryStatus := 0;
             end;
@@ -176,43 +176,43 @@ begin
   end else if ThrowStuff=3 then begin
     for v := 0 to 1 do begin
       for w := 1 to team[v].numplayers do begin
-        Bombdist := RangeRulerRange(player[v,w].p, player[v,w].q,
+        Bombdist := RangeRulerRange(allPlayers[v,w].p, allPlayers[v,w].q,
           pplace,qplace);
         if Bombdist = 0 then begin
           Whiff := false;
-          if (player[v,w].p = StuffP) and (player[v,w].q = StuffQ) then begin
+          if (allPlayers[v,w].p = StuffP) and (allPlayers[v,w].q = StuffQ) then begin
             Bloodbowl.comment.Text := 'Big Bomb blast HITS #' +
-              player[v,w].GetPlayerName;
+              allPlayers[v,w].GetPlayerName;
             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
             ArmourSettings(v,w,v,w,0);
-            if player[v,w].status < InjuryStatus then begin
-              if player[v,w].status=2 then begin
-                ploc := player[v,w].p;
-                qloc := player[v,w].q;
-                player[v,w].SetStatus(InjuryStatus);
+            if allPlayers[v,w].status < InjuryStatus then begin
+              if allPlayers[v,w].status=2 then begin
+                ploc := allPlayers[v,w].p;
+                qloc := allPlayers[v,w].q;
+                allPlayers[v,w].SetStatus(InjuryStatus);
                 BallScatter := true;
-              end else player[v,w].SetStatus(InjuryStatus);
+              end else allPlayers[v,w].SetStatus(InjuryStatus);
             end;
             InjuryStatus := 0;
           end else begin
             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
             if lastroll > 3 then begin
               Bloodbowl.comment.Text := 'Big Bomb blast HITS #' +
-                player[v,w].GetPlayerName;
+                allPlayers[v,w].GetPlayerName;
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               ArmourSettings(v,w,v,w,0);
-              if player[v,w].status < InjuryStatus then begin
-                if player[v,w].status=2 then begin
-                  ploc := player[v,w].p;
-                  qloc := player[v,w].q;
-                  player[v,w].SetStatus(InjuryStatus);
+              if allPlayers[v,w].status < InjuryStatus then begin
+                if allPlayers[v,w].status=2 then begin
+                  ploc := allPlayers[v,w].p;
+                  qloc := allPlayers[v,w].q;
+                  allPlayers[v,w].SetStatus(InjuryStatus);
                   BallScatter := true;
-                end else player[v,w].SetStatus(InjuryStatus);
+                end else allPlayers[v,w].SetStatus(InjuryStatus);
               end;
               InjuryStatus := 0;
             end else begin
               Bloodbowl.comment.Text := 'Big Bomb blast misses #' +
-                player[v,w].GetPlayerName;
+                allPlayers[v,w].GetPlayerName;
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
             end;
           end;
@@ -239,21 +239,21 @@ begin
     if StuffType = 3 then TheThing := 'BIG Bomb' else TheThing := 'Net';
   TeamCatcher := g;
   NumberCatcher := f;
-  frmCatchStuff.lblCatcher.caption := player[g,f].GetPlayerName;
+  frmCatchStuff.lblCatcher.caption := allPlayers[g,f].GetPlayerName;
   frmCatchStuff.lblCatcher.font.color := colorarray[g,0,0];
   if acc=1 then frmCatchStuff.rgAccPassBB.ItemIndex := 0
     else if acc=0 then frmCatchStuff.rgAccPassBB.ItemIndex := 1;
-  frmCatchStuff.txtCatcherAG.text := IntToStr(player[g,f].ag);
+  frmCatchStuff.txtCatcherAG.text := IntToStr(allPlayers[g,f].ag);
   tz := CountTZ(g, f);
   frmCatchStuff.txtCatcherTZ.text := IntToStr(tz.num);
   frmCatchStuff.txtCatcherFA.text := IntToStr(CountFA(g, f));
-  frmCatchStuff.cbExtraArms.checked := player[g,f].hasSkill('Extra Arms');
-  frmCatchStuff.cbNBH.checked := player[g,f].hasSkill('Nonball Handler');
-  frmCatchStuff.cbNoTZ.checked := (player[g,f].tz > 0) ;
-  frmCatchStuff.cbNervesOfSteel.checked := player[g,f].hasSkill('Nerves of Steel');
+  frmCatchStuff.cbExtraArms.checked := allPlayers[g,f].hasSkill('Extra Arms');
+  frmCatchStuff.cbNBH.checked := allPlayers[g,f].hasSkill('Nonball Handler');
+  frmCatchStuff.cbNoTZ.checked := (allPlayers[g,f].tz > 0) ;
+  frmCatchStuff.cbNervesOfSteel.checked := allPlayers[g,f].hasSkill('Nerves of Steel');
 
-  frmCatchStuff.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (true)); // big guy
+  frmCatchStuff.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or
+      (allPlayers[g,f].Ally)) and (true)); // big guy
   frmCatchStuff.cbPouringRain.checked :=
     (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN');
 
@@ -296,7 +296,7 @@ end;
 procedure TfrmCatchStuff.butCatchRollClick(Sender: TObject);
 var s: string;
 begin
-  s := player[TeamCatcher, NumberCatcher].GetPlayerName +
+  s := allPlayers[TeamCatcher, NumberCatcher].GetPlayerName +
        ' tries to catch the bomb (';
   if rgAccPassBB.ItemIndex = 0 then s := s + 'Accurate Pass, '
           else
@@ -316,14 +316,14 @@ begin
     Hide;
     Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
     if lastroll<=3 then begin
-      Bloodbowl.comment.Text := player[TeamCatcher, NumberCatcher].GetPlayerName
+      Bloodbowl.comment.Text := allPlayers[TeamCatcher, NumberCatcher].GetPlayerName
         + ' catches the '+TheThing+' only to have it explode in their hands!!!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      StuffP := player[TeamCatcher,NumberCatcher].p;
-      StuffQ := player[TeamCatcher,NumberCatcher].q;
+      StuffP := allPlayers[TeamCatcher,NumberCatcher].p;
+      StuffQ := allPlayers[TeamCatcher,NumberCatcher].q;
       BlowUpBomb;
     end else begin
-      Bloodbowl.comment.Text := player[TeamCatcher, NumberCatcher].GetPlayerName
+      Bloodbowl.comment.Text := allPlayers[TeamCatcher, NumberCatcher].GetPlayerName
         + ' has caught the '+TheThing+' and may throw it!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       if activeTeam <> TeamCatcher then begin
@@ -337,11 +337,11 @@ begin
     end;
   end else begin
     butCatchSkill.enabled :=
-       player[TeamCatcher, NumberCatcher].hasSkill('Catch') and
-       not(player[TeamCatcher,NumberCatcher].usedSkill('Catch'));
+       allPlayers[TeamCatcher, NumberCatcher].hasSkill('Catch') and
+       not(allPlayers[TeamCatcher,NumberCatcher].usedSkill('Catch'));
     butPro.enabled :=
-       player[TeamCatcher, NumberCatcher].hasSkill('Pro') and
-       not(player[TeamCatcher,NumberCatcher].usedSkill('Pro'));
+       allPlayers[TeamCatcher, NumberCatcher].hasSkill('Pro') and
+       not(allPlayers[TeamCatcher,NumberCatcher].usedSkill('Pro'));
     butTeamReroll.enabled := false;
     if (TeamCatcher = activeTeam) and CanUseTeamReroll(cbBigGuyAlly.checked)
       then butTeamReroll.enabled := true;
@@ -357,14 +357,14 @@ begin
     frmCatchStuff.Hide;
     Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
     if lastroll<=3 then begin
-      Bloodbowl.comment.Text := player[TeamCatcher, NumberCatcher].GetPlayerName
+      Bloodbowl.comment.Text := allPlayers[TeamCatcher, NumberCatcher].GetPlayerName
         + ' catches the bomb only to have it explode in their hands!!!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      StuffP := player[TeamCatcher,NumberCatcher].p;
-      StuffQ := player[TeamCatcher,NumberCatcher].q;
+      StuffP := allPlayers[TeamCatcher,NumberCatcher].p;
+      StuffQ := allPlayers[TeamCatcher,NumberCatcher].q;
       BlowUpBomb;
     end else begin
-      Bloodbowl.comment.Text := player[TeamCatcher, NumberCatcher].GetPlayerName
+      Bloodbowl.comment.Text := allPlayers[TeamCatcher, NumberCatcher].GetPlayerName
         + ' has caught the bomb and may throw it!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       if activeTeam <> TeamCatcher then begin
@@ -385,13 +385,13 @@ end;
 
 procedure TfrmCatchStuff.butCatchSkillClick(Sender: TObject);
 begin
-  player[TeamCatcher,NumberCatcher].UseSkill('Catch');
+  allPlayers[TeamCatcher,NumberCatcher].UseSkill('Catch');
   MakeCatchReroll;
 end;
 
 procedure TfrmCatchStuff.butProClick(Sender: TObject);
 begin
-  player[TeamCatcher,NumberCatcher].UseSkill('Pro');
+  allPlayers[TeamCatcher,NumberCatcher].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(TeamCatcher,NumberCatcher);
   if (lastroll >= 4) then begin
@@ -424,8 +424,8 @@ begin
     ModalResult := 1;
     Hide;
   end;
-  StuffP := player[TeamCatcher, NumberCatcher].p;
-  StuffQ := player[TeamCatcher, NumberCatcher].q;
+  StuffP := allPlayers[TeamCatcher, NumberCatcher].p;
+  StuffQ := allPlayers[TeamCatcher, NumberCatcher].q;
   ScatterStuffFrom(Stuffp, Stuffq, 1, 0, TheThing);
   If StuffP = -1 then begin
     Bloodbowl.comment.text :=  TheThing +

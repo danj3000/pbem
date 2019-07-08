@@ -84,7 +84,7 @@ var r, m: integer;
 begin
   m := 0;
   if (frmThrowStuff.cbHailMaryPass.checked) and
-    not(player[TeamPasser,NumberPasser].hasSkill('Hail Mary Pass')) then
+    not(allPlayers[TeamPasser,NumberPasser].hasSkill('Hail Mary Pass')) then
     frmThrowStuff.cbHailMaryPass.checked := false;
   if frmThrowStuff.cbHailMaryPass.checked then begin
     r := 2;
@@ -140,42 +140,42 @@ begin
       for u := 1 to 3 do begin
         for v := 0 to 1 do begin
           for w := 1 to team[v].numplayers do begin
-            if (player[v,w].p = pplace + (t-2)) and (player[v,w].q = qplace + (u-2))
+            if (allPlayers[v,w].p = pplace + (t-2)) and (allPlayers[v,w].q = qplace + (u-2))
               then begin
                 Whiff := false;
                 if (t=2) and (u=2) then begin
                   Bloodbowl.comment.Text := 'Bomb blast HITS #' +
-                    player[v,w].GetPlayerName;
+                    allPlayers[v,w].GetPlayerName;
                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                   ArmourSettings(v,w,v,w,0);
-                  if player[v,w].status < InjuryStatus then begin
-                    if player[v,w].status=2 then begin
-                      ploc := player[v,w].p;
-                      qloc := player[v,w].q;
-                      player[v,w].SetStatus(InjuryStatus);
+                  if allPlayers[v,w].status < InjuryStatus then begin
+                    if allPlayers[v,w].status=2 then begin
+                      ploc := allPlayers[v,w].p;
+                      qloc := allPlayers[v,w].q;
+                      allPlayers[v,w].SetStatus(InjuryStatus);
                       BallScatter := true;
-                    end else player[v,w].SetStatus(InjuryStatus);
+                    end else allPlayers[v,w].SetStatus(InjuryStatus);
                   end;
                   InjuryStatus := 0;
                 end else begin
                   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
                   if lastroll > 3 then begin
                      Bloodbowl.comment.Text := 'Bomb blast HITS #' +
-                       player[v,w].GetPlayerName;
+                       allPlayers[v,w].GetPlayerName;
                      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                      ArmourSettings(v,w,v,w,0);
-                     if player[v,w].status < InjuryStatus then begin
-                       if player[v,w].status=2 then begin
-                         ploc := player[v,w].p;
-                         qloc := player[v,w].q;
-                         player[v,w].SetStatus(InjuryStatus);
+                     if allPlayers[v,w].status < InjuryStatus then begin
+                       if allPlayers[v,w].status=2 then begin
+                         ploc := allPlayers[v,w].p;
+                         qloc := allPlayers[v,w].q;
+                         allPlayers[v,w].SetStatus(InjuryStatus);
                          BallScatter := true;
-                       end else player[v,w].SetStatus(InjuryStatus);
+                       end else allPlayers[v,w].SetStatus(InjuryStatus);
                      end;
                      InjuryStatus := 0;
                   end else begin
                     Bloodbowl.comment.Text := 'Bomb blast misses #' +
-                      player[v,w].GetPlayerName;
+                      allPlayers[v,w].GetPlayerName;
                     Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                   end;
                 end;
@@ -190,20 +190,20 @@ begin
       for u := 1 to 3 do begin
         for v := 0 to 1 do begin
           for w := 1 to team[v].numplayers do begin
-            if (player[v,w].p = pplace + (t-2)) and (player[v,w].q = qplace + (u-2))
+            if (allPlayers[v,w].p = pplace + (t-2)) and (allPlayers[v,w].q = qplace + (u-2))
             then begin
               Whiff := false;
               Bloodbowl.comment.Text := 'Stink Bomb blast HITS #' +
-                player[v,w].GetPlayerName;
+                allPlayers[v,w].GetPlayerName;
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               InjuryStatus := 3;
-              if player[v,w].status < InjuryStatus then begin
-                if player[v,w].status=2 then begin
-                  ploc := player[v,w].p;
-                  qloc := player[v,w].q;
-                  player[v,w].SetStatus(InjuryStatus);
+              if allPlayers[v,w].status < InjuryStatus then begin
+                if allPlayers[v,w].status=2 then begin
+                  ploc := allPlayers[v,w].p;
+                  qloc := allPlayers[v,w].q;
+                  allPlayers[v,w].SetStatus(InjuryStatus);
                   BallScatter := true;
-                end else player[v,w].SetStatus(InjuryStatus);
+                end else allPlayers[v,w].SetStatus(InjuryStatus);
               end;
               InjuryStatus := 0;
             end;
@@ -215,43 +215,43 @@ begin
   end else if ThrowStuff=3 then begin
     for v := 0 to 1 do begin
       for w := 1 to team[v].numplayers do begin
-        Bombdist := RangeRulerRange(player[v,w].p, player[v,w].q,
+        Bombdist := RangeRulerRange(allPlayers[v,w].p, allPlayers[v,w].q,
           pplace,qplace);
         if Bombdist = 0 then begin
           Whiff := false;
-          if (player[v,w].p = StuffP) and (player[v,w].q = StuffQ) then begin
+          if (allPlayers[v,w].p = StuffP) and (allPlayers[v,w].q = StuffQ) then begin
             Bloodbowl.comment.Text := 'Big Bomb blast HITS #' +
-              player[v,w].GetPlayerName;
+              allPlayers[v,w].GetPlayerName;
             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
             ArmourSettings(v,w,v,w,0);
-            if player[v,w].status < InjuryStatus then begin
-              if player[v,w].status=2 then begin
-                ploc := player[v,w].p;
-                qloc := player[v,w].q;
-                player[v,w].SetStatus(InjuryStatus);
+            if allPlayers[v,w].status < InjuryStatus then begin
+              if allPlayers[v,w].status=2 then begin
+                ploc := allPlayers[v,w].p;
+                qloc := allPlayers[v,w].q;
+                allPlayers[v,w].SetStatus(InjuryStatus);
                 BallScatter := true;
-              end else player[v,w].SetStatus(InjuryStatus);
+              end else allPlayers[v,w].SetStatus(InjuryStatus);
             end;
             InjuryStatus := 0;
           end else begin
             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
             if lastroll > 3 then begin
               Bloodbowl.comment.Text := 'Big Bomb blast HITS #' +
-                player[v,w].GetPlayerName;
+                allPlayers[v,w].GetPlayerName;
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               ArmourSettings(v,w,v,w,0);
-              if player[v,w].status < InjuryStatus then begin
-                if player[v,w].status=2 then begin
-                  ploc := player[v,w].p;
-                  qloc := player[v,w].q;
-                  player[v,w].SetStatus(InjuryStatus);
+              if allPlayers[v,w].status < InjuryStatus then begin
+                if allPlayers[v,w].status=2 then begin
+                  ploc := allPlayers[v,w].p;
+                  qloc := allPlayers[v,w].q;
+                  allPlayers[v,w].SetStatus(InjuryStatus);
                   BallScatter := true;
-                end else player[v,w].SetStatus(InjuryStatus);
+                end else allPlayers[v,w].SetStatus(InjuryStatus);
               end;
               InjuryStatus := 0;
             end else begin
               Bloodbowl.comment.Text := 'Big Bomb blast misses #' +
-                player[v,w].GetPlayerName;
+                allPlayers[v,w].GetPlayerName;
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
             end;
           end;
@@ -265,19 +265,19 @@ begin
   end else if ThrowStuff=4 then begin
     for v := 0 to 1 do begin
       for w := 1 to team[v].numplayers do begin
-        if (player[v,w].p = StuffP) and (player[v,w].q = StuffQ) then begin
+        if (allPlayers[v,w].p = StuffP) and (allPlayers[v,w].q = StuffQ) then begin
           Whiff := false;
           NetHit := true;
-          if (player[v,w].hasSkill('Dodge')) or (player[v,w].hasSkill('Side Step'))
+          if (allPlayers[v,w].hasSkill('Dodge')) or (allPlayers[v,w].hasSkill('Side Step'))
           then begin
             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if (lastroll >= 9-player[v,w].ag) or (lastroll=6) then begin
-              Bloodbowl.comment.Text := player[v,w].GetPlayerName + ' DODGES the'+
+            if (lastroll >= 9-allPlayers[v,w].ag) or (lastroll=6) then begin
+              Bloodbowl.comment.Text := allPlayers[v,w].GetPlayerName + ' DODGES the'+
                 ' Net.  No Effect!';
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               NetHit := false;
             end else begin
-               Bloodbowl.comment.Text := player[v,w].GetPlayerName + ' fails to ' +
+               Bloodbowl.comment.Text := allPlayers[v,w].GetPlayerName + ' fails to ' +
                  'dodge the Net!';
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
             end;
@@ -285,31 +285,31 @@ begin
           if NetHit then begin
             s2 := '';
             s2 := 'u' + Chr(v + 48) + Chr(w + 64) +
-              Chr(player[v,w].ma + 48) +
-              Chr(player[v,w].st + 48) +
-              Chr(player[v,w].ag + 48) +
-              Chr(player[v,w].av + 48) +
-             Chr(player[v,w].cnumber + 64) +
-             Chr(player[v,w].value div 5 + 48) +
-             player[v,w].name + '$' +
-             player[v,w].position + '$' +
-             player[v,w].picture + '$' +
-             player[v,w].icon + '$' +
-              player[v,w].GetSkillString(1) + '|' +
-              Chr(player[v,w].ma + 48) +
-              Chr(player[v,w].st + 48) +
-              Chr(player[v,w].ag + 48) +
-              Chr(player[v,w].av + 48) +
-              Chr(player[v,w].cnumber + 64) +
-             Chr(player[v,w].value div 5 + 48) +
-             player[v,w].name + '$' +
-             player[v,w].position + '$' +
-             player[v,w].picture + '$' +
-             player[v,w].icon + '$';
+              Chr(allPlayers[v,w].ma + 48) +
+              Chr(allPlayers[v,w].st + 48) +
+              Chr(allPlayers[v,w].ag + 48) +
+              Chr(allPlayers[v,w].av + 48) +
+             Chr(allPlayers[v,w].cnumber + 64) +
+             Chr(allPlayers[v,w].value div 5 + 48) +
+             allPlayers[v,w].name + '$' +
+             allPlayers[v,w].position + '$' +
+             allPlayers[v,w].picture + '$' +
+             allPlayers[v,w].icon + '$' +
+              allPlayers[v,w].GetSkillString(1) + '|' +
+              Chr(allPlayers[v,w].ma + 48) +
+              Chr(allPlayers[v,w].st + 48) +
+              Chr(allPlayers[v,w].ag + 48) +
+              Chr(allPlayers[v,w].av + 48) +
+              Chr(allPlayers[v,w].cnumber + 64) +
+             Chr(allPlayers[v,w].value div 5 + 48) +
+             allPlayers[v,w].name + '$' +
+             allPlayers[v,w].position + '$' +
+             allPlayers[v,w].picture + '$' +
+             allPlayers[v,w].icon + '$';
             s := '';
-            s := player[v,w].GetSkillString(1) + ', Netted';
-            player[v,w].SetSkill(s);
-            s2 := s2 + player[v,w].GetSkillString(1);
+            s := allPlayers[v,w].GetSkillString(1) + ', Netted';
+            allPlayers[v,w].SetSkill(s);
+            s2 := s2 + allPlayers[v,w].GetSkillString(1);
             LogWrite(s2);
             PlayActionPlayerStatChange(s2, 1);
           end;
@@ -341,23 +341,23 @@ begin
   end;
 
   frmThrowStuff.gbPass.enabled := true;
-  frmThrowStuff.lblPasser.caption := player[g,f].GetPlayerName;
+  frmThrowStuff.lblPasser.caption := allPlayers[g,f].GetPlayerName;
   frmThrowStuff.lblPasser.font.color := colorarray[g,0,0];
-  frmThrowStuff.txtThrowerAG.text := IntToStr(player[g,f].ag);
+  frmThrowStuff.txtThrowerAG.text := IntToStr(allPlayers[g,f].ag);
   tz := CountTZ(g, f);
   frmThrowStuff.txtPassTZ.text := IntToStr(tz.num);
   frmThrowStuff.txtPassFA.text := IntToStr(CountFA(g, f));
-  frmThrowStuff.cbStrongArm.checked := player[g,f].hasSkill('Strong Arm');
-  frmThrowStuff.cbAccurate.checked := player[g,f].hasSkill('Accurate');
-  frmThrowStuff.cbNervesOfSteel.checked := player[g,f].hasSkill('Nerves of Steel');
+  frmThrowStuff.cbStrongArm.checked := allPlayers[g,f].hasSkill('Strong Arm');
+  frmThrowStuff.cbAccurate.checked := allPlayers[g,f].hasSkill('Accurate');
+  frmThrowStuff.cbNervesOfSteel.checked := allPlayers[g,f].hasSkill('Nerves of Steel');
 
-  frmThrowStuff.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (true));      // bigguy
+  frmThrowStuff.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or
+      (allPlayers[g,f].Ally)) and (true));      // bigguy
   frmThrowStuff.cbTitchy.checked :=
-      (Pos('HALFLING', Uppercase(player[g,f].position)) > 0) or
-      ((Pos('GOBLIN', Uppercase(player[g,f].position)) > 0)
-        and not (Pos('HOBGOBLIN', Uppercase(player[g,f].position)) > 0)) or
-      ((player[g,f].hasSkill('Stunty')) );
+      (Pos('HALFLING', Uppercase(allPlayers[g,f].position)) > 0) or
+      ((Pos('GOBLIN', Uppercase(allPlayers[g,f].position)) > 0)
+        and not (Pos('HOBGOBLIN', Uppercase(allPlayers[g,f].position)) > 0)) or
+      ((allPlayers[g,f].hasSkill('Stunty')) );
   if (frmThrowStuff.cbTitchy.checked) then
     begin
         begin
@@ -384,11 +384,8 @@ begin
     end;
 
 
-  frmThrowStuff.cbVerySunny.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'VERY SUNNY');
-
-  frmThrowStuff.cbBlizzard.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD');
+  frmThrowStuff.cbVerySunny.checked := BloodBowl.GetWeather() = TWeather.Sunny;
+  frmThrowStuff.cbBlizzard.checked := BloodBowl.GetWeather() = TWeather.Blizzard;
 
   frmThrowStuff.cbNet.checked := ThrowStuff = 4;
 
@@ -397,7 +394,7 @@ begin
   frmThrowStuff.cbImpossible.checked := false;
   if (     ((squaredist > 1) ))
      and (((frmThrowStuff.cbBlizzard.checked) and not
-     (player[g,f].hasSkill('Cold Resistant')) or (frmThrowStuff.cbNet.Checked)))
+     (allPlayers[g,f].hasSkill('Cold Resistant')) or (frmThrowStuff.cbNet.Checked)))
         then frmThrowStuff.cbImpossible.checked := true;
   if (   (squaredist >= 2) )
     and (frmThrowStuff.cbBlizzard.checked)
@@ -422,12 +419,12 @@ begin
   frmThrowStuff.Height := 425;
   AccuratePassPlay := false;
   ThrowStuff := StuffType;
-  dist := (player[g,f].p - player[g0,f0].p) * (player[g,f].p - player[g0,f0].p)
-        + (player[g,f].q - player[g0,f0].q) * (player[g,f].q - player[g0,f0].q);
+  dist := (allPlayers[g,f].p - allPlayers[g0,f0].p) * (allPlayers[g,f].p - allPlayers[g0,f0].p)
+        + (allPlayers[g,f].q - allPlayers[g0,f0].q) * (allPlayers[g,f].q - allPlayers[g0,f0].q);
 
-    squaredist := RangeRulerRange(player[g,f].p, player[g,f].q,
-      player[g0,f0].p, player[g0,f0].q);
-  frmThrowStuff.lblCatcher.caption := player[g0,f0].GetPlayerName;
+    squaredist := RangeRulerRange(allPlayers[g,f].p, allPlayers[g,f].q,
+      allPlayers[g0,f0].p, allPlayers[g0,f0].q);
+  frmThrowStuff.lblCatcher.caption := allPlayers[g0,f0].GetPlayerName;
   frmThrowStuff.lblCatcher.font.color := colorarray[g0,0,0];
   if StuffType = 1 then TheThing := 'Bomb' else
     if StuffType = 2 then TheThing := 'Stink Bomb' else
@@ -461,10 +458,10 @@ begin
   FieldQ := q;
   AccuratePassPlay := false;
   ThrowStuff := StuffType;
-  dist := (player[g,f].p - p) * (player[g,f].p - p)
-        + (player[g,f].q - q) * (player[g,f].q - q);
+  dist := (allPlayers[g,f].p - p) * (allPlayers[g,f].p - p)
+        + (allPlayers[g,f].q - q) * (allPlayers[g,f].q - q);
 
-    squaredist := RangeRulerRange(player[g,f].p, player[g,f].q, p, q);
+    squaredist := RangeRulerRange(allPlayers[g,f].p, allPlayers[g,f].q, p, q);
   frmThrowStuff.lblCatcher.caption := 'Field position ' + Chr(65+q) + IntToStr(p+1);
   frmThrowStuff.lblCatcher.font.color := clPurple;
   if StuffType = 1 then TheThing := 'Bomb' else
@@ -538,8 +535,10 @@ begin
   if cbNervesOfSteel.checked then s := s + 'Nerves of Steel, ' else
    if txtPassTZ.text <> '0' then s := s + txtPassTZ.text + ' TZ, ';
   if txtPassFA.text <> '0' then s := s + txtPassFA.text + ' FA, ';
-  if cbVerySunny.checked then s := s + 'Very Sunny, ';
+  if cbVerySunny.checked then
+    s := s + 'Very Sunny, ';
   s := s + txtPassRollNeeded.text + ')';
+
   Bloodbowl.comment.text := s;
   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
   PassResult := WorkOutPassResult;
@@ -570,8 +569,8 @@ begin
         if ThrowStuff <> 4 then
           ShowCatchStuffWindow(TeamCatcher, NumberCatcher, 1, ThrowStuff)
         else begin
-          StuffP := player[TeamCatcher, NumberCatcher].p;
-          StuffQ := player[TeamCatcher, NumberCatcher].q;
+          StuffP := allPlayers[TeamCatcher, NumberCatcher].p;
+          StuffQ := allPlayers[TeamCatcher, NumberCatcher].q;
           BlowUpBomb;
         end;
       end;
@@ -580,10 +579,10 @@ begin
    else
      begin
     butPassRoll.enabled := false;
-    butPassSkill.enabled := player[TeamPasser,NumberPasser].hasSkill('Pass');
+    butPassSkill.enabled := allPlayers[TeamPasser,NumberPasser].hasSkill('Pass');
     butPro.enabled :=
-       player[TeamPasser, NumberPasser].hasSkill('Pro') and
-       not(player[TeamPasser,NumberPasser].usedSkill('Pro'));
+       allPlayers[TeamPasser, NumberPasser].hasSkill('Pro') and
+       not(allPlayers[TeamPasser,NumberPasser].usedSkill('Pro'));
     butTeamReroll.enabled := CanUseTeamReroll(cbBigGuyAlly.checked);
     frmThrowStuff.height := 585;
   end;
@@ -619,8 +618,8 @@ begin
         if ThrowStuff <> 4 then
           ShowCatchStuffWindow(TeamCatcher, NumberCatcher, 1, ThrowStuff)
         else begin
-          StuffP := player[TeamCatcher, NumberCatcher].p;
-          StuffQ := player[TeamCatcher, NumberCatcher].q;
+          StuffP := allPlayers[TeamCatcher, NumberCatcher].p;
+          StuffQ := allPlayers[TeamCatcher, NumberCatcher].q;
           BlowUpBomb;
         end;
       end;
@@ -656,8 +655,8 @@ begin
     frmThrowStuff.butLightFuse.enabled := false;
     frmThrowStuff.butRerollLight.enabled := CanUseTeamReroll(cbBigGuyAlly.checked);
     butFumbleInaccurate.caption := 'Bomb Explodes!';
-    frmThrowStuff.butProLight.enabled := (player[TeamPasser,NumberPasser].hasSkill('Pro'))
-      and (not (player[TeamPasser,NumberPasser].usedSkill('Pro')));
+    frmThrowStuff.butProLight.enabled := (allPlayers[TeamPasser,NumberPasser].hasSkill('Pro'))
+      and (not (allPlayers[TeamPasser,NumberPasser].usedSkill('Pro')));
     frmThrowStuff.butPassRoll.enabled := false;
     frmThrowStuff.butPassSkill.enabled := false;
     frmThrowStuff.butTeamReroll.enabled := false;
@@ -704,7 +703,7 @@ var targetroll: integer;
 begin
   targetroll := 2;
   if ThrowStuff = 3 then targetroll := 3;
-  player[TeamPasser,NumberPasser].UseSkill('Pro');
+  allPlayers[TeamPasser,NumberPasser].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(TeamPasser,NumberPasser);
   if (lastroll <= 3) then lastroll := 1;
@@ -736,7 +735,7 @@ end;
 
 procedure TfrmThrowStuff.butPassSkillClick(Sender: TObject);
 begin
-  player[TeamPasser,NumberPasser].UseSkill('Pass');
+  allPlayers[TeamPasser,NumberPasser].UseSkill('Pass');
   MakePassReroll;
 end;
 
@@ -754,7 +753,7 @@ end;
 
 procedure TfrmThrowStuff.butProClick(Sender: TObject);
 begin
-  player[TeamPasser,NumberPasser].UseSkill('Pro');
+  allPlayers[TeamPasser,NumberPasser].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(TeamPasser,NumberPasser);
   if (lastroll >= 4) then begin
@@ -776,12 +775,12 @@ begin
   frmThrowStuff.Hide;
   AccuratePassPlay := false;
   if butFumbleInaccurate.caption = 'Bomb Explodes!' then begin
-    StuffP := player[TeamPasser, NumberPasser].p;
-    StuffQ := player[TeamPasser, NumberPasser].q;
+    StuffP := allPlayers[TeamPasser, NumberPasser].p;
+    StuffQ := allPlayers[TeamPasser, NumberPasser].q;
     BlowUpBomb;
   end else if butFumbleInaccurate.caption = 'Fumble' then begin
-    StuffP := player[TeamPasser, NumberPasser].p;
-    StuffQ := player[TeamPasser, NumberPasser].q;
+    StuffP := allPlayers[TeamPasser, NumberPasser].p;
+    StuffQ := allPlayers[TeamPasser, NumberPasser].q;
     ScatterStuffFrom(Stuffp, Stuffq, 1, 0, TheThing);
     If StuffP = -1 then begin
       Bloodbowl.comment.text :=  TheThing +
@@ -803,20 +802,20 @@ begin
         NoPlayers := true;
         for v := 0 to 1 do begin
           for w := 1 to team[v].numplayers do begin
-            if (player[v,w].p=StuffP) and (player[v,w].q=StuffQ) and
-            (player[v,w].status >= 1) and (player[v,w].status <= 4) then begin
+            if (allPlayers[v,w].p=StuffP) and (allPlayers[v,w].q=StuffQ) and
+            (allPlayers[v,w].status >= 1) and (allPlayers[v,w].status <= 4) then begin
               NoPlayers := false;
-              if (player[v,w].status = 1) or (player[v,w].status = 2) then begin
+              if (allPlayers[v,w].status = 1) or (allPlayers[v,w].status = 2) then begin
                 if ThrowStuff <> 4 then
                   ShowCatchStuffWindow(v,w, 2, ThrowStuff)
                 else begin
-                  StuffP := player[v,w].p;
-                  StuffQ := player[v,w].q;
+                  StuffP := allPlayers[v,w].p;
+                  StuffQ := allPlayers[v,w].q;
                   BlowUpBomb;
                 end;
               end else begin
-                StuffP := player[v,w].p;
-                StuffQ := player[v,w].q;
+                StuffP := allPlayers[v,w].p;
+                StuffQ := allPlayers[v,w].q;
                 ScatterStuffFrom(Stuffp, Stuffq, 1, 0, TheThing);
                 If StuffP = -1 then begin
                   Bloodbowl.comment.text :=  TheThing +
@@ -841,8 +840,8 @@ begin
         end;
       end;
     end else begin
-      StuffP := player[TeamCatcher, NumberCatcher].p;
-      StuffQ := player[TeamCatcher, NumberCatcher].q;
+      StuffP := allPlayers[TeamCatcher, NumberCatcher].p;
+      StuffQ := allPlayers[TeamCatcher, NumberCatcher].q;
       ScatterStuffFrom(Stuffp, Stuffq, 3, 0, TheThing);
       If StuffP = -1 then begin
         Bloodbowl.comment.text :=  TheThing +
@@ -852,20 +851,20 @@ begin
         NoPlayers := true;
         for v := 0 to 1 do begin
           for w := 1 to team[v].numplayers do begin
-            if (player[v,w].p=StuffP) and (player[v,w].q=StuffQ) and
-            (player[v,w].status >= 1) and (player[v,w].status <= 4) then begin
+            if (allPlayers[v,w].p=StuffP) and (allPlayers[v,w].q=StuffQ) and
+            (allPlayers[v,w].status >= 1) and (allPlayers[v,w].status <= 4) then begin
               NoPlayers := false;
-              if (player[v,w].status = 1) or (player[v,w].status = 2) then begin
+              if (allPlayers[v,w].status = 1) or (allPlayers[v,w].status = 2) then begin
                 if ThrowStuff <> 4 then
                   ShowCatchStuffWindow(v,w, 2, ThrowStuff)
                 else begin
-                  StuffP := player[v,w].p;
-                  StuffQ := player[v,w].q;
+                  StuffP := allPlayers[v,w].p;
+                  StuffQ := allPlayers[v,w].q;
                   BlowUpBomb;
                 end;
               end else begin
-                StuffP := player[v,w].p;
-                StuffQ := player[v,w].q;
+                StuffP := allPlayers[v,w].p;
+                StuffQ := allPlayers[v,w].q;
                 ScatterStuffFrom(Stuffp, Stuffq, 1, 0, TheThing);
                 If StuffP = -1 then begin
                   Bloodbowl.comment.text :=  TheThing +

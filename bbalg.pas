@@ -15,8 +15,14 @@ const
   DirtyPlayerInjuryModifier = 1;
   RegenRollNeeded = 4;
 
-  PLAYER_STATUS_PRONE = 3;
+type
+  TPlayerStatus = (
+  PLAYER_STATUS_BALL_CARRIER = 2,
+  PLAYER_STATUS_PRONE = 3);
 
+type
+  TWeather = (Sweltering, Sunny, Nice, Raining, Blizzard);
+  function ParseWeather(s: string): TWeather;
 
 type
   TmodAlg = class(TDataModule)
@@ -100,6 +106,22 @@ uses unitLog, bbunit, unitNotes, unitBall, unitPlayer, unitTeam,
      unitMessage;
 
 {$R *.DFM}
+
+function ParseWeather(s: string): TWeather;
+begin
+  if s = 'SWELTERING HEAT' then
+    Result := Sweltering
+  else if s = 'VERY SUNNY' then
+    Result := Sunny
+  else if s = 'POURING RAIN'  then
+    Result := Raining
+  else if s = 'BLIZZARD' then
+    Result := Blizzard
+  else
+    Result := Nice;
+end;
+
+
 function GetR6Value(totspp: integer): integer;
 var r6: integer;
 begin
@@ -1046,17 +1068,17 @@ begin
     if (r < 8) and (PPunches) and (PDag) then begin
       InjuryStatus := 4;
     end;
-    if player[DownTeam,DownPlayer].status=2 then begin
-      ploc := player[DownTeam,DownPlayer].p;
-      qloc := player[DownTeam,DownPlayer].q;
-      player[DownTeam,DownPlayer].SetStatus(InjuryStatus);
+    if allPlayers[DownTeam,DownPlayer].status=2 then begin
+      ploc := allPlayers[DownTeam,DownPlayer].p;
+      qloc := allPlayers[DownTeam,DownPlayer].q;
+      allPlayers[DownTeam,DownPlayer].SetStatus(InjuryStatus);
       ScatterBallFrom(ploc, qloc, 1, 0);
-    end else player[DownTeam,DownPlayer].SetStatus(InjuryStatus);
+    end else allPlayers[DownTeam,DownPlayer].SetStatus(InjuryStatus);
     if (GetCas) and (InjuryStatus>=6) then begin
       if CanWriteToLog then begin
-        player[BashTeam, BashPlayer].cas := player[BashTeam, BashPlayer].cas + 1;
+        allPlayers[BashTeam, BashPlayer].cas := allPlayers[BashTeam, BashPlayer].cas + 1;
         LogWrite('p' + Chr(BashTeam + 48) + chr(BashPlayer + 65) + 'C');
-        AddLog('Casualty for ' + player[BashTeam, BashPlayer].GetPlayerName);
+        AddLog('Casualty for ' + allPlayers[BashTeam, BashPlayer].GetPlayerName);
         {increase casscore marker}
         marker[BashTeam, MT_CasScore].MarkerMouseUp(
                   marker[BashTeam, MT_CasScore], mbLeft, [], 0, 0);
@@ -1120,11 +1142,11 @@ begin
       r1 := Rnd(6,3) + 1;
       r2 := Rnd(6,5) + 1;
       if (HitTeam <> -1) and (HitPlayer <> -1) then begin
-        if player[HitTeam,HitPlayer].status=2 then begin
-          player[HitTeam,HitPlayer].SetStatus(3);
-          ScatterBallFrom((player[HitTeam,HitPlayer].p),
-            (player[HitTeam,HitPlayer].q), 1, 0);
-        end else player[HitTeam,HitPlayer].SetStatus(3);
+        if allPlayers[HitTeam,HitPlayer].status=2 then begin
+          allPlayers[HitTeam,HitPlayer].SetStatus(3);
+          ScatterBallFrom((allPlayers[HitTeam,HitPlayer].p),
+            (allPlayers[HitTeam,HitPlayer].q), 1, 0);
+        end else allPlayers[HitTeam,HitPlayer].SetStatus(3);
       end;
     end;
     if (r1 + r2 + am > av) then begin
@@ -1160,12 +1182,12 @@ begin
   if CrystalSkin then CS := 'C' else CS := ' ';
   ArmourRoll := PD + CS + PO + Chr(am + 48) + Chr(r1 + 48) + Chr(r2 + 48) + s;
   if not(InjuryFlag) and (DownTeam<> -1) and (DownPlayer<> -1) then begin
-    if player[DownTeam,DownPlayer].status=2 then begin
-      ploc := player[DownTeam,DownPlayer].p;
-      qloc := player[DownTeam,DownPlayer].q;
-      player[DownTeam,DownPlayer].SetStatus(3);
+    if allPlayers[DownTeam,DownPlayer].status=2 then begin
+      ploc := allPlayers[DownTeam,DownPlayer].p;
+      qloc := allPlayers[DownTeam,DownPlayer].q;
+      allPlayers[DownTeam,DownPlayer].SetStatus(3);
       ScatterBallFrom(ploc, qloc, 1, 0);
-    end else player[DownTeam,DownPlayer].SetStatus(3);
+    end else allPlayers[DownTeam,DownPlayer].SetStatus(3);
     DownTeam := -1;
     DownPlayer := -1;
     BashTeam := -1;
@@ -1213,20 +1235,20 @@ begin
     s := s + 'S';
 
   if (HitPlayer<> -1) and (HitTeam<> -1) then begin
-    if player[HitTeam,HitPlayer].status = STATUS_BALL_CARRIER then
+    if allPlayers[HitTeam,HitPlayer].status = STATUS_BALL_CARRIER then
     begin
-      ploc := player[HitTeam,HitPlayer].p;
-      qloc := player[HitTeam,HitPlayer].q;
-      player[HitTeam,HitPlayer].SOstatus := player[HitTeam,HitPlayer].status;
-      player[HitTeam,HitPlayer].SOSIstatus := player[HitTeam,HitPlayer].SIstatus;
-      player[HitTeam,HitPlayer].SetStatus(12);
+      ploc := allPlayers[HitTeam,HitPlayer].p;
+      qloc := allPlayers[HitTeam,HitPlayer].q;
+      allPlayers[HitTeam,HitPlayer].SOstatus := allPlayers[HitTeam,HitPlayer].status;
+      allPlayers[HitTeam,HitPlayer].SOSIstatus := allPlayers[HitTeam,HitPlayer].SIstatus;
+      allPlayers[HitTeam,HitPlayer].SetStatus(12);
       ScatterBallFrom(ploc, qloc, 1, 0);
     end
     else
     begin
-      player[HitTeam,HitPlayer].SOstatus := player[HitTeam,HitPlayer].status;
-      player[HitTeam,HitPlayer].SOSIstatus := player[HitTeam,HitPlayer].SIstatus;
-      player[HitTeam,HitPlayer].SetStatus(12);
+      allPlayers[HitTeam,HitPlayer].SOstatus := allPlayers[HitTeam,HitPlayer].status;
+      allPlayers[HitTeam,HitPlayer].SOSIstatus := allPlayers[HitTeam,HitPlayer].SIstatus;
+      allPlayers[HitTeam,HitPlayer].SetStatus(12);
     end;
     HitTeam := -1;
     HitPlayer := -1;
@@ -1270,7 +1292,7 @@ begin
   f := Ord(nr[4]) - 64;
   r := Ord(nr[5]) - 48;
   s := 'Roll for Niggling Injury for ' +
-                                player[g,f].GetPlayerName + ': ' + IntToStr(r);
+                                allPlayers[g,f].GetPlayerName + ': ' + IntToStr(r);
   TranslateNiggle := s;
 end;
 
@@ -1286,7 +1308,7 @@ begin
   g := Ord(nr[3]) - 48;
   f := Ord(nr[4]) - 64;
   r := Ord(nr[5]) - 48;
-  s := player[g,f].GetPlayerName;
+  s := allPlayers[g,f].GetPlayerName;
   if (r = 0) or (r = 9) then s := s + ' can play normally.'
            else s := s + ' must miss the match!';
   if (r = 0) or (r = 9) then
@@ -1304,12 +1326,12 @@ var f: integer;
 begin
   tz.num := 0;
   for f := 1 to team[1-g0].numplayers do begin
-    if (player[1-g0,f].status = 1)
-    or (player[1-g0,f].status = 2) then
+    if (allPlayers[1-g0,f].status = 1)
+    or (allPlayers[1-g0,f].status = 2) then
        begin
-      if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
-      and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
-      and (player[1-g0,f].tz = 0) then begin
+      if (abs(allPlayers[1-g0,f].p - allPlayers[g0,f0].p) <= 1)
+      and (abs(allPlayers[1-g0,f].q - allPlayers[g0,f0].q) <= 1)
+      and (allPlayers[1-g0,f].tz = 0) then begin
         tz.num := tz.num + 1;
         tz.pl[tz.num] := f;
       end;
@@ -1323,10 +1345,10 @@ var f, z: integer;
 begin
   z := 0;
   for f := 1 to team[1-g0].numplayers do begin
-    if (player[1-g0,f].status = 1)
-    or (player[1-g0,f].status = 2) then begin
-      if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
-      and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
+    if (allPlayers[1-g0,f].status = 1)
+    or (allPlayers[1-g0,f].status = 2) then begin
+      if (abs(allPlayers[1-g0,f].p - allPlayers[g0,f0].p) <= 1)
+      and (abs(allPlayers[1-g0,f].q - allPlayers[g0,f0].q) <= 1)
       then begin
         z := z + 1;
       end;
@@ -1341,10 +1363,10 @@ var f: integer;
 begin
   tz.num := 0;
   for f := 1 to team[g0].numplayers do begin
-    if (player[g0,f].status = 1) or (player[g0,f].status = 2) then begin
-      if (abs(player[g0,f].p - player[g0,f0].p) <= 1)
-      and (abs(player[g0,f].q - player[g0,f0].q) <= 1)
-      and (player[g0,f].tz = 0) then begin
+    if (allPlayers[g0,f].status = 1) or (allPlayers[g0,f].status = 2) then begin
+      if (abs(allPlayers[g0,f].p - allPlayers[g0,f0].p) <= 1)
+      and (abs(allPlayers[g0,f].q - allPlayers[g0,f0].q) <= 1)
+      and (allPlayers[g0,f].tz = 0) then begin
         tz.num := tz.num + 1;
         tz.pl[tz.num] := f;
       end;
@@ -1359,13 +1381,13 @@ var f: integer;
 begin
   tz.num := 0;
   for f := 1 to team[1-g0].numplayers do begin
-    if (player[1-g0,f].status = 1)
-    or (player[1-g0,f].status = 2)
-    or ((player[1-g0,f].status = 3) and
-       (player[1-g0,f].hasSkill('Trip Up'))) then begin
-      if (abs(player[1-g0,f].p - p) <= 1)
-      and (abs(player[1-g0,f].q - q) <= 1)
-      and (player[1-g0,f].tz = 0) then begin
+    if (allPlayers[1-g0,f].status = 1)
+    or (allPlayers[1-g0,f].status = 2)
+    or ((allPlayers[1-g0,f].status = 3) and
+       (allPlayers[1-g0,f].hasSkill('Trip Up'))) then begin
+      if (abs(allPlayers[1-g0,f].p - p) <= 1)
+      and (abs(allPlayers[1-g0,f].q - q) <= 1)
+      and (allPlayers[1-g0,f].tz = 0) then begin
         tz.num := tz.num + 1;
         tz.pl[tz.num] := f;
       end;
@@ -1380,16 +1402,16 @@ var f: integer;
 begin
   tz.num := 0;
   for f := 1 to team[1-g0].numplayers do begin
-    if (((player[1-g0,f].status = 1) or (player[1-g0,f].status = 2))
-      and ((player[1-g0,f].hasSkill('Shadow*')) or
-           ((player[1-g0,f].hasSkill('Diving Tackle'))
+    if (((allPlayers[1-g0,f].status = 1) or (allPlayers[1-g0,f].status = 2))
+      and ((allPlayers[1-g0,f].hasSkill('Shadow*')) or
+           ((allPlayers[1-g0,f].hasSkill('Diving Tackle'))
                                )))then
                                begin
-      if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
-      and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
-      and (player[1-g0,f].tz = 0) then begin
-        if (player[1-g0,f].hasSkill('Diving Tackle')) and
-          (player[1-g0,f].status = 1) then
+      if (abs(allPlayers[1-g0,f].p - allPlayers[g0,f0].p) <= 1)
+      and (abs(allPlayers[1-g0,f].q - allPlayers[g0,f0].q) <= 1)
+      and (allPlayers[1-g0,f].tz = 0) then begin
+        if (allPlayers[1-g0,f].hasSkill('Diving Tackle')) and
+          (allPlayers[1-g0,f].status = 1) then
           tz.num := tz.num + 10
            else tz.num := tz.num + 1;
         {tz.pl[tz.num] := f;}
@@ -1408,11 +1430,11 @@ begin
     if (not((1-g0=BlockTeam) and (f=BlockPlayer)))
     and (not((1-g0=HitTeam) and (f=HitPlayer)))
     then begin
-      if (player[1-g0,f].status = 1)
-      or (player[1-g0,f].status = 2) then begin
-        if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
-        and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
-        and (player[1-g0,f].tz = 0)
+      if (allPlayers[1-g0,f].status = 1)
+      or (allPlayers[1-g0,f].status = 2) then begin
+        if (abs(allPlayers[1-g0,f].p - allPlayers[g0,f0].p) <= 1)
+        and (abs(allPlayers[1-g0,f].q - allPlayers[g0,f0].q) <= 1)
+        and (allPlayers[1-g0,f].tz = 0)
         {and ((player[1-g0,f].tz = 0)
         or ((player[1-g0,f].tz <> 0)
         and (frmSettings.cbNoTZAssist.checked)))}
@@ -1435,11 +1457,11 @@ begin
     if (not((1-g0=BlockTeam) and (f=BlockPlayer)))
     and (not((1-g0=HitTeam) and (f=HitPlayer)))
     then begin
-      if (player[1-g0,f].status = 1)
-      or (player[1-g0,f].status = 2) then begin
-        if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
-        and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
-        and ((player[1-g0,f].tz = 0))
+      if (allPlayers[1-g0,f].status = 1)
+      or (allPlayers[1-g0,f].status = 2) then begin
+        if (abs(allPlayers[1-g0,f].p - allPlayers[g0,f0].p) <= 1)
+        and (abs(allPlayers[1-g0,f].q - allPlayers[g0,f0].q) <= 1)
+        and ((allPlayers[1-g0,f].tz = 0))
         then begin
           tz.num := tz.num + 1;
           tz.pl[tz.num] := f;
@@ -1456,11 +1478,11 @@ var f: integer;
 begin
   tz.num := 0;
   for f := 1 to team[1-g0].numplayers do begin
-    if (player[1-g0,f].status = 1)
-    or (player[1-g0,f].status = 2) then begin
-      if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
-      and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
-      and (player[1-g0,f].tz = 0) then begin
+    if (allPlayers[1-g0,f].status = 1)
+    or (allPlayers[1-g0,f].status = 2) then begin
+      if (abs(allPlayers[1-g0,f].p - allPlayers[g0,f0].p) <= 1)
+      and (abs(allPlayers[1-g0,f].q - allPlayers[g0,f0].q) <= 1)
+      and (allPlayers[1-g0,f].tz = 0) then begin
         tz.num := tz.num + 1;
         tz.pl[tz.num] := f;
       end;
@@ -1478,14 +1500,14 @@ var f: integer;
 begin
   tz.num := 0;
   for f := 1 to team[1-g0].numplayers do begin
-    if ((player[1-g0,f].status = 1) and not
-         (player[1-g0,f].hasSkill('Honorable')))
-    or ((player[1-g0,f].status = 2) and not
-         (player[1-g0,f].hasSkill('Honorable')))
+    if ((allPlayers[1-g0,f].status = 1) and not
+         (allPlayers[1-g0,f].hasSkill('Honorable')))
+    or ((allPlayers[1-g0,f].status = 2) and not
+         (allPlayers[1-g0,f].hasSkill('Honorable')))
     then begin
-      if (abs(player[1-g0,f].p - player[g0,f0].p) <= 1)
-      and (abs(player[1-g0,f].q - player[g0,f0].q) <= 1)
-      and (player[1-g0,f].tz = 0) then begin
+      if (abs(allPlayers[1-g0,f].p - allPlayers[g0,f0].p) <= 1)
+      and (abs(allPlayers[1-g0,f].q - allPlayers[g0,f0].q) <= 1)
+      and (allPlayers[1-g0,f].tz = 0) then begin
         tz.num := tz.num + 1;
         tz.pl[tz.num] := f;
       end;
@@ -1502,18 +1524,18 @@ begin
   a := 0;
   for f := 1 to team[g0].numplayers do begin
     if f <> f0 then begin
-      if ((player[g0,f].status = 1) or (player[g0,f].status = 2)) then begin
-        if (abs(player[g0,f].p - player[g0,f0].p) <= 1)
-        and (abs(player[g0,f].q - player[g0,f0].q) <= 1) then begin
+      if ((allPlayers[g0,f].status = 1) or (allPlayers[g0,f].status = 2)) then begin
+        if (abs(allPlayers[g0,f].p - allPlayers[g0,f0].p) <= 1)
+        and (abs(allPlayers[g0,f].q - allPlayers[g0,f0].q) <= 1) then begin
           Bhead := False;
           Rstupid := False;
           TZone := True;
-          if (player[g0,f].HasSkill('Bonehead')) or
-             (player[g0,f].hasSkill('Bone-head'))
+          if (allPlayers[g0,f].HasSkill('Bonehead')) or
+             (allPlayers[g0,f].hasSkill('Bone-head'))
               then Bhead := True;
-          if (player[g0,f].HasSkill('Really Stupid')) then
+          if (allPlayers[g0,f].HasSkill('Really Stupid')) then
               RStupid := True;
-          if (player[g0,f].tz > 0)
+          if (allPlayers[g0,f].tz > 0)
             then TZone := False;
           if TZone and not RStupid then
             a := a + 1;
@@ -1531,10 +1553,10 @@ var f, a, ThrowerP, ThrowerQ, OpponentP, OpponentQ, dp2, dq2, bigd, littled: int
 begin
   a := 0;
   for f := 1 to team[1-g0].numplayers do begin
-    ThrowerP := player[g0,f0].p;
-    ThrowerQ := player[g0,f0].q;
-    OpponentP := player[1-g0,f].p;
-    OpponentQ := player[1-g0,f].q;
+    ThrowerP := allPlayers[g0,f0].p;
+    ThrowerQ := allPlayers[g0,f0].q;
+    OpponentP := allPlayers[1-g0,f].p;
+    OpponentQ := allPlayers[1-g0,f].q;
     dp2 := abs(CatcherP - ThrowerP);
     dq2 := abs(CatcherQ - ThrowerQ);
     if dp2 >= dq2 then begin
@@ -1544,11 +1566,11 @@ begin
       bigd := dq2;
       littled := dp2;
     end;
-    if ((player[1-g0,f].status = 1)
-        and (player[1-g0,f].hasSkill('Pass Block')))
+    if ((allPlayers[1-g0,f].status = 1)
+        and (allPlayers[1-g0,f].hasSkill('Pass Block')))
     then
     begin
-      if (player[1-g0,f].tz = 0)  then
+      if (allPlayers[1-g0,f].tz = 0)  then
        begin
         if ((abs(OpponentP - ThrowerP)) <= 4) and
            ((abs(OpponentQ - ThrowerQ)) <= 4) then a := a + 1;
@@ -1588,15 +1610,15 @@ var f, a: integer;
 begin
   a := 0;
   for f := 1 to team[1-g0].numplayers do begin
-    if ((player[1-g0,f].status = 1)
-        or (player[1-g0,f].status = 2)
-        or (((player[1-g0,f].status=3) or (player[1-g0,f].status=4)) and
+    if ((allPlayers[1-g0,f].status = 1)
+        or (allPlayers[1-g0,f].status = 2)
+        or (((allPlayers[1-g0,f].status=3) or (allPlayers[1-g0,f].status=4)) and
         (true)))     // foul prone
-        and (player[1-g0,f].hasSkill('Foul Appearanc*')) then begin
+        and (allPlayers[1-g0,f].hasSkill('Foul Appearanc*')) then begin
     {TOM CHANGE:  Original code had the sum of the ABS <=3
      when it should be each condition being <= 3}
-      if ((abs(player[1-g0,f].p - player[g0,f0].p)) <= 3) and
-         ((abs(player[1-g0,f].q - player[g0,f0].q)) <= 3) then a := a + 1;
+      if ((abs(allPlayers[1-g0,f].p - allPlayers[g0,f0].p)) <= 3) and
+         ((abs(allPlayers[1-g0,f].q - allPlayers[g0,f0].q)) <= 3) then a := a + 1;
     end;
   end;
   CountFA := a;
@@ -1615,9 +1637,9 @@ var
 begin
   dl := 0;
   dd := 0;
-  std := player[g0, f0].st;
+  std := allPlayers[g0, f0].st;
   assa := 0;
-  bga := (((player[g, f].BigGuy) or (player[g, f].Ally)) and (true));
+  bga := (((allPlayers[g, f].BigGuy) or (allPlayers[g, f].Ally)) and (true));
   BlockTeam := g0;
   BlockPlayer := f0;
   HitTeam := g;
@@ -1626,14 +1648,14 @@ begin
   AVBreak := false;
   NoDumpOff := true;
   QuickPass := false;
-  TargetPlayer := player[g0, f0];
-  if (TargetPlayer.hasSkill('Dump Off')) or (player[g0, f0].hasSkill('Dump-Off'))
+  TargetPlayer := allPlayers[g0, f0];
+  if (TargetPlayer.hasSkill('Dump Off')) or (allPlayers[g0, f0].hasSkill('Dump-Off'))
   then
   begin
     for z := 1 to team[g0].numplayers do
     begin
-      squaredist := RangeRulerRange(player[g0, z].p,
-                                    player[g0, z].q,
+      squaredist := RangeRulerRange(allPlayers[g0, z].p,
+                                    allPlayers[g0, z].q,
                                     TargetPlayer.p,
                                     TargetPlayer.q);
       if squaredist = 0 then
@@ -1653,7 +1675,7 @@ begin
   end;
   { Ball and Chain }
   if (TargetPlayer.hasSkill('Ball and Chain')) and
-    not(player[g, f].hasSkill('Ball and Chain')) then
+    not(allPlayers[g, f].hasSkill('Ball and Chain')) then
     bnc := false
   else
     bnc := true;
@@ -1672,7 +1694,7 @@ begin
       end
       else
         p := 2;
-      Bloodbowl.comment.text := player[g, f].GetPlayerName +
+      Bloodbowl.comment.text := allPlayers[g, f].GetPlayerName +
         ' has to beat Foul Appearance (' + IntToStr(p) + '+)';
       Bloodbowl.EnterButtonClick(Bloodbowl);
       Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
@@ -1680,9 +1702,9 @@ begin
         fa := true
       else
       begin
-        bga := (((player[g, f].BigGuy) or (player[g, f].Ally)) and (true));
-        ProSkill := ((player[g, f].hasSkill('Pro'))) and (lastroll <= 1) and
-          (not(player[g, f].usedSkill('Pro'))) and (g = activeTeam);
+        bga := (((allPlayers[g, f].BigGuy) or (allPlayers[g, f].Ally)) and (true));
+        ProSkill := ((allPlayers[g, f].hasSkill('Pro'))) and (lastroll <= 1) and
+          (not(allPlayers[g, f].usedSkill('Pro'))) and (g = activeTeam);
         reroll := CanUseTeamReroll(bga);
         ReRollAnswer := 'Fail Roll';
         if reroll and ProSkill then
@@ -1712,7 +1734,7 @@ begin
         end;
         if ReRollAnswer = 'Use Pro' then
         begin
-          player[g, f].UseSkill('Pro');
+          allPlayers[g, f].UseSkill('Pro');
           Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
           if lastroll <= 3 then
             TeamRerollPro(g, f);
@@ -1732,35 +1754,35 @@ begin
   end;
   if not(fa) then
   begin
-    Bloodbowl.comment.text := player[g, f].GetPlayerName +
+    Bloodbowl.comment.text := allPlayers[g, f].GetPlayerName +
       ' is too revolted to make the block!';
     Bloodbowl.EnterButtonClick(Bloodbowl);
   end;
   if not(bnc) then
   begin
-    Bloodbowl.comment.text := player[g, f].GetPlayerName +
+    Bloodbowl.comment.text := allPlayers[g, f].GetPlayerName +
       ' cannot block a Ball and Chain player!';
     Bloodbowl.EnterButtonClick(Bloodbowl);
   end;
   if (avd) and (fa) and (jam) and (bnc) and (NoDumpOff) then
   begin
     { Dauntless }
-    if TargetPlayer.st > player[g, f].st then
+    if TargetPlayer.st > allPlayers[g, f].st then
     begin
-      if (player[g, f].hasSkill('Dauntless')) or
-        (player[g, f].hasSkill('Double Dauntless')) then
+      if (allPlayers[g, f].hasSkill('Dauntless')) or
+        (allPlayers[g, f].hasSkill('Double Dauntless')) then
       begin
-        Bloodbowl.comment.text := player[g, f].GetPlayerName +
+        Bloodbowl.comment.text := allPlayers[g, f].GetPlayerName +
           ' Dauntless roll';
         Bloodbowl.EnterButtonClick(Bloodbowl);
         Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-        if lastroll > player[g0, f0].st then
+        if lastroll > allPlayers[g0, f0].st then
           dl := 1
         else
         begin
-          bga := (((player[g, f].BigGuy) or (player[g, f].Ally)) and (true));
-          ProSkill := ((player[g, f].hasSkill('Pro'))) and (lastroll <= 1) and
-            (not(player[g, f].usedSkill('Pro'))) and (g = activeTeam);
+          bga := (((allPlayers[g, f].BigGuy) or (allPlayers[g, f].Ally)) and (true));
+          ProSkill := ((allPlayers[g, f].hasSkill('Pro'))) and (lastroll <= 1) and
+            (not(allPlayers[g, f].usedSkill('Pro'))) and (g = activeTeam);
           reroll := CanUseTeamReroll(bga);
           ReRollAnswer := 'Fail Roll';
           if reroll and ProSkill then
@@ -1790,7 +1812,7 @@ begin
           end;
           if ReRollAnswer = 'Use Pro' then
           begin
-            player[g, f].UseSkill('Pro');
+            allPlayers[g, f].UseSkill('Pro');
             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
             if lastroll <= 3 then
               TeamRerollPro(g, f);
@@ -1803,7 +1825,7 @@ begin
               Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
             end;
           end;
-          if lastroll > player[g0, f0].st then
+          if lastroll > allPlayers[g0, f0].st then
             dl := 1
           else
             dl := 0;
@@ -1816,35 +1838,35 @@ begin
   begin
     sa := 0;
     horns := 0;
-    s := '#' + IntToStr(player[g, f].cnumber) + ' (ST ';
+    s := '#' + IntToStr(allPlayers[g, f].cnumber) + ' (ST ';
     if dl = 1 then
     begin
       s := s + '*' + IntToStr(TargetPlayer.st) + '*';
       stx := TargetPlayer.st;
     end
-    else if (player[g, f].hasSkill('Ball and Chain')) then
+    else if (allPlayers[g, f].hasSkill('Ball and Chain')) then
     begin
       s := s + '*' + IntToStr(6) + '*';
       stx := 6;
     end
     else
     begin
-      s := s + IntToStr(player[g, f].st);
-      stx := player[g, f].st;
+      s := s + IntToStr(allPlayers[g, f].st);
+      stx := allPlayers[g, f].st;
     end;
-    if player[g, f].font.size = 12 then
+    if allPlayers[g, f].font.size = 12 then
       s := s + ') b '
     else
     begin
-      if (player[g, f].FirstBlock = 1) and
-        ((player[g, f].LastAction = 1) or (player[g, f].LastAction = 2)) then
+      if (allPlayers[g, f].FirstBlock = 1) and
+        ((allPlayers[g, f].LastAction = 1) or (allPlayers[g, f].LastAction = 2)) then
       begin // horns 2nd
-        if player[g, f].hasSkill('Horns') then
+        if allPlayers[g, f].hasSkill('Horns') then
         begin
           s := s + ',horns';
           horns := 1;
         end;
-        if player[g, f].hasSkill('Horn') then
+        if allPlayers[g, f].hasSkill('Horn') then
         begin
           s := s + ',horn';
           horns := 1;
@@ -1855,7 +1877,7 @@ begin
     if dd = 1 then
     begin
       s := s + '#' + IntToStr(TargetPlayer.cnumber) + ' (ST ' + '*' +
-        IntToStr(player[g, f].st) + '*)';
+        IntToStr(allPlayers[g, f].st) + '*)';
     end
     else
     begin
@@ -1864,7 +1886,7 @@ begin
     end;
     assa := horns + sa;
     { count assists }
-    if (not((player[g, f].hasSkill('Ball and Chain')))) then
+    if (not((allPlayers[g, f].hasSkill('Ball and Chain')))) then
     begin
       tz := CountTZBlockA(g0, f0);
       bx := false;
@@ -1872,7 +1894,7 @@ begin
       begin
         if tz.pl[p] <> f then
         begin
-          if player[g, tz.pl[p]].hasSkill('Guard') then
+          if allPlayers[g, tz.pl[p]].hasSkill('Guard') then
             b := true
           else
           begin
@@ -1892,14 +1914,14 @@ begin
             end
             else
               s := s + ',';
-            s := s + IntToStr(player[g, tz.pl[p]].cnumber);
+            s := s + IntToStr(allPlayers[g, tz.pl[p]].cnumber);
           end;
         end;
       end;
     end;
     assd := 0;
     { count counterassists }
-    if (not((player[g, f].hasSkill('Ball and Chain')))) then
+    if (not((allPlayers[g, f].hasSkill('Ball and Chain')))) then
     begin
       tz := CountTZBlockCA2(g, f);
       bx := false;
@@ -1907,7 +1929,7 @@ begin
       begin
         if tz.pl[p] <> f0 then
         begin
-          if player[g0, tz.pl[p]].hasSkill('Guard') then
+          if allPlayers[g0, tz.pl[p]].hasSkill('Guard') then
             b := true
           else
           begin
@@ -1926,12 +1948,12 @@ begin
             end
             else
               s := s + ',';
-            s := s + IntToStr(player[g0, tz.pl[p]].cnumber);
+            s := s + IntToStr(allPlayers[g0, tz.pl[p]].cnumber);
           end;
         end;
       end;
     end;
-    if (stx + assa < 1) and (player[g, f].st > 0) then
+    if (stx + assa < 1) and (allPlayers[g, f].st > 0) then
     begin
       assa := 0;
     end;
@@ -1972,12 +1994,12 @@ begin
       Bloodbowl.TwoDBButtonClick(Bloodbowl);
     if abs(db) = 3 then
       Bloodbowl.ThreeDBButtonClick(Bloodbowl);
-    HitBlock := player[g, f].hasSkill('Block');
+    HitBlock := allPlayers[g, f].hasSkill('Block');
     VicBlock := TargetPlayer.hasSkill('Block');
-    HitTackle := player[g, f].hasSkill('Tackle');
+    HitTackle := allPlayers[g, f].hasSkill('Tackle');
     VicDodge := TargetPlayer.hasSkill('Dodge');
-    HitJugger := (player[g, f].hasSkill('Juggernaut')) and
-      (player[g, f].FirstBlock = 1) and (player[g, f].LastAction = 1);
+    HitJugger := (allPlayers[g, f].hasSkill('Juggernaut')) and
+      (allPlayers[g, f].FirstBlock = 1) and (allPlayers[g, f].LastAction = 1);
     BlockCount := ((HitBlock) and not(VicBlock)) or (HitJugger);
     PowDCount := (not(VicDodge)) or (HitTackle);
     DownHeGoes := false;
@@ -2047,18 +2069,18 @@ begin
     end;
     if not(DownHeGoes) then
     begin
-      if CanUseTeamReroll(bga) or ((player[g, f].hasSkill('Pro')) and
-        not(player[g, f].usedSkill('Pro'))) then
+      if CanUseTeamReroll(bga) or ((allPlayers[g, f].hasSkill('Pro')) and
+        not(allPlayers[g, f].usedSkill('Pro'))) then
       begin
         BlockAnswer := 'No';
-        if (player[g, f].hasSkill('Pro')) and not(player[g, f].usedSkill('Pro'))
+        if (allPlayers[g, f].hasSkill('Pro')) and not(allPlayers[g, f].usedSkill('Pro'))
           and (CanUseTeamReroll(bga)) then
           BlockAnswer := FlexMessageBox
             ('Block fails to knock down and/or knocked down ' +
             'your player! Use Team Reroll or Pro?', 'Knock Down Failure',
             'No,Team Reroll,Pro')
-        else if (player[g, f].hasSkill('Pro')) and
-          not(player[g, f].usedSkill('Pro')) then
+        else if (allPlayers[g, f].hasSkill('Pro')) and
+          not(allPlayers[g, f].usedSkill('Pro')) then
           BlockAnswer := FlexMessageBox
             ('Block fails to knock down and/or knocked down ' +
             'your player! Use Pro?', 'Knock Down Failure', 'No,Pro')
@@ -2082,7 +2104,7 @@ begin
         end
         else if BlockAnswer = 'Pro' then
         begin
-          player[g, f].UseSkill('Pro');
+          allPlayers[g, f].UseSkill('Pro');
           Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
           if lastroll <= 3 then
             TeamRerollPro(g, f);
@@ -2194,7 +2216,7 @@ begin
       GetCas := false;
       AVBreak := false;
     end;
-    player[g, f].LastAction := 2;
+    allPlayers[g, f].LastAction := 2;
   end
   else
   begin
@@ -2220,12 +2242,12 @@ begin
   frmArmourRoll.txtAssists.text := IntToStr(assa);
   frmArmourRoll.rbARNoSkill.checked := true;
   frmArmourRoll.rbIRNoSkill.checked := true;
-  if player[g, f].hasSkill('Mighty Blow') then
+  if allPlayers[g, f].hasSkill('Mighty Blow') then
   begin
     frmArmourRoll.rbARMightyBlow.checked := true;
     frmArmourRoll.rbIRMightyBlow.checked := true;
   end;
-  if player[g, f].hasSkill('Claw') then
+  if allPlayers[g, f].hasSkill('Claw') then
     frmArmourRoll.rbClaw.checked := true;
   if TargetPlayer.hasSkill('Running Chainsaw') then
     frmArmourRoll.cbChainsawKD.checked := true;
@@ -2269,8 +2291,8 @@ var assa, assd, p,  NiggleCount: integer;
     b, bx: boolean;
 begin
   GetCAS := false;
-  s := IntToStr(player[g,f].cnumber) + ' fouls ' +
-    IntToStr(player[g0,f0].cnumber);
+  s := IntToStr(allPlayers[g,f].cnumber) + ' fouls ' +
+    IntToStr(allPlayers[g0,f0].cnumber);
   {count assists}
   assa := 0;
 
@@ -2279,7 +2301,7 @@ begin
   HitTeam := g;
   HitPlayer := f;
 
-  if not(player[g,f].hasSkill('Maniac'))
+  if not(allPlayers[g,f].hasSkill('Maniac'))
       then begin
     tz := CountTZFoul(g0, f0);
     bx := false;
@@ -2292,13 +2314,13 @@ begin
 
         if b then begin
           assa := assa + 1;
-          if player[g,tz.pl[p]].hasSkill('Running Chainsaw') then
+          if allPlayers[g,tz.pl[p]].hasSkill('Running Chainsaw') then
              assa := assa + 2;
           if not(bx) then begin
             s := s + ' a ';
             bx := true;
           end else s := s + ',';
-            s := s + InttoStr(player[g,tz.pl[p]].cnumber);
+            s := s + InttoStr(allPlayers[g,tz.pl[p]].cnumber);
         end;
       end;
     end;
@@ -2320,7 +2342,7 @@ begin
             s := s + ' ca ';
             bx := true;
           end else s := s + ',';
-            s := s + InttoStr(player[g0,tz.pl[p]].cnumber);
+            s := s + InttoStr(allPlayers[g0,tz.pl[p]].cnumber);
         end;
       end;
     end;
@@ -2328,43 +2350,43 @@ begin
   Bloodbowl.comment.text := s;
   Bloodbowl.EnterButtonClick(Bloodbowl);
 
-  frmArmourRoll.txtArmourValue.text := IntToStr(player[g0,f0].av);
+  frmArmourRoll.txtArmourValue.text := IntToStr(allPlayers[g0,f0].av);
   frmArmourRoll.txtAssists.text := IntToStr((assa-assd));
   frmArmourRoll.rbARNoSkill.checked := true;
   frmArmourRoll.rbIRNoSkill.checked := true;
-  if player[g,f].hasSkill('Mighty Blow') then begin
+  if allPlayers[g,f].hasSkill('Mighty Blow') then begin
     frmArmourRoll.rbARMightyBlow.checked := true;
     frmArmourRoll.rbIRMightyBlow.checked := true;
   end;
-  if player[g,f].hasSkill('Claw') then
+  if allPlayers[g,f].hasSkill('Claw') then
     frmArmourRoll.rbClaw.checked := true;
 
-  if player[g,f].hasSkill('Running Chainsaw') then
+  if allPlayers[g,f].hasSkill('Running Chainsaw') then
     frmArmourRoll.rbChainsaw.checked := true;
-  if player[g,f].hasSkill('Dirty Player') then begin
+  if allPlayers[g,f].hasSkill('Dirty Player') then begin
     frmArmourRoll.rbDirtyPlayer.checked := true;
     frmArmourRoll.rbIRDirtyPlayer.checked := true;
   end;
 
   frmArmourRoll.cbThickSkull.checked :=
-     (player[g0,f0].hasSkill('Thick Skull'));
-  frmArmourRoll.cbProSkill.checked := (player[g0,f0].hasSkill('Pro'));
+     (allPlayers[g0,f0].hasSkill('Thick Skull'));
+  frmArmourRoll.cbProSkill.checked := (allPlayers[g0,f0].hasSkill('Pro'));
 
-  if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
-      ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
-        and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
+  if ((Pos('HALFLING', Uppercase(allPlayers[g0,f0].position)) > 0) or
+      ((Pos('GOBLIN', Uppercase(allPlayers[g0,f0].position)) > 0)
+        and not (Pos('HOBGOBLIN', Uppercase(allPlayers[g0,f0].position)) > 0)))
         then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[g0,f0].hasSkill('STUNTY')) then begin
+  end else if (allPlayers[g0,f0].hasSkill('STUNTY')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else
    frmArmourRoll.rbNoStunty.checked := true;
 
-  frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
+  frmArmourRoll.cbDecay.checked := (allPlayers[g0,f0].hasSkill('Decay'));
   frmArmourRoll.cbIGMEOY.checked := (g = IGMEOY);
-  frmArmourRoll.rbDeathRoller.checked := (player[g,f].hasSkill('Deathroller'));
+  frmArmourRoll.rbDeathRoller.checked := (allPlayers[g,f].hasSkill('Deathroller'));
 
-    s := player[g0,f0].inj;
+    s := allPlayers[g0,f0].inj;
     p := Pos('N', Uppercase(s));
     {roll for each N until all done, or 1 rolled}
     NiggleCount := 0;
@@ -2418,23 +2440,23 @@ var p, NiggleCount: integer;
 begin
   frmArmourRoll.rbARNoSkill.checked := true;
   frmArmourRoll.rbIRNoSkill.checked := true;
-  frmArmourRoll.cbThickSkull.checked := (player[g0,f0].hasSkill('Thick Skull'));
-  frmArmourRoll.cbProSkill.checked := (player[g0,f0].hasSkill('Pro'));
+  frmArmourRoll.cbThickSkull.checked := (allPlayers[g0,f0].hasSkill('Thick Skull'));
+  frmArmourRoll.cbProSkill.checked := (allPlayers[g0,f0].hasSkill('Pro'));
 
-  if ((Pos('HALFLING', Uppercase(player[g0,f0].position)) > 0) or
-      ((Pos('GOBLIN', Uppercase(player[g0,f0].position)) > 0)
-        and not (Pos('HOBGOBLIN', Uppercase(player[g0,f0].position)) > 0)))
+  if ((Pos('HALFLING', Uppercase(allPlayers[g0,f0].position)) > 0) or
+      ((Pos('GOBLIN', Uppercase(allPlayers[g0,f0].position)) > 0)
+        and not (Pos('HOBGOBLIN', Uppercase(allPlayers[g0,f0].position)) > 0)))
         then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[g0,f0].hasSkill('STUNTY')) then begin
+  end else if (allPlayers[g0,f0].hasSkill('STUNTY')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[g0,f0].hasSkill('Easily Injured')) then begin
+  end else if (allPlayers[g0,f0].hasSkill('Easily Injured')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else frmArmourRoll.rbNoStunty.checked := true;
 
-  frmArmourRoll.cbDecay.checked := (player[g0,f0].hasSkill('Decay'));
+  frmArmourRoll.cbDecay.checked := (allPlayers[g0,f0].hasSkill('Decay'));
 
-    s := player[g0,f0].inj;
+    s := allPlayers[g0,f0].inj;
     p := Pos('N', Uppercase(s));
     {roll for each N until all done, or 1 rolled}
     NiggleCount := 0;
@@ -2459,7 +2481,7 @@ begin
   curteam := g0;
   curplayer := f0;
   frmArmourRoll.txtArmourValue.Text :=
-     IntToStr(player[curteam,curplayer].av);
+     IntToStr(allPlayers[curteam,curplayer].av);
   if special=0 then begin
     frmArmourRoll.rbARNoSkill.Checked := true;
     frmArmourRoll.rbIRNoSkill.Checked := true;
@@ -2473,25 +2495,25 @@ begin
     frmArmourRoll.rbIRMightyBlow.checked := true;
   end;
   frmArmourRoll.cbThickSkull.checked :=
-    (player[curteam,curplayer].hasSkill('Thick Skull'));
-  frmArmourRoll.cbProSkill.checked := (player[curteam,curplayer].hasSkill('Pro'));
-  if player[curteam,curplayer].hasSkill('Running Chainsaw') then
+    (allPlayers[curteam,curplayer].hasSkill('Thick Skull'));
+  frmArmourRoll.cbProSkill.checked := (allPlayers[curteam,curplayer].hasSkill('Pro'));
+  if allPlayers[curteam,curplayer].hasSkill('Running Chainsaw') then
     frmArmourRoll.cbChainsawKD.checked := true;
 
   if
-   ((Pos('HALFLING', Uppercase(player[curteam,curplayer].position)) > 0) or
-   ((Pos('GOBLIN', Uppercase(player[curteam,curplayer].position)) > 0)
-   and not (Pos('HOBGOBLIN', Uppercase(player[curteam,curplayer].position)) > 0)))
+   ((Pos('HALFLING', Uppercase(allPlayers[curteam,curplayer].position)) > 0) or
+   ((Pos('GOBLIN', Uppercase(allPlayers[curteam,curplayer].position)) > 0)
+   and not (Pos('HOBGOBLIN', Uppercase(allPlayers[curteam,curplayer].position)) > 0)))
    then begin
      frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[curteam,curplayer].hasSkill('STUNTY')) then begin
+  end else if (allPlayers[curteam,curplayer].hasSkill('STUNTY')) then begin
     frmArmourRoll.rbWeakPlayer.checked := true;
   end
    else frmArmourRoll.rbNoStunty.checked := true;
 
-  frmArmourRoll.cbDecay.checked := (player[curteam,curplayer].hasSkill('Decay'));
+  frmArmourRoll.cbDecay.checked := (allPlayers[curteam,curplayer].hasSkill('Decay'));
 
-    s := player[curteam,curplayer].inj;
+    s := allPlayers[curteam,curplayer].inj;
     p2 := Pos('N', Uppercase(s));
     {roll for each N until all done, or 1 rolled}
     NiggleCount := 0;
@@ -2649,30 +2671,30 @@ var f, g: integer;
 begin
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if (player[g,f].status <> 11) then begin
+      if (allPlayers[g,f].status <> 11) then begin
         s := 'u' + Chr(g + 48) + Chr(f + 64) +
-          Chr(player[g, f].ma + 48) +
-          Chr(player[g, f].st + 48) +
-          Chr(player[g, f].ag + 48) +
-          Chr(player[g, f].av + 48) +
-             Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$' +
-          player[g, f].GetSkillString(1) + '|' +
-          Chr(player[g, f].ma0 + 48) +
-          Chr(player[g, f].st0 + 48) +
-          Chr(player[g, f].ag0 + 48) +
-          Chr(player[g, f].av0 + 48) +
-             Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$' +
-          player[g, f].GetSkillString(2);
+          Chr(allPlayers[g, f].ma + 48) +
+          Chr(allPlayers[g, f].st + 48) +
+          Chr(allPlayers[g, f].ag + 48) +
+          Chr(allPlayers[g, f].av + 48) +
+             Chr(allPlayers[g,f].cnumber + 64) +
+             Chr(allPlayers[g,f].value div 5 + 48) +
+             allPlayers[g,f].name + '$' +
+             allPlayers[g,f].position + '$' +
+             allPlayers[g,f].picture + '$' +
+             allPlayers[g,f].icon + '$' +
+          allPlayers[g, f].GetSkillString(1) + '|' +
+          Chr(allPlayers[g, f].ma0 + 48) +
+          Chr(allPlayers[g, f].st0 + 48) +
+          Chr(allPlayers[g, f].ag0 + 48) +
+          Chr(allPlayers[g, f].av0 + 48) +
+             Chr(allPlayers[g,f].cnumber + 64) +
+             Chr(allPlayers[g,f].value div 5 + 48) +
+             allPlayers[g,f].name + '$' +
+             allPlayers[g,f].position + '$' +
+             allPlayers[g,f].picture + '$' +
+             allPlayers[g,f].icon + '$' +
+          allPlayers[g, f].GetSkillString(2);
         LogWrite(s);
         PlayActionPlayerStatChange(s, 1);
       end;

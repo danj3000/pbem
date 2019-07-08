@@ -117,8 +117,8 @@ begin
     if (MarkerType = MT_Leader) and (m = -1) then begin
       b := false;
       for f := 1 to team[team0].numplayers do begin
-        if (player[team0, f].status >= 1) and (player[team0, f].status <= 4)
-        and (player[team0, f].HasSkill('Leader')) then b := true;
+        if (allPlayers[team0, f].status >= 1) and (allPlayers[team0, f].status <= 4)
+        and (allPlayers[team0, f].HasSkill('Leader')) then b := true;
       end;
       if not(b) then
         ShowMessage('You can''t use the Leader reroll at this moment, ' +

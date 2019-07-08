@@ -93,24 +93,24 @@ begin
   {reset players}
   for g := 0 to 1 do
    for f := 1 to team[g].numplayers do
-    if player[g,f].font.size = 8 then begin
-     player[g,f].font.size := 12;
-     if ref then player[g,f].Refresh;
+    if allPlayers[g,f].font.size = 8 then begin
+     allPlayers[g,f].font.size := 12;
+     if ref then allPlayers[g,f].Refresh;
      s := s + Chr(g + 48) + Chr(f + 65);
    end;
   s := s + '^';
   {reset used skills}
   for g := 0 to 1 do
    for f := 1 to team[g].numplayers do begin
-      player[g,f].UsedMA := 0;
-      player[g,f].FirstBlock := 0;
-      player[g,f].SecondBlock := 0;
-      player[g,f].LastAction := 0;
-      player[g,f].GFI := 0;
+      allPlayers[g,f].UsedMA := 0;
+      allPlayers[g,f].FirstBlock := 0;
+      allPlayers[g,f].SecondBlock := 0;
+      allPlayers[g,f].LastAction := 0;
+      allPlayers[g,f].GFI := 0;
       for h := 1 to 15 do begin
-        if player[g,f].uskill[h]
+        if allPlayers[g,f].uskill[h]
         then s := s + Chr(g + 48) + Chr(f + 65) + Chr(h + 65);
-        player[g,f].uskill[h] := false;
+        allPlayers[g,f].uskill[h] := false;
       end;
     end;
   s := s + '^';
@@ -137,32 +137,32 @@ begin
   for g := 0 to 1 do
   for f := 1 to team[g].numplayers do begin
     if (g = activeTeam) and (InEditMode) then begin
-      if (player[g,f].hasSkill('Side Step')) and
-        (player[g,f].SideStep[1] = 1) then begin
+      if (allPlayers[g,f].hasSkill('Side Step')) and
+        (allPlayers[g,f].SideStep[1] = 1) then begin
         s3 := 'QF' + Chr(g + 48) + Chr(f + 64) + Chr(48) + Chr(64) + Chr(64)
-          + Chr(player[g,f].SideStep[1]+48) + Chr(player[g,f].SideStep[2]+64)
-          + Chr(player[g,f].SideStep[3]+64);
+          + Chr(allPlayers[g,f].SideStep[1]+48) + Chr(allPlayers[g,f].SideStep[2]+64)
+          + Chr(allPlayers[g,f].SideStep[3]+64);
         LogWrite(s3);
         PlayActionSideStep(s3, 1);
       end;
 
       CTest := false;
 
-      if (player[g,f].status = 4) and (frmSettings.cbDeStun.checked) and
+      if (allPlayers[g,f].status = 4) and (frmSettings.cbDeStun.checked) and
         (CanWriteToLog) then begin
-        s3 := 'x' + Chr(g + 48) + Chr(f + 65) + Chr(player[g,f].UsedMA + 64);
+        s3 := 'x' + Chr(g + 48) + Chr(f + 65) + Chr(allPlayers[g,f].UsedMA + 64);
         LogWrite(s3);
         PlayActionEndOfMove(s3, 1);
       end;
     end;
     if (g <> activeTeam) and (InEditMode) then begin
-      if (player[g,f].StunStatus > 0) and (frmSettings.cbDeStun.Checked)
+      if (allPlayers[g,f].StunStatus > 0) and (frmSettings.cbDeStun.Checked)
         then begin
         if CanWriteToLog then begin
           s3 := 'QS' + Chr(g + 48) + Chr(f + 64) + Chr(47);
           LogWrite(s3);
           PlayActionDeStun(s3, 1);
-          if player[g,f].StunStatus = 0 then player[g,f].SetStatus(3);
+          if allPlayers[g,f].StunStatus = 0 then allPlayers[g,f].SetStatus(3);
         end;
       end;
 
@@ -249,7 +249,7 @@ begin
     while (h < length(s)) and (s[h] <> '~') and (s[h] <> '^') do begin
       g := Ord(s[h]) - 48;
       f := Ord(s[h+1]) - 65;
-      player[g,f].font.size := 8;
+      allPlayers[g,f].font.size := 8;
       h := h + 2;
     end;
     {restore players using skills}
@@ -258,7 +258,7 @@ begin
       g := Ord(s[h]) - 48;
       f := Ord(s[h+1]) - 65;
       v := Ord(s[h+2]) - 65;
-      player[g,f].uskill[v] := true;
+      allPlayers[g,f].uskill[v] := true;
       h := h + 3;
     end;
     if s[h] = '^' then begin
@@ -314,7 +314,7 @@ begin
 
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if (player[g,f].Ally) and (player[g,f].status < 6)
+      if (allPlayers[g,f].Ally) and (allPlayers[g,f].status < 6)
           and not (true) then begin       // bigguy
         s := 'tA' + Chr(g + 48) + Chr(f + 64);
         LogWrite(s);
@@ -336,8 +336,8 @@ begin
     for f := 1 to team[g].numplayers do begin
       {A status 13 failed Take Root player returns to the
         game automatically}
-      if (player[g,f].status = 13)
-           and (player[g,f].HasSkill('Take Root'))  then begin
+      if (allPlayers[g,f].status = 13)
+           and (allPlayers[g,f].HasSkill('Take Root'))  then begin
         s := 'tO' + Chr(g + 48) + Chr(f + 64);
         LogWrite(s);
         PlayActionStartHalf(s, 1);
@@ -347,28 +347,28 @@ begin
       end;
 
       {Clear Out Side Step future programmed squares}
-      if (player[g,f].hasSkill('Side Step')) and (HalfNo = 1) then begin
+      if (allPlayers[g,f].hasSkill('Side Step')) and (HalfNo = 1) then begin
         s := 'QF' + Chr(g + 48) + Chr(f + 64) + Chr(48) + Chr(64) + Chr(64)
           + Chr(48) + Chr(64) + Chr(64);
         LogWrite(s);
         PlayActionSideStep(s, 1);
       end;
-      if (player[g,f].hasSkill('Side Step')) and (HalfNo <> 1) and
-        (player[g,f].SideStep[1] = 1) then begin
+      if (allPlayers[g,f].hasSkill('Side Step')) and (HalfNo <> 1) and
+        (allPlayers[g,f].SideStep[1] = 1) then begin
         s := 'QF' + Chr(g + 48) + Chr(f + 64) + Chr(48) + Chr(64) + Chr(64)
-          + Chr(player[g,f].SideStep[1]+48) + Chr(player[g,f].SideStep[2]+64)
-          + Chr(player[g,f].SideStep[3]+64);
+          + Chr(allPlayers[g,f].SideStep[1]+48) + Chr(allPlayers[g,f].SideStep[2]+64)
+          + Chr(allPlayers[g,f].SideStep[3]+64);
         LogWrite(s);
         PlayActionSideStep(s, 1);
       end;
 
-      if (player[g,f].HasSkill('Amateur')) and (HalfNo = 1) then begin
+      if (allPlayers[g,f].HasSkill('Amateur')) and (HalfNo = 1) then begin
         s := 'ta' + Chr(g + 48) + Chr(f + 64);
         LogWrite(s);
         PlayActionStartHalf(s, 1);
         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
         if lastroll <= 1 then begin
-           player[g,f].SetStatus(10);
+           allPlayers[g,f].SetStatus(10);
         end;
       end;
     end;
@@ -436,23 +436,23 @@ begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslateStartHalf :=
-               'Take Root roll for ' + player[g,f].GetPlayerName;
+               'Take Root roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'a': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslateStartHalf :=
-               'Amateur roll for ' + player[g,f].GetPlayerName;
+               'Amateur roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'A': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
-           TranslateStartHalf := 'Ally roll for ' + player[g,f].GetPlayerName;
+           TranslateStartHalf := 'Ally roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'O': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
-           TranslateStartHalf := player[g,f].GetPlayerName +
+           TranslateStartHalf := allPlayers[g,f].GetPlayerName +
                      ' returns from Take Root';
          end;
     'C': begin
@@ -604,25 +604,25 @@ var f, g: integer;
 begin
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if (player[g,f].status >= 6) and (player[g,f].status <= 8)
-      and ((player[g,f].HasSkill('Regen*')) or (player[g,f].HasSkill('Restoration')))
-      and not(player[g,f].UsedRegeneration) then begin
-        if player[g,f].HasSkill('Regen') then
-            player[g,f].UseSkill('Regen');
-        if player[g,f].HasSkill('Regenerate') then
-            player[g,f].UseSkill('Regenerate');
-        if player[g,f].HasSkill('Regeneration') then
-            player[g,f].UseSkill('Regeneration');
-        if player[g,f].hasSkill('RegenKO') then
-            player[g,f].UseSkill('RegenKO');
+      if (allPlayers[g,f].status >= 6) and (allPlayers[g,f].status <= 8)
+      and ((allPlayers[g,f].HasSkill('Regen*')) or (allPlayers[g,f].HasSkill('Restoration')))
+      and not(allPlayers[g,f].UsedRegeneration) then begin
+        if allPlayers[g,f].HasSkill('Regen') then
+            allPlayers[g,f].UseSkill('Regen');
+        if allPlayers[g,f].HasSkill('Regenerate') then
+            allPlayers[g,f].UseSkill('Regenerate');
+        if allPlayers[g,f].HasSkill('Regeneration') then
+            allPlayers[g,f].UseSkill('Regeneration');
+        if allPlayers[g,f].hasSkill('RegenKO') then
+            allPlayers[g,f].UseSkill('RegenKO');
 
         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
 
         if lastroll >= RegenRollNeeded then begin
           curteam := g;
           curplayer := f;
-          if (player[g,f].hasSkill('RegenKO')) or
-            (player[g,f].hasSkill('Restoration')) then
+          if (allPlayers[g,f].hasSkill('RegenKO')) or
+            (allPlayers[g,f].hasSkill('Restoration')) then
             Bloodbowl.KO1Click(Bloodbowl.KO1) else
             Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
         end else begin
@@ -642,31 +642,31 @@ var f, g: integer;
 begin
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if ((player[g,f].status <= 5) or (player[g,f].status = 13))
-        and (player[g,f].HasSkill('Were*')) then begin
+      if ((allPlayers[g,f].status <= 5) or (allPlayers[g,f].status = 13))
+        and (allPlayers[g,f].HasSkill('Were*')) then begin
         s := 'u' + Chr(g + 48) + Chr(f + 64) +
-          Chr(player[g, f].ma + 48) +
-          Chr(player[g, f].st + 48) +
-          Chr(player[g, f].ag + 48) +
-          Chr(player[g, f].av + 48) +
-             Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$' +
-          player[g, f].GetSkillString(1) + '|' +
-          Chr(player[g, f].ma0 + 48) +
-          Chr(player[g, f].st0 + 48) +
-          Chr(player[g, f].ag0 + 48) +
-          Chr(player[g, f].av0 + 48) +
-             Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$' +
-          player[g, f].GetSkillString(2);
+          Chr(allPlayers[g, f].ma + 48) +
+          Chr(allPlayers[g, f].st + 48) +
+          Chr(allPlayers[g, f].ag + 48) +
+          Chr(allPlayers[g, f].av + 48) +
+             Chr(allPlayers[g,f].cnumber + 64) +
+             Chr(allPlayers[g,f].value div 5 + 48) +
+             allPlayers[g,f].name + '$' +
+             allPlayers[g,f].position + '$' +
+             allPlayers[g,f].picture + '$' +
+             allPlayers[g,f].icon + '$' +
+          allPlayers[g, f].GetSkillString(1) + '|' +
+          Chr(allPlayers[g, f].ma0 + 48) +
+          Chr(allPlayers[g, f].st0 + 48) +
+          Chr(allPlayers[g, f].ag0 + 48) +
+          Chr(allPlayers[g, f].av0 + 48) +
+             Chr(allPlayers[g,f].cnumber + 64) +
+             Chr(allPlayers[g,f].value div 5 + 48) +
+             allPlayers[g,f].name + '$' +
+             allPlayers[g,f].position + '$' +
+             allPlayers[g,f].picture + '$' +
+             allPlayers[g,f].icon + '$' +
+          allPlayers[g, f].GetSkillString(2);
         LogWrite(s);
         PlayActionPlayerStatChange(s, 1);
       end;
@@ -682,48 +682,48 @@ begin
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
       if (Uppercase(team[g].race) = 'NURGLES ROTTERS') and
-        ((player[g,f].status<8) or (player[g,f].status>11)) and
-        not (player[g,f].hasSkill('NoRot')) then begin
-        if player[g,f].hasSkill('Foul Appearance L*') then begin
-          s := player[g,f].Get1Skill('Foul Appearance L*');
+        ((allPlayers[g,f].status<8) or (allPlayers[g,f].status>11)) and
+        not (allPlayers[g,f].hasSkill('NoRot')) then begin
+        if allPlayers[g,f].hasSkill('Foul Appearance L*') then begin
+          s := allPlayers[g,f].Get1Skill('Foul Appearance L*');
           p := FVal(Copy(s, 18, Length(s) - 17));
         end else p := 1;
-        if player[g,f].hasSkill('Foul Appearance L*') then begin
-          s := player[g,f].Get1Skill('Foul Appearance L*');
+        if allPlayers[g,f].hasSkill('Foul Appearance L*') then begin
+          s := allPlayers[g,f].Get1Skill('Foul Appearance L*');
           FALevel := FVal(Copy(s, 18, Length(s) - 17));
         end else FALevel := 0;
         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
         if lastroll <= p then begin
-          Bloodbowl.comment.text := '#' + InttoStr(f) + ' ' + player[g,f].name +
+          Bloodbowl.comment.text := '#' + InttoStr(f) + ' ' + allPlayers[g,f].name +
            ' FAILS his Nurgle Rot ' + InttoStr(p+1) + '+ roll.  Foul Appearance' +
            ' advances one level!';
           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
           s2 := '';
           if FALevel=0 then begin
             s2 := 'u' + Chr(g + 48) + Chr(f + 64) +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$' +
-              player[g, f].GetSkillString(1) + '|' +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av - 1 + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$';
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$' +
+              allPlayers[g, f].GetSkillString(1) + '|' +
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av - 1 + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$';
             s := '';
-            s := player[g, f].GetSkillString(1);
+            s := allPlayers[g, f].GetSkillString(1);
             s1spot := Pos('Foul Appearance L',s);
             if s1spot = 0 then begin
               s3 := s + ', Foul Appearance L1, AV -1';
@@ -735,35 +735,35 @@ begin
               s3 := Copy(s,1,s1spot-1) + 'Foul Appearance L1, ' +
                 Copy(s, s1spot + 21, length(s)-(20+s1spot)) + ', AV -1';
             end;
-            player[g, f].SetSkill(s3);
-            s2 := s2 + player[g, f].GetSkillString(1);
+            allPlayers[g, f].SetSkill(s3);
+            s2 := s2 + allPlayers[g, f].GetSkillString(1);
             LogWrite(s2);
             PlayActionPlayerStatChange(s2, 1);
           end else if FALevel = 1 then begin
             s2 := 'u' + Chr(g + 48) + Chr(f + 64) +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$' +
-              player[g, f].GetSkillString(1) + '|' +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av - 1 + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$';
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$' +
+              allPlayers[g, f].GetSkillString(1) + '|' +
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av - 1 + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$';
             s := '';
-            s := player[g, f].GetSkillString(1);
+            s := allPlayers[g, f].GetSkillString(1);
             s1spot := Pos('Foul Appearance L',s);
             if (s1spot = 1) and ((length(s))>20) then begin
               s3 := 'Foul Appearance L2, '+Copy(s, 21, length(s)-20)+', AV -1';
@@ -773,37 +773,37 @@ begin
               s3 := Copy(s,1,s1spot-1) + 'Foul Appearance L2, ' +
                 Copy(s, s1spot + 21, length(s)-(20+s1spot)) + ', AV -1';
             end;
-            player[g, f].SetSkill(s3);
-            s2 := s2 + player[g, f].GetSkillString(1);
+            allPlayers[g, f].SetSkill(s3);
+            s2 := s2 + allPlayers[g, f].GetSkillString(1);
             LogWrite(s2);
             PlayActionPlayerStatChange(s2, 1);
           end else if FALevel = 2 then begin
             s2 := 'u' + Chr(g + 48) + Chr(f + 64) +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$' +
-              player[g, f].GetSkillString(1) + '|' +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$';
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$' +
+              allPlayers[g, f].GetSkillString(1) + '|' +
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$';
             s := '';
-            s := player[g, f].GetSkillString(1);
+            s := allPlayers[g, f].GetSkillString(1);
             s1spot := Pos('Foul Appearance L',s);
-            if (player[g,f].hasSkill('Horns')) or (player[g,f].hasSkill('Horn'))
+            if (allPlayers[g,f].hasSkill('Horns')) or (allPlayers[g,f].hasSkill('Horn'))
             then begin
               if (s1spot = 1) and ((length(s))>20) then begin
                 s3 := 'Foul Appearance L3, '+Copy(s, 21, length(s)-20);
@@ -821,35 +821,35 @@ begin
                   Copy(s, s1spot + 21, length(s)-(20+s1spot)) + ', Horn';
               end;
             end;
-            player[g, f].SetSkill(s3);
-            s2 := s2 + player[g, f].GetSkillString(1);
+            allPlayers[g, f].SetSkill(s3);
+            s2 := s2 + allPlayers[g, f].GetSkillString(1);
             LogWrite(s2);
             PlayActionPlayerStatChange(s2, 1);
           end else if FALevel = 3 then begin
             s2 := 'u' + Chr(g + 48) + Chr(f + 64) +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$' +
-              player[g, f].GetSkillString(1) + '|' +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag - 2 + 48) +
-              Chr(player[g, f].av + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$';
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$' +
+              allPlayers[g, f].GetSkillString(1) + '|' +
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag - 2 + 48) +
+              Chr(allPlayers[g, f].av + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$';
             s := '';
-            s := player[g, f].GetSkillString(1);
+            s := allPlayers[g, f].GetSkillString(1);
             s1spot := Pos('Foul Appearance L',s);
             if (s1spot = 1) and ((length(s))>20) then begin
               s3 := 'Foul Appearance L4, '+Copy(s, 21, length(s)-20)+', AG -2';
@@ -859,35 +859,35 @@ begin
               s3 := Copy(s,1,s1spot-1) + 'Foul Appearance L4, ' +
                 Copy(s, s1spot + 21, length(s)-(20+s1spot)) + ', AG -2';
             end;
-            player[g, f].SetSkill(s3);
-            s2 := s2 + player[g, f].GetSkillString(1);
+            allPlayers[g, f].SetSkill(s3);
+            s2 := s2 + allPlayers[g, f].GetSkillString(1);
             LogWrite(s2);
             PlayActionPlayerStatChange(s2, 1);
           end else if FALevel = 4 then begin
             s2 := 'u' + Chr(g + 48) + Chr(f + 64) +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$' +
-              player[g, f].GetSkillString(1) + '|' +
-              Chr(player[g, f].ma - 2 + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$';
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$' +
+              allPlayers[g, f].GetSkillString(1) + '|' +
+              Chr(allPlayers[g, f].ma - 2 + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$';
             s := '';
-            s := player[g, f].GetSkillString(1);
+            s := allPlayers[g, f].GetSkillString(1);
             s1spot := Pos('Foul Appearance L',s);
             if (s1spot = 1) and ((length(s))>20) then begin
               s3 := 'Foul Appearance L5, '+Copy(s, 21, length(s)-20)+', MA -2, Claw';
@@ -897,35 +897,35 @@ begin
               s3 := Copy(s,1,s1spot-1) + 'Foul Appearance L5, ' +
                 Copy(s, s1spot + 21, length(s)-(20+s1spot)) + ', MA -2, Claw';
             end;
-            player[g, f].SetSkill(s3);
-            s2 := s2 + player[g, f].GetSkillString(1);
+            allPlayers[g, f].SetSkill(s3);
+            s2 := s2 + allPlayers[g, f].GetSkillString(1);
             LogWrite(s2);
             PlayActionPlayerStatChange(s2, 1);
           end else if FALevel = 5 then begin
             s2 := 'u' + Chr(g + 48) + Chr(f + 64) +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$' +
-              player[g, f].GetSkillString(1) + '|' +
-              Chr(player[g, f].ma + 48) +
-              Chr(player[g, f].st - 2 + 48) +
-              Chr(player[g, f].ag + 48) +
-              Chr(player[g, f].av + 48) +
-              Chr(player[g,f].cnumber + 64) +
-              Chr(player[g,f].value div 5 + 48) +
-              player[g,f].name + '$' +
-              player[g,f].position + '$' +
-              player[g,f].picture + '$' +
-              player[g,f].icon + '$';
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$' +
+              allPlayers[g, f].GetSkillString(1) + '|' +
+              Chr(allPlayers[g, f].ma + 48) +
+              Chr(allPlayers[g, f].st - 2 + 48) +
+              Chr(allPlayers[g, f].ag + 48) +
+              Chr(allPlayers[g, f].av + 48) +
+              Chr(allPlayers[g,f].cnumber + 64) +
+              Chr(allPlayers[g,f].value div 5 + 48) +
+              allPlayers[g,f].name + '$' +
+              allPlayers[g,f].position + '$' +
+              allPlayers[g,f].picture + '$' +
+              allPlayers[g,f].icon + '$';
             s := '';
-            s := player[g, f].GetSkillString(1);
+            s := allPlayers[g, f].GetSkillString(1);
             s1spot := Pos('Foul Appearance L',s);
             if (s1spot = 1) and ((length(s))>20) then begin
               s3 := 'Foul Appearance L6, '+Copy(s, 21, length(s)-20)+', ST -2';
@@ -935,19 +935,19 @@ begin
               s3 := Copy(s,1,s1spot-1) + 'Foul Appearance L6, ' +
                 Copy(s, s1spot + 21, length(s)-(20+s1spot)) + ', ST -2';
             end;
-            player[g, f].SetSkill(s3);
-            s2 := s2 + player[g, f].GetSkillString(1);
+            allPlayers[g, f].SetSkill(s3);
+            s2 := s2 + allPlayers[g, f].GetSkillString(1);
             LogWrite(s2);
             PlayActionPlayerStatChange(s2, 1);
           end else if FALevel = 6 then begin
             InjuryStatus := 8;
-            Bloodbowl.comment.text := player[g,f].name + ' dies from the Rot!';
+            Bloodbowl.comment.text := allPlayers[g,f].name + ' dies from the Rot!';
             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            player[g, f].SetStatus(InjuryStatus);
+            allPlayers[g, f].SetStatus(InjuryStatus);
             InjuryStatus := 0;
           end;
         end else begin
-          Bloodbowl.comment.text := '#' + InttoStr(f) + ' ' + player[g,f].name +
+          Bloodbowl.comment.text := '#' + InttoStr(f) + ' ' + allPlayers[g,f].name +
           ' passes his Nurgle Rot ' + InttoStr(p+1) + '+ roll.';
           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
         end;
@@ -989,16 +989,16 @@ begin
   heatroll := 0;
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if (player[g,f].StunStatus > 0) and (frmSettings.cbDeStun.Checked)
+      if (allPlayers[g,f].StunStatus > 0) and (frmSettings.cbDeStun.Checked)
         then begin
           s3 := 'QS' + Chr(g + 48) + Chr(f + 64) +
-            Chr(48-player[g,f].StunStatus);
+            Chr(48-allPlayers[g,f].StunStatus);
           LogWrite(s3);
           PlayActionDeStun(s3, 1);
       end;
-      if (player[g,f].status > 0) and (player[g,f].status < 5) then begin
+      if (allPlayers[g,f].status > 0) and (allPlayers[g,f].status < 5) then begin
         if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) =
-             'SWELTERING HEAT')) and (player[g,f].status <= 4) then
+             'SWELTERING HEAT')) and (allPlayers[g,f].status <= 4) then
         begin
           s0 := 'KW' + Chr(g + 48) + Chr(f + 64);
           LogWrite(s0);
@@ -1007,11 +1007,11 @@ begin
 
           Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
           if lastroll <= heatroll then begin
-            player[g,f].SetStatus(14);
+            allPlayers[g,f].SetStatus(14);
           end;
         end;
       end else begin
-        if player[g,f].status = 14 then begin
+        if allPlayers[g,f].status = 14 then begin
              curteam := g;
              curplayer := f;
              Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
@@ -1022,10 +1022,10 @@ begin
 
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if (player[g,f].status > 0) and (player[g,f].status < 5) then begin
-        s := 'KP' + Chr(g + 48) + Chr(f + 64) + Chr(player[g,f].status + 65) +
-             Chr(player[g,f].p + 65) + Chr(player[g,f].q + 65) +
-             Chr(player[g,f].font.size + 65);
+      if (allPlayers[g,f].status > 0) and (allPlayers[g,f].status < 5) then begin
+        s := 'KP' + Chr(g + 48) + Chr(f + 64) + Chr(allPlayers[g,f].status + 65) +
+             Chr(allPlayers[g,f].p + 65) + Chr(allPlayers[g,f].q + 65) +
+             Chr(allPlayers[g,f].font.size + 65);
         LogWrite(s);
         PlayActionPrepareForKickOff(s, 1);
       end;
@@ -1042,7 +1042,7 @@ begin
   {The following makes Knocked Out rolls}
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if player[g,f].status = 5 then begin
+      if allPlayers[g,f].status = 5 then begin
         s := 'KKO' + Chr(g + 48) + Chr(f + 64);
         LogWrite(s);
         PlayActionPrepareForKickOff(s, 1);
@@ -1068,14 +1068,14 @@ begin
   {The following for do loop handles the Unstable traits}
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if ((player[g,f].status <= 7) or (player[g,f].status = 13))
-          and (player[g,f].HasSkill('Unstable')) and (turnone = 0) then begin
+      if ((allPlayers[g,f].status <= 7) or (allPlayers[g,f].status = 13))
+          and (allPlayers[g,f].HasSkill('Unstable')) and (turnone = 0) then begin
         s := 'KU' + Chr(g + 48) + Chr(f + 64);
         LogWrite(s);
         PlayActionPrepareForKickOff(s, 1);
         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
         if lastroll <= 2 then begin
-           player[g,f].SetStatus(12);
+           allPlayers[g,f].SetStatus(12);
         end;
       end;
     end;
@@ -1084,31 +1084,31 @@ begin
   {The following for do loop handles the On Pitch Take Root trait}
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if (player[g,f].HasSkill('Take Root')) and
-         (player[g,f].ma = 0) then begin
+      if (allPlayers[g,f].HasSkill('Take Root')) and
+         (allPlayers[g,f].ma = 0) then begin
         s := 'u' + Chr(g + 48) + Chr(f + 64) +
                Chr(0 + 48) +
-               Chr(player[g, f].st + 48) +
-               Chr(player[g, f].ag + 48) +
-               Chr(player[g, f].av + 48) +
-             Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$' +
-               player[g, f].GetSkillString(1) + '|' +
-               Chr(player[g, f].ma0 + 48) +
-               Chr(player[g, f].st + 48) +
-               Chr(player[g, f].ag + 48) +
-               Chr(player[g, f].av + 48) +
-             Chr(player[g,f].cnumber + 64) +
-             Chr(player[g,f].value div 5 + 48) +
-             player[g,f].name + '$' +
-             player[g,f].position + '$' +
-             player[g,f].picture + '$' +
-             player[g,f].icon + '$' +
-               player[g, f].GetSkillString(1);
+               Chr(allPlayers[g, f].st + 48) +
+               Chr(allPlayers[g, f].ag + 48) +
+               Chr(allPlayers[g, f].av + 48) +
+             Chr(allPlayers[g,f].cnumber + 64) +
+             Chr(allPlayers[g,f].value div 5 + 48) +
+             allPlayers[g,f].name + '$' +
+             allPlayers[g,f].position + '$' +
+             allPlayers[g,f].picture + '$' +
+             allPlayers[g,f].icon + '$' +
+               allPlayers[g, f].GetSkillString(1) + '|' +
+               Chr(allPlayers[g, f].ma0 + 48) +
+               Chr(allPlayers[g, f].st + 48) +
+               Chr(allPlayers[g, f].ag + 48) +
+               Chr(allPlayers[g, f].av + 48) +
+             Chr(allPlayers[g,f].cnumber + 64) +
+             Chr(allPlayers[g,f].value div 5 + 48) +
+             allPlayers[g,f].name + '$' +
+             allPlayers[g,f].position + '$' +
+             allPlayers[g,f].picture + '$' +
+             allPlayers[g,f].icon + '$' +
+               allPlayers[g, f].GetSkillString(1);
           LogWrite(s);
           PlayActionPlayerStatChange(s, 1);
       end;
@@ -1118,7 +1118,7 @@ begin
   {The following for do loop handles restoring Lost Tackle Zones}
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if (player[g, f].tz > 0) and (not(player[g,f].HasSkill('Ball and Chain')))
+      if (allPlayers[g, f].tz > 0) and (not(allPlayers[g,f].HasSkill('Ball and Chain')))
         then begin
         if CanWriteToLog then begin
           s := 'U+' + Chr(g + 48) + Chr(f + 64);
@@ -1132,17 +1132,17 @@ begin
   {The following rolls for Off for a Bite and Gluttony}
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
-      if ((player[g,f].status <= 4) or (player[g,f].status = 13))
-          and (((player[g,f].HasSkill('Off for a Bite'))) or
-               ((player[g,f].HasSkill('OFAB')))) then begin
+      if ((allPlayers[g,f].status <= 4) or (allPlayers[g,f].status = 13))
+          and (((allPlayers[g,f].HasSkill('Off for a Bite'))) or
+               ((allPlayers[g,f].HasSkill('OFAB')))) then begin
         s := 'KF' + Chr(g + 48) + Chr(f + 64);
         LogWrite(s);
         PlayActionPrepareForKickOff(s, 1);
         Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
         if lastroll <= 3 then begin
-           player[g,f].SetStatus(13);
+           allPlayers[g,f].SetStatus(13);
         end else begin
-           if player[g,f].status = 13 then begin
+           if allPlayers[g,f].status = 13 then begin
              curteam := g;
              curplayer := f;
              Bloodbowl.MoveToReserve1Click(Bloodbowl.MoveToReserve1);
@@ -1159,47 +1159,47 @@ begin
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
 
-      if (not player[g,f].PlayedThisDrive) and
-         ((player[g,f].status <= 4) or (player[g,f].status = 13)) and
+      if (not allPlayers[g,f].PlayedThisDrive) and
+         ((allPlayers[g,f].status <= 4) or (allPlayers[g,f].status = 13)) and
          (turnone = 0) then begin
         s := s + Chr(g + 48) + Chr(f + 64);
-        if player[g,f].HasSkill('DSW*') and (GettheRef<>2) and (GettheRef<>g)
+        if allPlayers[g,f].HasSkill('DSW*') and (GettheRef<>2) and (GettheRef<>g)
           and (SWSafeRef<>2) and (SWSafeRef<>g) then begin
           s0 := 'KS' + Chr(g + 48) + Chr(f + 64);
           LogWrite(s0);
           PlayActionPrepareForKickOff(s0, 1);
-          s0 := player[g,f].Get1Skill('DSW*');
+          s0 := allPlayers[g,f].Get1Skill('DSW*');
           sw := FVal(Trim(Copy(s0, 4, Length(s0) - 2)));
           Bloodbowl.TwoD6ButtonClick(Bloodbowl.OneD6Button);
           if lastroll >= sw then begin
-            player[g,f].SOstatus := player[g,f].status;
-            player[g,f].SOSIstatus := player[g,f].SIstatus;
-            player[g,f].SetStatus(12);
+            allPlayers[g,f].SOstatus := allPlayers[g,f].status;
+            allPlayers[g,f].SOSIstatus := allPlayers[g,f].SIstatus;
+            allPlayers[g,f].SetStatus(12);
           end;
         end;
       end;
-      if player[g,f].PlayedThisDrive then begin
+      if allPlayers[g,f].PlayedThisDrive then begin
         s := s + Chr(g + 48) + Chr(f + 64);
-        if ((player[g,f].HasSkill('SW*')) or (player[g,f].HasSkill('SSW*')))
+        if ((allPlayers[g,f].HasSkill('SW*')) or (allPlayers[g,f].HasSkill('SSW*')))
           and (GettheRef<>2) and (GettheRef<>g) and (SWSafeRef<>2)
           and (SWSafeRef<>g)
           then begin
           s0 := 'KS' + Chr(g + 48) + Chr(f + 64);
           LogWrite(s0);
           PlayActionPrepareForKickOff(s0, 1);
-          if player[g,f].HasSkill('SW*') then begin
-            s0 := player[g,f].Get1Skill('SW*');
+          if allPlayers[g,f].HasSkill('SW*') then begin
+            s0 := allPlayers[g,f].Get1Skill('SW*');
             sw := FVal(Trim(Copy(s0, 3, Length(s0) - 2)));
           end;
-          if player[g,f].HasSkill('SSW*') then begin
-            s0 := player[g,f].Get1Skill('SSW*');
+          if allPlayers[g,f].HasSkill('SSW*') then begin
+            s0 := allPlayers[g,f].Get1Skill('SSW*');
             sw := FVal(Trim(Copy(s0, 4, Length(s0) - 3)));
           end;
           Bloodbowl.TwoD6ButtonClick(Bloodbowl.OneD6Button);
           if lastroll >= sw then begin
-            player[g,f].SOstatus := player[g,f].status;
-            player[g,f].SOSIstatus := player[g,f].SIstatus;
-            player[g,f].SetStatus(12);
+            allPlayers[g,f].SOstatus := allPlayers[g,f].status;
+            allPlayers[g,f].SOSIstatus := allPlayers[g,f].SIstatus;
+            allPlayers[g,f].SetStatus(12);
 
           end;
         end;
@@ -1226,7 +1226,7 @@ begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff := '- move ' +
-                               player[g,f].GetPlayerName + ' to dugout';
+                               allPlayers[g,f].GetPlayerName + ' to dugout';
          end;
     'N': TranslatePrepareForKickOff := '- clear num on field';
     'R': TranslatePrepareForKickOff := '- redraw dugout';
@@ -1240,73 +1240,73 @@ begin
            g := Ord(s[4]) - 48;
            f := Ord(s[5]) - 64;
            TranslatePrepareForKickOff :=
-               'KO roll for ' + player[g,f].GetPlayerName;
+               'KO roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'k': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Level 3+ Apothecary KO roll for ' + player[g,f].GetPlayerName;
+               'Level 3+ Apothecary KO roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'G': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Regeneration failed for ' + player[g,f].GetPlayerName;
+               'Regeneration failed for ' + allPlayers[g,f].GetPlayerName;
         end;
     'S': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Penalty roll for ' + player[g,f].GetPlayerName;
+               'Penalty roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'E': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Easily Confused roll for ' + player[g,f].GetPlayerName;
+               'Easily Confused roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'W': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Sweltering Heat roll for ' + player[g,f].GetPlayerName;
+               'Sweltering Heat roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'w': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Torpor roll for ' + player[g,f].GetPlayerName;
+               'Torpor roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'U': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Unstable roll for ' + player[g,f].GetPlayerName;
+               'Unstable roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'F': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Off for a Bite roll for ' + player[g,f].GetPlayerName;
+               'Off for a Bite roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'C': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Were Transformation roll for ' + player[g,f].GetPlayerName;
+               'Were Transformation roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'g': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Gluttony roll for ' + player[g,f].GetPlayerName;
+               'Gluttony roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'h': begin
            g := Ord(s[3]) - 48;
            f := Ord(s[4]) - 64;
            TranslatePrepareForKickOff :=
-               'Will He Show? roll for ' + player[g,f].GetPlayerName;
+               'Will He Show? roll for ' + allPlayers[g,f].GetPlayerName;
          end;
     'D': TranslatePrepareForKickOff := '- reset PlayedThisDrive';
   end;
@@ -1325,10 +1325,10 @@ begin
       'P': begin
              g := Ord(s[3]) - 48;
              f := Ord(s[4]) - 64;
-             player[g,f].status := 0;
-             player[g,f].p := -1;
-             player[g,f].q := -1;
-             player[g,f].font.size := 12;
+             allPlayers[g,f].status := 0;
+             allPlayers[g,f].p := -1;
+             allPlayers[g,f].q := -1;
+             allPlayers[g,f].font.size := 12;
            end;
       'N': ClearAllNumOnField;
       'R': RedrawDugout;
@@ -1343,7 +1343,7 @@ begin
              while h < Length(s) do begin
                g := Ord(s[h]) - 48;
                f := Ord(s[h+1]) - 64;
-               player[g,f].PlayedThisDrive := false;
+               allPlayers[g,f].PlayedThisDrive := false;
                h := h + 2;
              end;
            end;
@@ -1360,13 +1360,13 @@ begin
       'P': begin
              g := Ord(s[3]) - 48;
              f := Ord(s[4]) - 64;
-             player[g,f].status := Ord(s[5]) - 65;
-             player[g,f].p := Ord(s[6]) - 65;
-             player[g,f].q := Ord(s[7]) - 65;
-             player[g,f].parent := Bloodbowl;
-             player[g,f].top := field[player[g,f].p,player[g,f].q].top;
-             player[g,f].left := field[player[g,f].p,player[g,f].q].left;
-             player[g,f].font.size := Ord(s[8]) - 65;
+             allPlayers[g,f].status := Ord(s[5]) - 65;
+             allPlayers[g,f].p := Ord(s[6]) - 65;
+             allPlayers[g,f].q := Ord(s[7]) - 65;
+             allPlayers[g,f].parent := Bloodbowl;
+             allPlayers[g,f].top := field[allPlayers[g,f].p,allPlayers[g,f].q].top;
+             allPlayers[g,f].left := field[allPlayers[g,f].p,allPlayers[g,f].q].left;
+             allPlayers[g,f].font.size := Ord(s[8]) - 65;
            end;
       'N': begin
              PutMultipleNumOnField(Copy(s, 3, Length(s) - 2));
@@ -1381,7 +1381,7 @@ begin
              while h < Length(s) do begin
                g := Ord(s[h]) - 48;
                f := Ord(s[h+1]) - 64;
-               player[g,f].PlayedThisDrive := true;
+               allPlayers[g,f].PlayedThisDrive := true;
                h := h + 2;
              end;
            end;

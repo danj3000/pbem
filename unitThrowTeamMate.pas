@@ -111,7 +111,7 @@ begin
   NumberPasser := f;
   TeamThrowee := g2;
   NumberThrowee := f2;
-  if (player[g,f].hasSkill('Toss Team-Mate')) then begin
+  if (allPlayers[g,f].hasSkill('Toss Team-Mate')) then begin
     begin
       if squaredist = 0 then frmTTM.rbShortPass.checked := true else
       frmTTM.rbImpossible.checked := true;
@@ -125,18 +125,18 @@ begin
     end;
   end;
   frmTTM.gbPass.enabled := true;
-  frmTTM.lblPasser.caption := player[g,f].GetPlayerName;
+  frmTTM.lblPasser.caption := allPlayers[g,f].GetPlayerName;
   frmTTM.lblPasser.font.color := colorarray[g,0,0];
-  frmTTM.txtThrowerAG.text := IntToStr(player[g,f].ag);
+  frmTTM.txtThrowerAG.text := IntToStr(allPlayers[g,f].ag);
   tz := CountTZ(g, f);
   frmTTM.txtPassTZ.text := IntToStr(tz.num);
   frmTTM.txtPassFA.text := IntToStr(CountFA(g, f));
 
-  frmTTM.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (true));// big guy
+  frmTTM.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or
+      (allPlayers[g,f].Ally)) and (true));// big guy
 
   begin
-    if (player[g,f].hasSkill('Toss Team-Mate')) then begin
+    if (allPlayers[g,f].hasSkill('Toss Team-Mate')) then begin
       begin
         if squaredist = 0 then frmTTM.rbShortPass.checked := true else
         frmTTM.rbImpossible.checked := true;
@@ -153,9 +153,8 @@ begin
 
   CalculateTTMRollNeeded;
 
-  frmTTM.cbVerySunny.checked := (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'VERY SUNNY') ;
-
-  frmTTM.cbBlizzard.checked :=  (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD');
+  frmTTM.cbVerySunny.checked := Bloodbowl.GetWeather() = TWeather.Sunny;
+  frmTTM.cbBlizzard.checked :=Bloodbowl.GetWeather() = TWeather.Blizzard;
 
   CalculateTTMRollNeeded;
 
@@ -199,15 +198,15 @@ begin
   FieldP := p;
   FieldQ := q;
   frmTTM.Height := 425;
-  dist := (player[g,f].p - p) * (player[g,f].p - p)
-        + (player[g,f].q - q) * (player[g,f].q - q);
+  dist := (allPlayers[g,f].p - p) * (allPlayers[g,f].p - p)
+        + (allPlayers[g,f].q - q) * (allPlayers[g,f].q - q);
 
 
-    squaredist := RangeRulerRange(player[g,f].p, player[g,f].q, p, q);
+    squaredist := RangeRulerRange(allPlayers[g,f].p, allPlayers[g,f].q, p, q);
   frmTTM.lblCatcher.caption := 'Field position ' + Chr(65+q) + IntToStr(p+1);
   frmTTM.lblCatcher.font.color := clPurple;
-  frmTTM.lblThrowee.caption := '#'+InttoStr((player[g2,f2].cnumber))+' '+
-    player[g2,f2].name;
+  frmTTM.lblThrowee.caption := '#'+InttoStr((allPlayers[g2,f2].cnumber))+' '+
+    allPlayers[g2,f2].name;
   frmTTM.lblThrowee.font.color := clYellow;
   ShowTTM(g,f,g2,f2);
 end;
@@ -243,12 +242,12 @@ var s: string;
     acc, k, l, k2, l2, p, q: integer;
     TTMResult, test3, ballhandler: boolean;
 begin
-  if player[TeamPasser,NumberPasser].hasSkill('Throw TeamMate') then
-    player[TeamPasser,NumberPasser].UseSkill('Throw TeamMate');
-  if player[TeamPasser,NumberPasser].hasSkill('Toss Team-Mate') then
-    player[TeamPasser,NumberPasser].UseSkill('Toss Team-Mate');
-  if player[TeamPasser,NumberPasser].hasSkill('Throw Team-Mate') then
-    player[TeamPasser,NumberPasser].UseSkill('Throw Team-Mate');
+  if allPlayers[TeamPasser,NumberPasser].hasSkill('Throw TeamMate') then
+    allPlayers[TeamPasser,NumberPasser].UseSkill('Throw TeamMate');
+  if allPlayers[TeamPasser,NumberPasser].hasSkill('Toss Team-Mate') then
+    allPlayers[TeamPasser,NumberPasser].UseSkill('Toss Team-Mate');
+  if allPlayers[TeamPasser,NumberPasser].hasSkill('Throw Team-Mate') then
+    allPlayers[TeamPasser,NumberPasser].UseSkill('Throw Team-Mate');
   s := lblPasser.caption + ' throws ' + lblThrowee.caption + ' to '
       + lblCatcher.caption + ' (';
   if rbQuickPass.checked then s := s + 'Quick pass, ';
@@ -269,11 +268,11 @@ begin
     p := FieldP;
     q := FieldQ;
     ballhandler := false;
-    if player[TeamThrowee,NumberThrowee].status = 2 then ballhandler := true;
+    if allPlayers[TeamThrowee,NumberThrowee].status = 2 then ballhandler := true;
     test3 := false;
     for k := 0 to 1 do
     for l := 1 to team[k].numplayers do begin
-      if (player[k,l].p = p) and (player[k,l].q = q) and not
+      if (allPlayers[k,l].p = p) and (allPlayers[k,l].q = q) and not
         ((k=TeamThrowee) and (l=NumberThrowee)) then begin
         k2 := k;
         l2 := l;
@@ -282,13 +281,13 @@ begin
     end;
     if test3 then begin
       Bloodbowl.comment.text := '#'+
-        InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-        player[TeamThrowee,NumberThrowee].name + ' lands on top of '+
-        '#'+InttoStr((player[k2,l2].cnumber))+
-        ' '+ player[k2,l2].name +'!  Push back '+ player[k2,l2].name + '!';
+        InttoStr((allPlayers[TeamThrowee,NumberThrowee].cnumber))+' '+
+        allPlayers[TeamThrowee,NumberThrowee].name + ' lands on top of '+
+        '#'+InttoStr((allPlayers[k2,l2].cnumber))+
+        ' '+ allPlayers[k2,l2].name +'!  Push back '+ allPlayers[k2,l2].name + '!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      Bloodbowl.comment.text := player[TeamThrowee,NumberThrowee].name +
-        ' lands in ' + player[k2,l2].name + 's square.  Place both prone' +
+      Bloodbowl.comment.text := allPlayers[TeamThrowee,NumberThrowee].name +
+        ' lands in ' + allPlayers[k2,l2].name + 's square.  Place both prone' +
         ' and make armour/injury rolls for both!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       if ballhandler then begin
@@ -296,18 +295,18 @@ begin
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       end;
     end else begin
-      player[TeamThrowee,NumberThrowee].UsedMA :=
-        player[TeamThrowee,NumberThrowee].UsedMA - 1;
+      allPlayers[TeamThrowee,NumberThrowee].UsedMA :=
+        allPlayers[TeamThrowee,NumberThrowee].UsedMA - 1;
       ShowLandingWindow(TeamThrowee, NumberThrowee, FieldP, FieldQ, acc);
     end;
   end
   else
    begin
     butPassRoll.enabled := false;
-    butPassSkill.enabled := player[TeamPasser,NumberPasser].hasSkill('Pass');
+    butPassSkill.enabled := allPlayers[TeamPasser,NumberPasser].hasSkill('Pass');
     butTeamReroll.enabled := CanUseTeamReroll(cbBigGuyAlly.checked);
-    butPassPro.enabled := (player[TeamPasser,NumberPasser].hasSkill('Pro'))
-        and not (player[TeamPasser,NumberPasser].usedSkill('Pro'));
+    butPassPro.enabled := (allPlayers[TeamPasser,NumberPasser].hasSkill('Pro'))
+        and not (allPlayers[TeamPasser,NumberPasser].usedSkill('Pro'));
     frmTTM.height := 530;
   end;
 end;
@@ -324,11 +323,11 @@ begin
     p := FieldP;
     q := FieldQ;
     ballhandler := false;
-    if player[TeamThrowee,NumberThrowee].status = 2 then ballhandler := true;
+    if allPlayers[TeamThrowee,NumberThrowee].status = 2 then ballhandler := true;
     test3 := false;
     for k := 0 to 1 do
     for l := 1 to team[k].numplayers do begin
-      if (player[k,l].p = p) and (player[k,l].q = q) and not
+      if (allPlayers[k,l].p = p) and (allPlayers[k,l].q = q) and not
         ((k=TeamThrowee) and (l=NumberThrowee)) then begin
         k2 := k;
         l2 := l;
@@ -337,13 +336,13 @@ begin
     end;
     if test3 then begin
       Bloodbowl.comment.text := '#'+
-        InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-        player[TeamThrowee,NumberThrowee].name + ' lands on top of '+
-        '#'+InttoStr((player[k2,l2].cnumber))+
-        ' '+ player[k2,l2].name +'!  Push back '+ player[k2,l2].name + '!';
+        InttoStr((allPlayers[TeamThrowee,NumberThrowee].cnumber))+' '+
+        allPlayers[TeamThrowee,NumberThrowee].name + ' lands on top of '+
+        '#'+InttoStr((allPlayers[k2,l2].cnumber))+
+        ' '+ allPlayers[k2,l2].name +'!  Push back '+ allPlayers[k2,l2].name + '!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      Bloodbowl.comment.text := player[TeamThrowee,NumberThrowee].name +
-        ' lands in ' + player[k2,l2].name + 's square.  Place both prone' +
+      Bloodbowl.comment.text := allPlayers[TeamThrowee,NumberThrowee].name +
+        ' lands in ' + allPlayers[k2,l2].name + 's square.  Place both prone' +
         ' and make armour/injury rolls for both!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       if ballhandler then begin
@@ -351,8 +350,8 @@ begin
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       end;
     end else begin
-      player[TeamThrowee,NumberThrowee].UsedMA :=
-        player[TeamThrowee,NumberThrowee].UsedMA - 1;
+      allPlayers[TeamThrowee,NumberThrowee].UsedMA :=
+        allPlayers[TeamThrowee,NumberThrowee].UsedMA - 1;
       ShowLandingWindow(TeamThrowee, NumberThrowee, FieldP, FieldQ, acc);
     end;
   end else
@@ -374,7 +373,7 @@ end;
 
 procedure TfrmTTM.butTTMSkillClick(Sender: TObject);
 begin
-  player[TeamPasser,NumberPasser].UseSkill('Pass');
+  allPlayers[TeamPasser,NumberPasser].UseSkill('Pass');
   MakeTTMReroll;
 end;
 
@@ -397,8 +396,8 @@ begin
     frmTTM.butAlwaysHungry.enabled := false;
     frmTTM.butAHTeamReroll.enabled := CanUseTeamReroll(cbBigGuyAlly.checked);
     butFumbleInaccurate.caption := 'Try to Eat Player';
-    frmTTM.butAHPro.enabled := (player[TeamPasser,NumberPasser].hasSkill('Pro'))
-      and (not (player[TeamPasser,NumberPasser].usedSkill('Pro')));
+    frmTTM.butAHPro.enabled := (allPlayers[TeamPasser,NumberPasser].hasSkill('Pro'))
+      and (not (allPlayers[TeamPasser,NumberPasser].usedSkill('Pro')));
     frmTTM.butPassRoll.enabled := false;
     frmTTM.butPassSkill.enabled := false;
     frmTTM.butTeamReroll.enabled := false;
@@ -440,7 +439,7 @@ end;
 
 procedure TfrmTTM.butAHProRerollClick(Sender: TObject);
 begin
-  player[TeamPasser,NumberPasser].UseSkill('Pro');
+  allPlayers[TeamPasser,NumberPasser].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(TeamPasser,NumberPasser);
   if (lastroll <= 3) then lastroll := 1;
@@ -485,7 +484,7 @@ end;
 
 procedure TfrmTTM.butProRerollClick(Sender: TObject);
 begin
-  player[TeamPasser,NumberPasser].UseSkill('Pro');
+  allPlayers[TeamPasser,NumberPasser].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(TeamPasser,NumberPasser);
   if (lastroll >= 4) then begin
@@ -501,33 +500,33 @@ var p, q, k, l, k2, l2, i, acc, v, w,
     ballhandler, test3, outofbounds, BallScatter: boolean;
 begin
   ballhandler := false;
-  if player[TeamThrowee,NumberThrowee].status = 2 then ballhandler := true;
+  if allPlayers[TeamThrowee,NumberThrowee].status = 2 then ballhandler := true;
   ModalResult := 1;
   if butFumbleInaccurate.caption = 'Fumble' then begin
     Bloodbowl.comment.text := '#'+
-      InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-      player[TeamThrowee,NumberThrowee].name + 'lands face first from the Fumble';
+      InttoStr((allPlayers[TeamThrowee,NumberThrowee].cnumber))+' '+
+      allPlayers[TeamThrowee,NumberThrowee].name + 'lands face first from the Fumble';
     Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
     Ballscatter := false;
     v := TeamThrowee;
     w := NumberThrowee;
     ArmourSettings(v,w,v,w,0);
-    if player[v,w].status < InjuryStatus then begin
-      if player[v,w].status=2 then begin
-        ploc := player[v,w].p;
-        qloc := player[v,w].q;
-        player[v,w].SetStatus(InjuryStatus);
+    if allPlayers[v,w].status < InjuryStatus then begin
+      if allPlayers[v,w].status=2 then begin
+        ploc := allPlayers[v,w].p;
+        qloc := allPlayers[v,w].q;
+        allPlayers[v,w].SetStatus(InjuryStatus);
         BallScatter := true;
-      end else player[v,w].SetStatus(InjuryStatus);
+      end else allPlayers[v,w].SetStatus(InjuryStatus);
     end;
     InjuryStatus := 0;
     if BallScatter then ScatterBallFrom(ploc, qloc, 1, 0);
   end else if butFumbleInaccurate.caption = 'Try to Eat Player' then begin
     Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-    if (lastroll=1) and (player[TeamPasser,NumberPasser].hasSkill('Pro'))
-      and not (player[TeamPasser,NumberPasser].usedSkill('Pro'))
+    if (lastroll=1) and (allPlayers[TeamPasser,NumberPasser].hasSkill('Pro'))
+      and not (allPlayers[TeamPasser,NumberPasser].usedSkill('Pro'))
       then begin
-      player[TeamPasser,NumberPasser].UseSkill('Pro');
+      allPlayers[TeamPasser,NumberPasser].UseSkill('Pro');
       Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
       if lastroll <= 3 then TeamRerollPro(TeamPasser,NumberPasser);
       if (lastroll >= 4) then begin
@@ -538,13 +537,13 @@ begin
     end;
     if lastroll<>1 then begin
       Bloodbowl.D8ButtonClick(Bloodbowl.D8Button);
-      p := player[TeamPasser,NumberPasser].p;
-      q := player[TeamPasser,NumberPasser].q;
+      p := allPlayers[TeamPasser,NumberPasser].p;
+      q := allPlayers[TeamPasser,NumberPasser].q;
       NewPosInDir(p, q, lastroll);
       if (p < 0) or (p > 14) or (q < 0) or (q > 25) then begin
         Bloodbowl.comment.text := '#'+
-           InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-           player[TeamThrowee,NumberThrowee].name + ' squirms free out of bounds!'
+           InttoStr((allPlayers[TeamThrowee,NumberThrowee].cnumber))+' '+
+           allPlayers[TeamThrowee,NumberThrowee].name + ' squirms free out of bounds!'
            + ' Make Injury roll!';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
         if ballhandler then begin
@@ -556,7 +555,7 @@ begin
         test3 := false;
         for k := 0 to 1 do
         for l := 1 to team[k].numplayers do begin
-          if (player[k,l].p = p) and (player[k,l].q = q) and not
+          if (allPlayers[k,l].p = p) and (allPlayers[k,l].q = q) and not
             ((k=TeamThrowee) and (l=NumberThrowee)) then begin
             k2 := k;
             l2 := l;
@@ -565,13 +564,13 @@ begin
         end;
         if test3 then begin
           Bloodbowl.comment.text := '#'+
-            InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-            player[TeamThrowee,NumberThrowee].name + ' lands on top of '+
-            '#'+InttoStr((player[k2,l2].cnumber))+
-            ' '+ player[k2,l2].name +'!  Push back '+ player[k2,l2].name + '!';
+            InttoStr((allPlayers[TeamThrowee,NumberThrowee].cnumber))+' '+
+            allPlayers[TeamThrowee,NumberThrowee].name + ' lands on top of '+
+            '#'+InttoStr((allPlayers[k2,l2].cnumber))+
+            ' '+ allPlayers[k2,l2].name +'!  Push back '+ allPlayers[k2,l2].name + '!';
           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          Bloodbowl.comment.text := player[TeamThrowee,NumberThrowee].name +
-            ' lands in ' + player[k2,l2].name + 's square.  Place both prone' +
+          Bloodbowl.comment.text := allPlayers[TeamThrowee,NumberThrowee].name +
+            ' lands in ' + allPlayers[k2,l2].name + 's square.  Place both prone' +
             ' and make armour/injury rolls for both!';
           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
         if ballhandler then begin
@@ -580,10 +579,10 @@ begin
         end;
         end else begin
           PlacePlayer(NumberThrowee,TeamThrowee,p,q);
-          player[TeamThrowee,NumberThrowee].SetStatus(3);
+          allPlayers[TeamThrowee,NumberThrowee].SetStatus(3);
           Bloodbowl.comment.text := '#'+
-            InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-            player[TeamThrowee,NumberThrowee].name + 'lands face first!  Make'
+            InttoStr((allPlayers[TeamThrowee,NumberThrowee].cnumber))+' '+
+            allPlayers[TeamThrowee,NumberThrowee].name + 'lands face first!  Make'
             + ' armour/injury rolls!';
           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
           if ballhandler then ScatterBallFrom(p,q,1,0);
@@ -591,12 +590,12 @@ begin
       end;
     end else begin
       Bloodbowl.comment.text := '#'+
-        InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-      player[TeamThrowee,NumberThrowee].name + 'is EATEN!!!';
+        InttoStr((allPlayers[TeamThrowee,NumberThrowee].cnumber))+' '+
+      allPlayers[TeamThrowee,NumberThrowee].name + 'is EATEN!!!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      player[TeamThrowee,NumberThrowee].SetStatus(8);
-      if ballhandler then ScatterBallFrom((player[TeamPasser,NumberPasser].p),
-        (player[TeamPasser,NumberPasser].q),1,0);
+      allPlayers[TeamThrowee,NumberThrowee].SetStatus(8);
+      if ballhandler then ScatterBallFrom((allPlayers[TeamPasser,NumberPasser].p),
+        (allPlayers[TeamPasser,NumberPasser].q),1,0);
     end;
   end else begin
    {Inaccurate Throw}
@@ -612,8 +611,8 @@ begin
     end;
     if outofbounds then begin
       Bloodbowl.comment.text := '#'+
-        InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-      player[TeamThrowee,NumberThrowee].name + ' is thrown out of bounds!'
+        InttoStr((allPlayers[TeamThrowee,NumberThrowee].cnumber))+' '+
+      allPlayers[TeamThrowee,NumberThrowee].name + ' is thrown out of bounds!'
            + ' Make Injury roll!';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       if ballhandler then begin
@@ -624,7 +623,7 @@ begin
       test3 := false;
       for k := 0 to 1 do
       for l := 1 to team[k].numplayers do begin
-        if (player[k,l].p = p) and (player[k,l].q = q) and not
+        if (allPlayers[k,l].p = p) and (allPlayers[k,l].q = q) and not
           ((k=TeamThrowee) and (l=NumberThrowee)) then begin
           k2 := k;
           l2 := l;
@@ -633,14 +632,14 @@ begin
       end;
       if test3 then begin
         Bloodbowl.comment.text := '#'+
-          InttoStr((player[TeamThrowee,NumberThrowee].cnumber))+' '+
-          player[TeamThrowee,NumberThrowee].name + ' lands on top of '+
-          '#'+InttoStr((player[k2,l2].cnumber))+' '+
-          player[k2,l2].name +'!  Push back '+
-          player[k2,l2].name + '!';
+          InttoStr((allPlayers[TeamThrowee,NumberThrowee].cnumber))+' '+
+          allPlayers[TeamThrowee,NumberThrowee].name + ' lands on top of '+
+          '#'+InttoStr((allPlayers[k2,l2].cnumber))+' '+
+          allPlayers[k2,l2].name +'!  Push back '+
+          allPlayers[k2,l2].name + '!';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        Bloodbowl.comment.text := player[TeamThrowee,NumberThrowee].name +
-          ' lands in ' + player[k2,l2].name + 's square.  Place both prone' +
+        Bloodbowl.comment.text := allPlayers[TeamThrowee,NumberThrowee].name +
+          ' lands in ' + allPlayers[k2,l2].name + 's square.  Place both prone' +
           ' and make armour/injury rolls for both!';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
         if ballhandler then begin
@@ -650,8 +649,8 @@ begin
       end else begin
         frmTTM.Hide;
         if GameStatus = 'PitchPlayer2' then acc := 2 else acc := 0;
-        player[TeamThrowee,NumberThrowee].UsedMA :=
-          player[TeamThrowee,NumberThrowee].UsedMA - 1;
+        allPlayers[TeamThrowee,NumberThrowee].UsedMA :=
+          allPlayers[TeamThrowee,NumberThrowee].UsedMA - 1;
         ShowLandingWindow(TeamThrowee, NumberThrowee, p, q, acc);
       end;
     end;
@@ -661,7 +660,7 @@ end;
 procedure TfrmTTM.cbStuntyClick(Sender: TObject);
 begin
   begin
-    if (player[ActionTeam,ActionPlayer].hasSkill('Toss Team-Mate')) then begin
+    if (allPlayers[ActionTeam,ActionPlayer].hasSkill('Toss Team-Mate')) then begin
       if false then begin
         if dist < 16 then frmTTM.rbShortPass.checked := true else
         frmTTM.rbImpossible.checked := true;

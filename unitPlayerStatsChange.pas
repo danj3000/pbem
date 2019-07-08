@@ -77,32 +77,32 @@ uses unitPlayer;
 
 procedure TfrmPlayerStatsChange.FormActivate(Sender: TObject);
 begin
-  NameLabel.caption := player[TeamChanged, PlayerChanged].GetPlayerName;
+  NameLabel.caption := allPlayers[TeamChanged, PlayerChanged].GetPlayerName;
   NameLabel.font.color := colorarray[TeamChanged,0,0];
-  MADef.text := IntToStr(player[TeamChanged, PlayerChanged].ma0);
-  STDef.text := IntToStr(player[TeamChanged, PlayerChanged].st0);
-  AGDef.text := IntToStr(player[TeamChanged, PlayerChanged].ag0);
-  AVDef.text := IntToStr(player[TeamChanged, PlayerChanged].av0);
-  ValueDef.Text := InttoStr(player[TeamChanged, PlayerChanged].value0);
-  PNameDef.Text := player[TeamChanged, PlayerChanged].name0;
-  PNoDef.text := IntToStr(player[TeamChanged, PlayerChanged].cnumber0);
-  PositionDef.text := player[TeamChanged, PlayerChanged].position0;
+  MADef.text := IntToStr(allPlayers[TeamChanged, PlayerChanged].ma0);
+  STDef.text := IntToStr(allPlayers[TeamChanged, PlayerChanged].st0);
+  AGDef.text := IntToStr(allPlayers[TeamChanged, PlayerChanged].ag0);
+  AVDef.text := IntToStr(allPlayers[TeamChanged, PlayerChanged].av0);
+  ValueDef.Text := InttoStr(allPlayers[TeamChanged, PlayerChanged].value0);
+  PNameDef.Text := allPlayers[TeamChanged, PlayerChanged].name0;
+  PNoDef.text := IntToStr(allPlayers[TeamChanged, PlayerChanged].cnumber0);
+  PositionDef.text := allPlayers[TeamChanged, PlayerChanged].position0;
   IconDef.text := 'Yet to be Enabled';
-  PictureDef.text := player[TeamChanged, PlayerChanged].picture0;
+  PictureDef.text := allPlayers[TeamChanged, PlayerChanged].picture0;
   SkillsDef.Lines.clear;
-  SkillsDef.Lines.add(player[TeamChanged, PlayerChanged].getSkillString(-2));
-  MANew.text := IntToStr(player[TeamChanged, PlayerChanged].ma);
-  STNew.text := IntToStr(player[TeamChanged, PlayerChanged].st);
-  AGNew.text := IntToStr(player[TeamChanged, PlayerChanged].ag);
-  AVNew.text := IntToStr(player[TeamChanged, PlayerChanged].av);
-  ValueNew.Text := InttoStr(player[TeamChanged, PlayerChanged].value);
-  PNameNew.Text := player[TeamChanged, PlayerChanged].name;
-  PNoNew.text := IntToStr(player[TeamChanged, PlayerChanged].cnumber);
-  PositionNew.text := player[TeamChanged, PlayerChanged].position;
+  SkillsDef.Lines.add(allPlayers[TeamChanged, PlayerChanged].getSkillString(-2));
+  MANew.text := IntToStr(allPlayers[TeamChanged, PlayerChanged].ma);
+  STNew.text := IntToStr(allPlayers[TeamChanged, PlayerChanged].st);
+  AGNew.text := IntToStr(allPlayers[TeamChanged, PlayerChanged].ag);
+  AVNew.text := IntToStr(allPlayers[TeamChanged, PlayerChanged].av);
+  ValueNew.Text := InttoStr(allPlayers[TeamChanged, PlayerChanged].value);
+  PNameNew.Text := allPlayers[TeamChanged, PlayerChanged].name;
+  PNoNew.text := IntToStr(allPlayers[TeamChanged, PlayerChanged].cnumber);
+  PositionNew.text := allPlayers[TeamChanged, PlayerChanged].position;
   IconNew.text := 'Yet to be Enabled';
-  PictureNew.text := player[TeamChanged, PlayerChanged].picture;
+  PictureNew.text := allPlayers[TeamChanged, PlayerChanged].picture;
   SkillsNew.Lines.clear;
-  SkillsNew.Lines.add(player[TeamChanged, PlayerChanged].getSkillString(-1));
+  SkillsNew.Lines.add(allPlayers[TeamChanged, PlayerChanged].getSkillString(-1));
 end;
 
 procedure TfrmPlayerStatsChange.butResetClick(Sender: TObject);
@@ -110,28 +110,28 @@ var s: string;
 begin
   if CanWriteToLog then begin
     s := 'u' + Chr(TeamChanged + 48) + Chr(PlayerChanged + 64) +
-        Chr(player[TeamChanged, PlayerChanged].ma + 48) +
-        Chr(player[TeamChanged, PlayerChanged].st + 48) +
-        Chr(player[TeamChanged, PlayerChanged].ag + 48) +
-        Chr(player[TeamChanged, PlayerChanged].av + 48) +
-        Chr(player[TeamChanged, PlayerChanged].cnumber + 64) +
-        Chr(player[TeamChanged, PlayerChanged].value div 5 + 48) +
-        player[TeamChanged, PlayerChanged].name + '$' +
-        player[TeamChanged, PlayerChanged].position + '$' +
-        player[TeamChanged, PlayerChanged].picture + '$' +
-        player[TeamChanged, PlayerChanged].icon + '$' +
-        player[TeamChanged, PlayerChanged].GetSkillString(1) + '|' +
-        Chr(player[TeamChanged, PlayerChanged].ma0 + 48) +
-        Chr(player[TeamChanged, PlayerChanged].st0 + 48) +
-        Chr(player[TeamChanged, PlayerChanged].ag0 + 48) +
-        Chr(player[TeamChanged, PlayerChanged].av0 + 48) +
-        Chr(player[TeamChanged, PlayerChanged].cnumber0 + 64) +
-        Chr(player[TeamChanged, PlayerChanged].value0 div 5 + 48) +
-        player[TeamChanged, PlayerChanged].name0 + '$' +
-        player[TeamChanged, PlayerChanged].position0 + '$' +
-        player[TeamChanged, PlayerChanged].picture0 + '$' +
-        player[TeamChanged, PlayerChanged].icon0 + '$' +
-        player[TeamChanged, PlayerChanged].GetSkillString(2);
+        Chr(allPlayers[TeamChanged, PlayerChanged].ma + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].st + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].ag + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].av + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].cnumber + 64) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].value div 5 + 48) +
+        allPlayers[TeamChanged, PlayerChanged].name + '$' +
+        allPlayers[TeamChanged, PlayerChanged].position + '$' +
+        allPlayers[TeamChanged, PlayerChanged].picture + '$' +
+        allPlayers[TeamChanged, PlayerChanged].icon + '$' +
+        allPlayers[TeamChanged, PlayerChanged].GetSkillString(1) + '|' +
+        Chr(allPlayers[TeamChanged, PlayerChanged].ma0 + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].st0 + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].ag0 + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].av0 + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].cnumber0 + 64) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].value0 div 5 + 48) +
+        allPlayers[TeamChanged, PlayerChanged].name0 + '$' +
+        allPlayers[TeamChanged, PlayerChanged].position0 + '$' +
+        allPlayers[TeamChanged, PlayerChanged].picture0 + '$' +
+        allPlayers[TeamChanged, PlayerChanged].icon0 + '$' +
+        allPlayers[TeamChanged, PlayerChanged].GetSkillString(2);
     LogWrite(s);
     PlayActionPlayerStatChange(s, 1);
     frmPlayerStatsChange.Hide;
@@ -147,8 +147,8 @@ begin
     PNoNew.SetFocus;
   end else begin
     for f := 1 to team[TeamChanged].numplayers do begin
-      if (player[TeamChanged, f].cnumber = m)
-       and (player[TeamChanged, f].status <> 11) then begin
+      if (allPlayers[TeamChanged, f].cnumber = m)
+       and (allPlayers[TeamChanged, f].status <> 11) then begin
         ShowMessage('That number is already being used!');
         PNoNew.SetFocus;
       end;
@@ -205,17 +205,17 @@ var i: integer;
 begin
   if CanWriteToLog then begin
     ls := 'u' + Chr(TeamChanged + 48) + Chr(PlayerChanged + 64) +
-        Chr(player[TeamChanged, PlayerChanged].ma + 48) +
-        Chr(player[TeamChanged, PlayerChanged].st + 48) +
-        Chr(player[TeamChanged, PlayerChanged].ag + 48) +
-        Chr(player[TeamChanged, PlayerChanged].av + 48) +
-        Chr(player[TeamChanged, PlayerChanged].cnumber + 64) +
-        Chr(player[TeamChanged, PlayerChanged].value div 5 + 48) +
-        player[TeamChanged, PlayerChanged].name + '$' +
-        player[TeamChanged, PlayerChanged].position + '$' +
-        player[TeamChanged, PlayerChanged].picture + '$' +
-        player[TeamChanged, PlayerChanged].icon + '$' +
-        player[TeamChanged, PlayerChanged].GetSkillString(1) + '|' +
+        Chr(allPlayers[TeamChanged, PlayerChanged].ma + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].st + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].ag + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].av + 48) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].cnumber + 64) +
+        Chr(allPlayers[TeamChanged, PlayerChanged].value div 5 + 48) +
+        allPlayers[TeamChanged, PlayerChanged].name + '$' +
+        allPlayers[TeamChanged, PlayerChanged].position + '$' +
+        allPlayers[TeamChanged, PlayerChanged].picture + '$' +
+        allPlayers[TeamChanged, PlayerChanged].icon + '$' +
+        allPlayers[TeamChanged, PlayerChanged].GetSkillString(1) + '|' +
         Chr(FVal(MANew.text) + 48) +
         Chr(FVal(STNew.text) + 48) +
         Chr(FVal(AGNew.text) + 48) +
@@ -228,8 +228,8 @@ begin
         IconNew.text + '$';
     s := '';
     for i := 0 to SkillsNew.lines.count - 1 do s := s + SkillsNew.Lines[i];
-    player[TeamChanged, PlayerChanged].SetSkill(s, true);
-    ls := ls + player[TeamChanged, PlayerChanged].GetSkillString(1);
+    allPlayers[TeamChanged, PlayerChanged].SetSkill(s, true);
+    ls := ls + allPlayers[TeamChanged, PlayerChanged].GetSkillString(1);
     LogWrite(ls);
     PlayActionPlayerStatChange(ls, 1);
     frmPlayerStatsChange.Hide;

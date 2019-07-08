@@ -75,7 +75,7 @@ begin
   frmAddPlayer.lblTeamName.caption := team[g].name;
   frmAddPlayer.lblTeamName.font.color := colorarray[g,0,0];
   frmAddPlayer.cmbRosterSlot.clear;
-  for f := 1 to team[g].numplayers do if player[g,f].status = 11 then begin
+  for f := 1 to team[g].numplayers do if allPlayers[g,f].status = 11 then begin
     frmAddPlayer.cmbRosterSlot.Items.Add(IntToStr(f));
   end;
   if team[g].numplayers < MaxNumPlayersInTeam then
@@ -84,7 +84,7 @@ begin
   m := FVal(frmAddPlayer.cmbRosterSlot.Items[0]);
   f := 1;
   while f <= team[g].numplayers do begin
-    if (player[g,f].cnumber <> m) or (player[g,f].status = 11)
+    if (allPlayers[g,f].cnumber <> m) or (allPlayers[g,f].status = 11)
      then f := f + 1 else begin
       m := m + 1;
       f := 1;
@@ -104,8 +104,8 @@ begin
     txtNumber.SetFocus;
   end else begin
     for f := 1 to team[curroster].numplayers do begin
-      if (player[curroster,f].cnumber = m)
-       and (player[curroster,f].status <> 11) then begin
+      if (allPlayers[curroster,f].cnumber = m)
+       and (allPlayers[curroster,f].status <> 11) then begin
         ShowMessage('That number is already being used!');
         txtNumber.SetFocus;
       end;
@@ -193,50 +193,50 @@ begin
   if dir = 1 then begin
     if s[4] = '+' then team[g].numplayers := team[g].numplayers + 1;
     s0 := Copy(s, 5, Length(s) - 4);
-    SplitTextAtChr255(s0, player[g,f].name);
-    SplitTextAtChr255(s0, player[g,f].position);
+    SplitTextAtChr255(s0, allPlayers[g,f].name);
+    SplitTextAtChr255(s0, allPlayers[g,f].position);
     SplitTextAtChr255(s0, t);
-    player[g,f].SetSkill(t);
-    player[g,f].inj := '';
-    player[g,f].ma := Ord(s0[1]) - 48;
-    player[g,f].st := Ord(s0[2]) - 48;
-    player[g,f].ag := Ord(s0[3]) - 48;
-    player[g,f].av := Ord(s0[4]) - 48;
-    player[g,f].ma0 := player[g,f].ma;
-    player[g,f].st0 := player[g,f].st;
-    player[g,f].ag0 := player[g,f].ag;
-    player[g,f].av0 := player[g,f].av;
-    player[g,f].SetSkillsToDefault;
-    player[g,f].int := 0;
-    player[g,f].td := 0;
-    player[g,f].cas := 0;
-    player[g,f].comp := 0;
-    player[g,f].mvp := 0;
-    player[g,f].otherSPP := 0;
-    player[g,f].int0 := 0;
-    player[g,f].td0 := 0;
-    player[g,f].cas0 := 0;
-    player[g,f].comp0 := 0;
-    player[g,f].mvp0 := 0;
-    player[g,f].otherSPP0 := 0;
-    player[g,f].picture := '';
-    player[g,f].peaked := (s0[5] = 'P');
+    allPlayers[g,f].SetSkill(t);
+    allPlayers[g,f].inj := '';
+    allPlayers[g,f].ma := Ord(s0[1]) - 48;
+    allPlayers[g,f].st := Ord(s0[2]) - 48;
+    allPlayers[g,f].ag := Ord(s0[3]) - 48;
+    allPlayers[g,f].av := Ord(s0[4]) - 48;
+    allPlayers[g,f].ma0 := allPlayers[g,f].ma;
+    allPlayers[g,f].st0 := allPlayers[g,f].st;
+    allPlayers[g,f].ag0 := allPlayers[g,f].ag;
+    allPlayers[g,f].av0 := allPlayers[g,f].av;
+    allPlayers[g,f].SetSkillsToDefault;
+    allPlayers[g,f].int := 0;
+    allPlayers[g,f].td := 0;
+    allPlayers[g,f].cas := 0;
+    allPlayers[g,f].comp := 0;
+    allPlayers[g,f].mvp := 0;
+    allPlayers[g,f].otherSPP := 0;
+    allPlayers[g,f].int0 := 0;
+    allPlayers[g,f].td0 := 0;
+    allPlayers[g,f].cas0 := 0;
+    allPlayers[g,f].comp0 := 0;
+    allPlayers[g,f].mvp0 := 0;
+    allPlayers[g,f].otherSPP0 := 0;
+    allPlayers[g,f].picture := '';
+    allPlayers[g,f].peaked := (s0[5] = 'P');
     if Length(s0) > 8 then begin
-      player[g,f].value := 5 * (Ord(s0[9]) - 48);
+      allPlayers[g,f].value := 5 * (Ord(s0[9]) - 48);
       if Length(s0) > 9 then
-        player[g,f].picture := Copy(s0, 10, length(s0) - 9);
-    end else player[g,f].value := 10 * (Ord(s0[7]) - 48);
-    player[g,f].cnumber := Ord(s0[8]) - 64;
-    player[g,f].caption := IntToStr(player[g,f].cnumber);
-    player[g,f].SetStatusDef(0);
+        allPlayers[g,f].picture := Copy(s0, 10, length(s0) - 9);
+    end else allPlayers[g,f].value := 10 * (Ord(s0[7]) - 48);
+    allPlayers[g,f].cnumber := Ord(s0[8]) - 64;
+    allPlayers[g,f].caption := IntToStr(allPlayers[g,f].cnumber);
+    allPlayers[g,f].SetStatusDef(0);
     team[g].treasury :=
        IntToStr(MoneyVal(team[g].treasury) - 5 * (Ord(s0[6]) - 48)) + 'k';
-    player[g,f].visible := true;
+    allPlayers[g,f].visible := true;
     DefaultAction(TranslateAddPlayer(s));
   end else begin
     if s[4] = '+' then team[g].numplayers := team[g].numplayers - 1;
-    player[g,f].status := 11;
-    player[g,f].visible := false;
+    allPlayers[g,f].status := 11;
+    allPlayers[g,f].visible := false;
     s0 := Copy(s, 5, Length(s) - 4);
     SplitTextAtChr255(s0, t);
     SplitTextAtChr255(s0, t);

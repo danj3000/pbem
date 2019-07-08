@@ -65,7 +65,7 @@ procedure ShowGFIWindow(g, f: integer);
 begin
   TeamPlayer := g;
   NumberPlayer := f;
-  frmGFI.lblPlayer.caption := player[TeamPlayer,NumberPlayer].GetPlayerName;
+  frmGFI.lblPlayer.caption := allPlayers[TeamPlayer,NumberPlayer].GetPlayerName;
   frmGFI.lblPlayer.font.color := colorarray[g,0,0];
 
   frmGFI.cbBlizzard.checked :=
@@ -74,8 +74,8 @@ begin
   frmGFI.cbSprint.Visible := false;
   frmGFI.cbSprint.Checked := (false);
 
-  frmGFI.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (true));    // big guy
+  frmGFI.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or
+      (allPlayers[g,f].Ally)) and (true));    // big guy
 
   CalculateGFIRollNeeded;
 
@@ -97,7 +97,7 @@ begin
 
   end else if (lastroll+1 >= GFIRollNeeded) and (lastroll<>1) and
     (frmGFI.cbSprint.Checked) then begin
-    player[TeamPlayer,NumberPlayer].UseSkill('Sprint');
+    allPlayers[TeamPlayer,NumberPlayer].UseSkill('Sprint');
     WorkOutGFIResult := true;
     
   end else begin
@@ -111,7 +111,7 @@ end;
 procedure TfrmGFI.butGFIRollClick(Sender: TObject);
 var s: string;
 begin
-  s := player[TeamPlayer, NumberPlayer].GetPlayerName +
+  s := allPlayers[TeamPlayer, NumberPlayer].GetPlayerName +
          ' tries to Go For It (';
   if cbBlizzard.checked then s := s + 'Blizzard, ';
   s := s + txtGFIRollNeeded.text + ')';
@@ -125,11 +125,11 @@ begin
     Hide;
   end else begin
     butSureFeetSkill.enabled :=
-       player[TeamPlayer, NumberPlayer].hasSkill('Sure Feet') and
-       not(player[TeamPlayer,NumberPlayer].usedSkill('Sure Feet'));
+       allPlayers[TeamPlayer, NumberPlayer].hasSkill('Sure Feet') and
+       not(allPlayers[TeamPlayer,NumberPlayer].usedSkill('Sure Feet'));
     butPro.enabled :=
-       player[TeamPlayer, NumberPlayer].hasSkill('Pro') and
-       not(player[TeamPlayer,NumberPlayer].usedSkill('Pro'));
+       allPlayers[TeamPlayer, NumberPlayer].hasSkill('Pro') and
+       not(allPlayers[TeamPlayer,NumberPlayer].usedSkill('Pro'));
     butTeamReroll.enabled := false;
     if (TeamPlayer = activeTeam) and CanUseTeamReroll(cbBigGuyAlly.checked)
       then butTeamReroll.enabled := true;
@@ -151,7 +151,7 @@ end;
 
 procedure TfrmGFI.butProClick(Sender: TObject);
 begin
-  player[TeamPlayer,NumberPlayer].UseSkill('Pro');
+  allPlayers[TeamPlayer,NumberPlayer].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(TeamPlayer,NumberPlayer);
   if (lastroll >= 4) then begin
@@ -167,7 +167,7 @@ end;
 
 procedure TfrmGFI.butsurefeetSkillClick(Sender: TObject);
 begin
-  player[TeamPlayer,NumberPlayer].UseSkill('Sure Feet');
+  allPlayers[TeamPlayer,NumberPlayer].UseSkill('Sure Feet');
   MakeGFIReroll;
 end;
 
@@ -195,13 +195,13 @@ begin
   w := curplayer;
 
     ArmourSettings(v,w,v,w,0);
-  if player[v,w].status < InjuryStatus then begin
-    if player[v,w].status=2 then begin
-      ploc := player[v,w].p;
-      qloc := player[v,w].q;
-      player[v,w].SetStatus(InjuryStatus);
+  if allPlayers[v,w].status < InjuryStatus then begin
+    if allPlayers[v,w].status=2 then begin
+      ploc := allPlayers[v,w].p;
+      qloc := allPlayers[v,w].q;
+      allPlayers[v,w].SetStatus(InjuryStatus);
       BallScatter := true;
-    end else player[v,w].SetStatus(InjuryStatus);
+    end else allPlayers[v,w].SetStatus(InjuryStatus);
   end;
   InjuryStatus := 0;
   if BallScatter then ScatterBallFrom(ploc, qloc, 1, 0);

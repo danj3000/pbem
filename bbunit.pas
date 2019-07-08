@@ -10,7 +10,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Buttons, Menus, ComCtrls, jpeg,
-  bbalg, unitDodgeRoll, unitTeam, unitPlayer, unitMarker, unitCards, Weather;
+  bbalg, unitDodgeRoll, unitTeam, unitPlayer, unitMarker, unitCards;
 
 type
   TBloodbowl = class(TForm)
@@ -473,6 +473,8 @@ type
     procedure Stab1Click(Sender: TObject);
     procedure PickSideStep1Click(Sender: TObject);
      function GetWeather(): TWeather;
+    //procedure SetWeather(); overload;
+    procedure SetWeather(fullWeatherString: string); overload;
   private
     { Private declarations }
   public
@@ -484,7 +486,7 @@ var
   turn: array [0..1, 1..8] of TLabel;
   marker: array [0..1, 1..4] of TMarker;
   fn, GameStatus, FollowUp, LDFILEDT, BugString, HomePic,
-    AwayPic, LustrianRoll, LustrianRoll2: string; {fn=filename, LDFILEDT=File Date/Time}
+    AwayPic: string; {fn=filename, LDFILEDT=File Date/Time}
   ff: file of char;
   curteam, curplayer:  integer;
   activeTeam, IGMEOY, HalfNo, lastroll, lastroll2, lastroll3,
@@ -518,7 +520,7 @@ var
   TeamTextColor, OrgTeamTextColor: array [0..1] of TColor;
   apo, wiz: array [0..1] of TLabel;
   team: array [0..1] of TTeam;
-  player: array [0..1, 1..MaxNumPlayersInTeam] of TPlayer;
+  allPlayers: array [0..1, 1..MaxNumPlayersInTeam] of TPlayer;
   pnlDugOut: array [0..1, 1..3] of TScrollBox;
   lblDugOut: array [0..1, 1..3] of TLabel;
   ComputerID: array [1..500] of string;
@@ -548,8 +550,57 @@ uses unitRoster, unitLog, unitAbout, unitArmourRoll, unitNotes,
 {$R *.DFM}
 
 function TBloodbowl.GetWeather(): TWeather;
+var w: string;
 begin
-  Result := TWeather.Create((Copy(Bloodbowl.WeatherLabel.caption, 1, 10)));
+  w := Copy(Bloodbowl.WeatherLabel.caption, 1, 10);
+  Result := bbalg.ParseWeather(w);
+end;
+
+//procedure TBloodbowl.SetWeather();
+//begin
+//  if frmSettings.cbWeatherPitch.checked then
+//  begin
+//    case GetWeather() of
+//      Sweltering: ShowFieldImage('field_heat.jpg');
+//      Sunny:      ShowFieldImage('field_sunny.jpg');
+//      Nice:       ShowFieldImage(frmSettings.txtFieldImageFile.text);
+//      Raining:    ShowFieldImage('field_rain.jpg');
+//      Blizzard:
+//      begin
+//        ShowFieldImage('field_blizzard.jpg');
+//        frmSettings.cbBlackIce.Checked := True;
+//      end;
+//    end;
+//  end;
+//end;
+
+procedure TBloodbowl.SetWeather(fullWeatherString: string);
+var
+  weatherTitle: string;
+  p: Integer;
+begin
+  p := Pos('.', fullWeatherString);
+  // assuming table format is 'NICE. Perfect Bloodbowl weather.'
+  weatherTitle := Copy(fullWeatherString, 1, p);
+  WeatherLabel.caption := weatherTitle + Chr(13) + Copy(fullWeatherString, p + 1, 100);
+
+  // update graphics
+  if frmSettings.cbWeatherPitch.checked then
+  begin
+    if weatherTitle = 'SWELTERING HEAT' then
+      ShowFieldImage('field_heat.jpg')
+    else if weatherTitle = 'BLIZZARD' then
+    begin
+      ShowFieldImage('field_blizzard.jpg');
+      frmSettings.cbBlackIce.checked := True;
+    end
+    else if weatherTitle = 'POURING RAIN' then
+      ShowFieldImage('field_rain.jpg')
+    else if weatherTitle = 'VERY SUNNY' then
+      ShowFieldImage('field_sunny.jpg')
+    else
+      ShowFieldImage(frmSettings.txtFieldImageFile.text);
+  end;
 end;
 
 procedure SetSpeakLabel(g: integer);
@@ -696,7 +747,7 @@ begin
     marker[g,f].color := colorarray[g, 0, 0];
   end;
   for f := 1 to team[g].numplayers do begin
-    Player[g,f].Redraw;
+    allPlayers[g,f].Redraw;
   end;
 end;
 
@@ -1043,7 +1094,7 @@ begin
   end;
   for g := 0 to 1 do
    for f := 1 to MaxNumPlayersInTeam do begin
-    player[g,f] := TPlayer.New(Bloodbowl, g, f);
+    allPlayers[g,f] := TPlayer.New(Bloodbowl, g, f);
    end;
 
   for g := 0 to 1 do begin
@@ -1752,7 +1803,7 @@ end;
 
 procedure TBloodbowl.Movetofield1Click(Sender: TObject);
 begin
-  player[curteam, curplayer].StartMoveToField;
+  allPlayers[curteam, curplayer].StartMoveToField;
 end;
 
 procedure TBloodbowl.BallMouseDown(Sender: TObject;
@@ -1765,14 +1816,14 @@ end;
 
 procedure TBloodbowl.MovetoReserve1Click(Sender: TObject);
 begin
-  if player[curteam,curplayer].status = 12 then begin
-    if player[curteam,curplayer].SOstatus <= 4 then
-       player[curteam,curplayer].SetStatus(0) else
-       player[curteam,curplayer].SetStatus(player[curteam,curplayer].SOstatus);
-    if player[curteam,curplayer].SOstatus = 7 then
-       player[curteam,curplayer].SIstatus :=
-         player[curteam,curplayer].SOSIstatus;
-  end else player[curteam,curplayer].SetStatus(0);
+  if allPlayers[curteam,curplayer].status = 12 then begin
+    if allPlayers[curteam,curplayer].SOstatus <= 4 then
+       allPlayers[curteam,curplayer].SetStatus(0) else
+       allPlayers[curteam,curplayer].SetStatus(allPlayers[curteam,curplayer].SOstatus);
+    if allPlayers[curteam,curplayer].SOstatus = 7 then
+       allPlayers[curteam,curplayer].SIstatus :=
+         allPlayers[curteam,curplayer].SOSIstatus;
+  end else allPlayers[curteam,curplayer].SetStatus(0);
 end;
 
 procedure TBloodbowl.Placeball1Click(Sender: TObject);
@@ -1791,7 +1842,7 @@ begin
   g := curteam;
   f := curplayer;
   if CanWriteToLog then begin
-    s := 'x' + Chr(g + 48) + Chr(f + 65) + Chr(player[g,f].UsedMA + 64);
+    s := 'x' + Chr(g + 48) + Chr(f + 65) + Chr(allPlayers[g,f].UsedMA + 64);
     LogWrite(s);
     PlayActionEndOfMove(s, 1);
   end;
@@ -1804,7 +1855,7 @@ begin
   g := curteam;
   f := curplayer;
   if CanWriteToLog then begin
-    s := 'X' + Chr(g + 48) + Chr(f + 65) + Chr(player[g,f].UsedMA + 64);
+    s := 'X' + Chr(g + 48) + Chr(f + 65) + Chr(allPlayers[g,f].UsedMA + 64);
     LogWrite(s);
     PlayActionResetMove(s, 1);
   end;
@@ -1828,11 +1879,11 @@ begin
   LeftClickPlayer(curteam,curplayer);
   if curteam = g then begin
     if (
-       (not((player[g,f].ma<=2)))) or
-       (player[g,f].hasSkill('Jump Up'))
+       (not((allPlayers[g,f].ma<=2)))) or
+       (allPlayers[g,f].hasSkill('Jump Up'))
        then begin
-       player[g,f].SetStatus(1);
-    end else if (player[g,f].status) > 2 then begin
+       allPlayers[g,f].SetStatus(1);
+    end else if (allPlayers[g,f].status) > 2 then begin
         tz := CountTZSlow(g, f);
         StandUp := 0;
         for p := 1 to tz.num do begin
@@ -1842,7 +1893,7 @@ begin
           end;
         end;
 
-        if ((player[g,f].ma) <= 2) then begin
+        if ((allPlayers[g,f].ma) <= 2) then begin
             Bloodbowl.comment.text := 'Stand Up roll 4+ to succeed';
             StandUp := 0;
         end;
@@ -1852,11 +1903,11 @@ begin
         r2 := lastroll;
 
         if lastroll < 4 then begin
-          bga := (((player[ActionTeam,ActionPlayer].BigGuy) or
-            (player[ActionTeam,ActionPlayer].Ally))
+          bga := (((allPlayers[ActionTeam,ActionPlayer].BigGuy) or
+            (allPlayers[ActionTeam,ActionPlayer].Ally))
             and (true));   // bigguy
-          proskill := ((player[ActionTeam,ActionPlayer].HasSkill('Pro'))) and
-            (not (player[ActionTeam,ActionPlayer].usedSkill('Pro')))
+          proskill := ((allPlayers[ActionTeam,ActionPlayer].HasSkill('Pro'))) and
+            (not (allPlayers[ActionTeam,ActionPlayer].usedSkill('Pro')))
             and (ActionTeam = activeTeam);
           reroll := CanUseTeamReroll(bga);
           ReRollAnswer := 'Fail Roll';
@@ -1880,7 +1931,7 @@ begin
             end;
           end;
           if ReRollAnswer='Use Pro' then begin
-            player[ActionTeam,ActionPlayer].UseSkill('Pro');
+            allPlayers[ActionTeam,ActionPlayer].UseSkill('Pro');
             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
             if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
             if (lastroll <= 3) then lastroll := r2;
@@ -1896,12 +1947,12 @@ begin
         if lastroll>=4 then begin
           Bloodbowl.comment.text := 'Stand Up roll successful';
           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          player[g,f].SetStatus(1);
+          allPlayers[g,f].SetStatus(1);
         end else begin
           Bloodbowl.comment.text := 'Stand Up roll failed!';
           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
           s := 'x' + Chr(g + 48) + Chr(f + 65) +
-             Chr(player[g,f].UsedMA + 64);
+             Chr(allPlayers[g,f].UsedMA + 64);
           LogWrite(s);
           PlayActionEndOfMove(s, 1);
         end;
@@ -1911,61 +1962,71 @@ end;
 
 procedure TBloodbowl.Ballcarrier1Click(Sender: TObject);
 begin
-  player[curteam,curplayer].SetStatus(2);
+  allPlayers[curteam,curplayer].SetStatus(2);
 end;
 
 procedure TBloodbowl.Prone1Click(Sender: TObject);
-var g, f: integer;
+var
+  currentPlayer: unitPlayer.TPlayer;
+  g, f: Integer;
 begin
   g := curteam;
   f := curplayer;
-  if not(frmSettings.cbDeStun.Checked) then LeftClickPlayer(curteam,curplayer);
-  if g = curteam then begin
-    if player[g,f].status=2 then begin
-      player[g,f].SetStatus(3);
-      ScatterBallFrom((player[g,f].p), (player[g,f].q), 1, 0);
-    end else player[g,f].SetStatus(PLAYER_STATUS_PRONE);
+  if not(frmSettings.cbDeStun.checked) then
+    LeftClickPlayer(curteam, curplayer);
+
+
+  if g = curteam then
+  begin
+    currentPlayer := allPlayers[g, f];
+    if currentPlayer.status = Ord(TPlayerStatus.PLAYER_STATUS_BALL_CARRIER) then
+    begin
+      currentPlayer.SetStatus(TPlayerStatus.PLAYER_STATUS_PRONE);
+      ScatterBallFrom((currentPlayer.p), (currentPlayer.q), 1, 0);
+    end
+    else
+      currentPlayer.SetStatus(TPlayerStatus.PLAYER_STATUS_PRONE);
   end;
 end;
 
 procedure TBloodbowl.Stunned1Click(Sender: TObject);
 begin
-  if player[curteam,curplayer].status=2 then begin
-    player[curteam,curplayer].SetStatus(4);
-    ScatterBallFrom((player[curteam,curplayer].p), (player[curteam,curplayer].q), 1, 0);
-  end else player[curteam,curplayer].SetStatus(4);
+  if allPlayers[curteam,curplayer].status=2 then begin
+    allPlayers[curteam,curplayer].SetStatus(4);
+    ScatterBallFrom((allPlayers[curteam,curplayer].p), (allPlayers[curteam,curplayer].q), 1, 0);
+  end else allPlayers[curteam,curplayer].SetStatus(4);
 end;
 
 procedure TBloodbowl.Reserve1Click(Sender: TObject);
 begin
- if player[curteam,curplayer].status = 12 then begin
-    player[curteam,curplayer].SetStatus(player[curteam,curplayer].SOstatus);
-    if player[curteam,curplayer].SOstatus = 7 then
-       player[curteam,curplayer].SIstatus :=
-         player[curteam,curplayer].SOSIstatus;
-  end else player[curteam,curplayer].SetStatus(0);
+ if allPlayers[curteam,curplayer].status = 12 then begin
+    allPlayers[curteam,curplayer].SetStatus(allPlayers[curteam,curplayer].SOstatus);
+    if allPlayers[curteam,curplayer].SOstatus = 7 then
+       allPlayers[curteam,curplayer].SIstatus :=
+         allPlayers[curteam,curplayer].SOSIstatus;
+  end else allPlayers[curteam,curplayer].SetStatus(0);
 end;
 
 procedure TBloodbowl.KO1Click(Sender: TObject);
 var ploc, qloc: integer;
 begin
-  if player[curteam,curplayer].status=2 then begin
-    ploc := player[curteam,curplayer].p;
-    qloc := player[curteam,curplayer].q;
-    player[curteam,curplayer].SetStatus(5);
+  if allPlayers[curteam,curplayer].status=2 then begin
+    ploc := allPlayers[curteam,curplayer].p;
+    qloc := allPlayers[curteam,curplayer].q;
+    allPlayers[curteam,curplayer].SetStatus(5);
     ScatterBallFrom(ploc, qloc, 1, 0);
-  end else player[curteam,curplayer].SetStatus(5);
+  end else allPlayers[curteam,curplayer].SetStatus(5);
 end;
 
 procedure TBloodbowl.BadlyHurt1Click(Sender: TObject);
 var ploc, qloc: integer;
 begin
-  if player[curteam,curplayer].status=2 then begin
-    ploc := player[curteam,curplayer].p;
-    qloc := player[curteam,curplayer].q;
-    player[curteam,curplayer].SetStatus(6);
+  if allPlayers[curteam,curplayer].status=2 then begin
+    ploc := allPlayers[curteam,curplayer].p;
+    qloc := allPlayers[curteam,curplayer].q;
+    allPlayers[curteam,curplayer].SetStatus(6);
     ScatterBallFrom(ploc, qloc, 1, 0);
-  end else player[curteam,curplayer].SetStatus(6);
+  end else allPlayers[curteam,curplayer].SetStatus(6);
 end;
 
 procedure TBloodbowl.SeriouslyInjured1Click(Sender: TObject);
@@ -1980,39 +2041,39 @@ begin
   if s[3] = 'S' then v := 73; {-1 ST}
   if s[4] = 'G' then v := 74; {-1 AG}
   if s[4] = 'V' then v := 75; {-1 AV}
-  if player[curteam,curplayer].status=2 then begin
-    ploc := player[curteam,curplayer].p;
-    qloc := player[curteam,curplayer].q;
-    player[curteam,curplayer].SetStatus(v);
+  if allPlayers[curteam,curplayer].status=2 then begin
+    ploc := allPlayers[curteam,curplayer].p;
+    qloc := allPlayers[curteam,curplayer].q;
+    allPlayers[curteam,curplayer].SetStatus(v);
     ScatterBallFrom(ploc, qloc, 1, 0);
-  end else player[curteam,curplayer].SetStatus(v);
+  end else allPlayers[curteam,curplayer].SetStatus(v);
 end;
 
 procedure TBloodbowl.Dead1Click(Sender: TObject);
 var ploc, qloc: integer;
 begin
-  if player[curteam,curplayer].status=2 then begin
-    ploc := player[curteam,curplayer].p;
-    qloc := player[curteam,curplayer].q;
-    player[curteam,curplayer].SetStatus(8);
+  if allPlayers[curteam,curplayer].status=2 then begin
+    ploc := allPlayers[curteam,curplayer].p;
+    qloc := allPlayers[curteam,curplayer].q;
+    allPlayers[curteam,curplayer].SetStatus(8);
     ScatterBallFrom(ploc, qloc, 1, 0);
-  end else player[curteam,curplayer].SetStatus(8);
+  end else allPlayers[curteam,curplayer].SetStatus(8);
 end;
 
 procedure TBloodbowl.SendOff1Click(Sender: TObject);
 var ploc, qloc: integer;
 begin
-  if player[curteam,curplayer].status=2 then begin
-    ploc := player[curteam,curplayer].p;
-    qloc := player[curteam,curplayer].q;
-    player[curteam,curplayer].SOstatus := player[curteam,curplayer].status;
-    player[curteam,curplayer].SOSIstatus := player[curteam,curplayer].SIstatus;
-    player[curteam,curplayer].SetStatus(12);
+  if allPlayers[curteam,curplayer].status=2 then begin
+    ploc := allPlayers[curteam,curplayer].p;
+    qloc := allPlayers[curteam,curplayer].q;
+    allPlayers[curteam,curplayer].SOstatus := allPlayers[curteam,curplayer].status;
+    allPlayers[curteam,curplayer].SOSIstatus := allPlayers[curteam,curplayer].SIstatus;
+    allPlayers[curteam,curplayer].SetStatus(12);
     ScatterBallFrom(ploc, qloc, 1, 0);
   end else begin
-    player[curteam,curplayer].SOstatus := player[curteam,curplayer].status;
-    player[curteam,curplayer].SOSIstatus := player[curteam,curplayer].SIstatus;
-    player[curteam,curplayer].SetStatus(12);
+    allPlayers[curteam,curplayer].SOstatus := allPlayers[curteam,curplayer].status;
+    allPlayers[curteam,curplayer].SOSIstatus := allPlayers[curteam,curplayer].SIstatus;
+    allPlayers[curteam,curplayer].SetStatus(12);
   end;
   if Bloodbowl.ArgueCallSB.Visible then
     Bloodbowl.comment.Text := 'Remember you can Argue the Call!';
@@ -2020,17 +2081,17 @@ end;
 
 procedure TBloodbowl.MissesMatch1Click(Sender: TObject);
 begin
-  player[curteam,curplayer].SetStatus(10);
+  allPlayers[curteam,curplayer].SetStatus(10);
 end;
 
 procedure TBloodbowl.TemporaryOut1Click(Sender: TObject);
 begin
-  player[curteam,curplayer].SetStatus(13);
+  allPlayers[curteam,curplayer].SetStatus(13);
 end;
 
 procedure TBloodbowl.HeatOut1Click(Sender: TObject);
 begin
-  player[curteam,curplayer].SetStatus(14);
+  allPlayers[curteam,curplayer].SetStatus(14);
 end;
 
 procedure TBloodbowl.HideBall1Click(Sender: TObject);
@@ -2052,17 +2113,17 @@ begin
      TotalPlaying := 0;
      extratitchy := 0;
      for i := 1 to team[TeamTest].numplayers do begin
-       if (player[TeamTest,i].q = 12) and (TeamTest = 0) and
-         (player[TeamTest,i].p > 3) and (player[TeamTest,i].p < 11) then
+       if (allPlayers[TeamTest,i].q = 12) and (TeamTest = 0) and
+         (allPlayers[TeamTest,i].p > 3) and (allPlayers[TeamTest,i].p < 11) then
          LOS := LOS + 1;
-       if (player[TeamTest,i].q = 13) and (TeamTest = 1) and
-         (player[TeamTest,i].p > 3) and (player[TeamTest,i].p < 11) then
+       if (allPlayers[TeamTest,i].q = 13) and (TeamTest = 1) and
+         (allPlayers[TeamTest,i].p > 3) and (allPlayers[TeamTest,i].p < 11) then
          LOS := LOS + 1;
-       if (player[TeamTest,i].p <= 3) and (Player[TeamTest,i].status >= 1) and
-          (Player[TeamTest,i].status <= 2) then WZone1 := WZone1 + 1;
-       if (player[TeamTest,i].p >= 11) then WZone2 := WZone2 + 1;
-       if (Player[TeamTest,i].status <= 4) then TotalPlayers := TotalPlayers + 1;
-       if (Player[TeamTest,i].status >= 1) and (Player[TeamTest,i].status <= 4)
+       if (allPlayers[TeamTest,i].p <= 3) and (allPlayers[TeamTest,i].status >= 1) and
+          (allPlayers[TeamTest,i].status <= 2) then WZone1 := WZone1 + 1;
+       if (allPlayers[TeamTest,i].p >= 11) then WZone2 := WZone2 + 1;
+       if (allPlayers[TeamTest,i].status <= 4) then TotalPlayers := TotalPlayers + 1;
+       if (allPlayers[TeamTest,i].status >= 1) and (allPlayers[TeamTest,i].status <= 4)
          then TotalPlaying := TotalPlaying + 1;
      end;
      If (TotalPlayers >= 3) and (LOS < 3)
@@ -2109,16 +2170,16 @@ begin
   AVBreak := false;
   InjurySettings(curteam, curplayer);
   if InjuryStatus = 4 then InjuryStatus := 0;
-  if player[curteam,curplayer].status=2 then begin
-    ploc := player[curteam,curplayer].p;
-    qloc := player[curteam,curplayer].q;
-    player[curteam,curplayer].SetStatus(InjuryStatus);
+  if allPlayers[curteam,curplayer].status=2 then begin
+    ploc := allPlayers[curteam,curplayer].p;
+    qloc := allPlayers[curteam,curplayer].q;
+    allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
     if ploc = 0 then arrow := 2;
     if ploc = 14 then arrow := 7;
     if qloc = 0 then arrow := 4;
     if qloc = 25 then arrow := 5;
     ScatterBallFrom(ploc, qloc, 1, arrow);
-  end else player[curteam,curplayer].SetStatus(InjuryStatus);
+  end else allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
   InjuryStatus := 0;
 end;
 
@@ -2324,27 +2385,27 @@ end;
 procedure TBloodbowl.Completion1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    player[curteam, curplayer].comp := player[curteam, curplayer].comp + 1;
+    allPlayers[curteam, curplayer].comp := allPlayers[curteam, curplayer].comp + 1;
     LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'c');
-    AddLog('Completion for ' + player[curteam, curplayer].GetPlayerName);
+    AddLog('Completion for ' + allPlayers[curteam, curplayer].GetPlayerName);
   end;
 end;
 
 procedure TBloodbowl.Interception1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    player[curteam, curplayer].int := player[curteam, curplayer].int + 1;
+    allPlayers[curteam, curplayer].int := allPlayers[curteam, curplayer].int + 1;
     LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'I');
-    AddLog('Interception for ' + player[curteam, curplayer].GetPlayerName);
+    AddLog('Interception for ' + allPlayers[curteam, curplayer].GetPlayerName);
   end;
 end;
 
 procedure TBloodbowl.Touchdown1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    player[curteam, curplayer].td := player[curteam, curplayer].td + 1;
+    allPlayers[curteam, curplayer].td := allPlayers[curteam, curplayer].td + 1;
     LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'T');
-    AddLog('Touchdown for ' + player[curteam, curplayer].GetPlayerName);
+    AddLog('Touchdown for ' + allPlayers[curteam, curplayer].GetPlayerName);
 
     {increase score marker}
     marker[curteam, MT_Score].MarkerMouseUp(
@@ -2356,9 +2417,9 @@ end;
 procedure TBloodbowl.Casualty1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    player[curteam, curplayer].cas := player[curteam, curplayer].cas + 1;
+    allPlayers[curteam, curplayer].cas := allPlayers[curteam, curplayer].cas + 1;
     LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'C');
-    AddLog('Casualty for ' + player[curteam, curplayer].GetPlayerName);
+    AddLog('Casualty for ' + allPlayers[curteam, curplayer].GetPlayerName);
     {increase casscore marker}
     marker[curteam, MT_CasScore].MarkerMouseUp(
               marker[curteam, MT_CasScore], mbLeft, [], 0, 0);
@@ -2368,20 +2429,20 @@ end;
 procedure TBloodbowl.OtherSPP1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    player[curteam, curplayer].otherSPP :=
-                    player[curteam, curplayer].otherSPP + 1;
+    allPlayers[curteam, curplayer].otherSPP :=
+                    allPlayers[curteam, curplayer].otherSPP + 1;
     LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'O');
-    AddLog('1 other SPP for ' + player[curteam, curplayer].GetPlayerName);
+    AddLog('1 other SPP for ' + allPlayers[curteam, curplayer].GetPlayerName);
   end;
 end;
 
 procedure TBloodbowl.EXP1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    player[curteam, curplayer].exp :=
-                    player[curteam, curplayer].exp + 1;
+    allPlayers[curteam, curplayer].exp :=
+                    allPlayers[curteam, curplayer].exp + 1;
     LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'E');
-    AddLog('EXP point for ' + player[curteam, curplayer].GetPlayerName);
+    AddLog('EXP point for ' + allPlayers[curteam, curplayer].GetPlayerName);
   end;
 end;
 
@@ -2391,14 +2452,14 @@ begin
   if CanWriteToLog then begin
 
       intAnswer := Application.MessageBox(PChar('Are you sure you want to give ' +
-            player[curteam, curplayer].GetPlayerName + ' a MVP Award?'),
+            allPlayers[curteam, curplayer].GetPlayerName + ' a MVP Award?'),
             'Bloodbowl', mb_YesNo);
 
     if intAnswer = idYes then begin
-      player[curteam, curplayer].mvp :=
-                    player[curteam, curplayer].mvp + 1;
+      allPlayers[curteam, curplayer].mvp :=
+                    allPlayers[curteam, curplayer].mvp + 1;
       LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'M');
-      AddLog('MVP Award for ' + player[curteam, curplayer].GetPlayerName)
+      AddLog('MVP Award for ' + allPlayers[curteam, curplayer].GetPlayerName)
     end;
   end;
 end;
@@ -2408,9 +2469,9 @@ var r: integer;
     s: string;
 begin
   r := Rnd(team[g].numplayers,6) + 1;
-  while player[g,r].status = 11 do r := Rnd(team[g].numplayers,6) + 1;
+  while allPlayers[g,r].status = 11 do r := Rnd(team[g].numplayers,6) + 1;
   if CanWriteToLog then begin
-    s := player[g,r].MakeCurrent;
+    s := allPlayers[g,r].MakeCurrent;
     if s <> '' then LogWrite(s);
     s := 'Y' + Chr(g + 48) + Chr(r + 64);
     LogWrite(s);
@@ -2441,10 +2502,10 @@ begin
     koreturn := false;
     for g := 0 to 1 do begin
       for f := 1 to team[g].numplayers do begin
-        if player[g,f].status = 2 then begin
+        if allPlayers[g,f].status = 2 then begin
           ballplaced := true;
-          ballspotp := player[g,f].p;
-          ballspotq := player[g,f].q;
+          ballspotp := allPlayers[g,f].p;
+          ballspotq := allPlayers[g,f].q;
           ballhidden := false;
         end;
       end;
@@ -2472,17 +2533,17 @@ begin
       TotalPlayers := 0;
       extratitchy := 0;
       for i := 1 to team[TeamTest].numplayers do begin
-        if (player[TeamTest,i].q = 12) and (TeamTest = 0) and
-          (player[TeamTest,i].p > 3) and (player[TeamTest,i].p < 11) then
+        if (allPlayers[TeamTest,i].q = 12) and (TeamTest = 0) and
+          (allPlayers[TeamTest,i].p > 3) and (allPlayers[TeamTest,i].p < 11) then
           LOS := LOS + 1;
-        if (player[TeamTest,i].q = 13) and (TeamTest = 1) and
-          (player[TeamTest,i].p > 3) and (player[TeamTest,i].p < 11) then
+        if (allPlayers[TeamTest,i].q = 13) and (TeamTest = 1) and
+          (allPlayers[TeamTest,i].p > 3) and (allPlayers[TeamTest,i].p < 11) then
           LOS := LOS + 1;
-        if (player[TeamTest,i].p <= 3) and (Player[TeamTest,i].status >= 1) and
-           (Player[TeamTest,i].status <= 2) then WZone1 := WZone1 + 1;
-        if (player[TeamTest,i].p >= 11) then WZone2 := WZone2 + 1;
-        if (Player[TeamTest,i].status <= 4) then TotalPlayers := TotalPlayers + 1;
-        if (Player[TeamTest,i].status >= 1) and (Player[TeamTest,i].status <= 4)
+        if (allPlayers[TeamTest,i].p <= 3) and (allPlayers[TeamTest,i].status >= 1) and
+           (allPlayers[TeamTest,i].status <= 2) then WZone1 := WZone1 + 1;
+        if (allPlayers[TeamTest,i].p >= 11) then WZone2 := WZone2 + 1;
+        if (allPlayers[TeamTest,i].status <= 4) then TotalPlayers := TotalPlayers + 1;
+        if (allPlayers[TeamTest,i].status >= 1) and (allPlayers[TeamTest,i].status <= 4)
           then TotalPlaying := TotalPlaying + 1;
       end;
       If (TotalPlayers >= 3) and (LOS < 3)
@@ -2504,17 +2565,17 @@ begin
       TotalPlaying := 0;
       extratitchy := 0;
       for i := 1 to team[TeamTest].numplayers do begin
-        if (player[TeamTest,i].q = 12) and (TeamTest = 0) and
-          (player[TeamTest,i].p > 3) and (player[TeamTest,i].p < 11) then
+        if (allPlayers[TeamTest,i].q = 12) and (TeamTest = 0) and
+          (allPlayers[TeamTest,i].p > 3) and (allPlayers[TeamTest,i].p < 11) then
           LOS := LOS + 1;
-        if (player[TeamTest,i].q = 13) and (TeamTest = 1) and
-          (player[TeamTest,i].p > 3) and (player[TeamTest,i].p < 11) then
+        if (allPlayers[TeamTest,i].q = 13) and (TeamTest = 1) and
+          (allPlayers[TeamTest,i].p > 3) and (allPlayers[TeamTest,i].p < 11) then
           LOS := LOS + 1;
-        if (player[TeamTest,i].p <= 3) and (Player[TeamTest,i].status >= 1) and
-           (Player[TeamTest,i].status <= 2) then WZone1 := WZone1 + 1;
-        if (player[TeamTest,i].p >= 11) then WZone2 := WZone2 + 1;
-        if (Player[TeamTest,i].status <= 4) then TotalPlayers := TotalPlayers + 1;
-        if (Player[TeamTest,i].status >= 1) and (Player[TeamTest,i].status <= 4)
+        if (allPlayers[TeamTest,i].p <= 3) and (allPlayers[TeamTest,i].status >= 1) and
+           (allPlayers[TeamTest,i].status <= 2) then WZone1 := WZone1 + 1;
+        if (allPlayers[TeamTest,i].p >= 11) then WZone2 := WZone2 + 1;
+        if (allPlayers[TeamTest,i].status <= 4) then TotalPlayers := TotalPlayers + 1;
+        if (allPlayers[TeamTest,i].status >= 1) and (allPlayers[TeamTest,i].status <= 4)
           then TotalPlaying := TotalPlaying + 1;
       end;
       If (TotalPlayers >= 3) and (LOS < 3)
@@ -2541,7 +2602,7 @@ begin
         ballspotq := HideBallq;
         for u := 0 to 1 do begin
           for v := 1 to team[u].numplayers do begin
-            if (player[u,v].p = HideBallp) and (player[u,v].q = HideBallq)
+            if (allPlayers[u,v].p = HideBallp) and (allPlayers[u,v].q = HideBallq)
             then begin
               PlayerThere := true;
               {player[u,v].SetStatus(2);}
@@ -2556,12 +2617,12 @@ begin
       if ballspotq >= 13 then g := 1 else g := 0;
       KickOffTeam := g;
       for f := 1 to team[g].numplayers do begin
-        if (player[g,f].hasSkill('Kickoff Return')) and ((player[g,f].status = 1)
-          or (player[g,f].status = 2)) and ((player[g,f].q > 13) or
-          (player[g,f].q < 12)) then KOReturn := true;
-        if (player[g,f].hasSkill('Kick-Off Return')) and ((player[g,f].status = 1)
-          or (player[g,f].status = 2)) and ((player[g,f].q > 13) or
-          (player[g,f].q < 12)) then KOReturn := true;
+        if (allPlayers[g,f].hasSkill('Kickoff Return')) and ((allPlayers[g,f].status = 1)
+          or (allPlayers[g,f].status = 2)) and ((allPlayers[g,f].q > 13) or
+          (allPlayers[g,f].q < 12)) then KOReturn := true;
+        if (allPlayers[g,f].hasSkill('Kick-Off Return')) and ((allPlayers[g,f].status = 1)
+          or (allPlayers[g,f].status = 2)) and ((allPlayers[g,f].q > 13) or
+          (allPlayers[g,f].q < 12)) then KOReturn := true;
       end;
       AddLog('(' + IntToStr(r1) + ',' + IntToStr(r2) + ') : '
         + KickoffTable[r3]);
@@ -2677,8 +2738,8 @@ begin
             PlayActionCoachRef(s, 1);
           end;
           if (KOCatcherPlayer <> -1) and
-            (player[KOCatcherTeam, KOCatcherPlayer].status >= 1) and
-            (player[KOCatcherTeam, KOCatcherPlayer].status <= 2) then begin
+            (allPlayers[KOCatcherTeam, KOCatcherPlayer].status >= 1) and
+            (allPlayers[KOCatcherTeam, KOCatcherPlayer].status <= 2) then begin
             ShowCatchWindow(KOCatcherTeam, KOCatcherPlayer, 0, false, false);
             KOCatcherTeam := -1;
             KOCatcherPlayer := -1;
@@ -2779,7 +2840,7 @@ begin
       end else if Copy((KickoffTable[r3]),1,14) = 'WEATHER CHANGE' then begin
         if CanWriteToLog then begin
           ScatterD8D6(ballspotp, ballspotq, true, false);
-          WeatherTableClick;
+          DoWeatherRoll();
           if KOCatcherPlayer <> -1 then begin
             ShowCatchWindow(KOCatcherTeam, KOCatcherPlayer, 0, false, false);
             KOCatcherTeam := -1;
@@ -2901,24 +2962,24 @@ begin
             done := 0;
             pitchcount := 0;
             for f := 1 to team[1].numplayers do begin
-             if (player[1,f].status = 2) or (player[1,f].status =1) then begin
+             if (allPlayers[1,f].status = 2) or (allPlayers[1,f].status =1) then begin
                pitchcount := pitchcount + 1;
              end;
             end;
             if pitchcount > 0 then begin
               while done = 0 do begin
                 RandomPlayer(1);
-                if (player[curteam,curplayer].status = 1) or
-                   (player[curteam,curplayer].status = 2) then done := 1;
+                if (allPlayers[curteam,curplayer].status = 1) or
+                   (allPlayers[curteam,curplayer].status = 2) then done := 1;
               end;
             end;
             InjurySettings(curteam, curplayer);
-            if player[curteam,curplayer].status=2 then begin
-              ploc := player[curteam,curplayer].p;
-              qloc := player[curteam,curplayer].q;
-              player[curteam,curplayer].SetStatus(InjuryStatus);
+            if allPlayers[curteam,curplayer].status=2 then begin
+              ploc := allPlayers[curteam,curplayer].p;
+              qloc := allPlayers[curteam,curplayer].q;
+              allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
               ScatterBallFrom(ploc, qloc, 1, 0);
-            end else player[curteam,curplayer].SetStatus(InjuryStatus);
+            end else allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
             InjuryStatus := 0;
           end else if koteam1 > koteam0 then begin
             s := Chr(255) + ffcl[1] + ' win the roll! ';
@@ -2927,24 +2988,24 @@ begin
             done := 0;
             pitchcount := 0;
             for f := 1 to team[0].numplayers do begin
-             if (player[0,f].status = 2) or (player[0,f].status =1) then begin
+             if (allPlayers[0,f].status = 2) or (allPlayers[0,f].status =1) then begin
                pitchcount := pitchcount + 1;
              end;
             end;
             if pitchcount > 0 then begin
               while done = 0 do begin
                 RandomPlayer(0);
-                if (player[curteam,curplayer].status = 1) or
-                   (player[curteam,curplayer].status = 2) then done := 1;
+                if (allPlayers[curteam,curplayer].status = 1) or
+                   (allPlayers[curteam,curplayer].status = 2) then done := 1;
               end;
             end;
             InjurySettings(curteam, curplayer);
-            if player[curteam,curplayer].status=2 then begin
-              ploc := player[curteam,curplayer].p;
-              qloc := player[curteam,curplayer].q;
-              player[curteam,curplayer].SetStatus(InjuryStatus);
+            if allPlayers[curteam,curplayer].status=2 then begin
+              ploc := allPlayers[curteam,curplayer].p;
+              qloc := allPlayers[curteam,curplayer].q;
+              allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
               ScatterBallFrom(ploc, qloc, 1, 0);
-            end else player[curteam,curplayer].SetStatus(InjuryStatus);
+            end else allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
             InjuryStatus := 0;
           end else begin
             s := Chr(255) + 'Tie roll, both teams effected! ';
@@ -2953,56 +3014,56 @@ begin
             done := 0;
             pitchcount := 0;
             for f := 1 to team[0].numplayers do begin
-             if (player[0,f].status = 2) or (player[0,f].status =1) then begin
+             if (allPlayers[0,f].status = 2) or (allPlayers[0,f].status =1) then begin
                pitchcount := pitchcount + 1;
              end;
             end;
             if pitchcount > 0 then begin
               while done = 0 do begin
                 RandomPlayer(0);
-                if (player[curteam,curplayer].status = 1) or
-                   (player[curteam,curplayer].status = 2) then done := 1;
+                if (allPlayers[curteam,curplayer].status = 1) or
+                   (allPlayers[curteam,curplayer].status = 2) then done := 1;
               end;
             end;
             InjurySettings(curteam, curplayer);
-            if player[curteam,curplayer].status=2 then begin
-              ploc := player[curteam,curplayer].p;
-              qloc := player[curteam,curplayer].q;
-              player[curteam,curplayer].SetStatus(InjuryStatus);
+            if allPlayers[curteam,curplayer].status=2 then begin
+              ploc := allPlayers[curteam,curplayer].p;
+              qloc := allPlayers[curteam,curplayer].q;
+              allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
               ScatterBallFrom(ploc, qloc, 1, 0);
-            end else player[curteam,curplayer].SetStatus(InjuryStatus);
+            end else allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
             InjuryStatus := 0;
             done := 0;
             pitchcount := 0;
             for f := 1 to team[1].numplayers do begin
-             if (player[1,f].status = 2) or (player[1,f].status =1) then begin
+             if (allPlayers[1,f].status = 2) or (allPlayers[1,f].status =1) then begin
                pitchcount := pitchcount + 1;
              end;
             end;
             if pitchcount > 0 then begin
               while done = 0 do begin
                 RandomPlayer(1);
-                if (player[curteam,curplayer].status = 1) or
-                   (player[curteam,curplayer].status = 2) then done := 1;
+                if (allPlayers[curteam,curplayer].status = 1) or
+                   (allPlayers[curteam,curplayer].status = 2) then done := 1;
               end;
             end;
             InjurySettings(curteam, curplayer);
-            if player[curteam,curplayer].status=2 then begin
-              ploc := player[curteam,curplayer].p;
-              qloc := player[curteam,curplayer].q;
-              player[curteam,curplayer].SetStatus(InjuryStatus);
+            if allPlayers[curteam,curplayer].status=2 then begin
+              ploc := allPlayers[curteam,curplayer].p;
+              qloc := allPlayers[curteam,curplayer].q;
+              allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
               ScatterBallFrom(ploc, qloc, 1, 0);
-            end else player[curteam,curplayer].SetStatus(InjuryStatus);
+            end else allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
             InjuryStatus := 0;
           end;
           if (KOCatcherPlayer <> -1) and
-            (player[KOCatcherTeam, KOCatcherPlayer].status >= 1) and
-            (player[KOCatcherTeam, KOCatcherPlayer].status <= 2) then begin
+            (allPlayers[KOCatcherTeam, KOCatcherPlayer].status >= 1) and
+            (allPlayers[KOCatcherTeam, KOCatcherPlayer].status <= 2) then begin
             ShowCatchWindow(KOCatcherTeam, KOCatcherPlayer, 0, false, false);
             KOCatcherTeam := -1;
             KOCatcherPlayer := -1;
           end else if (KOCatcherPlayer <> -1) and
-            (player[KOCatcherTeam, KOCatcherPlayer].status > 2) then begin
+            (allPlayers[KOCatcherTeam, KOCatcherPlayer].status > 2) then begin
             ScatterBallFrom(ball.p,ball.q,1,0);
             KOCatcherTeam := -1;
             KOCatcherPlayer := -1;
@@ -3048,7 +3109,7 @@ begin
               LogWrite(s);
               pitchcount := 0;
               for f := 1 to team[1].numplayers do begin
-               if (player[1,f].status = 2) or (player[1,f].status =1) then begin
+               if (allPlayers[1,f].status = 2) or (allPlayers[1,f].status =1) then begin
                  pitchcount := pitchcount + 1;
                end;
               end;
@@ -3058,16 +3119,16 @@ begin
                   done := 0;
                   while done = 0 do begin
                     RandomPlayer(1);
-                    if (player[curteam,curplayer].status = 1) or
-                       (player[curteam,curplayer].status = 2) then done := 1;
+                    if (allPlayers[curteam,curplayer].status = 1) or
+                       (allPlayers[curteam,curplayer].status = 2) then done := 1;
                   end;
                   InjurySettings(curteam, curplayer);
-                  if player[curteam,curplayer].status=2 then begin
-                    ploc := player[curteam,curplayer].p;
-                    qloc := player[curteam,curplayer].q;
-                    player[curteam,curplayer].SetStatus(InjuryStatus);
+                  if allPlayers[curteam,curplayer].status=2 then begin
+                    ploc := allPlayers[curteam,curplayer].p;
+                    qloc := allPlayers[curteam,curplayer].q;
+                    allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
                     ScatterBallFrom(ploc, qloc, 1, 0);
-                  end else player[curteam,curplayer].SetStatus(InjuryStatus);
+                  end else allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
                   InjuryStatus := 0;
                 end;
               end;
@@ -3082,7 +3143,7 @@ begin
               LogWrite(s);
               pitchcount := 0;
               for f := 1 to team[0].numplayers do begin
-               if (player[0,f].status = 2) or (player[0,f].status =1) then begin
+               if (allPlayers[0,f].status = 2) or (allPlayers[0,f].status =1) then begin
                  pitchcount := pitchcount + 1;
                end;
               end;
@@ -3092,16 +3153,16 @@ begin
                   done := 0;
                   while done = 0 do begin
                     RandomPlayer(0);
-                    if (player[curteam,curplayer].status = 1) or
-                       (player[curteam,curplayer].status = 2) then done := 1;
+                    if (allPlayers[curteam,curplayer].status = 1) or
+                       (allPlayers[curteam,curplayer].status = 2) then done := 1;
                   end;
                   InjurySettings(curteam, curplayer);
-                  if player[curteam,curplayer].status=2 then begin
-                    ploc := player[curteam,curplayer].p;
-                    qloc := player[curteam,curplayer].q;
-                    player[curteam,curplayer].SetStatus(InjuryStatus);
+                  if allPlayers[curteam,curplayer].status=2 then begin
+                    ploc := allPlayers[curteam,curplayer].p;
+                    qloc := allPlayers[curteam,curplayer].q;
+                    allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
                     ScatterBallFrom(ploc, qloc, 1, 0);
-                  end else player[curteam,curplayer].SetStatus(InjuryStatus);
+                  end else allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
                   InjuryStatus := 0;
                 end;
               end;
@@ -3116,7 +3177,7 @@ begin
               LogWrite(s);
               pitchcount := 0;
               for f := 1 to team[0].numplayers do begin
-               if (player[0,f].status = 2) or (player[0,f].status =1) then begin
+               if (allPlayers[0,f].status = 2) or (allPlayers[0,f].status =1) then begin
                  pitchcount := pitchcount + 1;
                end;
               end;
@@ -3126,16 +3187,16 @@ begin
                   done := 0;
                   while done = 0 do begin
                     RandomPlayer(0);
-                    if (player[curteam,curplayer].status = 1) or
-                       (player[curteam,curplayer].status = 2) then done := 1;
+                    if (allPlayers[curteam,curplayer].status = 1) or
+                       (allPlayers[curteam,curplayer].status = 2) then done := 1;
                   end;
                   InjurySettings(curteam, curplayer);
-                  if player[curteam,curplayer].status=2 then begin
-                    ploc := player[curteam,curplayer].p;
-                    qloc := player[curteam,curplayer].q;
-                    player[curteam,curplayer].SetStatus(InjuryStatus);
+                  if allPlayers[curteam,curplayer].status=2 then begin
+                    ploc := allPlayers[curteam,curplayer].p;
+                    qloc := allPlayers[curteam,curplayer].q;
+                    allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
                     ScatterBallFrom(ploc, qloc, 1, 0);
-                  end else player[curteam,curplayer].SetStatus(InjuryStatus);
+                  end else allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
                   InjuryStatus := 0;
                 end;
               end;
@@ -3146,7 +3207,7 @@ begin
               LogWrite(s);
               pitchcount := 0;
               for f := 1 to team[1].numplayers do begin
-               if (player[1,f].status = 2) or (player[1,f].status =1) then begin
+               if (allPlayers[1,f].status = 2) or (allPlayers[1,f].status =1) then begin
                  pitchcount := pitchcount + 1;
                end;
               end;
@@ -3156,16 +3217,16 @@ begin
                   done := 0;
                   while done = 0 do begin
                     RandomPlayer(1);
-                    if (player[curteam,curplayer].status = 1) or
-                       (player[curteam,curplayer].status = 2) then done := 1;
+                    if (allPlayers[curteam,curplayer].status = 1) or
+                       (allPlayers[curteam,curplayer].status = 2) then done := 1;
                   end;
                   InjurySettings(curteam, curplayer);
-                  if player[curteam,curplayer].status=2 then begin
-                    ploc := player[curteam,curplayer].p;
-                    qloc := player[curteam,curplayer].q;
-                    player[curteam,curplayer].SetStatus(InjuryStatus);
+                  if allPlayers[curteam,curplayer].status=2 then begin
+                    ploc := allPlayers[curteam,curplayer].p;
+                    qloc := allPlayers[curteam,curplayer].q;
+                    allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
                     ScatterBallFrom(ploc, qloc, 1, 0);
-                  end else player[curteam,curplayer].SetStatus(InjuryStatus);
+                  end else allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
                   InjuryStatus := 0;
                 end;
               end;
@@ -3178,16 +3239,16 @@ begin
             PlayActionComment(s, 1, 2);
             LogWrite(s);
             for f := 1 to team[0].numplayers do begin
-              if (player[0,f].status >= 1) and (player[0,f].status <= 4) then begin
+              if (allPlayers[0,f].status >= 1) and (allPlayers[0,f].status <= 4) then begin
                 Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
                 if team[0].ff < team[1].ff then lastroll := lastroll + 1;
                 if lastroll >= 6 then begin
-                  if player[0,f].status=2 then begin
-                    ploc := player[0,f].p;
-                    qloc := player[0,f].q;
-                    player[0,f].SetStatus(4);
+                  if allPlayers[0,f].status=2 then begin
+                    ploc := allPlayers[0,f].p;
+                    qloc := allPlayers[0,f].q;
+                    allPlayers[0,f].SetStatus(4);
                     ScatterBallFrom(ploc, qloc, 1, 0);
-                  end else player[0,f].SetStatus(4);
+                  end else allPlayers[0,f].SetStatus(4);
                   InjuryStatus := 0;
                 end;
               end;
@@ -3199,29 +3260,29 @@ begin
             PlayActionComment(s, 1, 2);
             LogWrite(s);
             for f := 1 to team[1].numplayers do begin
-              if (player[1,f].status >= 1) and (player[1,f].status <= 4) then begin
+              if (allPlayers[1,f].status >= 1) and (allPlayers[1,f].status <= 4) then begin
                 Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
                 if team[1].ff < team[0].ff then lastroll := lastroll + 1;
                 if lastroll >= 6 then begin
-                  if player[1,f].status=2 then begin
-                    ploc := player[1,f].p;
-                    qloc := player[1,f].q;
-                    player[1,f].SetStatus(4);
+                  if allPlayers[1,f].status=2 then begin
+                    ploc := allPlayers[1,f].p;
+                    qloc := allPlayers[1,f].q;
+                    allPlayers[1,f].SetStatus(4);
                     ScatterBallFrom(ploc, qloc, 1, 0);
-                  end else player[1,f].SetStatus(4);
+                  end else allPlayers[1,f].SetStatus(4);
                   InjuryStatus := 0;
                 end;
               end;
             end;
           end;
           if (KOCatcherPlayer <> -1) and
-            (player[KOCatcherTeam, KOCatcherPlayer].status >= 1) and
-            (player[KOCatcherTeam, KOCatcherPlayer].status <= 2) then begin
+            (allPlayers[KOCatcherTeam, KOCatcherPlayer].status >= 1) and
+            (allPlayers[KOCatcherTeam, KOCatcherPlayer].status <= 2) then begin
             ShowCatchWindow(KOCatcherTeam, KOCatcherPlayer, 0, false, false);
             KOCatcherTeam := -1;
             KOCatcherPlayer := -1;
           end else if (KOCatcherPlayer <> -1) and
-            (player[KOCatcherTeam, KOCatcherPlayer].status > 2) then begin
+            (allPlayers[KOCatcherTeam, KOCatcherPlayer].status > 2) then begin
             ScatterBallFrom(ball.p,ball.q,1,0);
             KOCatcherTeam := -1;
             KOCatcherPlayer := -1;
@@ -3259,9 +3320,10 @@ begin
   KickoffNow := false;
 end;
 
+// Weather Menu item
 procedure TBloodbowl.Weathertable1Click(Sender: TObject);
 begin
-  WeatherTableClick;
+  DoWeatherRoll();
 end;
 
 procedure TBloodbowl.ViewRedPB1Click(Sender: TObject);
@@ -3391,11 +3453,11 @@ begin
     t := abs(1-curteam);
     if (t=1) or (t=0) then begin
       for m := 1 to team[t].numplayers do begin
-        if player[t,m].hasSkill('Pass Block') then begin
+        if allPlayers[t,m].hasSkill('Pass Block') then begin
           for f := 0 to 14 do
             for g := 0 to 25 do begin
-              if (abs(f - (player[t,m].p)) <= 3) and
-              (abs(g - (player[t,m].q)) <= 3) then begin
+              if (abs(f - (allPlayers[t,m].p)) <= 3) and
+              (abs(g - (allPlayers[t,m].q)) <= 3) then begin
                 field[f,g].color := clYellow;
                 field[f,g].transparent := false;
               end;
@@ -3447,12 +3509,12 @@ end;
 
 procedure TBloodbowl.PlayerShowPassingRanges1Click(Sender: TObject);
 begin
-  ShowPassRanges(player[curteam, curplayer].p, player[curteam, curplayer].q);
+  ShowPassRanges(allPlayers[curteam, curplayer].p, allPlayers[curteam, curplayer].q);
 end;
 
 procedure TBloodbowl.PlayerShowPassBlockRanges1Click(Sender: TObject);
 begin
-  ShowPassBlockRanges(player[curteam, curplayer].p, player[curteam, curplayer].q);
+  ShowPassBlockRanges(allPlayers[curteam, curplayer].p, allPlayers[curteam, curplayer].q);
 end;
 
 procedure TBloodbowl.FieldShowPassingRanges1Click(Sender: TObject);
@@ -3553,7 +3615,7 @@ end;
 procedure TBloodbowl.LoseRegainTackleZone1Click(Sender: TObject);
 var s: string;
 begin
-  if player[curteam, curplayer].tz > 0 then begin
+  if allPlayers[curteam, curplayer].tz > 0 then begin
     if CanWriteToLog then begin
       s := 'U+' + Chr(curteam + 48) + Chr(curplayer + 64);
       LogWrite(s);
@@ -3683,9 +3745,7 @@ end;
 procedure TBloodbowl.ButWeatherClick(Sender: TObject);
 begin
   Bloodbowl.Weathertable1Click(Bloodbowl);
-  LblWeather.caption :=
-    Copy(Bloodbowl.WeatherLabel.caption, 1,
-          Pos('.', Bloodbowl.WeatherLabel.caption) - 1);
+  LblWeather.caption := Copy(Bloodbowl.WeatherLabel.caption, 1, Pos('.', Bloodbowl.WeatherLabel.caption) - 1);
   ButWeather.enabled := false;
   ButGate.enabled := true;
   RGGate.visible := true;
@@ -3813,9 +3873,9 @@ begin
               done := 0;
               while done = 0 do begin
                 RandomPlayer(p);
-                if (player[curteam,curplayer].status <> 8) and
-                   (player[curteam,curplayer].status <> 10) and
-                   (player[curteam,curplayer].status <> 11) then done := 1;
+                if (allPlayers[curteam,curplayer].status <> 8) and
+                   (allPlayers[curteam,curplayer].status <> 10) and
+                   (allPlayers[curteam,curplayer].status <> 11) then done := 1;
                 if (curplayer=UsedPlayers[1]) or (curplayer=UsedPlayers[2]) or
                   (curplayer=UsedPlayers[3]) or (curplayer=UsedPlayers[4])
                   then done := 0;
@@ -3827,7 +3887,7 @@ begin
               if r3 <= 3 then begin
                 InjuryStatus := 6;
                 Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                  player[curteam, curplayer].name +
+                  allPlayers[curteam, curplayer].name +
                   ' only Badly Hurt from the Post Game Fight! He will be fine!';
                 Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               end;
@@ -3835,42 +3895,42 @@ begin
                 if (r1>=1) and (r1<=3) then begin
                   InjuryStatus := 70;
                   Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    player[curteam, curplayer].name +
+                    allPlayers[curteam, curplayer].name +
                     ' will Miss Next Game from the Post Game Fight!';
                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                 end else
                 if (r1>=4) and (r1<=5) then begin
                   InjuryStatus := 71;
                   Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    player[curteam, curplayer].name +
+                    allPlayers[curteam, curplayer].name +
                     ' will Miss Next Game and suffers a Niggling Injury from the Post Game Fight!';
                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                 end else
                 if (r2=1) or (r2=2) then begin
                   InjuryStatus := 72;
                   Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    player[curteam, curplayer].name +
+                    allPlayers[curteam, curplayer].name +
                     ' will Miss Next Game and suffers -1 MA from the Post Game Fight!';
                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                 end else
                 if (r2=3) then begin
                   InjuryStatus := 73;
                   Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    player[curteam, curplayer].name +
+                    allPlayers[curteam, curplayer].name +
                     ' will Miss Next Game and suffers -1 ST from the Post Game Fight!';
                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                 end else
                 if (r2=4) then begin
                   InjuryStatus := 74;
                   Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    player[curteam, curplayer].name +
+                    allPlayers[curteam, curplayer].name +
                     ' will Miss Next Game and suffers -1 AG from the Post Game Fight!';
                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                 end else
                 if (r2=5) or (r2=6) then begin
                   InjuryStatus := 75;
                   Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    player[curteam, curplayer].name +
+                    allPlayers[curteam, curplayer].name +
                     ' will Miss Next Game and suffers -1 AV from the Post Game Fight!';
                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                 end;
@@ -3878,11 +3938,11 @@ begin
               if r3 = 6 then begin
                 InjuryStatus := 8;
                 Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                  player[curteam, curplayer].name +
+                  allPlayers[curteam, curplayer].name +
                   ' KILLED during the Post Game Fight!  What a fight!';
                 Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               end;
-              player[curteam,curplayer].SetStatus(InjuryStatus);
+              allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
               InjuryStatus := 0;
             end;
           end;
@@ -3900,13 +3960,13 @@ var PassFine, TZone: Boolean;
     g, f: integer;
     ReRollAnswer: string;
 begin
-  if player[curteam, curplayer].status = 2 then begin
+  if allPlayers[curteam, curplayer].status = Ord(TPlayerStatus.PLAYER_STATUS_BALL_CARRIER) then begin
     PassFine := true;
     TZone := true;
     g := curteam;
     f := curplayer;
 
-    if (player[g,f].tz > 0)
+    if (allPlayers[g,f].tz > 0)
       then TZone := False;
     if TZone then begin
       if PassFine then begin
@@ -3981,14 +4041,14 @@ end;
 
 procedure TBloodbowl.ScatterPlayerBall1Click(Sender: TObject);
 begin
-  ScatterBallFrom((player[curteam,curplayer].p), (player[curteam,curplayer].q), 1, 0);
+  ScatterBallFrom((allPlayers[curteam,curplayer].p), (allPlayers[curteam,curplayer].q), 1, 0);
 end;
 
 procedure TBloodbowl.HGaze1Click(Sender: TObject);
 begin
-  if (player[curteam,curplayer].hasSkill('Hypnotic Gaze'))
+  if (allPlayers[curteam,curplayer].hasSkill('Hypnotic Gaze'))
   then begin
-    if not (player[curteam,curplayer].usedSkill('Hypnotic Gaze'))
+    if not (allPlayers[curteam,curplayer].usedSkill('Hypnotic Gaze'))
     then begin
       GameStatus := 'HGaze';
       Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO GAZE';
@@ -4006,11 +4066,11 @@ end;
 
 procedure TBloodbowl.Leap1Click(Sender: TObject);
 begin
-  if (player[curteam,curplayer].hasSkill('Pogo Stick')) or
-    (player[curteam,curplayer].hasSkill('Leap'))
+  if (allPlayers[curteam,curplayer].hasSkill('Pogo Stick')) or
+    (allPlayers[curteam,curplayer].hasSkill('Leap'))
     then begin
-    if not (player[curteam,curplayer].usedSkill('Leap'))
-      and not(player[curteam,curplayer].hasSkill('Pogo Stick'))
+    if not (allPlayers[curteam,curplayer].usedSkill('Leap'))
+      and not(allPlayers[curteam,curplayer].hasSkill('Pogo Stick'))
       then begin
       GameStatus := 'Leap';
       Loglabel.caption := 'CLICK ON THE SPOT ON THE FIELD ' +
@@ -4034,16 +4094,16 @@ end;
 
 procedure TBloodbowl.ThrowTeamMate1Click(Sender: TObject);
 begin
-  if (player[curteam,curplayer].hasSkill('Throw TeamMate')) or
-    (player[curteam,curplayer].hasSkill('Toss Team-Mate')) or
-    (player[curteam,curplayer].hasSkill('Throw Team-Mate'))
+  if (allPlayers[curteam,curplayer].hasSkill('Throw TeamMate')) or
+    (allPlayers[curteam,curplayer].hasSkill('Toss Team-Mate')) or
+    (allPlayers[curteam,curplayer].hasSkill('Throw Team-Mate'))
     then begin
-    if ((player[curteam,curplayer].hasSkill('Throw TeamMate')) and
-      (not (player[curteam,curplayer].usedSkill('Throw TeamMate')))) or
-      ((player[curteam,curplayer].hasSkill('Throw Team-Mate')) and
-      (not (player[curteam,curplayer].usedSkill('Throw Team-Mate')))) or
-      ((player[curteam,curplayer].hasSkill('Toss Team-Mate')) and
-      (not (player[curteam,curplayer].usedSkill('Toss Team-Mate'))))
+    if ((allPlayers[curteam,curplayer].hasSkill('Throw TeamMate')) and
+      (not (allPlayers[curteam,curplayer].usedSkill('Throw TeamMate')))) or
+      ((allPlayers[curteam,curplayer].hasSkill('Throw Team-Mate')) and
+      (not (allPlayers[curteam,curplayer].usedSkill('Throw Team-Mate')))) or
+      ((allPlayers[curteam,curplayer].hasSkill('Toss Team-Mate')) and
+      (not (allPlayers[curteam,curplayer].usedSkill('Toss Team-Mate'))))
       then begin
       GameStatus := 'ThrowTeamMate1';
       Loglabel.caption := 'CLICK ON THE PLAYER THAT YOU WISH TO THROW';
@@ -4061,8 +4121,8 @@ end;
 
 procedure TBloodbowl.ThrowBomb1Click(Sender: TObject);
 begin
-  if ((player[curteam,curplayer].hasSkill('Bomb')) and
-  (player[curteam,curplayer].font.size = 12)) or ((curteam=BombTeam) and
+  if ((allPlayers[curteam,curplayer].hasSkill('Bomb')) and
+  (allPlayers[curteam,curplayer].font.size = 12)) or ((curteam=BombTeam) and
   (curplayer=BombPlayer))
   then begin
     GameStatus := 'Bomb';
@@ -4095,8 +4155,8 @@ begin
     g := activeTeam;
     ActionTeam := curteam;
     ActionPlayer := curplayer;
-    pplace := player[ActionTeam,ActionPlayer].p;
-    qplace := player[ActionTeam,ActionPlayer].q;
+    pplace := allPlayers[ActionTeam,ActionPlayer].p;
+    qplace := allPlayers[ActionTeam,ActionPlayer].q;
     LogWrite('W' + Chr(g + 48));
     AddLog(ffcl[g] + '''s Wizard casts a spell');
     wiz[g].color := colorarray[g, 4, 0];
@@ -4105,28 +4165,28 @@ begin
       for u := 1 to 3 do begin
         for v := 0 to 1 do begin
           for w := 1 to team[v].numplayers do begin
-            if (player[v,w].p = pplace + (t-2)) and (player[v,w].q = qplace + (u-2))
+            if (allPlayers[v,w].p = pplace + (t-2)) and (allPlayers[v,w].q = qplace + (u-2))
               then begin
                 Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-                if lastroll > player[v,w].ag then begin
+                if lastroll > allPlayers[v,w].ag then begin
                    Bloodbowl.comment.Text := 'Fireball HITS #' +
-                     player[v,w].GetPlayerName + ' AG: ' +
-                     InttoStr(player[v,w].ag);
+                     allPlayers[v,w].GetPlayerName + ' AG: ' +
+                     InttoStr(allPlayers[v,w].ag);
                    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                    ArmourSettings(v,w,v,w,1);
-                   if player[v,w].status < InjuryStatus then begin
-                     if player[v,w].status=2 then begin
-                       ploc := player[v,w].p;
-                       qloc := player[v,w].q;
-                       player[v,w].SetStatus(InjuryStatus);
+                   if allPlayers[v,w].status < InjuryStatus then begin
+                     if allPlayers[v,w].status=2 then begin
+                       ploc := allPlayers[v,w].p;
+                       qloc := allPlayers[v,w].q;
+                       allPlayers[v,w].SetStatus(InjuryStatus);
                        BallScatter := true;
-                     end else player[v,w].SetStatus(InjuryStatus);
+                     end else allPlayers[v,w].SetStatus(InjuryStatus);
                    end;
                    InjuryStatus := 0;
                 end else begin
                   Bloodbowl.comment.Text := 'Fireball misses ' +
-                    player[v,w].GetPlayerName + ' AG: ' +
-                    InttoStr(player[v,w].ag);
+                    allPlayers[v,w].GetPlayerName + ' AG: ' +
+                    InttoStr(allPlayers[v,w].ag);
                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                 end;
             end;
@@ -4163,28 +4223,28 @@ begin
       for u := 1 to 3 do begin
         for v := 0 to 1 do begin
           for w := 1 to team[v].numplayers do begin
-            if (player[v,w].p = pplace + (t-2)) and (player[v,w].q = qplace + (u-2))
+            if (allPlayers[v,w].p = pplace + (t-2)) and (allPlayers[v,w].q = qplace + (u-2))
               then begin
                 Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-                if lastroll > player[v,w].ag then begin
+                if lastroll > allPlayers[v,w].ag then begin
                    Bloodbowl.comment.Text := 'Fireball HITS #' +
-                     player[v,w].GetPlayerName + ' AG: ' +
-                     InttoStr(player[v,w].ag);
+                     allPlayers[v,w].GetPlayerName + ' AG: ' +
+                     InttoStr(allPlayers[v,w].ag);
                    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                    ArmourSettings(v,w,v,w,1);
-                   if player[v,w].status < InjuryStatus then begin
-                     if player[v,w].status=2 then begin
-                       ploc := player[v,w].p;
-                       qloc := player[v,w].q;
-                       player[v,w].SetStatus(InjuryStatus);
+                   if allPlayers[v,w].status < InjuryStatus then begin
+                     if allPlayers[v,w].status=2 then begin
+                       ploc := allPlayers[v,w].p;
+                       qloc := allPlayers[v,w].q;
+                       allPlayers[v,w].SetStatus(InjuryStatus);
                        BallScatter := true;
-                     end else player[v,w].SetStatus(InjuryStatus);
+                     end else allPlayers[v,w].SetStatus(InjuryStatus);
                    end;
                    InjuryStatus := 0;
                 end else begin
                   Bloodbowl.comment.Text := 'Fireball misses ' +
-                    player[v,w].GetPlayerName + ' AG: ' +
-                    InttoStr(player[v,w].ag);
+                    allPlayers[v,w].GetPlayerName + ' AG: ' +
+                    InttoStr(allPlayers[v,w].ag);
                   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                 end;
             end;
@@ -4208,10 +4268,10 @@ begin
   if (wiz[activeTeam].color = colorarray[activeTeam, 0, 0]) and
   (team[activeTeam].wiz=1)
   then begin
-    if (player[curteam,curplayer].p=0) or (player[curteam,curplayer].p=14)
+    if (allPlayers[curteam,curplayer].p=0) or (allPlayers[curteam,curplayer].p=14)
     then begin
-      if (player[curteam,curplayer].q=0) then LeftRight := 'Right'
-      else if (player[curteam,curplayer].q=25) then LeftRight := 'Left'
+      if (allPlayers[curteam,curplayer].q=0) then LeftRight := 'Right'
+      else if (allPlayers[curteam,curplayer].q=25) then LeftRight := 'Left'
       else begin
         LeftRight := 'Left';
         LeftRight := FlexMessageBox('Should the 2nd square of the Lightning Bolt'+
@@ -4223,8 +4283,8 @@ begin
       g := activeTeam;
       ActionTeam := curteam;
       ActionPlayer := curplayer;
-      pplace := player[ActionTeam,ActionPlayer].p;
-      qplace := player[ActionTeam,ActionPlayer].q;
+      pplace := allPlayers[ActionTeam,ActionPlayer].p;
+      qplace := allPlayers[ActionTeam,ActionPlayer].q;
       LogWrite('W' + Chr(g + 48));
       AddLog(ffcl[g] + '''s Wizard casts a spell');
       wiz[g].color := colorarray[g, 4, 0];
@@ -4244,8 +4304,8 @@ begin
         LBoltCount := 0;
         for v := 0 to 1 do begin
           for w := 1 to team[v].numplayers do begin
-            if (player[v,w].p = testp1) and ((player[v,w].q = testq1) or
-              (player[v,w].q = testq2)) then LBoltCount := LBoltCount + 1;
+            if (allPlayers[v,w].p = testp1) and ((allPlayers[v,w].q = testq1) or
+              (allPlayers[v,w].q = testq2)) then LBoltCount := LBoltCount + 1;
           end;
         end;
         if LBoltCount = 2 then LBoltPlayer := Rnd(2,6) + 1;
@@ -4254,31 +4314,31 @@ begin
         if (LBoltCount > 0) and (not(Zapped)) then begin
           for v := 0 to 1 do begin
             for w := 1 to team[v].numplayers do begin
-              if (player[v,w].p = testp1) and ((player[v,w].q = testq1) or
-              (player[v,w].q = testq2)) then begin
+              if (allPlayers[v,w].p = testp1) and ((allPlayers[v,w].q = testq1) or
+              (allPlayers[v,w].q = testq2)) then begin
                   LBoltCount2 := LBoltCount2 + 1;
                   if LBoltPlayer = LBoltCount2 then begin
                     Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-                    if lastroll > player[v,w].ag then begin
+                    if lastroll > allPlayers[v,w].ag then begin
                        Bloodbowl.comment.Text := 'Lightning Bolt HITS #' +
-                         player[v,w].GetPlayerName + ' AG: ' +
-                         InttoStr(player[v,w].ag);
+                         allPlayers[v,w].GetPlayerName + ' AG: ' +
+                         InttoStr(allPlayers[v,w].ag);
                        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                        ArmourSettings(v,w,v,w,1);
-                       if player[v,w].status < InjuryStatus then begin
-                         if player[v,w].status=2 then begin
-                           ploc := player[v,w].p;
-                           qloc := player[v,w].q;
-                           player[v,w].SetStatus(InjuryStatus);
+                       if allPlayers[v,w].status < InjuryStatus then begin
+                         if allPlayers[v,w].status=2 then begin
+                           ploc := allPlayers[v,w].p;
+                           qloc := allPlayers[v,w].q;
+                           allPlayers[v,w].SetStatus(InjuryStatus);
                            BallScatter := true;
-                         end else player[v,w].SetStatus(InjuryStatus);
+                         end else allPlayers[v,w].SetStatus(InjuryStatus);
                        end;
                        InjuryStatus := 0;
                        Zapped := true;
                     end else begin
                       Bloodbowl.comment.Text := 'Lightning Bolt misses ' +
-                        player[v,w].GetPlayerName + ' AG: ' +
-                        InttoStr(player[v,w].ag);
+                        allPlayers[v,w].GetPlayerName + ' AG: ' +
+                        InttoStr(allPlayers[v,w].ag);
                       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                     end;
                   end;
@@ -4344,8 +4404,8 @@ begin
         LBoltCount := 0;
         for v := 0 to 1 do begin
           for w := 1 to team[v].numplayers do begin
-            if (player[v,w].p = testp1) and ((player[v,w].q = testq1) or
-              (player[v,w].q = testq2)) then LBoltCount := LBoltCount + 1;
+            if (allPlayers[v,w].p = testp1) and ((allPlayers[v,w].q = testq1) or
+              (allPlayers[v,w].q = testq2)) then LBoltCount := LBoltCount + 1;
           end;
         end;
         if LBoltCount = 2 then LBoltPlayer := Rnd(2,6) + 1;
@@ -4354,31 +4414,31 @@ begin
         if (LBoltCount > 0) and (not(Zapped)) then begin
           for v := 0 to 1 do begin
             for w := 1 to team[v].numplayers do begin
-              if (player[v,w].p = testp1) and ((player[v,w].q = testq1) or
-              (player[v,w].q = testq2)) then begin
+              if (allPlayers[v,w].p = testp1) and ((allPlayers[v,w].q = testq1) or
+              (allPlayers[v,w].q = testq2)) then begin
                   LBoltCount2 := LBoltCount2 + 1;
                   if LBoltPlayer = LBoltCount2 then begin
                     Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
-                    if lastroll > player[v,w].ag then begin
+                    if lastroll > allPlayers[v,w].ag then begin
                        Bloodbowl.comment.Text := 'Lightning Bolt HITS #' +
-                         player[v,w].GetPlayerName + ' AG: ' +
-                         InttoStr(player[v,w].ag);
+                         allPlayers[v,w].GetPlayerName + ' AG: ' +
+                         InttoStr(allPlayers[v,w].ag);
                        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                        ArmourSettings(v,w,v,w,1);
-                       if player[v,w].status < InjuryStatus then begin
-                         if player[v,w].status=2 then begin
-                           ploc := player[v,w].p;
-                           qloc := player[v,w].q;
-                           player[v,w].SetStatus(InjuryStatus);
+                       if allPlayers[v,w].status < InjuryStatus then begin
+                         if allPlayers[v,w].status=2 then begin
+                           ploc := allPlayers[v,w].p;
+                           qloc := allPlayers[v,w].q;
+                           allPlayers[v,w].SetStatus(InjuryStatus);
                            BallScatter := true;
-                         end else player[v,w].SetStatus(InjuryStatus);
+                         end else allPlayers[v,w].SetStatus(InjuryStatus);
                        end;
                        InjuryStatus := 0;
                        Zapped := true;
                     end else begin
                       Bloodbowl.comment.Text := 'Lightning Bolt misses ' +
-                        player[v,w].GetPlayerName + ' AG: ' +
-                        InttoStr(player[v,w].ag);
+                        allPlayers[v,w].GetPlayerName + ' AG: ' +
+                        InttoStr(allPlayers[v,w].ag);
                       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                     end;
                   end;
@@ -4411,8 +4471,8 @@ begin
     g := activeTeam;
     ActionTeam := curteam;
     ActionPlayer := curplayer;
-    pplace := player[ActionTeam,ActionPlayer].p;
-    qplace := player[ActionTeam,ActionPlayer].q;
+    pplace := allPlayers[ActionTeam,ActionPlayer].p;
+    qplace := allPlayers[ActionTeam,ActionPlayer].q;
     LogWrite('W' + Chr(g + 48));
     AddLog(ffcl[g] + '''s Wizard casts a spell');
     wiz[g].color := colorarray[g, 4, 0];
@@ -4426,7 +4486,7 @@ begin
     if StuffP <> -1 then begin
       for v := 0 to 1 do begin
         for w := 1 to team[v].numplayers do begin
-          if (player[v,w].p = StuffP) and (player[v,w].q = StuffQ)
+          if (allPlayers[v,w].p = StuffP) and (allPlayers[v,w].q = StuffQ)
           then begin
             Zapped := true;
             Zteam := v;
@@ -4436,40 +4496,40 @@ begin
       end;
       if Zapped then begin
         Bloodbowl.comment.Text := 'Zap Spell HITS #' +
-          player[Zteam,Zplayer].GetPlayerName + '.  Players changed to a FROG!!!' +
+          allPlayers[Zteam,Zplayer].GetPlayerName + '.  Players changed to a FROG!!!' +
           '  Use Stats Change, Reset to' +
           ' default change him/her back at the end of the drive!';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
         s2 := 'u' + Chr(Zteam + 48) + Chr(Zplayer + 64) +
-               Chr(player[Zteam,Zplayer].ma + 48) +
-               Chr(player[Zteam,Zplayer].st + 48) +
-               Chr(player[Zteam,Zplayer].ag + 48) +
-               Chr(player[Zteam,Zplayer].av + 48) +
-               Chr(player[Zteam,Zplayer].cnumber + 64) +
-               Chr(player[Zteam,Zplayer].value div 5 + 48) +
-               player[Zteam,Zplayer].name + '$' +
-               player[Zteam,Zplayer].position + '$' +
-               player[Zteam,Zplayer].picture + '$' +
-               player[Zteam,Zplayer].icon + '$' +
-               player[Zteam,Zplayer].GetSkillString(1) + '|' +
+               Chr(allPlayers[Zteam,Zplayer].ma + 48) +
+               Chr(allPlayers[Zteam,Zplayer].st + 48) +
+               Chr(allPlayers[Zteam,Zplayer].ag + 48) +
+               Chr(allPlayers[Zteam,Zplayer].av + 48) +
+               Chr(allPlayers[Zteam,Zplayer].cnumber + 64) +
+               Chr(allPlayers[Zteam,Zplayer].value div 5 + 48) +
+               allPlayers[Zteam,Zplayer].name + '$' +
+               allPlayers[Zteam,Zplayer].position + '$' +
+               allPlayers[Zteam,Zplayer].picture + '$' +
+               allPlayers[Zteam,Zplayer].icon + '$' +
+               allPlayers[Zteam,Zplayer].GetSkillString(1) + '|' +
                Chr(3 + 48) +
                Chr(1 + 48) +
                Chr(4 + 48) +
                Chr(4 + 48) +
-               Chr(player[Zteam,Zplayer].cnumber + 64) +
-               Chr(player[Zteam,Zplayer].value div 5 + 48) +
-               player[Zteam,Zplayer].name + '$' +
+               Chr(allPlayers[Zteam,Zplayer].cnumber + 64) +
+               Chr(allPlayers[Zteam,Zplayer].value div 5 + 48) +
+               allPlayers[Zteam,Zplayer].name + '$' +
                'Toad' + '$' +
                'Human\Toad.jpg' + '$' +
-               player[Zteam,Zplayer].icon + '$';
+               allPlayers[Zteam,Zplayer].icon + '$';
         s := 'Dodge, Leap, Stunty';
-        player[Zteam, Zplayer].SetSkill(s);
-        s2 := s2 + player[Zteam, Zplayer].GetSkillString(1);
+        allPlayers[Zteam, Zplayer].SetSkill(s);
+        s2 := s2 + allPlayers[Zteam, Zplayer].GetSkillString(1);
         LogWrite(s2);
         PlayActionPlayerStatChange(s2, 1);
-        if player[Zteam,Zplayer].status=2 then begin
-          ploc := player[Zteam,Zplayer].p;
-          qloc := player[Zteam,Zplayer].q;
+        if allPlayers[Zteam,Zplayer].status=2 then begin
+          ploc := allPlayers[Zteam,Zplayer].p;
+          qloc := allPlayers[Zteam,Zplayer].q;
           BallScatter := true;
         end;
       end else begin
@@ -4494,7 +4554,7 @@ end;
 
 procedure TBloodbowl.MakeKickRoll1Click(Sender: TObject);
 begin
-  if player[curteam, curplayer].status = 2 then begin
+  if allPlayers[curteam, curplayer].status = 2 then begin
     GameStatus := 'Kick';
     Loglabel.caption := 'CLICK ON THE ADJACENT SQUARE THAT IS THE STRAIGHT '+
        'LINE KICKING DIRECTION';
@@ -4522,13 +4582,13 @@ begin
   DownPlayer := -1;
   GetCAS := false;
   ArmourSettings(curteam,curplayer,curteam,curplayer,0);
-  if player[v,w].status < InjuryStatus then begin
-    if player[v,w].status=2 then begin
-      ploc := player[v,w].p;
-      qloc := player[v,w].q;
-      player[v,w].SetStatus(InjuryStatus);
+  if allPlayers[v,w].status < InjuryStatus then begin
+    if allPlayers[v,w].status=2 then begin
+      ploc := allPlayers[v,w].p;
+      qloc := allPlayers[v,w].q;
+      allPlayers[v,w].SetStatus(InjuryStatus);
       BallScatter := true;
-    end else player[v,w].SetStatus(InjuryStatus);
+    end else allPlayers[v,w].SetStatus(InjuryStatus);
   end;
   InjuryStatus := 0;
   if BallScatter then ScatterBallFrom(ploc, qloc, 1, 0);
@@ -4544,7 +4604,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather1.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4560,7 +4620,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather2.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4576,7 +4636,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather3.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4592,7 +4652,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather4.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4608,7 +4668,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather5.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4624,7 +4684,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather6.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4640,7 +4700,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather7.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4656,7 +4716,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather8.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4672,7 +4732,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather9.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4688,7 +4748,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather10.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4704,7 +4764,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather11.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      WeatherPickClick(g);
+      DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4713,11 +4773,11 @@ end;
 procedure TBloodbowl.RemoveComp1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    if (player[curteam, curplayer].comp0)+(player[curteam, curplayer].comp) > 0
+    if (allPlayers[curteam, curplayer].comp0)+(allPlayers[curteam, curplayer].comp) > 0
       then begin
-      player[curteam, curplayer].comp := player[curteam, curplayer].comp - 1;
+      allPlayers[curteam, curplayer].comp := allPlayers[curteam, curplayer].comp - 1;
       LogWrite('q' + Chr(curteam + 48) + chr(curplayer + 65) + 'cR');
-      AddLog('Remove Completion for ' + player[curteam, curplayer].GetPlayerName);
+      AddLog('Remove Completion for ' + allPlayers[curteam, curplayer].GetPlayerName);
     end;
   end;
 end;
@@ -4725,11 +4785,11 @@ end;
 procedure TBloodbowl.RemoveInt1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    if (player[curteam, curplayer].int)+(player[curteam, curplayer].int0) > 0
+    if (allPlayers[curteam, curplayer].int)+(allPlayers[curteam, curplayer].int0) > 0
       then begin
-      player[curteam, curplayer].int := player[curteam, curplayer].int - 1;
+      allPlayers[curteam, curplayer].int := allPlayers[curteam, curplayer].int - 1;
       LogWrite('q' + Chr(curteam + 48) + chr(curplayer + 65) + 'IA');
-      AddLog('Remove Interception for ' + player[curteam, curplayer].GetPlayerName);
+      AddLog('Remove Interception for ' + allPlayers[curteam, curplayer].GetPlayerName);
     end;
   end;
 end;
@@ -4737,11 +4797,11 @@ end;
 procedure TBloodbowl.RemoveTD1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    if (player[curteam, curplayer].td)+(player[curteam, curplayer].td0) > 0
+    if (allPlayers[curteam, curplayer].td)+(allPlayers[curteam, curplayer].td0) > 0
       then begin
-      player[curteam, curplayer].td := player[curteam, curplayer].td - 1;
+      allPlayers[curteam, curplayer].td := allPlayers[curteam, curplayer].td - 1;
       LogWrite('q' + Chr(curteam + 48) + chr(curplayer + 65) + 'TA');
-      AddLog('Remove Touchdown for ' + player[curteam, curplayer].GetPlayerName);
+      AddLog('Remove Touchdown for ' + allPlayers[curteam, curplayer].GetPlayerName);
     end;
   end;
 end;
@@ -4749,11 +4809,11 @@ end;
 procedure TBloodbowl.RemoveCas1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    if (player[curteam, curplayer].cas)+(player[curteam, curplayer].cas0) > 0
+    if (allPlayers[curteam, curplayer].cas)+(allPlayers[curteam, curplayer].cas0) > 0
       then begin
-      player[curteam, curplayer].cas := player[curteam, curplayer].cas - 1;
+      allPlayers[curteam, curplayer].cas := allPlayers[curteam, curplayer].cas - 1;
       LogWrite('q' + Chr(curteam + 48) + chr(curplayer + 65) + 'C');
-      AddLog('Remove Casualty for ' + player[curteam, curplayer].GetPlayerName);
+      AddLog('Remove Casualty for ' + allPlayers[curteam, curplayer].GetPlayerName);
     end;
   end;
 end;
@@ -4761,12 +4821,12 @@ end;
 procedure TBloodbowl.RemoveOther1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    if (player[curteam, curplayer].otherSPP)+(player[curteam, curplayer].otherSPP0) > 0
+    if (allPlayers[curteam, curplayer].otherSPP)+(allPlayers[curteam, curplayer].otherSPP0) > 0
       then begin
-      player[curteam, curplayer].otherSPP :=
-                      player[curteam, curplayer].otherSPP - 1;
+      allPlayers[curteam, curplayer].otherSPP :=
+                      allPlayers[curteam, curplayer].otherSPP - 1;
       LogWrite('q' + Chr(curteam + 48) + chr(curplayer + 65) + 'O');
-      AddLog('Remove 1 other SPP for ' + player[curteam, curplayer].GetPlayerName);
+      AddLog('Remove 1 other SPP for ' + allPlayers[curteam, curplayer].GetPlayerName);
     end;
   end;
 end;
@@ -4774,12 +4834,12 @@ end;
 procedure TBloodbowl.RemoveMVP1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    if (player[curteam, curplayer].mvp)+(player[curteam, curplayer].mvp0) > 0
+    if (allPlayers[curteam, curplayer].mvp)+(allPlayers[curteam, curplayer].mvp0) > 0
       then begin
-      player[curteam, curplayer].mvp :=
-                    player[curteam, curplayer].mvp - 1;
+      allPlayers[curteam, curplayer].mvp :=
+                    allPlayers[curteam, curplayer].mvp - 1;
       LogWrite('q' + Chr(curteam + 48) + chr(curplayer + 65) + 'M');
-      AddLog('Remove MVP Award for ' + player[curteam, curplayer].GetPlayerName)
+      AddLog('Remove MVP Award for ' + allPlayers[curteam, curplayer].GetPlayerName)
     end;
   end;
 end;
@@ -4787,12 +4847,12 @@ end;
 procedure TBloodbowl.RemoveEXP1Click(Sender: TObject);
 begin
   if CanWriteToLog then begin
-    if (player[curteam, curplayer].EXP)+(player[curteam, curplayer].EXP0) > 0
+    if (allPlayers[curteam, curplayer].EXP)+(allPlayers[curteam, curplayer].EXP0) > 0
       then begin
-      player[curteam, curplayer].EXP :=
-                      player[curteam, curplayer].EXP - 1;
+      allPlayers[curteam, curplayer].EXP :=
+                      allPlayers[curteam, curplayer].EXP - 1;
       LogWrite('q' + Chr(curteam + 48) + chr(curplayer + 65) + 'E');
-      AddLog('Remove EXP point for ' + player[curteam, curplayer].GetPlayerName);
+      AddLog('Remove EXP point for ' + allPlayers[curteam, curplayer].GetPlayerName);
     end;
   end;
 end;
@@ -4903,11 +4963,11 @@ begin
     t := abs(1-curteam);
     if (t=1) or (t=0) then begin
       for m := 1 to team[t].numplayers do begin
-        if player[t,m].hasSkill('Diving Tackle') then begin
+        if allPlayers[t,m].hasSkill('Diving Tackle') then begin
           for f := 0 to 14 do
             for g := 0 to 25 do begin
-              if (abs(f - (player[t,m].p)) <= 1) and
-              (abs(g - (player[t,m].q)) <= 1) then begin
+              if (abs(f - (allPlayers[t,m].p)) <= 1) and
+              (abs(g - (allPlayers[t,m].q)) <= 1) then begin
                 field[f,g].color := clYellow;
                 field[f,g].transparent := false;
               end;
@@ -4920,7 +4980,7 @@ end;
 
 procedure TBloodbowl.PlayerShowDivingTackle1Click(Sender: TObject);
 begin
-  ShowDivingTackleRanges(player[curteam, curplayer].p, player[curteam, curplayer].q);
+  ShowDivingTackleRanges(allPlayers[curteam, curplayer].p, allPlayers[curteam, curplayer].q);
 end;
 
 procedure TBloodbowl.FieldShowDivingTackleRanges1Click(Sender: TObject);
@@ -4941,17 +5001,17 @@ var pplace, qplace, TestP, TestQ, NewP, NewQ, g, f, q, r, v, w, SStype,
     OOB, PlayerHere, Sideline, BallFlag, BallScat, PickedSquare: boolean;
     SquarePoints, PDir, QDir: array [0..7] of integer;
 begin
-  if (player[curteam,curplayer].hasSkill('Side Step'))
+  if (allPlayers[curteam,curplayer].hasSkill('Side Step'))
      then begin
       ActionTeam := curteam;
       ActionPlayer := curplayer;
       PickedSquare := false;
-      if player[ActionTeam,ActionPlayer].SideStep[1] = 1 then begin
+      if allPlayers[ActionTeam,ActionPlayer].SideStep[1] = 1 then begin
         PickedSquare := true;
         for g := 0 to 1 do begin
           for f := 1 to team[g].numplayers do begin
-            if (player[g,f].p = player[ActionTeam,ActionPlayer].SideStep[2]) and
-              (player[g,f].q = player[ActionTeam,ActionPlayer].SideStep[3]) then
+            if (allPlayers[g,f].p = allPlayers[ActionTeam,ActionPlayer].SideStep[2]) and
+              (allPlayers[g,f].q = allPlayers[ActionTeam,ActionPlayer].SideStep[3]) then
               PickedSquare := false;
           end;
         end;
@@ -4959,11 +5019,11 @@ begin
       if PickedSquare then begin
         for g := 0 to 1 do begin
           for f := 1 to team[g].numplayers do begin
-            if player[g,f].status = 2 then begin
+            if allPlayers[g,f].status = 2 then begin
               SStype := 3;
               if (g=ActionTeam) and (f=ActionPlayer) then SStype := 1;
-              ballspotp := player[g,f].p;
-              ballspotq := player[g,f].q;
+              ballspotp := allPlayers[g,f].p;
+              ballspotq := allPlayers[g,f].q;
             end;
           end;
         end;
@@ -4973,8 +5033,8 @@ begin
           ballspotq := ball.q;
         end;
         BallScat := false;
-        FinalP := player[ActionTeam, ActionPlayer].SideStep[2];
-        FinalQ := player[ActionTeam, ActionPlayer].SideStep[3];
+        FinalP := allPlayers[ActionTeam, ActionPlayer].SideStep[2];
+        FinalQ := allPlayers[ActionTeam, ActionPlayer].SideStep[3];
         if (FinalP=ballspotp) and (FinalQ=ballspotq) then BallScat := true;
         SideStepStop := false;
         PlacePlayer(ActionPlayer, ActionTeam, FinalP, FinalQ);
@@ -4984,23 +5044,23 @@ begin
         if BallScat then ScatterBallFrom(FinalP, FinalQ, 1, 0);
         s := 'QF' + Chr(ActionTeam + 48) + Chr(ActionPlayer + 64) + Chr(0+48)
           + Chr(0+64) + Chr(0+64)
-          + Chr(player[ActionTeam,ActionPlayer].SideStep[1]+48)
-          + Chr(player[ActionTeam,ActionPlayer].SideStep[2]+64)
-          + Chr(player[ActionTeam,ActionPlayer].SideStep[3]+64);
+          + Chr(allPlayers[ActionTeam,ActionPlayer].SideStep[1]+48)
+          + Chr(allPlayers[ActionTeam,ActionPlayer].SideStep[2]+64)
+          + Chr(allPlayers[ActionTeam,ActionPlayer].SideStep[3]+64);
         LogWrite(s);
         PlayActionSideStep(s, 1);
       end else begin
-        pplace := player[ActionTeam,ActionPlayer].p;
-        qplace := player[ActionTeam,ActionPlayer].q;
-        TestP := player[HitTeam,HitPlayer].p;
-        TestQ := player[HitTeam,HitPlayer].q;
+        pplace := allPlayers[ActionTeam,ActionPlayer].p;
+        qplace := allPlayers[ActionTeam,ActionPlayer].q;
+        TestP := allPlayers[HitTeam,HitPlayer].p;
+        TestQ := allPlayers[HitTeam,HitPlayer].q;
         for g := 0 to 1 do begin
           for f := 1 to team[g].numplayers do begin
-            if player[g,f].status = 2 then begin
+            if allPlayers[g,f].status = 2 then begin
               SStype := 3;
               if (g=ActionTeam) and (f=ActionPlayer) then SStype := 1;
-              ballspotp := player[g,f].p;
-              ballspotq := player[g,f].q;
+              ballspotp := allPlayers[g,f].p;
+              ballspotq := allPlayers[g,f].q;
             end;
           end;
         end;
@@ -5021,7 +5081,7 @@ begin
               PlayerHere := false;
               for g := 0 to 1 do begin
                 for f := 1 to team[g].numplayers do begin
-                  if (player[g,f].p = NewP) and (player[g,f].q = NewQ) then
+                  if (allPlayers[g,f].p = NewP) and (allPlayers[g,f].q = NewQ) then
                     PlayerHere := true;
                 end;
               end;
@@ -5035,16 +5095,16 @@ begin
           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
           InjurySettings(curteam, curplayer);
           if InjuryStatus = 4 then InjuryStatus := 0;
-          if player[curteam,curplayer].status=2 then begin
-            ploc := player[curteam,curplayer].p;
-            qloc := player[curteam,curplayer].q;
-            player[curteam,curplayer].SetStatus(InjuryStatus);
+          if allPlayers[curteam,curplayer].status=2 then begin
+            ploc := allPlayers[curteam,curplayer].p;
+            qloc := allPlayers[curteam,curplayer].q;
+            allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
             if ploc = 0 then arrow := 2;
             if ploc = 14 then arrow := 7;
             if qloc = 0 then arrow := 4;
             if qloc = 25 then arrow := 5;
             ScatterBallFrom(ploc, qloc, 1, arrow);
-          end else player[curteam,curplayer].SetStatus(InjuryStatus);
+          end else allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
           InjuryStatus := 0;
         end else begin
           for g := 0 to 7 do begin
@@ -5058,7 +5118,7 @@ begin
               PlayerHere := false;
               for g := 0 to 1 do begin
                 for f := 1 to team[g].numplayers do begin
-                  if (player[g,f].p = NewP2) and (player[g,f].q = NewQ2) then
+                  if (allPlayers[g,f].p = NewP2) and (allPlayers[g,f].q = NewQ2) then
                     PlayerHere := true;
                 end;
               end;
@@ -5084,10 +5144,10 @@ begin
                     end else begin
                       for g := 0 to 1 do begin
                         for f := 1 to team[g].numplayers do begin
-                          if (player[g,f].p=NewP) and (player[g,f].q=NewQ) then begin
+                          if (allPlayers[g,f].p=NewP) and (allPlayers[g,f].q=NewQ) then begin
                             if (ActionTeam <> g) and not((g=HitTeam) and (f=HitPlayer))
                               then BadTZ := BadTZ + 1;
-                            if (ActionTeam <> g) and (player[g,f].font.size = 12)
+                            if (ActionTeam <> g) and (allPlayers[g,f].font.size = 12)
                               and not((g=HitTeam) and (f=HitPlayer))
                               then NotMovedBadTZ := NotMovedBadTZ + 1;
                             if ActionTeam = g then FriendTZ := FriendTZ + 1;
@@ -5174,11 +5234,11 @@ begin
     t := abs(1-curteam);
     if (t=1) or (t=0) then begin
       for m := 1 to team[t].numplayers do begin
-        if player[t,m].hasSkill('Tackle') then begin
+        if allPlayers[t,m].hasSkill('Tackle') then begin
           for f := 0 to 14 do
             for g := 0 to 25 do begin
-              if (abs(f - (player[t,m].p)) <= 1) and
-              (abs(g - (player[t,m].q)) <= 1) then begin
+              if (abs(f - (allPlayers[t,m].p)) <= 1) and
+              (abs(g - (allPlayers[t,m].q)) <= 1) then begin
                 field[f,g].color := clYellow;
                 field[f,g].transparent := false;
               end;
@@ -5190,7 +5250,7 @@ begin
 end;
 procedure TBloodbowl.PlayerShowTackle1Click(Sender: TObject);
 begin
-  ShowTackleRanges(player[curteam, curplayer].p, player[curteam, curplayer].q);
+  ShowTackleRanges(allPlayers[curteam, curplayer].p, allPlayers[curteam, curplayer].q);
 end;
 
 procedure TBloodbowl.FieldShowTackleRanges1Click(Sender: TObject);
@@ -5400,7 +5460,7 @@ end;
 
 procedure TBloodbowl.Stab1Click(Sender: TObject);
 begin
-  if (player[curteam,curplayer].hasSkill('Stab')) then begin
+  if (allPlayers[curteam,curplayer].hasSkill('Stab')) then begin
     GameStatus := 'Stab';
     Loglabel.caption := 'CLICK ON THE PLAYER YOU WISH TO STAB';
     ActionTeam := curteam;
@@ -5413,7 +5473,7 @@ end;
 
 procedure TBloodbowl.PickSideStep1Click(Sender: TObject);
 begin
-  if (player[curteam,curplayer].hasSkill('Side Step')) then begin
+  if (allPlayers[curteam,curplayer].hasSkill('Side Step')) then begin
     GameStatus := 'Side Step';
     Loglabel.caption := 'CLICK ON THE SQUARE YOU WANT TO PICK TO SIDE ' +
       'STEP THIS PLAYER TO';

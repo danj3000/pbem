@@ -48,7 +48,7 @@ implementation
 uses bbunit, bbalg, unitRoster, unitTeam, unitRandom, unitLog,
      unitPlayAction, unitPlayer, unitSettings, unitPostgameSeq, unitLanguage;
 
-var Players: array [0..MaxNumPlayersInTeam] of integer;
+var aPlayers: array [0..MaxNumPlayersInTeam] of integer;
     teamSK, playerSK, numSK: integer;
 
 function TranslateActionSkillRoll(s: string): string;
@@ -62,7 +62,7 @@ begin
             f := Ord(s[4]) - 64;
             sk := Copy(s, 6, Length(s) - 5);
             t := '';
-            TranslateActionSkillRoll := player[g,f].GetPlayerName + ' gains ' + sk + t;
+            TranslateActionSkillRoll := allPlayers[g,f].GetPlayerName + ' gains ' + sk + t;
          end;
     'E': begin
             TranslateActionSkillRoll := t;
@@ -78,19 +78,19 @@ begin
   if dir = 1 then begin
     num := Ord(s[5]) - 48;
     if s[2] = 'r' then begin
-      player[g,f].SkillRollsMade[num,0] := Ord(s[6]) - 48;
-      player[g,f].SkillRollsMade[num,1] := Ord(s[7]) - 48;
+      allPlayers[g,f].SkillRollsMade[num,0] := Ord(s[6]) - 48;
+      allPlayers[g,f].SkillRollsMade[num,1] := Ord(s[7]) - 48;
       if Length(s) > 7 then begin
-        player[g,f].SkillAgingRollsMade[num, 0] := Ord(s[8]) - 48;
-        player[g,f].SkillAgingRollsMade[num, 1] := Ord(s[9]) - 48;
+        allPlayers[g,f].SkillAgingRollsMade[num, 0] := Ord(s[8]) - 48;
+        allPlayers[g,f].SkillAgingRollsMade[num, 1] := Ord(s[9]) - 48;
         if Length(s) > 9 then begin
-          player[g,f].SkillAgingEffectRollsMade[num, 0] := Ord(s[10]) - 48;
-          player[g,f].SkillAgingEffectRollsMade[num, 1] := Ord(s[11]) - 48;
+          allPlayers[g,f].SkillAgingEffectRollsMade[num, 0] := Ord(s[10]) - 48;
+          allPlayers[g,f].SkillAgingEffectRollsMade[num, 1] := Ord(s[11]) - 48;
         end;
       end;
     end;
     if s[2] = 'A' then begin
-      player[g,f].SkillsGained[num] := Copy(s, 6, Length(s) - 5);
+      allPlayers[g,f].SkillsGained[num] := Copy(s, 6, Length(s) - 5);
       DefaultAction(TranslateActionSkillRoll(s));
     end;
     if s[2] = 'E' then begin
@@ -120,17 +120,17 @@ begin
 
   teamSK := g;
   h := 1;
-  if (player[g,f].hasSkill('DProg')) then
+  if (allPlayers[g,f].hasSkill('DProg')) then
     h := 2;
 
-  hb := player[g,f].GetStartingSPP();
-  hg := player[g,f].GetMatchSPP();
+  hb := allPlayers[g,f].GetStartingSPP();
+  hg := allPlayers[g,f].GetMatchSPP();
   ha := hb + hg;
-  player[g,f].skillrolls := 0;
+  allPlayers[g,f].skillrolls := 0;
   for i := 1 to 6 do begin
     if (hb <= SPPNeeded[i] * h) and (ha > SPPNeeded[i] * h) then begin
-      player[g,f].skillrolls := player[g,f].skillrolls + 1;
-      player[g,f].SkillLevel[player[g,f].skillrolls] := i;
+      allPlayers[g,f].skillrolls := allPlayers[g,f].skillrolls + 1;
+      allPlayers[g,f].SkillLevel[allPlayers[g,f].skillrolls] := i;
     end;
   end;
 end;
@@ -142,10 +142,10 @@ begin
   for f := 1 to team[g].numplayers do begin
     CountSkillRolls(g, f);
     n := 0;
-    while player[g,f].skillrolls > n do begin
+    while allPlayers[g,f].skillrolls > n do begin
       frmSkillRolls.lbPlayers.Enabled := true;
-      frmSkillRolls.lbPlayers.Items.Add(player[g,f].GetPlayerName);
-      Players[frmSkillRolls.lbPlayers.Items.count - 1] := f;
+      frmSkillRolls.lbPlayers.Items.Add(allPlayers[g,f].GetPlayerName);
+      aPlayers[frmSkillRolls.lbPlayers.Items.count - 1] := f;
       n := n + 1;
     end;
   end;
@@ -161,7 +161,7 @@ procedure TfrmSkillRolls.lbPlayersClick(Sender: TObject);
 var i, r1, r2, a1, a2, ae1, ae2: integer;
     s: string;
 begin
-  playerSK := Players[lbPlayers.ItemIndex];
+  playerSK := aPlayers[lbPlayers.ItemIndex];
   numSK := 0;
   a1 := 0;
   a2 := 0;
@@ -169,29 +169,29 @@ begin
   ae2 := 0;
   {check to see which skill roll this is (in case a player has more than 1)}
   for i := 0 to lbPlayers.ItemIndex do begin
-    if Players[i] = playerSK then numSK := numSK + 1;
+    if aPlayers[i] = playerSK then numSK := numSK + 1;
   end;
-  lblPlayerName.caption := player[teamSK, playerSK].GetPlayerName;
+  lblPlayerName.caption := allPlayers[teamSK, playerSK].GetPlayerName;
   txtSkill.text := '';
   lblPlayerName.font.color := colorarray[teamSK,0,0];
-  if player[teamSK, playerSK].SkillRollsMade[numSK,0] > 0 then begin
-    r1 := player[teamSK, playerSK].SkillRollsMade[numSK,0];
-    r2 := player[teamSK, playerSK].SkillRollsMade[numSK,1];
-    if player[teamSK, playerSK].SkillsGained[numSK] = '+1 MA' then begin
+  if allPlayers[teamSK, playerSK].SkillRollsMade[numSK,0] > 0 then begin
+    r1 := allPlayers[teamSK, playerSK].SkillRollsMade[numSK,0];
+    r2 := allPlayers[teamSK, playerSK].SkillRollsMade[numSK,1];
+    if allPlayers[teamSK, playerSK].SkillsGained[numSK] = '+1 MA' then begin
       rbMA.Checked := true;
-    end else if player[teamSK, playerSK].SkillsGained[numSK] = '+1 AG' then begin
+    end else if allPlayers[teamSK, playerSK].SkillsGained[numSK] = '+1 AG' then begin
       rbAG.checked := true;
-    end else if player[teamSK, playerSK].SkillsGained[numSK] = '+1 ST' then begin
+    end else if allPlayers[teamSK, playerSK].SkillsGained[numSK] = '+1 ST' then begin
       rbST.checked := true;
     end else begin
       rbSkill.checked := true;
-      txtSkill.text := player[teamSK, playerSK].SkillsGained[numSK];
+      txtSkill.text := allPlayers[teamSK, playerSK].SkillsGained[numSK];
     end;
   end else begin
     r1 := Rnd(6,2) + 1;
     r2 := Rnd(6,2) + 1;
-    player[teamSK, playerSK].SkillRollsMade[numSK, 0] := r1;
-    player[teamSK, playerSK].SkillRollsMade[numSK, 1] := r2;
+    allPlayers[teamSK, playerSK].SkillRollsMade[numSK, 0] := r1;
+    allPlayers[teamSK, playerSK].SkillRollsMade[numSK, 1] := r2;
     s := '(sr' + Chr(teamSK + 48) + Chr(playerSK + 64) +
              Chr(numSK + 48) + Chr(r1 + 48) + Chr(r2 + 48);
     LogWrite(s);
@@ -211,7 +211,7 @@ begin
     rbAG.checked := rbAG.enabled;
     rbST.checked := rbST.enabled;
   end;
-  butAccept.enabled := (player[teamSK, playerSK].SkillsGained[numSK] = '');
+  butAccept.enabled := (allPlayers[teamSK, playerSK].SkillsGained[numSK] = '');
   begin
     frmSkillRolls.Height := 320;
   end;
@@ -220,59 +220,59 @@ end;
 procedure TfrmSkillRolls.butAcceptClick(Sender: TObject);
 var s, t, sk: string;
 begin
-  sk := player[teamSK, playerSK].GetSkillString(1);
+  sk := allPlayers[teamSK, playerSK].GetSkillString(1);
   s := '(u' + Chr(teamSK + 48) + Chr(playerSK + 64) +
-        Chr(player[teamSK, playerSK].ma + 48) +
-        Chr(player[teamSK, playerSK].st + 48) +
-        Chr(player[teamSK, playerSK].ag + 48) +
-        Chr(player[teamSK, playerSK].av + 48) +
-        Chr(player[teamSK, playerSK].cnumber + 64) +
-        Chr(player[teamSK, playerSK].value div 5 + 48) +
-        player[teamSK, playerSK].name + '$' +
-        player[teamSK, playerSK].position + '$' +
-        player[teamSK, playerSK].picture + '$' +
-        player[teamSK, playerSK].icon + '$' +
+        Chr(allPlayers[teamSK, playerSK].ma + 48) +
+        Chr(allPlayers[teamSK, playerSK].st + 48) +
+        Chr(allPlayers[teamSK, playerSK].ag + 48) +
+        Chr(allPlayers[teamSK, playerSK].av + 48) +
+        Chr(allPlayers[teamSK, playerSK].cnumber + 64) +
+        Chr(allPlayers[teamSK, playerSK].value div 5 + 48) +
+        allPlayers[teamSK, playerSK].name + '$' +
+        allPlayers[teamSK, playerSK].position + '$' +
+        allPlayers[teamSK, playerSK].picture + '$' +
+        allPlayers[teamSK, playerSK].icon + '$' +
         sk + '|';
   if rbSkill.checked then begin
-    player[teamSK, playerSK].SkillsGained[numSK] := Trim(txtSkill.text);
+    allPlayers[teamSK, playerSK].SkillsGained[numSK] := Trim(txtSkill.text);
     sk := sk + ', ' + TranslateSkillToEnglish(Trim(txtSkill.text));
   end;
   if rbMA.checked then begin
-    player[teamSK, playerSK].SkillsGained[numSK] := '+1 MA';
-    player[teamSK, playerSK].ma := player[teamSK, playerSK].ma + 1;
+    allPlayers[teamSK, playerSK].SkillsGained[numSK] := '+1 MA';
+    allPlayers[teamSK, playerSK].ma := allPlayers[teamSK, playerSK].ma + 1;
     sk := sk + ', +1 MA';
   end;
   if rbAG.checked then begin
-    player[teamSK, playerSK].SkillsGained[numSK] := '+1 AG';
-    player[teamSK, playerSK].ag := player[teamSK, playerSK].ag + 1;
+    allPlayers[teamSK, playerSK].SkillsGained[numSK] := '+1 AG';
+    allPlayers[teamSK, playerSK].ag := allPlayers[teamSK, playerSK].ag + 1;
     sk := sk + ', +1 AG';
   end;
   if rbST.checked then begin
-    player[teamSK, playerSK].SkillsGained[numSK] := '+1 ST';
-    player[teamSK, playerSK].st := player[teamSK, playerSK].st + 1;
+    allPlayers[teamSK, playerSK].SkillsGained[numSK] := '+1 ST';
+    allPlayers[teamSK, playerSK].st := allPlayers[teamSK, playerSK].st + 1;
     sk := sk + ', +1 ST';
   end;
   if (sk <> '') and (sk[1] = ',') then sk := Copy(sk, 3, Length(sk));
   height := 148;
   t := 'sA' + Chr(teamSK + 48) + Chr(playerSK + 64) +
-             Chr(numSK + 48) + player[teamSK, playerSK].SkillsGained[numSK];
+             Chr(numSK + 48) + allPlayers[teamSK, playerSK].SkillsGained[numSK];
   frmSkillRolls.lbPlayers.Items[lbPlayers.ItemIndex] :=
-      player[teamSK, playerSK].GetPlayerName + ' gains ' +
-      player[teamSK, playerSK].SkillsGained[numSK];
+      allPlayers[teamSK, playerSK].GetPlayerName + ' gains ' +
+      allPlayers[teamSK, playerSK].SkillsGained[numSK];
   if CanWriteToLog then begin
     LogWrite(t);
     PlayActionSkillRoll(t, 1);
     s := s +
-        Chr(player[teamSK, playerSK].ma + 48) +
-        Chr(player[teamSK, playerSK].st + 48) +
-        Chr(player[teamSK, playerSK].ag + 48) +
-        Chr(player[teamSK, playerSK].av + 48) +
-        Chr(player[teamSK, playerSK].cnumber + 64) +
-        Chr(player[teamSK, playerSK].value div 5 + 48) +
-        player[teamSK, playerSK].name + '$' +
-        player[teamSK, playerSK].position + '$' +
-        player[teamSK, playerSK].picture + '$' +
-        player[teamSK, playerSK].icon + '$' +
+        Chr(allPlayers[teamSK, playerSK].ma + 48) +
+        Chr(allPlayers[teamSK, playerSK].st + 48) +
+        Chr(allPlayers[teamSK, playerSK].ag + 48) +
+        Chr(allPlayers[teamSK, playerSK].av + 48) +
+        Chr(allPlayers[teamSK, playerSK].cnumber + 64) +
+        Chr(allPlayers[teamSK, playerSK].value div 5 + 48) +
+        allPlayers[teamSK, playerSK].name + '$' +
+        allPlayers[teamSK, playerSK].position + '$' +
+        allPlayers[teamSK, playerSK].picture + '$' +
+        allPlayers[teamSK, playerSK].icon + '$' +
         sk;
     LogWrite(s);
     PlayActionPlayerStatChange(Copy(s, 2, Length(s) - 1), 1);

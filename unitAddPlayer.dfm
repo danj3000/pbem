@@ -168,7 +168,6 @@ object frmAddPlayer: TfrmAddPlayer
     Width = 49
     Height = 21
     Style = csDropDownList
-    ItemHeight = 13
     TabOrder = 1
   end
   object txtNumber: TEdit

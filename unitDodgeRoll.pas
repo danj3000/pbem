@@ -85,23 +85,23 @@ begin
   NumberPlayer := f0;
   frmDodgeRoll.MakeDodgeRollButton.enabled := false;
   frmDodgeRoll.MakeGFIRoll.Enabled := false;
-  frmDodgeRoll.playerag.text := IntToStr(player[g0,f0].ag);
-  frmDodgeRoll.playerst.text := IntToStr(player[g0,f0].st);
-  frmDodgeRoll.StuntyCB.checked := (player[g0,f0].hasSkill('Stunty')) and
-    (not(player[g0,f0].HasSkill('SW*')));
-  frmDodgeRoll.TwoHeadsCB.checked := player[g0,f0].hasSkill('Two Heads');
+  frmDodgeRoll.playerag.text := IntToStr(allPlayers[g0,f0].ag);
+  frmDodgeRoll.playerst.text := IntToStr(allPlayers[g0,f0].st);
+  frmDodgeRoll.StuntyCB.checked := (allPlayers[g0,f0].hasSkill('Stunty')) and
+    (not(allPlayers[g0,f0].HasSkill('SW*')));
+  frmDodgeRoll.TwoHeadsCB.checked := allPlayers[g0,f0].hasSkill('Two Heads');
   if true then
        frmDodgeRoll.BreakTackleCB.checked :=
-                        (player[g0,f0].hasSkill('Break Tackle')
-                         and not(player[g0,f0].usedSkill('Break Tackle')))
+                        (allPlayers[g0,f0].hasSkill('Break Tackle')
+                         and not(allPlayers[g0,f0].usedSkill('Break Tackle')))
   else frmDodgeRoll.BreakTackleCB.checked :=
-                        player[g0,f0].hasSkill('Break Tackle');
+                        allPlayers[g0,f0].hasSkill('Break Tackle');
   frmDodgeRoll.TitchyCB.Visible := true;
-  frmDodgeRoll.TitchyCB.checked := (player[g0,f0].hasSkill('Titchy')) and
-    (not(player[g0,f0].HasSkill('SW*'))) and (true);
+  frmDodgeRoll.TitchyCB.checked := (allPlayers[g0,f0].hasSkill('Titchy')) and
+    (not(allPlayers[g0,f0].HasSkill('SW*'))) and (true);
 
-  frmDodgeRoll.cbBigGuyAlly.checked := (((player[g0,f0].BigGuy) or
-    (player[g0,f0].Ally)) and ( true));   // bigguy
+  frmDodgeRoll.cbBigGuyAlly.checked := (((allPlayers[g0,f0].BigGuy) or
+    (allPlayers[g0,f0].Ally)) and ( true));   // bigguy
   b := 0;
   pt := 0;
   ten := 0;
@@ -112,33 +112,33 @@ begin
   for i := -1 to 1 do
    for j := -1 to 1 do if (i<>0) or (j<>0) then begin
     tz := 0;
-    if player[g0,f0].p + i < 0 then tz := 10;
-    if player[g0,f0].p + i > 14 then tz := 10;
-    if player[g0,f0].q + j < 0 then tz := 10;
-    if player[g0,f0].q + j > 25 then tz := 10;
+    if allPlayers[g0,f0].p + i < 0 then tz := 10;
+    if allPlayers[g0,f0].p + i > 14 then tz := 10;
+    if allPlayers[g0,f0].q + j < 0 then tz := 10;
+    if allPlayers[g0,f0].q + j > 25 then tz := 10;
     if tz = 0 then begin
       for f := 1 to team[1-g0].numplayers do begin
-        if (player[1-g0,f].status = 1)
-        or (player[1-g0,f].status = 2)
+        if (allPlayers[1-g0,f].status = 1)
+        or (allPlayers[1-g0,f].status = 2)
         then begin
-          if (abs(player[1-g0,f].p - player[g0,f0].p - i) <= 1)
-          and (abs(player[1-g0,f].q - player[g0,f0].q - j) <= 1) then begin
-            if (player[1-g0,f].tz = 0) and
-               not ((player[1-g0,f].hasSkill('Titchy')) and
+          if (abs(allPlayers[1-g0,f].p - allPlayers[g0,f0].p - i) <= 1)
+          and (abs(allPlayers[1-g0,f].q - allPlayers[g0,f0].q - j) <= 1) then begin
+            if (allPlayers[1-g0,f].tz = 0) and
+               not ((allPlayers[1-g0,f].hasSkill('Titchy')) and
                  (true)) then tz := tz + 1;
           end;
-          if (player[1-g0,f].p = player[g0,f0].p + i)
-          and (player[1-g0,f].q = player[g0,f0].q + j) then begin
+          if (allPlayers[1-g0,f].p = allPlayers[g0,f0].p + i)
+          and (allPlayers[1-g0,f].q = allPlayers[g0,f0].q + j) then begin
             tz := 10;
-            if player[1-g0,f].tz = 0 then begin
-              if player[1-g0,f].hasSkill('Prehensile Tail') then pt := pt + 1;
-              if player[1-g0,f].hasSkill('Tentacles') then begin
+            if allPlayers[1-g0,f].tz = 0 then begin
+              if allPlayers[1-g0,f].hasSkill('Prehensile Tail') then pt := pt + 1;
+              if allPlayers[1-g0,f].hasSkill('Tentacles') then begin
                 ten := ten + 1;
                 OppWithTentacles[ten] := f;
               end;
-              if player[1-g0,f].hasSkill('Tackle') then OppHasTackle := true;
-              if (player[1-g0,f].hasSkill('Diving Tackle')) and
-                 (player[1-g0,f].status = 1) and (true)
+              if allPlayers[1-g0,f].hasSkill('Tackle') then OppHasTackle := true;
+              if (allPlayers[1-g0,f].hasSkill('Diving Tackle')) and
+                 (allPlayers[1-g0,f].status = 1) and (true)
                  then begin
                    frmDodgeRoll.cbDivingTackle.checked := true;
                    DTf := f;
@@ -146,17 +146,17 @@ begin
             end;
           end;
         end;
-        if ((player[1-g0,f].status >= 1) and (player[1-g0,f].status <= 4))
+        if ((allPlayers[1-g0,f].status >= 1) and (allPlayers[1-g0,f].status <= 4))
           then begin
-            if (player[1-g0,f].p = player[g0,f0].p + i)
-              and (player[1-g0,f].q = player[g0,f0].q + j) then tz := 10;
+            if (allPlayers[1-g0,f].p = allPlayers[g0,f0].p + i)
+              and (allPlayers[1-g0,f].q = allPlayers[g0,f0].q + j) then tz := 10;
           end;
       end;
       for f := 1 to team[g0].numplayers do begin
-        if (f <> f0) and ((player[g0,f].status >= 1)
-          and (player[g0,f].status <= 4)) then begin
-            if (player[g0,f].p = player[g0,f0].p + i)
-            and (player[g0,f].q = player[g0,f0].q + j) then tz := 10;
+        if (f <> f0) and ((allPlayers[g0,f].status >= 1)
+          and (allPlayers[g0,f].status <= 4)) then begin
+            if (allPlayers[g0,f].p = allPlayers[g0,f0].p + i)
+            and (allPlayers[g0,f].q = allPlayers[g0,f0].q + j) then tz := 10;
         end;
       end;
     end;
@@ -195,8 +195,8 @@ begin
   if frmDodgeRoll.BreakTackleCB.checked
    and true then
       frmDodgeRoll.BreakTackleCB.checked :=
-        player[g0,f0].hasSkill('Break Tackle')
-        and not(player[g0,f0].usedSkill('Break Tackle'));
+        allPlayers[g0,f0].hasSkill('Break Tackle')
+        and not(allPlayers[g0,f0].usedSkill('Break Tackle'));
   if BreakTackleCB.checked
         then begin
           r := 6 - FVal(playerst.text);
@@ -246,28 +246,28 @@ begin
     if (lastroll >= r) then begin
       if (frmDodgeRoll.BreakTackleCB.checked) and (lastroll < r2) and
          (true) then
-          player[g0,f0].UseSkill('Break Tackle');
-      if (not(player[1-g0,DTf].usedSkill('Diving Tackle'))) and
+          allPlayers[g0,f0].UseSkill('Break Tackle');
+      if (not(allPlayers[1-g0,DTf].usedSkill('Diving Tackle'))) and
         (not(true)) then
-          player[1-g0,DTf].UseSkill('Diving Tackle');
-      if player[1-g0,DTf].usedSkill('Diving Tackle') then
+          allPlayers[1-g0,DTf].UseSkill('Diving Tackle');
+      if allPlayers[1-g0,DTf].usedSkill('Diving Tackle') then
        Bloodbowl.comment.text := 'Dodge successful - Diving Tackle used - Place' +
            'DT player prone in square you LEFT!' else
        Bloodbowl.comment.text := 'Dodge successful - Diving Tackle not used';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       WorkOutDodgeResult := true;
     end else begin
-      if (not(player[1-g0,DTf].usedSkill('Diving Tackle')) and
+      if (not(allPlayers[1-g0,DTf].usedSkill('Diving Tackle')) and
         (not (true))) or
         ((true) and (lastroll >= r3) and
-         not(player[1-g0,DTf].usedSkill('Diving Tackle'))) then
-        player[1-g0,DTf].UseSkill('Diving Tackle');
-      if (t = 0) and (player[1-g0,DTf].usedSkill('Diving Tackle')) then
+         not(allPlayers[1-g0,DTf].usedSkill('Diving Tackle'))) then
+        allPlayers[1-g0,DTf].UseSkill('Diving Tackle');
+      if (t = 0) and (allPlayers[1-g0,DTf].usedSkill('Diving Tackle')) then
          Bloodbowl.comment.text := 'Dodge failed! - Diving Tackle used - Place' +
            'DT player prone in square you LEFT!' else
-      if (t = 0) and (not(player[1-g0,DTf].usedSkill('Diving Tackle'))) then
+      if (t = 0) and (not(allPlayers[1-g0,DTf].usedSkill('Diving Tackle'))) then
          Bloodbowl.comment.text := 'Dodge failed! - Diving Tackle not used' else
-      if (t <> 0) and (not(player[1-g0,DTf].usedSkill('Diving Tackle'))) then
+      if (t <> 0) and (not(allPlayers[1-g0,DTf].usedSkill('Diving Tackle'))) then
          Bloodbowl.comment.text := 'Dodge REROLL failed! - Diving Tackle not used'
       else Bloodbowl.comment.text := 'Dodge REROLL failed! - Diving Tackle used - Place' +
            'DT player prone in square you LEFT!';
@@ -279,7 +279,7 @@ begin
     if (lastroll >= r) then begin
       if (frmDodgeRoll.BreakTackleCB.checked) and (lastroll < r2) and
          (true) then
-          player[g0,f0].UseSkill('Break Tackle');
+          allPlayers[g0,f0].UseSkill('Break Tackle');
       Bloodbowl.comment.text := 'Dodge successful';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       WorkOutDodgeResult := true;
@@ -303,9 +303,9 @@ begin
   f := 1;
   Tentacles4th := true;
   while succes and (f <= FVal(Tentacles.text)) do begin
-    s := player[g0,f0].GetPlayerName + ' tries to get away from Tentacles';
+    s := allPlayers[g0,f0].GetPlayerName + ' tries to get away from Tentacles';
     if Tentacles4th then
-          s := s + ' of ' + player[1-g0,OppWithTentacles[f]].GetPlayerName;
+          s := s + ' of ' + allPlayers[1-g0,OppWithTentacles[f]].GetPlayerName;
     Bloodbowl.comment.text := s;
     Bloodbowl.EnterButtonClick(Bloodbowl);
     Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
@@ -313,11 +313,11 @@ begin
     if Tentacles4th then Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
     r2 := lastroll;
     if Tentacles4th then begin
-      with player[g0,f0] do begin
+      with allPlayers[g0,f0] do begin
         s := GetPlayerName + ': ST' + IntToStr(st) + ' + ' +
              IntToStr(r1) + ' = ' + IntToStr(st + r1);
       end;
-      with player[1-g0,OppWithTentacles[f]] do begin
+      with allPlayers[1-g0,OppWithTentacles[f]] do begin
         s := s + ', ' + GetPlayerName + ': ST' + IntToStr(st) + ' + ' +
              IntToStr(r2) + ' = ' + IntToStr(st + r2);
       end;
@@ -325,8 +325,8 @@ begin
       Bloodbowl.EnterButtonClick(Bloodbowl);
     end;
     if (Tentacles4th and
-            (r1 + player[g0,f0].st < r2 + player[1-g0,OppWithTentacles[f]].st))
-    or (not(Tentacles4th) and (lastroll >= player[g0,f0].st)) then begin
+            (r1 + allPlayers[g0,f0].st < r2 + allPlayers[1-g0,OppWithTentacles[f]].st))
+    or (not(Tentacles4th) and (lastroll >= allPlayers[g0,f0].st)) then begin
       succes := false;
       if CanUseTeamReroll(cbBigGuyAlly.checked) then begin
         if Application.MessageBox('Tentacles roll failed! Use Team Reroll?',
@@ -340,14 +340,14 @@ begin
   end;
   if not(succes) then begin
     {didn't escape Tentacles}
-    Bloodbowl.comment.text := player[g0,f0].GetPlayerName +
+    Bloodbowl.comment.text := allPlayers[g0,f0].GetPlayerName +
        ' was grabbed by Tentacles';
     Bloodbowl.EnterButtonClick(Bloodbowl);
     frmDodgeRoll.Hide;
   end else begin
-    Bloodbowl.comment.text := player[g0,f0].GetPlayerName + ' dodges to ' +
-       field[player[g0,f0].p + DirBut[db].dx,
-          player[g0,f0].q + DirBut[db].dy].hint + ' (';
+    Bloodbowl.comment.text := allPlayers[g0,f0].GetPlayerName + ' dodges to ' +
+       field[allPlayers[g0,f0].p + DirBut[db].dx,
+          allPlayers[g0,f0].q + DirBut[db].dy].hint + ' (';
     if TwoHeadsCB.checked then
       Bloodbowl.comment.text := Bloodbowl.comment.text + 'Two Heads, ';
 
@@ -372,23 +372,23 @@ begin
       butUseTeamReroll.enabled := false;
       butUseStandFirmSkill.enabled := false;
       lblDodgeRerollFailed.Visible := false;
-      if player[g0,f0].hasSkill('Dodge') and not(OppHasTackle)
-      and not(player[g0,f0].usedSkill('Dodge')) then
+      if allPlayers[g0,f0].hasSkill('Dodge') and not(OppHasTackle)
+      and not(allPlayers[g0,f0].usedSkill('Dodge')) then
         butUseDodgeSkill.enabled := true;
-      if player[g0,f0].hasSkill('Pro')and
-        not(player[g0,f0].usedSkill('Pro')) then
+      if allPlayers[g0,f0].hasSkill('Pro')and
+        not(allPlayers[g0,f0].usedSkill('Pro')) then
         butPro.enabled := true;
       butUseTeamReroll.enabled := CanUseTeamReroll(cbBigGuyAlly.checked);
-      if player[g0,f0].hasSkill('Stand Firm') then
+      if allPlayers[g0,f0].hasSkill('Stand Firm') then
         butUseStandFirmSkill.enabled := true;
     end;
     if succes then begin
       PlacePlayer(f0, g0,
-         player[g0,f0].p + DirBut[db].dx, player[g0,f0].q + DirBut[db].dy);
+         allPlayers[g0,f0].p + DirBut[db].dx, allPlayers[g0,f0].q + DirBut[db].dy);
       frmDodgeRoll.Hide;
-      if (player[g0,f0].p = ball.p) and (player[g0,f0].q = ball.q) then begin
+      if (allPlayers[g0,f0].p = ball.p) and (allPlayers[g0,f0].q = ball.q) then begin
         Continuing := true;
-        player[g0,f0].SetStatus(2);
+        allPlayers[g0,f0].SetStatus(2);
         Continuing := false;
         ShowPickUpWindow(g0, f0);
       end;
@@ -425,11 +425,11 @@ procedure MakeDodgeReroll;
 begin
   if WorkOutDodgeResult(1) then begin
     PlacePlayer(f0, g0,
-       player[g0,f0].p + DirBut[db].dx, player[g0,f0].q + DirBut[db].dy);
+       allPlayers[g0,f0].p + DirBut[db].dx, allPlayers[g0,f0].q + DirBut[db].dy);
     frmDodgeRoll.Hide;
-    if (player[g0,f0].p = ball.p) and (player[g0,f0].q = ball.q) then begin
+    if (allPlayers[g0,f0].p = ball.p) and (allPlayers[g0,f0].q = ball.q) then begin
       Continuing := true;
-      player[g0,f0].SetStatus(2);
+      allPlayers[g0,f0].SetStatus(2);
       Continuing := false;
       ShowPickUpWindow(g0, f0);
     end;
@@ -458,25 +458,25 @@ procedure TfrmDodgeRoll.butMakeGFIRollClick(Sender: TObject);
 begin
   ShowGFIWindow(TeamPlayer, NumberPlayer);
   MakeGFIRoll.Enabled := False;
-  if (player[teamplayer, numberplayer].status < 1) or
-    (player[teamplayer, numberplayer].status > 2) then begin
+  if (allPlayers[teamplayer, numberplayer].status < 1) or
+    (allPlayers[teamplayer, numberplayer].status > 2) then begin
     DodgeNoStand := true;
     PlacePlayer(NumberPlayer, TeamPlayer,
-      player[TeamPlayer,NumberPlayer].p + DirBut[db].dx,
-      player[TeamPlayer,NumberPlayer].q + DirBut[db].dy);
+      allPlayers[TeamPlayer,NumberPlayer].p + DirBut[db].dx,
+      allPlayers[TeamPlayer,NumberPlayer].q + DirBut[db].dy);
     DodgeNoStand := false;
     frmDodgeRoll.Hide;
-    if (player[TeamPlayer,NumberPlayer].p = ball.p) and
-      (player[TeamPlayer,NumberPlayer].q = ball.q) then begin
-      ScatterBallFrom(player[TeamPlayer, NumberPlayer].p,
-                   player[TeamPlayer, NumberPlayer].q, 1, 0);
+    if (allPlayers[TeamPlayer,NumberPlayer].p = ball.p) and
+      (allPlayers[TeamPlayer,NumberPlayer].q = ball.q) then begin
+      ScatterBallFrom(allPlayers[TeamPlayer, NumberPlayer].p,
+                   allPlayers[TeamPlayer, NumberPlayer].q, 1, 0);
     end;
   end;
 end;
 
 procedure TfrmDodgeRoll.butProClick(Sender: TObject);
 begin
-  player[g0,f0].UseSkill('Pro');
+  allPlayers[g0,f0].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(g0,f0);
   if (lastroll >= 4) then begin
@@ -493,17 +493,17 @@ end;
 
 procedure TfrmDodgeRoll.butUseDodgeSkillClick(Sender: TObject);
 begin
-  player[g0,f0].UseSkill('Dodge');
+  allPlayers[g0,f0].UseSkill('Dodge');
   MakeDodgeReroll;
 end;
 
 procedure TfrmDodgeRoll.butUseStandFirmSkillClick(Sender: TObject);
 var s: string;
 begin
-  player[g0,f0].UseSkill('Stand Firm');
+  allPlayers[g0,f0].UseSkill('Stand Firm');
 {  player[g0,f0].MakeCurrent;}
-  if player[g0,f0].UsedMA = 0 then begin
-    s := 'x' + Chr(g0 + 48) + Chr(f0 + 65) + Chr(player[g0,f0].UsedMA + 64);
+  if allPlayers[g0,f0].UsedMA = 0 then begin
+    s := 'x' + Chr(g0 + 48) + Chr(f0 + 65) + Chr(allPlayers[g0,f0].UsedMA + 64);
     LogWrite(s);
     PlayActionEndOfMove(s, 1);
   end;
@@ -517,24 +517,24 @@ var v, w, ploc, qloc: integer;
 begin
   frmDodgeRoll.Hide;
   PlacePlayer(f0, g0,
-     player[g0,f0].p + DirBut[db].dx, player[g0,f0].q + DirBut[db].dy);
+     allPlayers[g0,f0].p + DirBut[db].dx, allPlayers[g0,f0].q + DirBut[db].dy);
   Ballscatter := false;
   v := g0;
   w := f0;
-  if (ball.p = player[g0,f0].p) and
-    (ball.q = player[g0,f0].q) then begin
+  if (ball.p = allPlayers[g0,f0].p) and
+    (ball.q = allPlayers[g0,f0].q) then begin
     BallScatter := true;
     ploc := ball.p;
     qloc := ball.q;
   end;
   ArmourSettings(v,w,v,w,0);
-  if player[v,w].status < InjuryStatus then begin
-    if player[v,w].status=2 then begin
-      ploc := player[v,w].p;
-      qloc := player[v,w].q;
-      player[v,w].SetStatus(InjuryStatus);
+  if allPlayers[v,w].status < InjuryStatus then begin
+    if allPlayers[v,w].status=2 then begin
+      ploc := allPlayers[v,w].p;
+      qloc := allPlayers[v,w].q;
+      allPlayers[v,w].SetStatus(InjuryStatus);
       BallScatter := true;
-    end else player[v,w].SetStatus(InjuryStatus);
+    end else allPlayers[v,w].SetStatus(InjuryStatus);
   end;
   InjuryStatus := 0;
   if BallScatter then ScatterBallFrom(ploc, qloc, 1, 0);

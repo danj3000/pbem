@@ -74,7 +74,7 @@ begin
      frmCatch.cbVeryLongLegs.visible := false;
      frmCatch.cbExtraArms.visible := true;
   end;
-  r := 7 - player[TeamCatcher, NumberCatcher].ag;
+  r := 7 - allPlayers[TeamCatcher, NumberCatcher].ag;
   if frmCatch.rgAccPassBB.ItemIndex = 0 then r := r - 1;
   if frmCatch.rgAccPassBB.ItemIndex = 2 then r := r + 2;
   if (frmCatch.cbExtraArms.checked) and (not(frmCatch.rgAccPassBB.ItemIndex=2))
@@ -100,24 +100,24 @@ var tz: TackleZones;
 begin
   TeamCatcher := g;
   NumberCatcher := f;
-  frmCatch.lblCatcher.caption := player[g,f].GetPlayerName;
+  frmCatch.lblCatcher.caption := allPlayers[g,f].GetPlayerName;
   frmCatch.lblCatcher.font.color := colorarray[g,0,0];
   if acc=1 then frmCatch.rgAccPassBB.ItemIndex := 0
     else if acc=0 then frmCatch.rgAccPassBB.ItemIndex := 1 else
     frmCatch.rgAccPassBB.ItemIndex := 2;
-  frmCatch.txtCatcherAG.text := IntToStr(player[g,f].ag);
+  frmCatch.txtCatcherAG.text := IntToStr(allPlayers[g,f].ag);
   tz := CountTZ(g, f);
   frmCatch.txtCatcherTZ.text := IntToStr(tz.num);
   frmCatch.txtCatcherFA.text := IntToStr(CountFA(g, f));
-  frmCatch.cbExtraArms.checked := player[g,f].hasSkill('Extra Arms');
-  frmCatch.cbNBH.checked := player[g,f].hasSkill('Nonball Handler');
-  frmCatch.cbNoTZ.checked := (player[g,f].tz > 0) ;
-  frmCatch.cbNervesOfSteel.checked := player[g,f].hasSkill('Nerves of Steel');
+  frmCatch.cbExtraArms.checked := allPlayers[g,f].hasSkill('Extra Arms');
+  frmCatch.cbNBH.checked := allPlayers[g,f].hasSkill('Nonball Handler');
+  frmCatch.cbNoTZ.checked := (allPlayers[g,f].tz > 0) ;
+  frmCatch.cbNervesOfSteel.checked := allPlayers[g,f].hasSkill('Nerves of Steel');
   frmCatch.cbSafeThrow.Checked := sthrow;
   frmCatch.cbVeryLongLegs.visible := false;
-  frmCatch.cbVeryLongLegs.checked := (player[g,f].hasSkill('Very Long Legs'));
-  frmCatch.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (true)); // big guy
+  frmCatch.cbVeryLongLegs.checked := (allPlayers[g,f].hasSkill('Very Long Legs'));
+  frmCatch.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or
+      (allPlayers[g,f].Ally)) and (true)); // big guy
   frmCatch.cbPouringRain.checked :=
     (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN');
 
@@ -138,14 +138,14 @@ begin
   if lastroll >= CatchRollNeeded then begin
     if (frmCatch.rgAccPassBB.ItemIndex = 2) and (frmCatch.cbSafeThrow.checked)
     then begin
-      player[ActionTeam,ActionPlayer].UseSkill('Safe Throw');
+      allPlayers[ActionTeam,ActionPlayer].UseSkill('Safe Throw');
       Bloodbowl.comment.text := 'Safe Throw roll';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-      if ((player[ActionTeam,ActionPlayer].HasSkill('Pro')) and (lastroll <= 1) and
-        (not (player[ActionTeam,ActionPlayer].usedSkill('Pro'))) and
+      if ((allPlayers[ActionTeam,ActionPlayer].HasSkill('Pro')) and (lastroll <= 1) and
+        (not (allPlayers[ActionTeam,ActionPlayer].usedSkill('Pro'))) and
         (ActionTeam = activeTeam)) then begin
-            player[ActionTeam,ActionPlayer].UseSkill('Pro');
+            allPlayers[ActionTeam,ActionPlayer].UseSkill('Pro');
             Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
             if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
             if (lastroll <= 3) then lastroll := 1;
@@ -159,20 +159,20 @@ begin
         Bloodbowl.comment.text := 'Safe Throw failed!';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
         if CanWriteToLog then begin
-          player[TeamCatcher, NumberCatcher].int :=
-            player[TeamCatcher, NumberCatcher].int + 1;
+          allPlayers[TeamCatcher, NumberCatcher].int :=
+            allPlayers[TeamCatcher, NumberCatcher].int + 1;
           LogWrite('p' + Chr(TeamCatcher + 48) + chr(NumberCatcher + 65) + 'I');
           AddLog('Interception for ' +
-            player[TeamCatcher, NumberCatcher].GetPlayerName);
+            allPlayers[TeamCatcher, NumberCatcher].GetPlayerName);
         end;
-        player[TeamCatcher, NumberCatcher].SetStatus(2);
+        allPlayers[TeamCatcher, NumberCatcher].SetStatus(2);
         if (AccurateTeam=TeamCatcher) and (AccuratePassPlay) and
           (AccuratePlayer<>NumberCatcher) then begin
-          player[AccurateTeam, AccuratePlayer].comp :=
-            player[AccurateTeam, AccuratePlayer].comp + 1;
+          allPlayers[AccurateTeam, AccuratePlayer].comp :=
+            allPlayers[AccurateTeam, AccuratePlayer].comp + 1;
           LogWrite('p' + Chr(AccurateTeam + 48) + chr(AccuratePlayer + 65) + 'c');
           AddLog('Completion for ' +
-            player[AccurateTeam, AccuratePlayer].GetPlayerName);
+            allPlayers[AccurateTeam, AccuratePlayer].GetPlayerName);
           AccuratePassPlay := false;
         end;
         WorkOutCatchResult := true;
@@ -184,30 +184,30 @@ begin
     end else begin
       if frmCatch.cbNBH.checked then begin
           AddLog('Nonball Handler ' +
-              (player[TeamCatcher, NumberCatcher].GetPlayerName) + ' bats it out'+
+              (allPlayers[TeamCatcher, NumberCatcher].GetPlayerName) + ' bats it out'+
               ' of the air');
-          ScatterBallFrom(player[TeamCatcher, NumberCatcher].p,
-            player[TeamCatcher, NumberCatcher].q, 1, 0);
+          ScatterBallFrom(allPlayers[TeamCatcher, NumberCatcher].p,
+            allPlayers[TeamCatcher, NumberCatcher].q, 1, 0);
           WorkOutCatchResult := true;
       end else begin
-        player[TeamCatcher, NumberCatcher].SetStatus(2);
+        allPlayers[TeamCatcher, NumberCatcher].SetStatus(2);
         if (AccurateTeam=TeamCatcher) and (AccuratePassPlay) and
           (AccuratePlayer<>NumberCatcher) then begin
-          player[AccurateTeam, AccuratePlayer].comp :=
-            player[AccurateTeam, AccuratePlayer].comp + 1;
+          allPlayers[AccurateTeam, AccuratePlayer].comp :=
+            allPlayers[AccurateTeam, AccuratePlayer].comp + 1;
           LogWrite('p' + Chr(AccurateTeam + 48) + chr(AccuratePlayer + 65) + 'c');
           AddLog('Completion for ' +
-            player[AccurateTeam, AccuratePlayer].GetPlayerName);
+            allPlayers[AccurateTeam, AccuratePlayer].GetPlayerName);
           AccuratePassPlay := False;
         end;
         WorkOutCatchResult := true;
         if frmCatch.rgAccPassBB.ItemIndex = 2 then begin
           if CanWriteToLog then begin
-               player[TeamCatcher, NumberCatcher].int :=
-                 player[TeamCatcher, NumberCatcher].int + 1;
+               allPlayers[TeamCatcher, NumberCatcher].int :=
+                 allPlayers[TeamCatcher, NumberCatcher].int + 1;
                LogWrite('p' + Chr(TeamCatcher + 48) + chr(NumberCatcher + 65) + 'I');
                AddLog('Interception for ' +
-                 player[TeamCatcher, NumberCatcher].GetPlayerName);
+                 allPlayers[TeamCatcher, NumberCatcher].GetPlayerName);
                WorkOutCatchResult := true;
           end;
         end;
@@ -221,7 +221,7 @@ begin
           Bloodbowl.comment.text := 'Catch RE-ROLL failed!'
         else if (i = 0) and (frmCatch.rgAccPassBB.ItemIndex = 2) then begin
           Bloodbowl.comment.text := 'Interception roll failed!';
-          if not (player[TeamCatcher, NumberCatcher].hasSkill('Catch'))
+          if not (allPlayers[TeamCatcher, NumberCatcher].hasSkill('Catch'))
              then WorkOutCatchResult := true;
         end else begin
           Bloodbowl.comment.text := 'Interception RE-ROLL failed!';
@@ -244,7 +244,7 @@ end;
 procedure TfrmCatch.butCatchRollClick(Sender: TObject);
 var s: string;
 begin
-  s := player[TeamCatcher, NumberCatcher].GetPlayerName +
+  s := allPlayers[TeamCatcher, NumberCatcher].GetPlayerName +
        ' tries to catch the ball (';
   if rgAccPassBB.ItemIndex = 0 then s := s + 'Accurate Pass, '
           else
@@ -268,11 +268,11 @@ begin
     Hide;
   end else begin
     butCatchSkill.enabled :=
-       player[TeamCatcher, NumberCatcher].hasSkill('Catch') and
-       not(player[TeamCatcher,NumberCatcher].usedSkill('Catch'));
+       allPlayers[TeamCatcher, NumberCatcher].hasSkill('Catch') and
+       not(allPlayers[TeamCatcher,NumberCatcher].usedSkill('Catch'));
     butPro.enabled :=
-       player[TeamCatcher, NumberCatcher].hasSkill('Pro') and
-       not(player[TeamCatcher,NumberCatcher].usedSkill('Pro'));
+       allPlayers[TeamCatcher, NumberCatcher].hasSkill('Pro') and
+       not(allPlayers[TeamCatcher,NumberCatcher].usedSkill('Pro'));
     butTeamReroll.enabled := false;
     if (TeamCatcher = activeTeam) and CanUseTeamReroll(cbBigGuyAlly.checked)
       and (not(KickOffNow)) then butTeamReroll.enabled := true;
@@ -296,13 +296,13 @@ end;
 
 procedure TfrmCatch.butCatchSkillClick(Sender: TObject);
 begin
-  player[TeamCatcher,NumberCatcher].UseSkill('Catch');
+  allPlayers[TeamCatcher,NumberCatcher].UseSkill('Catch');
   MakeCatchReroll;
 end;
 
 procedure TfrmCatch.butProClick(Sender: TObject);
 begin
-  player[TeamCatcher,NumberCatcher].UseSkill('Pro');
+  allPlayers[TeamCatcher,NumberCatcher].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(TeamCatcher,NumberCatcher);
   if (lastroll >= 4) then begin
@@ -333,8 +333,8 @@ begin
   CanHide := true;
 
   {Stop HEre}
-  ScatterBallFrom(player[TeamCatcher, NumberCatcher].p,
-                  player[TeamCatcher, NumberCatcher].q, 1, 0);
+  ScatterBallFrom(allPlayers[TeamCatcher, NumberCatcher].p,
+                  allPlayers[TeamCatcher, NumberCatcher].q, 1, 0);
   if CanHide then begin
     ModalResult := 1;
     Hide;

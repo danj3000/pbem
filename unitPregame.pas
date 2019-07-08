@@ -4,8 +4,11 @@ interface
 
 procedure PregameEnableDisable;
 procedure NigglesOrStart;
-procedure WeatherTableClick;
-procedure WeatherPickClick(r3: integer);
+
+procedure DoWeatherRoll;
+procedure DoWeatherPick(r3: integer);
+procedure DoWeather(r1, r2: integer);
+
 procedure PlayActionGate(s: string; dir, ff: integer);
 function TranslateHandicapTable: string;
 procedure PlayActionHandicapTable(s: string; dir: integer);
@@ -67,7 +70,7 @@ begin
     b := false;
     for g := 0 to 1 do begin
       for f := 1 to team[g].numplayers do begin
-        if (player[g,f].status = 9) then begin
+        if (allPlayers[g,f].status = 9) then begin
           b := true;
         end;
       end;
@@ -179,137 +182,40 @@ begin
   end;
 end;
 
-procedure WeatherTableClick;
-var r1, r2, p: integer;
-    s0: string;
+procedure DoWeatherRoll;
+var r1, r2: integer;
 begin
-  if CanWriteToLog then begin
+  if CanWriteToLog then
+  begin
     r1 := Rnd(6,6) + 1;
     r2 := Rnd(6,6) + 1;
-    AddLog('(' + IntToStr(r1) + ',' + IntToStr(r2) + ') = ' +
-       IntToStr(r1 + r2) + ' : ' + WeatherTable[r1 + r2]);
-    s0 := WeatherTable[r1 + r2];
-    p := Pos('.', s0);
-    Bloodbowl.WeatherLabel.caption :=
-          Copy(s0, 1, p) + Chr(13) + Copy(s0, p+1, 100);
-    LogWrite('DW' + Chr(r1 + 48) + Chr(r2 + 48));
-    if frmSettings.cbWeatherPitch.checked then begin
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) =
-        'SWELTERING HEAT')) then
-        ShowFieldImage('field_heat.jpg') else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) =
-        'BLIZZARD')) then
-        ShowFieldImage('field_blizzard.jpg') else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) =
-        'POURING RAIN')) then
-        ShowFieldImage('field_rain.jpg') else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) =
-        'VERY SUNNY')) then
-        ShowFieldImage('field_sunny.jpg') else
-        ShowFieldImage(frmSettings.txtFieldImageFile.text);
-    end;
-    if frmSettings.cbWeatherPitch.checked then begin
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) =
-        'SWELTERING HEAT')) then
-        frmSettings.cbBlackIce.Checked := False else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) =
-        'BLIZZARD')) then
-        frmSettings.cbBlackIce.Checked := True else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) =
-        'POURING RAIN')) then
-        frmSettings.cbBlackIce.Checked := False else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) =
-        'VERY SUNNY')) then
-        frmSettings.cbBlackIce.Checked := False else
-      if frmSettings.txtWeatherTable.Text = 'W7' then
-        frmSettings.cbBlackIce.Checked := True else
-      if frmSettings.txtWeatherTable.Text = 'W9' then
-        frmSettings.cbBlackIce.Checked := True else
-      if frmSettings.txtWeatherTable.Text = 'W5' then
-        frmSettings.cbBlackIce.Checked := True else
-      if frmSettings.txtWeatherTable.Text = 'W10' then
-        frmSettings.cbBlackIce.checked := True else
-      frmSettings.cbBlackIce.Checked := False;
-    end;
+    DoWeather(r1, r2);
   end;
 end;
 
-procedure WeatherPickClick(r3: integer);
-var r1, r2, p, g, f: integer;
-    s0: string;
+procedure DoWeather(r1, r2: integer);
+var weatherString: string;
+begin
+    weatherString := WeatherTable[r1 + r2];
+    AddLog('(' + IntToStr(r1) + ',' + IntToStr(r2) + ') = ' + IntToStr(r1 + r2) + ' : ' + weatherString);
+    LogWrite('DW' + Chr(r1 + 48) + Chr(r2 + 48));
+
+    Bloodbowl.SetWeather(weatherString);
+end;
+
+procedure DoWeatherPick(r3: integer);
+var r1, r2: integer;
 begin
   if CanWriteToLog then begin
-    if r3 >= 7 then r1 := 6 else r1 := 1;
+    // make up dice rolls
+    if r3 >= 7 then
+      r1 := 6
+    else
+      r1 := 1;
     r2 := r3 - r1;
-    AddLog('(' + IntToStr(r1) + ',' + IntToStr(r2) + ') = ' +
-       IntToStr(r1 + r2) + ' : ' + WeatherTable[r1 + r2]);
-    s0 := WeatherTable[r1 + r2];
-    p := Pos('.', s0);
-    Bloodbowl.WeatherLabel.caption :=
-          Copy(s0, 1, p) + Chr(13) + Copy(s0, p+1, 100);
-    LogWrite('DW' + Chr(r1 + 48) + Chr(r2 + 48));
-    if frmSettings.cbWeatherPitch.checked then begin
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) =
-        'SWELTERING HEAT')) then
-        ShowFieldImage('field_heat.jpg') else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) =
-        'BLIZZARD')) then
-        ShowFieldImage('field_blizzard.jpg') else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) =
-        'POURING RAIN')) then
-        ShowFieldImage('field_rain.jpg') else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) =
-        'VERY SUNNY')) then
-        ShowFieldImage('field_sunny.jpg') else
-        ShowFieldImage(frmSettings.txtFieldImageFile.text);
-    end;
-    if frmSettings.cbWeatherPitch.checked then begin
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) =
-        'SWELTERING HEAT')) then
-        frmSettings.cbBlackIce.Checked := False else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) =
-        'BLIZZARD')) then
-        frmSettings.cbBlackIce.Checked := True else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) =
-        'POURING RAIN')) then
-        frmSettings.cbBlackIce.Checked := False else
-      if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) =
-        'VERY SUNNY')) then
-        frmSettings.cbBlackIce.Checked := False else
-      if frmSettings.txtWeatherTable.Text = 'W7' then
-        frmSettings.cbBlackIce.Checked := True else
-      if frmSettings.txtWeatherTable.Text = 'W9' then
-        frmSettings.cbBlackIce.Checked := True else
-      if frmSettings.txtWeatherTable.Text = 'W5' then
-        frmSettings.cbBlackIce.Checked := True else
-      if frmSettings.txtWeatherTable.Text = 'W10' then
-        frmSettings.cbBlackIce.checked := True else
-      frmSettings.cbBlackIce.Checked := False;
-    end;
-    for g := 0 to 1 do begin
-      for f := 1 to team[g].numplayers do begin
-        if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) =
-             'SWELTERING HEAT')) and ((player[g,f].HasSkill('Cold Natured')) or
-                (player[g,f].HasSkill('Stone Cold Stupid')))
-                and (player[g,f].status <= 4)
-             then player[g,f].SetStatus(14);
-        if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) =
-             'BLIZZARD')) and (player[g,f].HasSkill('Cold Blooded'))
-             and (player[g,f].status <= 4)
-             then player[g,f].SetStatus(14);
-        if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) =
-             'POURING RAIN')) and (player[g,f].HasSkill('Rusting'))
-                and (player[g,f].status <= 4)
-             then player[g,f].SetStatus(14);
-        if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) =
-             'VERY SUNNY')) and (player[g,f].HasSkill('Vampiric Change'))
-                and (player[g,f].status <= 4)
-             then begin
-               if player[g,f].status >= 1 then ShowHurtForm('I');
-               player[g,f].SetStatus(14);
-        end;
-      end;
-    end;
+
+    // do it
+    DoWeather(r1, r2);
   end;
 end;
 
@@ -498,9 +404,9 @@ begin
   f := Ord(s[4]) - 64;
   if dir = 1 then begin
     DefaultAction(TranslateNiggleResult(s));
-    if s[5] = '0' then player[g,f].SetStatusDef(0);
+    if s[5] = '0' then allPlayers[g,f].SetStatusDef(0);
   end else begin
-    player[g,f].SetStatusDef(9);
+    allPlayers[g,f].SetStatusDef(9);
     BackLog;
     Bloodbowl.LblNiggles.caption := '';
     Bloodbowl.ButNiggles.enabled := true;
@@ -519,8 +425,8 @@ begin
   for g := 0 to 1 do begin
     for f := 1 to team[g].numplayers do begin
       {look for niggled players}
-      if (player[g,f].status = 9) then begin
-        s := player[g,f].inj;
+      if (allPlayers[g,f].status = 9) then begin
+        s := allPlayers[g,f].inj;
         p := Pos('N', Uppercase(s));
         {roll for each N until all done, or 1 rolled}
         repeat begin
@@ -539,7 +445,7 @@ begin
         t := 'Dn' + Chr(g + 48) + Chr(f + 64);
         if r <> 1 then begin
           t := t + '0';
-          player[g,f].SetStatusDef(0);
+          allPlayers[g,f].SetStatusDef(0);
         end else begin
           t := t + '1';
         end;

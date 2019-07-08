@@ -395,8 +395,8 @@ begin
       while p > 0 do begin
         q := Pos('"', Copy(s0, p+5, length(s0)));
         piccount := piccount + 1;
-        player[g,piccount].picture := Copy(s0, p+5, q-1);
-        player[g,piccount].picture0 := player[g,piccount].picture;
+        allPlayers[g,piccount].picture := Copy(s0, p+5, q-1);
+        allPlayers[g,piccount].picture0 := allPlayers[g,piccount].picture;
         s0 := Copy(s0, p+5+q, length(s0));
         p := Pos('SRC="', s0);
       end;
@@ -423,49 +423,49 @@ begin
         end;
         q := FVal(GetNextcell(s0));
         if (q > 0) and (q < 100) then begin
-          player[g,f].cnumber := q;
-          player[g,f].cnumber0 := q;
-          player[g,f].caption := IntToStr(q);
-          player[g,f].status := 0;
+          allPlayers[g,f].cnumber := q;
+          allPlayers[g,f].cnumber0 := q;
+          allPlayers[g,f].caption := IntToStr(q);
+          allPlayers[g,f].status := 0;
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].name := GetNextCell(s0);
-          player[g,f].name0 := player[g,f].name;
+          allPlayers[g,f].name := GetNextCell(s0);
+          allPlayers[g,f].name0 := allPlayers[g,f].name;
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].position := GetNextCell(s0);
-          player[g,f].position0 := player[g,f].position;
+          allPlayers[g,f].position := GetNextCell(s0);
+          allPlayers[g,f].position0 := allPlayers[g,f].position;
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].ma := FVal(GetNextCell(s0));
-          player[g,f].ma0 := player[g,f].ma;
+          allPlayers[g,f].ma := FVal(GetNextCell(s0));
+          allPlayers[g,f].ma0 := allPlayers[g,f].ma;
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].st := FVal(GetNextCell(s0));
-          player[g,f].st0 := player[g,f].st;
+          allPlayers[g,f].st := FVal(GetNextCell(s0));
+          allPlayers[g,f].st0 := allPlayers[g,f].st;
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].ag := FVal(GetNextCell(s0));
-          player[g,f].ag0 := player[g,f].ag;
+          allPlayers[g,f].ag := FVal(GetNextCell(s0));
+          allPlayers[g,f].ag0 := allPlayers[g,f].ag;
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].av := FVal(GetNextCell(s0));
-          player[g,f].av0 := player[g,f].av;
+          allPlayers[g,f].av := FVal(GetNextCell(s0));
+          allPlayers[g,f].av0 := allPlayers[g,f].av;
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].SetSkill(GetNextCell(s0));
-          player[g,f].SetSkillsToDefault;
+          allPlayers[g,f].SetSkill(GetNextCell(s0));
+          allPlayers[g,f].SetSkillsToDefault;
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].inj := GetNextCell(s0);
+          allPlayers[g,f].inj := GetNextCell(s0);
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].comp0 := FVal(GetNextCell(s0));
+          allPlayers[g,f].comp0 := FVal(GetNextCell(s0));
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].td0 := FVal(GetNextCell(s0));
+          allPlayers[g,f].td0 := FVal(GetNextCell(s0));
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].int0 := FVal(GetNextCell(s0));
+          allPlayers[g,f].int0 := FVal(GetNextCell(s0));
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].cas0 := FVal(GetNextCell(s0));
+          allPlayers[g,f].cas0 := FVal(GetNextCell(s0));
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].mvp0 := FVal(GetNextCell(s0));
+          allPlayers[g,f].mvp0 := FVal(GetNextCell(s0));
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
 
-          player[g,f].peaked := (Uppercase(Trim(GetNextCell(s0))) = 'P');
+          allPlayers[g,f].peaked := (Uppercase(Trim(GetNextCell(s0))) = 'P');
           s0 := Copy(s0, Pos('</TD>', s0) + 5, length(s0));
-          player[g,f].value := MoneyVal(GetNextCell(s0));
-          player[g,f].value0 := player[g,f].value;
+          allPlayers[g,f].value := MoneyVal(GetNextCell(s0));
+          allPlayers[g,f].value0 := allPlayers[g,f].value;
           s := GetLine;
           f := f + 1;
         end else begin
@@ -494,24 +494,24 @@ begin
            Chr(team[g].tr div 100 + 48) + Chr(team[g].rerollcost + 48) +
            team[g].logo + Chr(255) + team[g].homefield);
   for f := 1 to team[g].numplayers do begin
-    s0 := '(L' + player[g,f].GetSaveString;
+    s0 := '(L' + allPlayers[g,f].GetSaveString;
     LogWrite(s0);
   end;
   AddLog('Team ' + ffcl[g] + ' loaded: ' + team[g].name);
   ffcl[g] := team[g].name;
   team[g].caption := team[g].name;
   for f := 1 to team[g].numplayers do begin
-    if player[g,f].ma = 0
-    then player[g,f].SetStatusDef(11)
+    if allPlayers[g,f].ma = 0
+    then allPlayers[g,f].SetStatusDef(11)
     else
-     if Pos('M', player[g,f].inj) > 0
-     then player[g,f].SetStatusDef(10)
+     if Pos('M', allPlayers[g,f].inj) > 0
+     then allPlayers[g,f].SetStatusDef(10)
      else
-      if Pos('N', player[g,f].inj) > 0
-      then player[g,f].SetStatusDef(9);
+      if Pos('N', allPlayers[g,f].inj) > 0
+      then allPlayers[g,f].SetStatusDef(9);
   end;
   for f := team[g].numplayers + 1 to MaxNumPlayersInTeam
-   do player[g,f].SetStatusDef(11);
+   do allPlayers[g,f].SetStatusDef(11);
 
   apo[g].Enabled := (team[g].apot > 0 );
 
@@ -595,54 +595,54 @@ begin
     end else begin
       team[g].numplayers := team[g].numplayers + 1;
       f := Ord(s[3]) - 64;
-      player[g,f].number := f;
-      player[g,f].teamnr := g;
+      allPlayers[g,f].number := f;
+      allPlayers[g,f].teamnr := g;
       s0 := Copy(s, 4, Length(s) - 3);
-      SplitTextAtChr255(s0, player[g,f].name);
-      player[g,f].name0 := player[g,f].name;
-      SplitTextAtChr255(s0, player[g,f].position);
-      player[g,f].position0 := player[g,f].position;
+      SplitTextAtChr255(s0, allPlayers[g,f].name);
+      allPlayers[g,f].name0 := allPlayers[g,f].name;
+      SplitTextAtChr255(s0, allPlayers[g,f].position);
+      allPlayers[g,f].position0 := allPlayers[g,f].position;
       SplitTextAtChr255(s0, t);
-      player[g,f].SetSkill(t);
-      SplitTextAtChr255(s0, player[g,f].inj);
+      allPlayers[g,f].SetSkill(t);
+      SplitTextAtChr255(s0, allPlayers[g,f].inj);
       SplitTextAtChr255(s0, t);
-      player[g,f].icon := 'Yet to be Enabled';
-      player[g,f].icon0 := 'Yet to be Enabled';
-      player[g,f].ma := Ord(t[1]) - 48;
-      player[g,f].st := Ord(t[2]) - 48;
-      player[g,f].ag := Ord(t[3]) - 48;
-      player[g,f].av := Ord(t[4]) - 48;
-      player[g,f].ma0 := player[g,f].ma;
-      player[g,f].st0 := player[g,f].st;
-      player[g,f].ag0 := player[g,f].ag;
-      player[g,f].av0 := player[g,f].av;
-      player[g,f].SetSkillsToDefault;
-      player[g,f].int0 := Ord(t[5]) - 48;
-      player[g,f].td0 := Ord(t[6]) - 48;
-      player[g,f].cas0 := Ord(t[7]) - 48;
-      player[g,f].comp0 := Ord(t[8]) - 48;
-      player[g,f].mvp0 := Ord(t[9]) - 48;
-      player[g,f].peaked := (t[10] = 'P');
-      player[g,f].value := 10 * (Ord(t[11]) - 48);
-      player[g,f].value0 := player[g,f].value;
-      if length(t) > 11 then player[g,f].cnumber := Ord(t[12]) - 48
-                         else player[g,f].cnumber := f;
-      player[g,f].cnumber0 := player[g,f].cnumber;
+      allPlayers[g,f].icon := 'Yet to be Enabled';
+      allPlayers[g,f].icon0 := 'Yet to be Enabled';
+      allPlayers[g,f].ma := Ord(t[1]) - 48;
+      allPlayers[g,f].st := Ord(t[2]) - 48;
+      allPlayers[g,f].ag := Ord(t[3]) - 48;
+      allPlayers[g,f].av := Ord(t[4]) - 48;
+      allPlayers[g,f].ma0 := allPlayers[g,f].ma;
+      allPlayers[g,f].st0 := allPlayers[g,f].st;
+      allPlayers[g,f].ag0 := allPlayers[g,f].ag;
+      allPlayers[g,f].av0 := allPlayers[g,f].av;
+      allPlayers[g,f].SetSkillsToDefault;
+      allPlayers[g,f].int0 := Ord(t[5]) - 48;
+      allPlayers[g,f].td0 := Ord(t[6]) - 48;
+      allPlayers[g,f].cas0 := Ord(t[7]) - 48;
+      allPlayers[g,f].comp0 := Ord(t[8]) - 48;
+      allPlayers[g,f].mvp0 := Ord(t[9]) - 48;
+      allPlayers[g,f].peaked := (t[10] = 'P');
+      allPlayers[g,f].value := 10 * (Ord(t[11]) - 48);
+      allPlayers[g,f].value0 := allPlayers[g,f].value;
+      if length(t) > 11 then allPlayers[g,f].cnumber := Ord(t[12]) - 48
+                         else allPlayers[g,f].cnumber := f;
+      allPlayers[g,f].cnumber0 := allPlayers[g,f].cnumber;
       if length(t) > 12 then begin
-        player[g,f].otherSPP0 := Ord(t[13]) - 48;
+        allPlayers[g,f].otherSPP0 := Ord(t[13]) - 48;
       end;
-      if s0 <> '' then player[g,f].picture := s0;
-      player[g,f].picture0 := player[g,f].picture;
-      player[g,f].caption := IntToStr(player[g,f].cnumber);
-      if player[g,f].ma <> 0 then begin
-        if Pos('M', player[g,f].inj) > 0
-        then player[g,f].SetStatusDef(10)
+      if s0 <> '' then allPlayers[g,f].picture := s0;
+      allPlayers[g,f].picture0 := allPlayers[g,f].picture;
+      allPlayers[g,f].caption := IntToStr(allPlayers[g,f].cnumber);
+      if allPlayers[g,f].ma <> 0 then begin
+        if Pos('M', allPlayers[g,f].inj) > 0
+        then allPlayers[g,f].SetStatusDef(10)
         else
-         if Pos('N', player[g,f].inj) > 0
-         then player[g,f].SetStatusDef(9)
-         else player[g,f].SetStatusDef(0);
+         if Pos('N', allPlayers[g,f].inj) > 0
+         then allPlayers[g,f].SetStatusDef(9)
+         else allPlayers[g,f].SetStatusDef(0);
       end else begin
-        player[g,f].SetStatusDef(11);
+        allPlayers[g,f].SetStatusDef(11);
       end;
     end;
   end else begin
@@ -880,10 +880,10 @@ begin
       while (p0 > p) and (p0 < q) and (piccount < team[g].numplayers) do begin
         q0 := p0+pickuplength+ Pos('"', Copy(s, p0+5, length(s)))+2;
         piccount := piccount + 1;
-        q := q + p0 + 5 - q0 + length(player[g,piccount].picture) +
+        q := q + p0 + 5 - q0 + length(allPlayers[g,piccount].picture) +
           (pickuplength-2);
         if p2 = 1 then pickuplength := 4;
-        s := Copy(s, 1, p0+pickuplength) + player[g,piccount].picture + '">' +
+        s := Copy(s, 1, p0+pickuplength) + allPlayers[g,piccount].picture + '">' +
                CHR(13) + CHR(10) + Copy(s, q0+pickup2, Length(s));
         Tom1 := Copy(s, 1, p0+pickuplength);
         Tom2 := Copy(s, q0+pickup2, Length(s));
@@ -915,41 +915,41 @@ begin
         p := Pos('<TR', s);
         p := GotoNextCell(s, p);
         {Tom Change:  Added code to remove sent off Dead players}
-        if (player[g,f].status = 8) or (player[g,f].status = 11) or
-           (player[g,f].SOstatus = 8) then begin
+        if (allPlayers[g,f].status = 8) or (allPlayers[g,f].status = 11) or
+           (allPlayers[g,f].SOstatus = 8) then begin
           {remove DEAD and retired players}
-          s := ReplaceNextText(s, IntToStr(player[g,f].cnumber), p);
+          s := ReplaceNextText(s, IntToStr(allPlayers[g,f].cnumber), p);
           for i := 1 to 15 do begin
             p := GotoNextCell(s, p);
             s := ReplaceNextText(s, '', p);
           end;
 
         end else begin
-          s := ReplaceNextText(s, IntToStr(player[g,f].cnumber), p);
+          s := ReplaceNextText(s, IntToStr(allPlayers[g,f].cnumber), p);
           p := GotoNextCell(s, p);
-          s := ReplaceNextText(s, player[g,f].name, p);
+          s := ReplaceNextText(s, allPlayers[g,f].name, p);
           p := GotoNextCell(s, p);
-          s := ReplaceNextText(s, player[g,f].position, p);
+          s := ReplaceNextText(s, allPlayers[g,f].position, p);
           p := GotoNextCell(s, p);
-          q := player[g,f].ma;
+          q := allPlayers[g,f].ma;
           t := '';
           {Added code for Seriously Injured Sent Off players}
-          if ((player[g,f].status = 7) and (player[g,f].SIstatus = 2)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 2)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 11)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 11)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 15)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 15)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 16)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 16)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 18)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 18))
+          if ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 2)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 2)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 11)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 11)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 15)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 15)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 16)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 16)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 18)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 18))
              then begin
             q := q - 1;
             t := t + '-1 MA';
           end;
-          if ((player[g,f].status = 7) and (player[g,f].SIstatus = 17)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 17))
+          if ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 17)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 17))
              then begin
             q := q - 2;
             t := t + '-1 MA, -1 MA';
@@ -957,23 +957,23 @@ begin
           if (Uppercase(team[g].race) <> 'NURGLES ROTTERS') and (q<1) then q := 1;
           s := ReplaceNextText(s, IntToStr(q), p);
           p := GotoNextCell(s, p);
-          q := player[g,f].st;
-          if ((player[g,f].status = 7) and (player[g,f].SIstatus = 3)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 3)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 12)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 12)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 15)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 15)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 20)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 20)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 21)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 21))
+          q := allPlayers[g,f].st;
+          if ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 3)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 3)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 12)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 12)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 15)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 15)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 20)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 20)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 21)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 21))
             then begin
             q := q - 1;
             t := t + '-1 ST';
           end;
-          if ((player[g,f].status = 7) and (player[g,f].SIstatus = 19)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 19))
+          if ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 19)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 19))
             then begin
             q := q - 2;
             t := t + '-1 ST, -1 ST';
@@ -981,23 +981,23 @@ begin
           if (Uppercase(team[g].race) <> 'NURGLES ROTTERS') and (q<1) then q := 1;
           s := ReplaceNextText(s, IntToStr(q), p);
           p := GotoNextCell(s, p);
-          q := player[g,f].ag;
-          if ((player[g,f].status = 7) and (player[g,f].SIstatus = 4)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 4)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 13)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 13)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 16)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 16)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 20)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 20)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 23)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 23))
+          q := allPlayers[g,f].ag;
+          if ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 4)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 4)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 13)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 13)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 16)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 16)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 20)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 20)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 23)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 23))
             then begin
             q := q - 1;
             t := t + '-1 AG';
           end;
-          if ((player[g,f].status = 7) and (player[g,f].SIstatus = 22)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 22))
+          if ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 22)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 22))
             then begin
             q := q - 2;
             t := t + '-1 AG, -1 AG';
@@ -1005,23 +1005,23 @@ begin
           if (Uppercase(team[g].race) <> 'NURGLES ROTTERS') and (q<1) then q := 1;
           s := ReplaceNextText(s, IntToStr(q), p);
           p := GotoNextCell(s, p);
-          q := player[g,f].av;
-          if ((player[g,f].status = 7) and (player[g,f].SIstatus = 5)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 5)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 14)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 14)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 18)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 18)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 21)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 21)) or
-             ((player[g,f].status = 7) and (player[g,f].SIstatus = 23)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 23))
+          q := allPlayers[g,f].av;
+          if ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 5)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 5)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 14)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 14)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 18)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 18)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 21)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 21)) or
+             ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 23)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 23))
             then begin
             q := q - 1;
             t := t + '-1 AV';
           end;
-          if ((player[g,f].status = 7) and (player[g,f].SIstatus = 24)) or
-             ((player[g,f].SOstatus = 7) and (player[g,f].SOSIstatus = 24))
+          if ((allPlayers[g,f].status = 7) and (allPlayers[g,f].SIstatus = 24)) or
+             ((allPlayers[g,f].SOstatus = 7) and (allPlayers[g,f].SOSIstatus = 24))
             then begin
             q := q - 2;
             t := t + '-1 AV, -1 AV';
@@ -1029,56 +1029,56 @@ begin
           if (Uppercase(team[g].race) <> 'NURGLES ROTTERS') and (q<1) then q := 1;
           s := ReplaceNextText(s, IntToStr(q), p);
           p := GotoNextCell(s, p);
-          s0 := player[g,f].GetSkillString(1);
+          s0 := allPlayers[g,f].GetSkillString(1);
           if t <> '' then begin
             if s0 = '' then s0 := t else s0 := s0 + ', ' + t;
           end;
           s := ReplaceNextText(s, s0, p);
           p := GotoNextCell(s, p);
-          t := player[g,f].inj;
+          t := allPlayers[g,f].inj;
           if (t <> '') and (t[1] = 'M') then t := Copy(t, 2, Length(t) - 1);
-          if (player[g,f].status = 7) or (player[g,f].SOstatus = 7) or
-            (player[g,f].SIAgestatus > 0) then begin
+          if (allPlayers[g,f].status = 7) or (allPlayers[g,f].SOstatus = 7) or
+            (allPlayers[g,f].SIAgestatus > 0) then begin
             t := 'M' + t;
-            if (player[g,f].SIstatus = 1) or (player[g,f].SOSIstatus = 1) or
-               (player[g,f].SIstatus = 10) or (player[g,f].SOSIstatus = 10) or
-               (player[g,f].SIstatus = 11) or (player[g,f].SOSIstatus = 11) or
-               (player[g,f].SIstatus = 12) or (player[g,f].SOSIstatus = 12) or
-               (player[g,f].SIstatus = 13) or (player[g,f].SOSIstatus = 13) or
-               (player[g,f].SIstatus = 14) or (player[g,f].SOSIstatus = 14)
+            if (allPlayers[g,f].SIstatus = 1) or (allPlayers[g,f].SOSIstatus = 1) or
+               (allPlayers[g,f].SIstatus = 10) or (allPlayers[g,f].SOSIstatus = 10) or
+               (allPlayers[g,f].SIstatus = 11) or (allPlayers[g,f].SOSIstatus = 11) or
+               (allPlayers[g,f].SIstatus = 12) or (allPlayers[g,f].SOSIstatus = 12) or
+               (allPlayers[g,f].SIstatus = 13) or (allPlayers[g,f].SOSIstatus = 13) or
+               (allPlayers[g,f].SIstatus = 14) or (allPlayers[g,f].SOSIstatus = 14)
                then t := t + 'N';
-            if (player[g,f].SIstatus = 10) or (player[g,f].SOSIstatus = 10)
+            if (allPlayers[g,f].SIstatus = 10) or (allPlayers[g,f].SOSIstatus = 10)
                then t := t + 'N';
           end;
           s := ReplaceNextText(s, t, p);
 
           p := GotoNextCell(s, p);
           s := ReplaceNextText(s,
-                IntToStr(player[g,f].comp + player[g,f].comp0), p);
+                IntToStr(allPlayers[g,f].comp + allPlayers[g,f].comp0), p);
           p := GotoNextCell(s, p);
           s := ReplaceNextText(s,
-                IntToStr(player[g,f].td + player[g,f].td0), p);
+                IntToStr(allPlayers[g,f].td + allPlayers[g,f].td0), p);
           p := GotoNextCell(s, p);
           s := ReplaceNextText(s,
-                IntToStr(player[g,f].int + player[g,f].int0), p);
+                IntToStr(allPlayers[g,f].int + allPlayers[g,f].int0), p);
           p := GotoNextCell(s, p);
           s := ReplaceNextText(s,
-                IntToStr(player[g,f].cas + player[g,f].cas0), p);
+                IntToStr(allPlayers[g,f].cas + allPlayers[g,f].cas0), p);
           p := GotoNextCell(s, p);
           s := ReplaceNextText(s,
-                IntToStr(player[g,f].mvp + player[g,f].mvp0), p);
+                IntToStr(allPlayers[g,f].mvp + allPlayers[g,f].mvp0), p);
 
           p := GotoNextCell(s, p);
-          if player[g,f].peaked then begin
+          if allPlayers[g,f].peaked then begin
             s := ReplaceNextText(s, 'P', p);
           end
           else
           begin
-            s := ReplaceNextText(s, IntToStr(player[g,f].GetStartingSPP() + player[g,f].GetMatchSPP()), p);
+            s := ReplaceNextText(s, IntToStr(allPlayers[g,f].GetStartingSPP() + allPlayers[g,f].GetMatchSPP()), p);
           end;                                                                      
           p := GotoNextCell(s, p);
-          s := ReplaceNextText(s, Money(player[g,f].value), p);
-          totval := totval + player[g,f].value;
+          s := ReplaceNextText(s, Money(allPlayers[g,f].value), p);
+          totval := totval + allPlayers[g,f].value;
         end;
         Writeln(gg, s);
       end;

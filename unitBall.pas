@@ -50,9 +50,9 @@ begin
   end else begin
     g := ball.p + 3;
     f := ball.q;
-    if player[g,f].status = 2 then st := 1 else st := player[g,f].status;
-    player[g,f].status := st;
-    player[g,f].Redraw;
+    if allPlayers[g,f].status = 2 then st := 1 else st := allPlayers[g,f].status;
+    allPlayers[g,f].status := st;
+    allPlayers[g,f].Redraw;
     s := 'P' + Chr(g + 48) + Chr(f + 65);
   end;
   ball.p := -1;
@@ -79,8 +79,8 @@ begin
     f := Ord(s[3]) - 65;
     ball.p := g - 3;
     ball.q := f;
-    player[g,f].status := 2;
-    player[g,f].Redraw;
+    allPlayers[g,f].status := 2;
+    allPlayers[g,f].Redraw;
   end;
 end;
 
@@ -234,17 +234,17 @@ begin
     if (not(Touchback)) then begin
       for g := 0 to 1 do begin
         for f := 1 to team[g].numplayers do begin
-          if (player[g,f].p = p) and (player[g,f].q = q) then begin
-            if player[g,f].status < 3 then begin
+          if (allPlayers[g,f].p = p) and (allPlayers[g,f].q = q) then begin
+            if allPlayers[g,f].status < 3 then begin
               done := 99;
-              Bloodbowl.comment.text := player[g,f].GetPlayerName +
+              Bloodbowl.comment.text := allPlayers[g,f].GetPlayerName +
                   ' can catch the ball';
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               ShowCatchWindow(g, f, 0, false, false);
               DCCheck := false;
             end else begin
               Bloodbowl.comment.text := 'Ball bounces on ' +
-                  player[g,f].GetPlayerName;
+                  allPlayers[g,f].GetPlayerName;
               Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
               sctimes := 1;
               done := 0;
@@ -318,17 +318,17 @@ begin
   if not(BadKick) then Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button)
     else Bloodbowl.TwoD6ButtonClick(Bloodbowl.TwoD6Button);
   for f2 := 1 to team[QTeam].numplayers do begin
-    if (player[QTeam,f2].HasSkill('Kick')) and (player[QTeam,f2].status = 1)
-      and (kickoff) and (player[QTeam,f2].q > 13) and (player[QTeam,f2].p > 3)
-      and (player[QTeam,f2].p < 11) and (QTeam = 1) then KickSkill := true;
-    if (player[QTeam,f2].HasSkill('Kick')) and (player[QTeam,f2].status = 1)
-      and (kickoff) and (player[QTeam,f2].q < 12) and (player[QTeam,f2].p > 3)
-      and (player[QTeam,f2].p < 11) and (QTeam = 0) then KickSkill := true;
-    if (player[QTeam,f2].status = 1) and (kickoff) and (player[QTeam,f2].q > 13)
-      and (player[QTeam,f2].p > 3) and (player[QTeam,f2].p < 11) and (QTeam = 1)
+    if (allPlayers[QTeam,f2].HasSkill('Kick')) and (allPlayers[QTeam,f2].status = 1)
+      and (kickoff) and (allPlayers[QTeam,f2].q > 13) and (allPlayers[QTeam,f2].p > 3)
+      and (allPlayers[QTeam,f2].p < 11) and (QTeam = 1) then KickSkill := true;
+    if (allPlayers[QTeam,f2].HasSkill('Kick')) and (allPlayers[QTeam,f2].status = 1)
+      and (kickoff) and (allPlayers[QTeam,f2].q < 12) and (allPlayers[QTeam,f2].p > 3)
+      and (allPlayers[QTeam,f2].p < 11) and (QTeam = 0) then KickSkill := true;
+    if (allPlayers[QTeam,f2].status = 1) and (kickoff) and (allPlayers[QTeam,f2].q > 13)
+      and (allPlayers[QTeam,f2].p > 3) and (allPlayers[QTeam,f2].p < 11) and (QTeam = 1)
       then KickerPlayer := true;
-    if (player[QTeam,f2].status = 1) and (kickoff) and (player[QTeam,f2].q < 12)
-      and (player[QTeam,f2].p > 3) and (player[QTeam,f2].p < 11) and (QTeam = 0)
+    if (allPlayers[QTeam,f2].status = 1) and (kickoff) and (allPlayers[QTeam,f2].q < 12)
+      and (allPlayers[QTeam,f2].p > 3) and (allPlayers[QTeam,f2].p < 11) and (QTeam = 0)
       then KickerPlayer := true;
   end;
   if KickSkill then lastroll := lastroll div 2;
@@ -384,9 +384,9 @@ begin
     Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
     for g := 0 to 1 do begin
       for f := 1 to team[g].numplayers do begin
-        if (player[g,f].p = P) and (player[g,f].q = Q) then begin
-          if player[g,f].status < 3 then begin
-            Bloodbowl.comment.text := player[g,f].GetPlayerName +
+        if (allPlayers[g,f].p = P) and (allPlayers[g,f].q = Q) then begin
+          if allPlayers[g,f].status < 3 then begin
+            Bloodbowl.comment.text := allPlayers[g,f].GetPlayerName +
                 ' can catch the ball';
             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
             ShowCatchWindow(g, f, 0, false, false);
@@ -403,16 +403,16 @@ begin
     CatchIt := false;
     for g := 0 to 1 do begin
       for f := 1 to team[g].numplayers do begin
-        if (player[g,f].p = P) and (player[g,f].q = Q) then begin
-          if player[g,f].status < 3 then begin
-            Bloodbowl.comment.text := player[g,f].GetPlayerName +
+        if (allPlayers[g,f].p = P) and (allPlayers[g,f].q = Q) then begin
+          if allPlayers[g,f].status < 3 then begin
+            Bloodbowl.comment.text := allPlayers[g,f].GetPlayerName +
                 ' can catch the ball after the kickoff result has been resolved';
             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
             Catchit := true;
             KoCatcherTeam := g;
             KoCatcherPlayer := f;
-            ball.p := player[g,f].p;
-            ball.q := player[g,f].q;
+            ball.p := allPlayers[g,f].p;
+            ball.q := allPlayers[g,f].q;
           end;
         end;
       end;

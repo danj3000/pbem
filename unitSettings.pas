@@ -43,7 +43,6 @@ type
     txtCardsIniFile: TEdit;
     Label24: TLabel;
     txtHandicapIniFile: TEdit;
-    lblLustrian: TLabel;
     rgCardSystem: TRadioGroup;
     butSelectFile: TButton;
     dlgPic: TOpenDialog;
@@ -252,7 +251,7 @@ begin
   frmSettings.txtFieldImageFile.text := GetText;
 //  frmSettings.cbUseOtherSPP.checked := (s[1] = 'O');
 //  frmSettings.cbSeparateARIR.checked := (s[2] = 'S');
-  frmSettings.lblLustrian.Caption := s[3];
+//  frmSettings.lblLustrian.Caption := s[3];
 
   FixSettings;
 end;
@@ -387,7 +386,7 @@ begin
   st := st + '*' + Trim(txtFieldImageFile.text) + '*';
   st := st + '.';
   st := st + 'S'; // separate inj/arm rolls
-  st := st + frmSettings.lblLustrian.Caption;
+  st := st + '';
   UpdateLog(3, st);
 
   ModalResult := 1;
@@ -451,9 +450,7 @@ begin
         if Copy(s, 1, 11) = 'CardSystem=' then begin
           rgCardSystem.ItemIndex := FVal(copy(s, 12, 1)) - 1;
         end;
-//        if Copy(s, 1, 16) = 'RegenRollNeeded=' then begin
-//          txtRegenRollNeeded.text := copy(s, 17, 1);
-//        end;
+
         if Copy(s, 1, 14) = 'HandicapTable=' then begin
           txtHandicapTable.text := Trim((copy(s, 15, length(s))));
         end;
@@ -466,290 +463,19 @@ begin
         if Copy(s, 1, 13) = 'WeatherTable=' then begin
           txtWeatherTable.text := Trim((copy(s, 14, length(s))));
         end;
-//        if Copy(s, 1, 17) = 'WonMatchModifier=' then begin
-//          rgWonMatchMod.ItemIndex := FVal(copy(s, 18, 1)) - 1;
-//        end;
-//        if Copy(s, 1, 18) = 'TiedMatchModifier=' then begin
-//          rgTiedMatchMod.ItemIndex := FVal(copy(s, 19, 1));
-//        end;
-//        if Copy(s, 1, 21) = '4thEditionMightyBlow=' then begin
-//          cbMB4th.checked := (Copy(s, 22, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 20) = '4thEditionStandFirm=' then begin
-//          cbSF4th.checked := (Copy(s, 21, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 11) = 'WildAnimal=' then begin
-//          rbWA.ItemIndex := FVal(copy(s, 12, 1));
-//        end;
-//        if Copy(s, 1, 10) = 'NoInjMods=' then begin
-//          cbNoInjMods.checked := (Copy(s, 11, 1) = 'Y');
-//        end;
+
         if Copy(s, 1, 15) = 'NewDivingCatch=' then begin
           cbDC.checked := (Copy(s, 16, 1) = 'Y');
         end;
-//        if Copy(s, 1, 23) = '4thEditionDivingTackle=' then begin
-//          cbDT4th.checked := (Copy(s, 24, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 18) = 'DivingTackleAfter=' then begin
-//          cbDTAfter.checked := (Copy(s, 19, 1) = 'Y');
-//        end;
+
         if Copy(s, 1, 9) = 'PilingOn=' then begin
           rbPO.ItemIndex := FVal(copy(s, 10, 1));
         end;
-//        if Copy(s, 1, 27) = '4thEditionStarPlayerPoints=' then begin
-//          if Copy(s, 28, 1) = 'Y' then rgSkillRollsAt.ItemIndex := 1
-//                                  else rgSkillRollsAt.ItemIndex := 0;
-//        end;
-//        if Copy(s, 1, 9) = 'PBJumpUp=' then begin
-//          cbPBJumpUp.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 11) = 'NoTZAssist=' then begin
-//          cbNoTZAssist.checked := (Copy(s, 12, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'NiggleUp=' then begin
-//          cbNiggleUp.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 11) = 'NiggleHalf=' then begin
-//          cbNiggleHalf.checked := (Copy(s, 12, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'MVPBench=' then begin
-//          cbMVPBench.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'LRBHorns=' then begin
-          // cbLRBHorns.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 14) = 'SquarePassing=' then begin
-//          cbSquarePass.checked := (Copy(s, 15, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'BHAssist=' then begin
-//          cbBHAssist.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 16) = 'HalflingChefNew=' then begin
-//          cbHChefNew.checked := (Copy(s, 17, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 13) = 'DiagonalMove=' then begin
-//          cbDiagMove.checked := (Copy(s, 14, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 6) = 'SWRef=' then begin
-//          cbSWRef.checked := (Copy(s, 7, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 5) = 'LOS3=' then begin
-//          cbLOS.checked := (Copy(s, 6, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'WideZone=' then begin
-//          cbWideZone.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'Ruleof11=' then begin
-//          cbRuleof11.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 6) = 'HGaze=' then begin
-//          rgHGaze.ItemIndex := FVal(copy(s, 7, 1));
-//        end;
-//        if Copy(s, 1, 14) = 'GoblinWeapons=' then begin
-//          cbGoblinWeapons.checked := (Copy(s, 15, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 16) = 'NoForcedMAandAG=' then begin
-//          cbNoForcedMAandAG.checked := (Copy(s, 17, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 21) = '4thEditionBigGuyAlly=' then begin
-//          rgBGA4th.ItemIndex := FVal(copy(s, 22, 1));
-//        end;
-//        if Copy(s, 1, 20) = '4thEditionTentacles=' then begin
-//          cbTentacles4th.checked := (Copy(s, 21, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 22) = '4thEditionBreakTackle=' then begin
-//          cbBT4th.checked := (Copy(s, 23, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 11) = 'WeakStunty=' then begin
-//          cbWeakStunty.checked := (Copy(s, 12, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 13) = 'NiggleOnFour=' then begin
-//          cbNiggleOnFour.checked := (Copy(s, 14, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 12) = 'ThrowStunty=' then begin
-//          cbThrowStunty.checked := (Copy(s, 13, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 8) = 'CheerAC=' then begin
-//          cbCheerAC.checked := (Copy(s, 9, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 8) = 'UpApoth=' then begin
-//          cbUpApoth.checked := (Copy(s, 9, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 8) = 'Kicking=' then begin
-//          cbKicking.checked := (Copy(s, 9, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 13) = 'NoFieldGoals=' then begin
-//          cbNoFieldGoals.checked := (Copy(s, 14, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 14) = 'FFMinus1Per10=' then begin
-//          cbFFMinus1Per10.checked := (Copy(s, 15, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 11) = 'FFTrueDice=' then begin
-//          cbFFTrueDice.checked := (Copy(s, 12, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 12) = 'UseOtherSPP=' then begin
-//          cbUseOtherSPP.checked := (Copy(s, 13, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 7) = 'NoMVPs=' then begin
-//          cbNoMVPs.checked := (Copy(s, 8, 1) = 'Y');
-//        end;
-
-//        if Copy(s, 1, 16) = 'OnPitchTakeRoot=' then begin
-//          cbOPTakeRoot.checked := (Copy(s, 17, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 28) = 'SeparateArmourAndInjuryRoll=' then begin
-//          cbSeparateARIR.checked := (Copy(s, 29, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 11) = 'Banishment=' then begin
-//          cbBanishment.checked := (Copy(s, 12, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 6) = 'Bless=' then begin
-//          cbBless.checked := (Copy(s, 7, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 8) = 'Brittle=' then begin
-//          cbBrittle.checked := (Copy(s, 9, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 12) = 'CrystalSkin=' then begin
-//          cbCrystalSkin.checked := (Copy(s, 13, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 13) = 'DaemonicAura=' then begin
-//          cbDaemonicAura.checked := (Copy(s, 14, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 4) = 'Dig=' then begin
-//          cbDig.checked := (Copy(s, 5, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 14) = 'ElephantTrunk=' then begin
-//          cbElephantTrunk.checked := (Copy(s, 15, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 12) = 'Firethrower=' then begin
-//          cbFirethrower.checked := (Copy(s, 13, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 6) = 'Flyer=' then begin
-//          cbFlyer.checked := (Copy(s, 7, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 8) = 'Fragile=' then begin
-//          cbFragile.checked := (Copy(s, 9, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 10) = 'GFIInjury=' then begin
-//          cbGFIInjury.checked := (Copy(s, 11, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 13) = 'HouseFlyHead=' then begin
-//          cbHouseFlyHead.checked := (Copy(s, 14, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 8) = 'Landing=' then begin
-//          cbLanding.checked := (Copy(s, 9, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 14) = 'PerfectSpiral=' then begin
-//          cbPerfectSpiral.checked := (Copy(s, 15, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 14) = 'PulledPunches=' then begin
-//          cbPulledPunches.checked := (Copy(s, 15, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 10) = 'SingleEye=' then begin
-//          cbSingleEye.checked := (Copy(s, 11, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 10) = 'NullField=' then begin
-//          cbNullField.checked := (Copy(s, 11, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'ThirdEye=' then begin
-//          cbThirdEye.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 7) = 'Titchy=' then begin
-//          rgTitchy.ItemIndex := FVal(copy(s, 8, 1));
-//        end;
-//        if Copy(s, 1, 13) = 'WaaaghArmour=' then begin
-//          cbWaaaghArmour.checked := (Copy(s, 14, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 16) = 'BrightCrusaders=' then begin
-//          cbBrightCrusaders.checked := (Copy(s, 17, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'EvilGits=' then begin
-//          cbEvilGits.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 16) = 'VampireNecrarch=' then begin
-//          cbVampireNecrarch.checked := (Copy(s, 17, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 15) = 'VampireLahmian=' then begin
-//          cbVampireLahmian.checked := (Copy(s, 16, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 15) = 'NurglesRotters=' then begin
-//          cbNurglesRotters.checked := (Copy(s, 16, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 10) = 'Hobgoblin=' then begin
-//          cbHobgoblin.checked := (Copy(s, 11, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 14) = 'BiasedReferee=' then begin
-//          cbBiasedReferee.checked := (Copy(s, 15, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 8) = 'BearHug=' then begin
-//          cbBearHug.checked := (Copy(s, 9, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 12) = 'BulletThrow=' then begin
-//          cbBulletThrow.checked := (Copy(s, 13, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 14) = 'Butterfingers=' then begin
-//          cbButterfingers.checked := (Copy(s, 15, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 6) = 'Chill=' then begin
-//          cbChill.checked := (Copy(s, 7, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'Ethereal=' then begin
-//          cbEthereal.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'MaceTail=' then begin
-//          cbMaceTail.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 12) = 'PitchPlayer=' then begin
-//          cbPitchPlayer.checked := (Copy(s, 13, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 13) = 'ThrowBigBomb=' then begin
-//          cbThrowBigBomb.checked := (Copy(s, 14, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 14) = 'ThrowFireball=' then begin
-//          cbThrowFireball.checked := (Copy(s, 15, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 9) = 'ThrowNet=' then begin
-//          cbThrowNet.checked := (Copy(s, 10, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 15) = 'ThrowStinkBomb=' then begin
-//          cbThrowStinkBomb.checked := (Copy(s, 16, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 7) = 'WarCry=' then begin
-//          cbWarCry.checked := (Copy(s, 8, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 6) = 'Wings=' then begin
-//          cbWings.checked := (Copy(s, 7, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 8) = 'FAProne=' then begin
-//          cbFoulApp.checked := (Copy(s, 9, 1) = 'Y');
-//        end;
+//
         if Copy(s, 1, 7) = 'DeStun=' then begin
           cbDeStun.checked := (Copy(s, 8, 1) = 'Y');
         end;
-//        if Copy(s, 1, 16) = 'FieldGoal1Point=' then begin
-//          cbFG1PT.checked := (Copy(s, 17, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 17) = 'Freeboot Wizards=' then begin
-//          cbWizards.checked := (Copy(s, 18, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 16) = 'OnPitch Wizards=' then begin
-//          cbOnPitchSpellcasters.checked := (Copy(s, 17, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 18) = 'Negative Winnings=' then begin
-//          cbNegativeWinnings.checked := (Copy(s, 19, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 16) = 'Freeboot Apoths=' then begin
-//          cbApoths.checked := (Copy(s, 17, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 11) = 'PassFumble=' then begin
-//          rgPassFumble.ItemIndex := FVal(copy(s, 12, 1));
-//        end;
-//        if Copy(s, 1, 5) = 'PGFI=' then begin
-//          cbPGFI.checked := (Copy(s, 6, 1) = 'Y');
-//        end;
-//        if Copy(s, 1, 8) = 'LateInt=' then begin
-//          cbLateInt.checked := (Copy(s, 9, 1) = 'Y');
-//        end;
+
         if Copy(s, 1, 13) = 'CardsIniFile=' then begin
           txtCardsIniFile.text := Copy(s, 14, Length(s) - 13);
         end;
@@ -768,22 +494,6 @@ begin
       end;
     end;
     CloseFile(ff);
-    if cmbLeague.Items[cmbLeague.ItemIndex] = 'LUSTRIAN' then begin
-      txtWeatherTable.text := LustrianRoll;
-      txtKOTable.text := LustrianRoll2;
-      if txtWeatherTable.text = 'W3' then txtFieldImageFile.text := 'sdField.jpg' else
-      if txtWeatherTable.text = 'W4' then txtFieldImageFile.text := 'jrsField.jpg' else
-      if txtWeatherTable.text = 'W5' then txtFieldImageFile.text := 'ssField.jpg' else
-      if txtWeatherTable.text = 'W6' then txtFieldImageFile.text := 'acField.jpg' else
-      if txtWeatherTable.text = 'W7' then txtFieldImageFile.text := 'mpField.jpg' else
-      if txtWeatherTable.text = 'W8' then txtFieldImageFile.text := 'uspField.jpg' else
-      if txtWeatherTable.text = 'W9' then txtFieldImageFile.text := 'naField.jpg' else
-      if txtWeatherTable.text = 'W10' then txtFieldImageFile.text := 'tbField.jpg';
-      if txtWeatherTable.Text = 'W7' then cbBlackIce.Checked := True;
-      if txtWeatherTable.Text = 'W9' then cbBlackIce.Checked := True;
-      if txtWeatherTable.Text = 'W5' then cbBlackIce.Checked := True;
-      if txtWeatherTable.Text = 'W10' then cbBlackIce.checked := True;
-    end;
   {end;}
 end;
 
@@ -843,30 +553,6 @@ begin
     end else begin
       ShowMessage('Field image must be put in directory ' + curdir + 'images');
     end;
-  end;
-  if cmbLeague.Items[cmbLeague.ItemIndex] = 'LUSTRIAN' then begin
-    cbBlackIce.Checked := False;
-    if txtFieldImageFile.text = 'sdField.jpg' then LRoll := 3 else
-    if txtFieldImageFile.text = 'jrsField.jpg' then LRoll := 4 else
-    if txtFieldImageFile.text = 'ssField.jpg' then LRoll := 5 else
-    if txtFieldImageFile.text = 'acField.jpg' then LRoll := 6 else
-    if txtFieldImageFile.text = 'mpField.jpg' then LRoll := 7 else
-    if txtFieldImageFile.text = 'uspField.jpg' then LRoll := 8 else
-    if txtFieldImageFile.text = 'naField.jpg' then LRoll := 9 else
-    if txtFieldImageFile.text = 'tbField.jpg' then LRoll := 10 else
-    if txtFieldImageFile.text = 'lcField.jpg' then LRoll := 11 else
-    if txtFieldImageFile.text = 'rcpField.jpg' then LRoll := 12 else
-    if txtFieldImageFile.text = 'saField.jpg' then LRoll := 13 else
-    if txtFieldImageFile.text = 'ppField.jpg' then LRoll := 14;
-
-    LustrianRoll := 'W'+ InttoStr(LRoll);
-    LustrianRoll2 := 'KO' + InttoStr(LRoll);
-    txtWeatherTable.text := LustrianRoll;
-    txtKOTable.text := LustrianRoll2;
-    if txtWeatherTable.Text = 'W7' then cbBlackIce.Checked := True;
-    if txtWeatherTable.Text = 'W9' then cbBlackIce.Checked := True;
-    if txtWeatherTable.Text = 'W5' then cbBlackIce.Checked := True;
-    if txtWeatherTable.Text = 'W10' then cbBlackIce.checked := True;
   end;
 end;
 

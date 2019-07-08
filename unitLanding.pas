@@ -55,7 +55,7 @@ var TeamLandinger, NumberLandinger, LandingRollNeeded, FieldP, FieldQ: integer;
 procedure CalculateLandingRollNeeded;
 var r: integer;
 begin
-  r := 7 - player[TeamLandinger, NumberLandinger].ag;
+  r := 7 - allPlayers[TeamLandinger, NumberLandinger].ag;
   if frmLanding.rgAccPassBB.ItemIndex = 0 then r := r - 1;
   if frmLanding.rgAccPassBB.ItemIndex = 2 then r := r + 2;
 
@@ -74,17 +74,17 @@ begin
   NumberLandinger := f;
   FieldP := p;
   FieldQ := q;
-  frmLanding.lblLandinger.caption := player[g,f].GetPlayerName;
+  frmLanding.lblLandinger.caption := allPlayers[g,f].GetPlayerName;
   frmLanding.lblLandinger.font.color := colorarray[g,0,0];
   if acc= 1 then frmLanding.rgAccPassBB.ItemIndex := 0
     else if acc=0 then frmLanding.rgAccPassBB.ItemIndex := 1
     else frmLanding.rgAccPassBB.ItemIndex := 2;
-  frmLanding.txtLandingerAG.text := IntToStr(player[g,f].ag);
+  frmLanding.txtLandingerAG.text := IntToStr(allPlayers[g,f].ag);
   tz := CountTZEmpty(g, p, q);
   frmLanding.txtLandingerTZ.text := IntToStr(tz.num);
 
-  frmLanding.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (true));  // big guy
+  frmLanding.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or
+      (allPlayers[g,f].Ally)) and (true));  // big guy
 
   CalculateLandingRollNeeded;
 
@@ -132,7 +132,7 @@ end;
 procedure TfrmLanding.butLandingRollClick(Sender: TObject);
 var s: string;
 begin
-  s := player[TeamLandinger, NumberLandinger].GetPlayerName +
+  s := allPlayers[TeamLandinger, NumberLandinger].GetPlayerName +
        ' tries to Land (';
   if rgAccPassBB.ItemIndex = 0 then s := s + 'Accurate Pass, '
           else s := s + 'Inaccurate Pass, ';
@@ -150,8 +150,8 @@ begin
     butTeamReroll.enabled := false;
     if (TeamLandinger = activeTeam) and CanUseTeamReroll(cbBigGuyAlly.checked)
       then butTeamReroll.enabled := true;
-    butProSkill.enabled := player[TeamLandinger, NumberLandinger].hasSkill('Pro')
-      and (not (player[TeamLandinger,NumberLandinger].usedSkill('Pro')));
+    butProSkill.enabled := allPlayers[TeamLandinger, NumberLandinger].hasSkill('Pro')
+      and (not (allPlayers[TeamLandinger,NumberLandinger].usedSkill('Pro')));
     height := 460;
     frmLanding.butBounce.enabled := true;
   end;
@@ -186,7 +186,7 @@ end;
 
 procedure TfrmLanding.butProSkillClick(Sender: TObject);
 begin
-  player[TeamLandinger,NumberLandinger].UseSkill('Pro');
+  allPlayers[TeamLandinger,NumberLandinger].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(TeamLandinger,NumberLandinger);
   if (lastroll >= 4) then begin
@@ -215,13 +215,13 @@ begin
   if frmLanding.rgAccPassBB.ItemIndex = 2 then AVBreak := true;
   ArmourSettings(v,w,v,w,0);
   if frmLanding.rgAccPassBB.ItemIndex = 2 then AVBreak := false;
-  if player[v,w].status < InjuryStatus then begin
-    if player[v,w].status=2 then begin
-      ploc := player[v,w].p;
-      qloc := player[v,w].q;
-      player[v,w].SetStatus(InjuryStatus);
+  if allPlayers[v,w].status < InjuryStatus then begin
+    if allPlayers[v,w].status=2 then begin
+      ploc := allPlayers[v,w].p;
+      qloc := allPlayers[v,w].q;
+      allPlayers[v,w].SetStatus(InjuryStatus);
       BallScatter := true;
-    end else player[v,w].SetStatus(InjuryStatus);
+    end else allPlayers[v,w].SetStatus(InjuryStatus);
   end;
   InjuryStatus := 0;
   if BallScatter then ScatterBallFrom(ploc, qloc, 1, 0);

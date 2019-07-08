@@ -134,15 +134,20 @@ begin
   b := false;
   br := false;
   {check for coach}
-  if not(InEditMode) then begin
-    be := ((RLCoach[0] = LoggedCoach) or (RLCoach[1] = LoggedCoach)) or
-      (LoggedCoach = 'Teakoak Ironwood');
-    if not(be) then begin
-      for f := 0 to 1 do begin
-        if RLCoach[f] = '' then begin
-          if Application.MessageBox(PChar('Are you playing this team: ' +
-             ffcl[f] + '?'),
-             'Bloodbowl Coach', MB_YESNO) = IDYES then begin
+  if not(InEditMode) then
+  begin
+    be := ((RLCoach[0] = LoggedCoach) or (RLCoach[1] = LoggedCoach)) or (LoggedCoach = 'Teakoak Ironwood');
+    if not(be) then
+    begin
+      for f := 0 to 1 do
+      begin
+        // coach not set
+        if RLCoach[f] = '' then
+        begin
+          if Application.MessageBox(PChar('Are you playing this team: ' + ffcl[f] + '?'),
+                                     'Bloodbowl Coach',
+                                     MB_YESNO) = IDYES then
+          begin
             be := true;
             RLCoach[f] := LoggedCoach;
             gamelog[f + 1] := LoggedCoach;
@@ -163,7 +168,9 @@ begin
                 'Bloodbowl Error', MB_OK);
     end;
 
-  end else be := true;
+  end
+  else
+    be := true;
 
   {check for deletion of part log}
   if (be) and (logpos <= High(gamelog)) and (TIKSTPK) then b := false else

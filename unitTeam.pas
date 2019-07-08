@@ -99,50 +99,50 @@ begin
     team[g].logo := '';
     team[g].homefield := '';
     for f := 1 to MaxNumPlayersInTeam do begin
-      player[g,f].teamnr := g;
-      player[g,f].number := f;
-      player[g,f].name := '';
-      player[g,f].name0 := '';
-      player[g,f].position := '';
-      player[g,f].position0 := '';
-      player[g,f].inj := '';
-      player[g,f].p := -1;
-      player[g,f].q := -1;
-      player[g,f].status := 11;
-      player[g,f].SIstatus := 0;
-      player[g,f].int := 0;
-      player[g,f].td := 0;
-      player[g,f].cas := 0;
-      player[g,f].comp := 0;
-      player[g,f].mvp := 0;
-      player[g,f].otherSPP := 0;
-      player[g,f].int0 := 0;
-      player[g,f].td0 := 0;
-      player[g,f].cas0 := 0;
-      player[g,f].comp0 := 0;
-      player[g,f].mvp0 := 0;
-      player[g,f].otherSPP0 := 0;
-      player[g,f].ma := 0;
-      player[g,f].st := 0;
-      player[g,f].ag := 0;
-      player[g,f].av := 0;
-      player[g,f].BigGuy := false;
-      player[g,f].Ally := false;
-      for i := 1 to 15 do player[g,f].skill[i] := '';
-      player[g,f].ma0 := 0;
-      player[g,f].st0 := 0;
-      player[g,f].ag0 := 0;
-      player[g,f].av0 := 0;
-      player[g,f].BigGuy0 := false;
-      player[g,f].Ally0 := false;
-      for i := 1 to 15 do player[g,f].skill0[i] := '';
-      player[g,f].value := 0;
-      player[g,f].value0 := 0;
-      player[g,f].skillrolls := 0;
-      player[g,f].tz := 0;
-      player[g,f].peaked := false;
-      player[g,f].picture := '';
-      player[g,f].picture0 := '';
+      allPlayers[g,f].teamnr := g;
+      allPlayers[g,f].number := f;
+      allPlayers[g,f].name := '';
+      allPlayers[g,f].name0 := '';
+      allPlayers[g,f].position := '';
+      allPlayers[g,f].position0 := '';
+      allPlayers[g,f].inj := '';
+      allPlayers[g,f].p := -1;
+      allPlayers[g,f].q := -1;
+      allPlayers[g,f].status := 11;
+      allPlayers[g,f].SIstatus := 0;
+      allPlayers[g,f].int := 0;
+      allPlayers[g,f].td := 0;
+      allPlayers[g,f].cas := 0;
+      allPlayers[g,f].comp := 0;
+      allPlayers[g,f].mvp := 0;
+      allPlayers[g,f].otherSPP := 0;
+      allPlayers[g,f].int0 := 0;
+      allPlayers[g,f].td0 := 0;
+      allPlayers[g,f].cas0 := 0;
+      allPlayers[g,f].comp0 := 0;
+      allPlayers[g,f].mvp0 := 0;
+      allPlayers[g,f].otherSPP0 := 0;
+      allPlayers[g,f].ma := 0;
+      allPlayers[g,f].st := 0;
+      allPlayers[g,f].ag := 0;
+      allPlayers[g,f].av := 0;
+      allPlayers[g,f].BigGuy := false;
+      allPlayers[g,f].Ally := false;
+      for i := 1 to 15 do allPlayers[g,f].skill[i] := '';
+      allPlayers[g,f].ma0 := 0;
+      allPlayers[g,f].st0 := 0;
+      allPlayers[g,f].ag0 := 0;
+      allPlayers[g,f].av0 := 0;
+      allPlayers[g,f].BigGuy0 := false;
+      allPlayers[g,f].Ally0 := false;
+      for i := 1 to 15 do allPlayers[g,f].skill0[i] := '';
+      allPlayers[g,f].value := 0;
+      allPlayers[g,f].value0 := 0;
+      allPlayers[g,f].skillrolls := 0;
+      allPlayers[g,f].tz := 0;
+      allPlayers[g,f].peaked := false;
+      allPlayers[g,f].picture := '';
+      allPlayers[g,f].picture0 := '';
     end;
 end;
 
@@ -232,9 +232,9 @@ begin
       if b then begin
         b := false;
         for f := 1 to team[activeTeam].numplayers do begin
-          if (player[activeTeam, f].status >= 1)
-           and (player[activeTeam, f].status <= 3)
-           and (player[activeTeam, f].HasSkill('Leader')) then b := true;
+          if (allPlayers[activeTeam, f].status >= 1)
+           and (allPlayers[activeTeam, f].status <= 3)
+           and (allPlayers[activeTeam, f].HasSkill('Leader')) then b := true;
         end;
       end;
       CanUseTeamReroll := b;
@@ -248,15 +248,15 @@ begin
       if b then begin
         b := false;
         for f := 1 to team[activeTeam].numplayers do begin
-          if (player[activeTeam, f].status >= 1)
-           and (player[activeTeam, f].status <= 3)
-           and (player[activeTeam, f].HasSkill('Leader')) then b := true;
+          if (allPlayers[activeTeam, f].status >= 1)
+           and (allPlayers[activeTeam, f].status <= 3)
+           and (allPlayers[activeTeam, f].HasSkill('Leader')) then b := true;
         end;
       end;
       CanUseTeamReroll := b;
     end;
-    if (player[activeTeam,curplayer].BigGuy) then CanUseTeamReRoll := false;
-    if (player[activeTeam,curplayer].Ally) then CanUseTeamReRoll := true;
+    if (allPlayers[activeTeam,curplayer].BigGuy) then CanUseTeamReRoll := false;
+    if (allPlayers[activeTeam,curplayer].Ally) then CanUseTeamReRoll := true;
   end else CanUseTeamReroll := false;
 end;
 
@@ -272,20 +272,20 @@ begin
   if b then begin
     b := false;
     for f := 1 to team[curmove2].numplayers do begin
-      if (player[curmove2, f].status >= 1) and (player[curmove2, f].status <= 3)
-      and (player[curmove2, f].HasSkill('Leader')) then b := true;
+      if (allPlayers[curmove2, f].status >= 1) and (allPlayers[curmove2, f].status <= 3)
+      and (allPlayers[curmove2, f].HasSkill('Leader')) then b := true;
     end;
   end;
   UseTeamReroll := true;
-  if (true) and (player[curmove2,curplayer].Ally) then   // bigguy
+  if (true) and (allPlayers[curmove2,curplayer].Ally) then   // bigguy
     begin
       r3 := Rnd(6,3) + 1;
       Bloodbowl.comment.text := 'Roll to use Team Re-roll: '+InttoStr(r3);
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       if r3 <= 3 then begin
-        if (player[curmove2,curplayer].HasSkill('Pro')) and
-        (not (player[curmove2,curplayer].usedSkill('Pro'))) then begin
-          player[curmove2,curplayer].UseSkill('Pro');
+        if (allPlayers[curmove2,curplayer].HasSkill('Pro')) and
+        (not (allPlayers[curmove2,curplayer].usedSkill('Pro'))) then begin
+          allPlayers[curmove2,curplayer].UseSkill('Pro');
           r2 := Rnd(6,3) + 1;
           Bloodbowl.comment.text := 'Pro Roll: '+InttoStr(r2);
           Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
@@ -319,7 +319,7 @@ procedure TeamRerollPro(g,f:integer);
 var bga, reroll, UReroll: boolean;
     ProAnswer: string;
 begin
-  bga := (((player[g,f].BigGuy) or (player[g,f].Ally))
+  bga := (((allPlayers[g,f].BigGuy) or (allPlayers[g,f].Ally))
     and (true));  // bigguy
   reroll := CanUseTeamReroll(bga);
   if reroll then begin

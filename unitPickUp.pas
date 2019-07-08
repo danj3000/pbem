@@ -62,7 +62,7 @@ var TeamPlayer, NumberPlayer, PickUpRollNeeded: integer;
 procedure CalculatePickUpRollNeeded;
 var r: integer;
 begin
-  r := 6 - player[TeamPlayer, NumberPlayer].ag;
+  r := 6 - allPlayers[TeamPlayer, NumberPlayer].ag;
   if frmPickUp.cbPouringRain.checked then r := r + 1;
 
   r := r + FVal(frmPickUp.txtPlayerTZ.text);
@@ -81,19 +81,19 @@ var tz: TackleZones;
 begin
   TeamPlayer := g;
   NumberPlayer := f;
-  frmPickUp.lblPlayer.caption := player[g,f].GetPlayerName;
+  frmPickUp.lblPlayer.caption := allPlayers[g,f].GetPlayerName;
   frmPickUp.lblPlayer.font.color := colorarray[g,0,0];
-  frmPickUp.txtPlayerAG.text := IntToStr(player[g,f].ag);
+  frmPickUp.txtPlayerAG.text := IntToStr(allPlayers[g,f].ag);
   tz := CountTZ(g, f);
   frmPickUp.txtPlayerTZ.text := IntToStr(tz.num);
-  frmPickUp.cbBigHand.checked := player[g,f].hasSkill('Big Hand');
+  frmPickUp.cbBigHand.checked := allPlayers[g,f].hasSkill('Big Hand');
 
   frmPickUp.cbPouringRain.checked :=
     (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN');
 
-  frmPickUp.cbNBH.checked := player[g,f].hasSkill('Nonball Handler');
-  frmPickUp.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (true));   // big guy
+  frmPickUp.cbNBH.checked := allPlayers[g,f].hasSkill('Nonball Handler');
+  frmPickUp.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or
+      (allPlayers[g,f].Ally)) and (true));   // big guy
 
   CalculatePickUpRollNeeded;
 
@@ -111,7 +111,7 @@ function WorkOutPickUpResult(i: integer): boolean;
 begin
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll >= PickUpRollNeeded then begin
-    player[TeamPlayer, NumberPlayer].SetStatus(2);
+    allPlayers[TeamPlayer, NumberPlayer].SetStatus(2);
     WorkOutPickUpResult := true;
   end else begin
     if i = 0 then Bloodbowl.comment.text := 'PickUp roll failed!'
@@ -137,9 +137,9 @@ begin
   butGFI.Enabled := False;
   if cbAutoScatter.checked then begin
      s := 'Ball scatters off of ' +
-        player[TeamPlayer, NumberPlayer].GetPlayerName;
+        allPlayers[TeamPlayer, NumberPlayer].GetPlayerName;
   end else begin
-    s := player[TeamPlayer, NumberPlayer].GetPlayerName +
+    s := allPlayers[TeamPlayer, NumberPlayer].GetPlayerName +
          ' tries to pick up the ball (';
     if cbBigHand.checked then s := s + 'Big Hand, ' else begin
       if txtPlayerTZ.Text <> '0' then s := s + txtPlayerTZ.text + ' TZ, ';
@@ -155,8 +155,8 @@ begin
   if cbAutoScatter.checked then begin
     cbAutoScatter.checked := false;
     CanHide := true;
-    ScatterBallFrom(player[TeamPlayer, NumberPlayer].p,
-                  player[TeamPlayer, NumberPlayer].q, 1, 0);
+    ScatterBallFrom(allPlayers[TeamPlayer, NumberPlayer].p,
+                  allPlayers[TeamPlayer, NumberPlayer].q, 1, 0);
     if CanHide then begin
       ModalResult := 1;
       Hide;
@@ -166,10 +166,10 @@ begin
     Hide;
   end else begin
     butSureHandsSkill.enabled :=
-       player[TeamPlayer, NumberPlayer].hasSkill('Sure Hands');
+       allPlayers[TeamPlayer, NumberPlayer].hasSkill('Sure Hands');
     butPro.enabled :=
-       player[TeamPlayer, NumberPlayer].hasSkill('Pro') and
-       not(player[TeamPlayer,NumberPlayer].usedSkill('Pro'));
+       allPlayers[TeamPlayer, NumberPlayer].hasSkill('Pro') and
+       not(allPlayers[TeamPlayer,NumberPlayer].usedSkill('Pro'));
     butTeamReroll.enabled := false;
     if (TeamPlayer = activeTeam) and CanUseTeamReroll(cbBigGuyAlly.checked)
       then butTeamReroll.enabled := true;
@@ -191,13 +191,13 @@ end;
 
 procedure TfrmPickUp.butSureHandsSkillClick(Sender: TObject);
 begin
-  player[TeamPlayer,NumberPlayer].UseSkill('Sure Hands');
+  allPlayers[TeamPlayer,NumberPlayer].UseSkill('Sure Hands');
   MakePickUpReroll;
 end;
 
 procedure TfrmPickUp.butProClick(Sender: TObject);
 begin
-  player[TeamPlayer,NumberPlayer].UseSkill('Pro');
+  allPlayers[TeamPlayer,NumberPlayer].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(TeamPlayer,NumberPlayer);
   if (lastroll >= 4) then begin
@@ -226,8 +226,8 @@ procedure TfrmPickUp.butGFIRollClick(Sender: TObject);
 begin
   ShowGFIWindow(TeamPlayer, NumberPlayer);
   butGFI.Enabled := False;
-  if (player[teamplayer, numberplayer].status < 1) or
-     (player[teamplayer, numberplayer].status > 2) then begin
+  if (allPlayers[teamplayer, numberplayer].status < 1) or
+     (allPlayers[teamplayer, numberplayer].status > 2) then begin
     CanHide := true;
     if CanHide then begin
       ModalResult := 1;
@@ -239,8 +239,8 @@ end;
 procedure TfrmPickUp.butBounceClick(Sender: TObject);
 begin
   CanHide := true;
-  ScatterBallFrom(player[TeamPlayer, NumberPlayer].p,
-                  player[TeamPlayer, NumberPlayer].q, 1, 0);
+  ScatterBallFrom(allPlayers[TeamPlayer, NumberPlayer].p,
+                  allPlayers[TeamPlayer, NumberPlayer].q, 1, 0);
   if CanHide then begin
     ModalResult := 1;
     Hide;

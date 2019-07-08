@@ -118,7 +118,7 @@ begin
   g := Ord(s[2]) - 48;
   f := Ord(s[3]) - 64;
   st := Ord(s[Length(s)]) - 64;
-  t := player[g,f].GetPlayerName;
+  t := allPlayers[g,f].GetPlayerName;
   if st = 8 then t := t + ' is removed from the team roster'
             else t := t + ' retires and becomes assistant coach';
   TranslateRetire := t;
@@ -134,9 +134,9 @@ begin
     if (st <> 8) and (Uppercase(team[g].race) <> 'NURGLES ROTTERS') then begin
       team[g].asstcoaches := team[g].asstcoaches + 1;
     end;
-    player[g,f].status := 11;
+    allPlayers[g,f].status := 11;
     DefaultAction(TranslateRetire(s));
-    player[g,f].visible := false;
+    allPlayers[g,f].visible := false;
   end else begin
     {restoring all settings for the player is the same as loading him}
     if (st <> 8) and (Uppercase(team[g].race) <> 'NURGLES ROTTERS') then begin
@@ -144,9 +144,9 @@ begin
     end;
     PlayActionLoadTeam(Copy(s, 1, length(s)-1), 1);
     BackLog;
-    player[g,f].status := st;
-    player[g,f].visible := true;
-    player[g,f].Redraw;
+    allPlayers[g,f].status := st;
+    allPlayers[g,f].visible := true;
+    allPlayers[g,f].Redraw;
   end;
   RedrawDugOut;
 
@@ -156,14 +156,14 @@ procedure TRetireButton.RetireButtonClick(Sender: TObject);
 var s: string;
 begin
   s := 'Are you sure you want to ';
-  if player[curroster,nr].status = 8
+  if allPlayers[curroster,nr].status = 8
        then s := s + 'clear '
        else s := s + 'retire ';
-  s := s + player[curroster,nr].GetPlayername + '?';
+  s := s + allPlayers[curroster,nr].GetPlayername + '?';
   if Application.MessageBox(PChar(s),
                   'Confirmation', MB_OKCANCEL) = IDOK then begin
-    s := 'R' + player[curroster,nr].GetSaveString +
-                      Chr(player[curroster,nr].status + 64);
+    s := 'R' + allPlayers[curroster,nr].GetSaveString +
+                      Chr(allPlayers[curroster,nr].status + 64);
     LogWrite(s);
     PlayActionRetire(s, 1);
     ShowTeam(curroster);
@@ -386,74 +386,74 @@ begin
     end;
   end;
   for f := 1 to team[g].numplayers do
-   if player[g,f].status <> 11 then begin
-    hb := player[g,f].GetStartingSPP();
-    hg := player[g,f].GetMatchSPP();
+   if allPlayers[g,f].status <> 11 then begin
+    hb := allPlayers[g,f].GetStartingSPP();
+    hg := allPlayers[g,f].GetMatchSPP();
     ha := hb + hg;
     if frmRoster.GameRB.checked then begin
-      if (player[g,f].otherSPP > 0)
-         then lb[f,9].caption := IntToStr(player[g,f].otherSPP);
-      if player[g,f].comp > 0
-         then lb[f,10].caption := IntToStr(player[g,f].comp);
-      if player[g,f].td > 0
-         then lb[f,11].caption := IntToStr(player[g,f].td);
-      if player[g,f].cas > 0
-         then lb[f,12].caption := IntToStr(player[g,f].cas);
-      if player[g,f].int > 0
-         then lb[f,13].caption := IntToStr(player[g,f].int);
-      if player[g,f].mvp > 0
-         then lb[f,14].caption := IntToStr(player[g,f].mvp);
-      if player[g,f].exp > 0
-         then lb[f,15].caption := IntToStr(player[g,f].exp);
-      if player[g,f].peaked then
+      if (allPlayers[g,f].otherSPP > 0)
+         then lb[f,9].caption := IntToStr(allPlayers[g,f].otherSPP);
+      if allPlayers[g,f].comp > 0
+         then lb[f,10].caption := IntToStr(allPlayers[g,f].comp);
+      if allPlayers[g,f].td > 0
+         then lb[f,11].caption := IntToStr(allPlayers[g,f].td);
+      if allPlayers[g,f].cas > 0
+         then lb[f,12].caption := IntToStr(allPlayers[g,f].cas);
+      if allPlayers[g,f].int > 0
+         then lb[f,13].caption := IntToStr(allPlayers[g,f].int);
+      if allPlayers[g,f].mvp > 0
+         then lb[f,14].caption := IntToStr(allPlayers[g,f].mvp);
+      if allPlayers[g,f].exp > 0
+         then lb[f,15].caption := IntToStr(allPlayers[g,f].exp);
+      if allPlayers[g,f].peaked then
         lb[f,16].caption := 'P'
       else
        if hg > 0 then lb[f,16].caption := IntToStr(hg);
     end;
     if frmRoster.BeforeRB.checked then begin
-      if (player[g,f].otherSPP0 > 0)
-         then lb[f,9].caption := IntToStr(player[g,f].otherSPP0);
-      if player[g,f].comp0 > 0
-         then lb[f,10].caption := IntToStr(player[g,f].comp0);
-      if player[g,f].td0 > 0
-         then lb[f,11].caption := IntToStr(player[g,f].td0);
-      if player[g,f].cas0 > 0
-         then lb[f,12].caption := IntToStr(player[g,f].cas0);
-      if player[g,f].int0 > 0
-         then lb[f,13].caption := IntToStr(player[g,f].int0);
-      if player[g,f].mvp0 > 0
-         then lb[f,14].caption := IntToStr(player[g,f].mvp0);
-      if player[g,f].exp0 > 0
-         then lb[f,15].caption := IntToStr(player[g,f].exp0);
-      if player[g,f].peaked then
+      if (allPlayers[g,f].otherSPP0 > 0)
+         then lb[f,9].caption := IntToStr(allPlayers[g,f].otherSPP0);
+      if allPlayers[g,f].comp0 > 0
+         then lb[f,10].caption := IntToStr(allPlayers[g,f].comp0);
+      if allPlayers[g,f].td0 > 0
+         then lb[f,11].caption := IntToStr(allPlayers[g,f].td0);
+      if allPlayers[g,f].cas0 > 0
+         then lb[f,12].caption := IntToStr(allPlayers[g,f].cas0);
+      if allPlayers[g,f].int0 > 0
+         then lb[f,13].caption := IntToStr(allPlayers[g,f].int0);
+      if allPlayers[g,f].mvp0 > 0
+         then lb[f,14].caption := IntToStr(allPlayers[g,f].mvp0);
+      if allPlayers[g,f].exp0 > 0
+         then lb[f,15].caption := IntToStr(allPlayers[g,f].exp0);
+      if allPlayers[g,f].peaked then
         lb[f,16].caption := 'P'
       else
        if hb > 0 then lb[f,16].caption := IntToStr(hb);
     end;
     if frmRoster.TotalRB.checked then begin
-      if player[g,f].otherSPP + player[g,f].otherSPP0 > 0 then
-             lb[f,9].caption := IntToStr(player[g,f].otherSPP +
-                                                 player[g,f].otherSPP0);
-      if player[g,f].comp + player[g,f].comp0 > 0 then lb[f,10].caption :=
-                              IntToStr(player[g,f].comp + player[g,f].comp0);
-      if player[g,f].td + player[g,f].td0 > 0
-         then lb[f,11].caption := IntToStr(player[g,f].td + player[g,f].td0);
-      if player[g,f].cas + player[g,f].cas0 > 0
-         then lb[f,12].caption := IntToStr(player[g,f].cas + player[g,f].cas0);
-      if player[g,f].int + player[g,f].int0 > 0
-         then lb[f,13].caption := IntToStr(player[g,f].int + player[g,f].int0);
-      if player[g,f].mvp + player[g,f].mvp0 > 0
-         then lb[f,14].caption := IntToStr(player[g,f].mvp + player[g,f].mvp0);
-      if player[g,f].exp + player[g,f].exp0 > 0
-         then lb[f,15].caption := IntToStr(player[g,f].exp + player[g,f].exp0);
-      if player[g,f].peaked then
+      if allPlayers[g,f].otherSPP + allPlayers[g,f].otherSPP0 > 0 then
+             lb[f,9].caption := IntToStr(allPlayers[g,f].otherSPP +
+                                                 allPlayers[g,f].otherSPP0);
+      if allPlayers[g,f].comp + allPlayers[g,f].comp0 > 0 then lb[f,10].caption :=
+                              IntToStr(allPlayers[g,f].comp + allPlayers[g,f].comp0);
+      if allPlayers[g,f].td + allPlayers[g,f].td0 > 0
+         then lb[f,11].caption := IntToStr(allPlayers[g,f].td + allPlayers[g,f].td0);
+      if allPlayers[g,f].cas + allPlayers[g,f].cas0 > 0
+         then lb[f,12].caption := IntToStr(allPlayers[g,f].cas + allPlayers[g,f].cas0);
+      if allPlayers[g,f].int + allPlayers[g,f].int0 > 0
+         then lb[f,13].caption := IntToStr(allPlayers[g,f].int + allPlayers[g,f].int0);
+      if allPlayers[g,f].mvp + allPlayers[g,f].mvp0 > 0
+         then lb[f,14].caption := IntToStr(allPlayers[g,f].mvp + allPlayers[g,f].mvp0);
+      if allPlayers[g,f].exp + allPlayers[g,f].exp0 > 0
+         then lb[f,15].caption := IntToStr(allPlayers[g,f].exp + allPlayers[g,f].exp0);
+      if allPlayers[g,f].peaked then
         lb[f,16].caption := 'P'
       else
        if ha > 0 then lb[f,16].caption := IntToStr(ha);
     end;
-    if not(player[g,f].peaked) then begin
+    if not(allPlayers[g,f].peaked) then begin
       CountSkillRolls(g, f);
-      if player[g,f].skillrolls > 0
+      if allPlayers[g,f].skillrolls > 0
          then lb[f,16].color := clAqua else lb[f,16].color := clYellow;
     end;
   end;
@@ -511,44 +511,44 @@ begin
   ClearRoster;
   for f := 1 to team[g].numplayers do begin
     lb[f,0].font.color := colorarray[g,0,0];
-    if player[g,f].status <> 11 then begin
-      lb[f,0].caption := IntToStr(player[g,f].cnumber);
-      if player[g,f].cnumber <> player[g,f].cnumber0 then lb[f,0].font.color := clRed
+    if allPlayers[g,f].status <> 11 then begin
+      lb[f,0].caption := IntToStr(allPlayers[g,f].cnumber);
+      if allPlayers[g,f].cnumber <> allPlayers[g,f].cnumber0 then lb[f,0].font.color := clRed
          else lb[f,0].font.color := clBlack;
-      lb[f,1].caption := player[g,f].name;
-      if player[g,f].name <> player[g,f].name0 then lb[f,1].font.color := clRed
+      lb[f,1].caption := allPlayers[g,f].name;
+      if allPlayers[g,f].name <> allPlayers[g,f].name0 then lb[f,1].font.color := clRed
          else lb[f,1].font.color := clBlack;
-      lb[f,2].caption := player[g,f].position;
-      if player[g,f].position <> player[g,f].position0 then lb[f,2].font.color := clRed
+      lb[f,2].caption := allPlayers[g,f].position;
+      if allPlayers[g,f].position <> allPlayers[g,f].position0 then lb[f,2].font.color := clRed
          else lb[f,2].font.color := clBlack;
-      lb[f,3].caption := IntToStr(player[g,f].ma);
-      if player[g,f].ma <> player[g,f].ma0 then lb[f,3].font.color := clRed
+      lb[f,3].caption := IntToStr(allPlayers[g,f].ma);
+      if allPlayers[g,f].ma <> allPlayers[g,f].ma0 then lb[f,3].font.color := clRed
          else lb[f,3].font.color := clBlack;
-      lb[f,4].caption := IntToStr(player[g,f].st);
-      if player[g,f].st <> player[g,f].st0 then lb[f,4].font.color := clRed
+      lb[f,4].caption := IntToStr(allPlayers[g,f].st);
+      if allPlayers[g,f].st <> allPlayers[g,f].st0 then lb[f,4].font.color := clRed
          else lb[f,4].font.color := clBlack;
-      lb[f,5].caption := IntToStr(player[g,f].ag);
-      if player[g,f].ag <> player[g,f].ag0 then lb[f,5].font.color := clRed
+      lb[f,5].caption := IntToStr(allPlayers[g,f].ag);
+      if allPlayers[g,f].ag <> allPlayers[g,f].ag0 then lb[f,5].font.color := clRed
          else lb[f,5].font.color := clBlack;
-      lb[f,6].caption := IntToStr(player[g,f].av);
-      if player[g,f].av <> player[g,f].av0 then lb[f,6].font.color := clRed
+      lb[f,6].caption := IntToStr(allPlayers[g,f].av);
+      if allPlayers[g,f].av <> allPlayers[g,f].av0 then lb[f,6].font.color := clRed
          else lb[f,6].font.color := clBlack;
-      s := player[g,f].GetSkillString(1);
+      s := allPlayers[g,f].GetSkillString(1);
       if s <> '' then begin
         lb[f,7].caption := s;
         lb[f,7].hint := s;
         lb[f,7].ShowHint := true;
       end;
-      if player[g,f].hasNewSkills
+      if allPlayers[g,f].hasNewSkills
            then lb[f,7].font.color := clRed
            else lb[f,7].font.color := clBlack;
-      lb[f,8].caption := player[g,f].inj;
-      lb[f,17].caption := status[player[g,f].status];
-      if (player[g,f].status > 5) and (player[g,f].status <> 11) then
+      lb[f,8].caption := allPlayers[g,f].inj;
+      lb[f,17].caption := status[allPlayers[g,f].status];
+      if (allPlayers[g,f].status > 5) and (allPlayers[g,f].status <> 11) then
         for h := 1 to 17 do if h <> 16 then lb[f,h].color := $DDDDDD;
       if PostgameActive then begin
         butRetire[f].visible := true;
-        if player[g,f].status = 8 then butRetire[f].caption := 'Clear'
+        if allPlayers[g,f].status = 8 then butRetire[f].caption := 'Clear'
                                   else butRetire[f].caption := 'Retire';
       end else butRetire[f].visible := false;
     end else begin

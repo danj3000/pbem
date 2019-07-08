@@ -77,7 +77,7 @@ var r, m: integer;
 begin
   m := 0;
   if (frmPass.cbHailMaryPass.checked) and
-    not(player[TeamPasser,NumberPasser].hasSkill('Hail Mary Pass')) then
+    not(allPlayers[TeamPasser,NumberPasser].hasSkill('Hail Mary Pass')) then
     frmPass.cbHailMaryPass.checked := false;
   if frmPass.cbHailMaryPass.checked then begin
     r := 2;
@@ -132,24 +132,24 @@ begin
   end;
 
   frmPass.gbPass.enabled := true;
-  frmPass.lblPasser.caption := player[g,f].GetPlayerName;
+  frmPass.lblPasser.caption := allPlayers[g,f].GetPlayerName;
   frmPass.lblPasser.font.color := colorarray[g,0,0];
-  frmPass.txtThrowerAG.text := IntToStr(player[g,f].ag);
+  frmPass.txtThrowerAG.text := IntToStr(allPlayers[g,f].ag);
   tz := CountTZ(g, f);
   frmPass.txtPassTZ.text := IntToStr(tz.num);
   frmPass.txtPassFA.text := IntToStr(CountFA(g, f));
-  frmPass.cbStrongArm.checked := player[g,f].hasSkill('Strong Arm');
-  frmPass.cbAccurate.checked := player[g,f].hasSkill('Accurate');
-  frmPass.cbNervesOfSteel.checked := player[g,f].hasSkill('Nerves of Steel');
+  frmPass.cbStrongArm.checked := allPlayers[g,f].hasSkill('Strong Arm');
+  frmPass.cbAccurate.checked := allPlayers[g,f].hasSkill('Accurate');
+  frmPass.cbNervesOfSteel.checked := allPlayers[g,f].hasSkill('Nerves of Steel');
 
 
-  frmPass.cbBigGuyAlly.checked := (((player[g,f].BigGuy) or
-      (player[g,f].Ally)) and (true));     // big guy
+  frmPass.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or
+      (allPlayers[g,f].Ally)) and (true));     // big guy
   frmPass.cbTitchy.checked :=
-      (Pos('HALFLING', Uppercase(player[g,f].position)) > 0) or
-      ((Pos('GOBLIN', Uppercase(player[g,f].position)) > 0)
-        and not (Pos('HOBGOBLIN', Uppercase(player[g,f].position)) > 0)) or
-      ((player[g,f].hasSkill('Stunty')));
+      (Pos('HALFLING', Uppercase(allPlayers[g,f].position)) > 0) or
+      ((Pos('GOBLIN', Uppercase(allPlayers[g,f].position)) > 0)
+        and not (Pos('HOBGOBLIN', Uppercase(allPlayers[g,f].position)) > 0)) or
+      ((allPlayers[g,f].hasSkill('Stunty')));
   if  (frmPass.cbTitchy.checked) then
     begin
 
@@ -177,16 +177,13 @@ begin
       CalculatePassRollNeeded;
     end;
 
-
-  frmPass.cbVerySunny.checked := Bloodbowl.GetWeather().IsVerySunny();
-
-  frmPass.cbBlizzard.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD') ;
+  frmPass.cbVerySunny.checked := Bloodbowl.GetWeather() = TWeather.Sunny;
+  frmPass.cbBlizzard.checked :=Bloodbowl.GetWeather() = TWeather.Blizzard;
 
   CalculatePassRollNeeded;
 
-  frmPass.cbHailMaryPass.checked := ((player[g,f].hasSkill('Hail Mary Pass')) or
-    (player[g,f].hasSkill('HMP'))) and (frmPass.rbHailMaryPass.checked);
+  frmPass.cbHailMaryPass.checked := ((allPlayers[g,f].hasSkill('Hail Mary Pass')) or
+    (allPlayers[g,f].hasSkill('HMP'))) and (frmPass.rbHailMaryPass.checked);
 
   // can't throw in a blizzard
   frmPass.cbImpossible.checked := (squaredist > 1) and (frmPass.cbBlizzard.checked);
@@ -201,35 +198,35 @@ procedure InjuryPlayer;
 var Injmod, totspp, NiggleCount, p, t: integer;
   s: string;
 begin
-  player[TeamCatcher,NumberCatcher].SetStatus(3);
+  allPlayers[TeamCatcher,NumberCatcher].SetStatus(3);
   if (frmPass.rbQuickPass.checked) then Injmod := 2 else
   if (frmPass.rbShortPass.checked) then Injmod := 1 else
   if (frmPass.rbLongPass.checked) then Injmod := 0 else Injmod := -1;
-  if (player[TeamPasser,NumberPasser].hasSkill('Strong Arm')) then
+  if (allPlayers[TeamPasser,NumberPasser].hasSkill('Strong Arm')) then
     Injmod := Injmod +1;
   frmArmourRoll.rbIRDirtyPlayer.checked := true;
   if Injmod >= 0 then frmArmourRoll.txtDPInjMod.text := '+'+InttoStr(Injmod) else
     frmArmourRoll.txtDPInjMod.text := InttoStr(Injmod);
-  frmArmourRoll.cbThickSkull.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Thick Skull'));
-  frmArmourRoll.cbProSkill.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Pro'));
+  frmArmourRoll.cbThickSkull.checked := (allPlayers[TeamCatcher,NumberCatcher].hasSkill('Thick Skull'));
+  frmArmourRoll.cbProSkill.checked := (allPlayers[TeamCatcher,NumberCatcher].hasSkill('Pro'));
 
 
-  if ((Pos('HALFLING', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0) or
-      ((Pos('GOBLIN', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0)
-        and not (Pos('HOBGOBLIN', Uppercase(player[TeamCatcher,NumberCatcher].position)) > 0)))
+  if ((Pos('HALFLING', Uppercase(allPlayers[TeamCatcher,NumberCatcher].position)) > 0) or
+      ((Pos('GOBLIN', Uppercase(allPlayers[TeamCatcher,NumberCatcher].position)) > 0)
+        and not (Pos('HOBGOBLIN', Uppercase(allPlayers[TeamCatcher,NumberCatcher].position)) > 0)))
         then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
-  end else if (player[TeamCatcher,NumberCatcher].hasSkill('STUNTY')) then begin
+  end else if (allPlayers[TeamCatcher,NumberCatcher].hasSkill('STUNTY')) then begin
           frmArmourRoll.rbWeakPlayer.checked := true;
   end else
       frmArmourRoll.rbNoStunty.checked := true;
   
-  frmArmourRoll.cbDecay.checked := (player[TeamCatcher,NumberCatcher].hasSkill('Decay'));
+  frmArmourRoll.cbDecay.checked := (allPlayers[TeamCatcher,NumberCatcher].hasSkill('Decay'));
 
-  totspp := player[TeamCatcher,NumberCatcher].GetStartingSPP() +
-            player[TeamCatcher,NumberCatcher].GetMatchSPP();
+  totspp := allPlayers[TeamCatcher,NumberCatcher].GetStartingSPP() +
+            allPlayers[TeamCatcher,NumberCatcher].GetMatchSPP();
 
-    s := player[TeamCatcher,NumberCatcher].inj;
+    s := allPlayers[TeamCatcher,NumberCatcher].inj;
     p := Pos('N', Uppercase(s));
     {roll for each N until all done, or 1 rolled}
     NiggleCount := 0;
@@ -262,7 +259,7 @@ begin
   r3 := 0;
   HMPPass := false;
   //dist := (player[g, f].p - p) * (player[g, f].p - p) + (player[g, f].q - q) * (player[g, f].q - q);
-  squaredist := RangeRulerRange(player[g, f].p, player[g, f].q, p, q);
+  squaredist := RangeRulerRange(allPlayers[g, f].p, allPlayers[g, f].q, p, q);
   begin
     if squaredist > 3 then
       HMPPass := true;
@@ -274,7 +271,7 @@ begin
     begin
       { check if player is on field and standing }
       TZone := true;
-      loopPlayer := player[1 - g, h];
+      loopPlayer := allPlayers[1 - g, h];
       if (loopPlayer.tz > 0)  then
         TZone := false;
       if (loopPlayer.hasSkill('Nonball Handler')) then
@@ -282,16 +279,16 @@ begin
       if (loopPlayer.status = 1) and (TZone) then
       begin
         { calculate closest point on pass-line to opponent }
-        d := ((player[g, f].p - p) * (player[g, f].p - loopPlayer.p) +
-          (player[g, f].q - q) * (player[g, f].q - loopPlayer.q)) /
-          ((player[g, f].p - p) * (player[g, f].p - p) + (player[g, f].q - q) *
-          (player[g, f].q - q));
+        d := ((allPlayers[g, f].p - p) * (allPlayers[g, f].p - loopPlayer.p) +
+          (allPlayers[g, f].q - q) * (allPlayers[g, f].q - loopPlayer.q)) /
+          ((allPlayers[g, f].p - p) * (allPlayers[g, f].p - p) + (allPlayers[g, f].q - q) *
+          (allPlayers[g, f].q - q));
         { if d<0 or d>1 then the opponent is not between passer and catcher }
         if (d > 0) and (d < 1) then
         begin
           { (dp,dq) is point on pass-line closest to opponent }
-          dp := player[g, f].p + d * (p - player[g, f].p);
-          dq := player[g, f].q + d * (q - player[g, f].q);
+          dp := allPlayers[g, f].p + d * (p - allPlayers[g, f].p);
+          dq := allPlayers[g, f].q + d * (q - allPlayers[g, f].q);
           { calculate distance from (dp,dq) to opponent }
           dist9 := Sqrt((loopPlayer.p - dp) * (loopPlayer.p - dp) +
             (loopPlayer.q - dq) * (loopPlayer.q - dq));
@@ -300,7 +297,7 @@ begin
             can intercept... but squares are 1.1 inch wide so dist must be
             smaller than 1.45/1.1=1.318 }
 
-          GoodPlayer := CanIntercept(player[g, f].p, player[g, f].q, p, q,
+          GoodPlayer := CanIntercept(allPlayers[g, f].p, allPlayers[g, f].q, p, q,
             loopPlayer.p, loopPlayer.q);
           if GoodPlayer then
             dist9 := 1;
@@ -501,7 +498,7 @@ begin
     begin
       Bloodbowl.comment.text := 'The pass can be intercepted by: ' + s;
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-      safethrow := player[g, f].hasSkill('Safe Throw');
+      safethrow := allPlayers[g, f].hasSkill('Safe Throw');
       ShowCatchWindow(1 - g, besth, 2, pspiral, safethrow);
     end;
   end;
@@ -530,10 +527,10 @@ begin
   DCCatch := false;
   for g := 0 to 1 do begin
     for h := 1 to team[g].numplayers do begin
-      if (player[g,h].hasSkill('Diving Catch')) and (abs(player[g,h].p-p)<=1)
-        and (abs(player[g,h].q-q)<=1) and (player[g,h].tz = 0) and
-        (not(player[g,h].hasSkill('Nonball Handler'))) and
-        (not(player[g,h].hasSkill('No Hands')))
+      if (allPlayers[g,h].hasSkill('Diving Catch')) and (abs(allPlayers[g,h].p-p)<=1)
+        and (abs(allPlayers[g,h].q-q)<=1) and (allPlayers[g,h].tz = 0) and
+        (not(allPlayers[g,h].hasSkill('Nonball Handler'))) and
+        (not(allPlayers[g,h].hasSkill('No Hands')))
         then begin
           if g = 0 then RedTeam := true;
           if g = 1 then BlueTeam := true;
@@ -547,29 +544,29 @@ begin
       for h := 1 to team[1-g].numplayers do begin
         {check if player is on field and standing}
         TZone := True;
-        if (player[1-g,h].tz > 0)
+        if (allPlayers[1-g,h].tz > 0)
          then TZone := False;
-        if (player[1-g,h].hasSkill('Nonball Handler')) or
-          (player[1-g,h].hasSkill('No Hands')) then TZone := False;
-        if (player[1-g,h].status = 1) and (TZone) then begin
+        if (allPlayers[1-g,h].hasSkill('Nonball Handler')) or
+          (allPlayers[1-g,h].hasSkill('No Hands')) then TZone := False;
+        if (allPlayers[1-g,h].status = 1) and (TZone) then begin
           d := 2;
-          if (abs(player[1-g,h].p-p)<=1) and (abs(player[1-g,h].q-q)<=1) and
-            (player[1-g,h].hasSkill('Diving Catch')) then d := 1;
+          if (abs(allPlayers[1-g,h].p-p)<=1) and (abs(allPlayers[1-g,h].q-q)<=1) and
+            (allPlayers[1-g,h].hasSkill('Diving Catch')) then d := 1;
           {if d is 1 then the player can Diving Catch}
           if d = 1 then begin
             dist9 := 1;
             if dist9 <= 1.318 then begin
               if s <> '' then begin
                 s := s + ', ';
-                r := 7 - player[1-g, h].ag + 0;
-                if player[1-g, h].hasSkill('Extra Arms') then r := r - 1;
+                r := 7 - allPlayers[1-g, h].ag + 0;
+                if allPlayers[1-g, h].hasSkill('Extra Arms') then r := r - 1;
 
                 if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
                   then r := r + 1;
                 if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
                   then r := r + 1;
                 tz := CountTZ(1-g, h);
-                if not(player[1-g, h].hasSkill('Nerves of Steel')) then
+                if not(allPlayers[1-g, h].hasSkill('Nerves of Steel')) then
                   r := r + tz.num;
                 bptz := tz.num;
                 r := r + CountFA(1-g, h);
@@ -577,26 +574,26 @@ begin
                 if r > 6 then r := 6;
                 r2 := r;
                 r3 := r;
-                if player[1-g, h].hasSkill('Catch') then r2 := r2 - 1.5;
+                if allPlayers[1-g, h].hasSkill('Catch') then r2 := r2 - 1.5;
                 if bptz = 0 then r3 := r3 - 2;
-                if (bptz <> 0) and (player[1-g,h].hasSkill('Dodge')) then
+                if (bptz <> 0) and (allPlayers[1-g,h].hasSkill('Dodge')) then
                    r3 := r3 - 1;
-                if g=0 then disttoTD := 25 - player[1-g,h].q else
-                  disttoTD := player[1-g,h].q;
-                if disttoTD <= player[1-g,h].ma then r4 := 1 else
-                  if (disttoTD <= player[1-g,h].ma + 1) and
-                    (player[1-g,h].hasSkill('Sure Feet')) then r4 := 2 else
-                  if (disttoTD <= player[1-g,h].ma + 1) then r4 := 3 else
-                  if (disttoTD <= player[1-g,h].ma + 2) and
-                    (player[1-g,h].hasSkill('Sure Feet')) then r4 := 4 else
-                  if (disttoTD <= player[1-g,h].ma + 2) then r4 := 5 else
-                  if (disttoTD <= player[1-g,h].ma + 3) and
-                    (player[1-g,h].hasSkill('Sure Feet')) and
-                    (player[1-g,h].hasSkill('Sprint')) then r4 := 6 else
-                  if (disttoTD <= player[1-g,h].ma + 3) and
-                    (player[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
-                r5 := 20 - player[1-g,h].st;
-                totspp := player[1-g,h].GetStartingSPP() + player[1-g,h].GetMatchSPP();
+                if g=0 then disttoTD := 25 - allPlayers[1-g,h].q else
+                  disttoTD := allPlayers[1-g,h].q;
+                if disttoTD <= allPlayers[1-g,h].ma then r4 := 1 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 1) and
+                    (allPlayers[1-g,h].hasSkill('Sure Feet')) then r4 := 2 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 1) then r4 := 3 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 2) and
+                    (allPlayers[1-g,h].hasSkill('Sure Feet')) then r4 := 4 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 2) then r4 := 5 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 3) and
+                    (allPlayers[1-g,h].hasSkill('Sure Feet')) and
+                    (allPlayers[1-g,h].hasSkill('Sprint')) then r4 := 6 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 3) and
+                    (allPlayers[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
+                r5 := 20 - allPlayers[1-g,h].st;
+                totspp := allPlayers[1-g,h].GetStartingSPP() + allPlayers[1-g,h].GetMatchSPP();
 
                 begin
                   if totspp >= 176 then r6 := 100 else
@@ -653,40 +650,40 @@ begin
                   bestspp := r6;
                 end;
               end else begin
-                r := 7 - player[1-g, h].ag + 0;
+                r := 7 - allPlayers[1-g, h].ag + 0;
 
                 if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
                    then r := r + 1;
                 if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
                    then r := r + 1;
                 tz := CountTZ(1-g, h);
-                if not(player[1-g, h].hasSkill('Nerves of Steel')) then
+                if not(allPlayers[1-g, h].hasSkill('Nerves of Steel')) then
                    r := r + tz.num;
                 r := r + CountFA(1-g, h);
                 if r < 2 then r := 2;
                 if r > 6 then r := 6;
                 r2 := r;
                 r3 := r;
-                if player[1-g, h].hasSkill('Catch') then r2 := r2 - 1.5;
+                if allPlayers[1-g, h].hasSkill('Catch') then r2 := r2 - 1.5;
                 if tz.num = 0 then r3 := r3 - 2;
-                if (tz.num <> 0) and (player[1-g,h].hasSkill('Dodge')) then
+                if (tz.num <> 0) and (allPlayers[1-g,h].hasSkill('Dodge')) then
                    r3 := r3 - 1;
-                if g=0 then disttoTD := 25 - player[1-g,h].q else
-                  disttoTD := player[1-g,h].q;
-                if disttoTD <= player[1-g,h].ma then r4 := 1 else
-                  if (disttoTD <= player[1-g,h].ma + 1) and
-                    (player[1-g,h].hasSkill('Sure Feet')) then r4 := 2 else
-                  if (disttoTD <= player[1-g,h].ma + 1) then r4 := 3 else
-                  if (disttoTD <= player[1-g,h].ma + 2) and
-                    (player[1-g,h].hasSkill('Sure Feet')) then r4 := 4 else
-                  if (disttoTD <= player[1-g,h].ma + 2) then r4 := 5 else
-                  if (disttoTD <= player[1-g,h].ma + 3) and
-                    (player[1-g,h].hasSkill('Sure Feet')) and
-                    (player[1-g,h].hasSkill('Sprint')) then r4 := 6 else
-                  if (disttoTD <= player[1-g,h].ma + 3) and
-                    (player[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
-                r5 := 20 - player[1-g,h].st;
-                totspp := player[1-g,h].GetStartingSPP() + player[1-g,h].GetMatchSPP();
+                if g=0 then disttoTD := 25 - allPlayers[1-g,h].q else
+                  disttoTD := allPlayers[1-g,h].q;
+                if disttoTD <= allPlayers[1-g,h].ma then r4 := 1 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 1) and
+                    (allPlayers[1-g,h].hasSkill('Sure Feet')) then r4 := 2 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 1) then r4 := 3 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 2) and
+                    (allPlayers[1-g,h].hasSkill('Sure Feet')) then r4 := 4 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 2) then r4 := 5 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 3) and
+                    (allPlayers[1-g,h].hasSkill('Sure Feet')) and
+                    (allPlayers[1-g,h].hasSkill('Sprint')) then r4 := 6 else
+                  if (disttoTD <= allPlayers[1-g,h].ma + 3) and
+                    (allPlayers[1-g,h].hasSkill('Sprint')) then r4 := 7 else r4 := 8;
+                r5 := 20 - allPlayers[1-g,h].st;
+                totspp := allPlayers[1-g,h].GetStartingSPP() + allPlayers[1-g,h].GetMatchSPP();
 
                 r6 := bbalg.GetR6Value(totspp);
                 
@@ -701,7 +698,7 @@ begin
                 bestst := r5;
                 bestspp := r6;
               end;
-              s := s + '#' + IntToStr(player[1-g,h].cnumber);
+              s := s + '#' + IntToStr(allPlayers[1-g,h].cnumber);
             end;
           end;
         end;
@@ -713,13 +710,13 @@ begin
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       if cancatch=1 then ShowCatchWindow(bestg, besth, catchtype, false, false);
       if cancatch=0 then begin
-        Bloodbowl.comment.text := player[bestg,besth].GetPlayerName +
+        Bloodbowl.comment.text := allPlayers[bestg,besth].GetPlayerName +
           ' can catch the ball after the kick-off result has been resolved';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
         KoCatcherTeam := bestg;
         KoCatcherPlayer := besth;
-        ball.p := player[bestg,besth].p;
-        ball.q := player[bestg,besth].q;
+        ball.p := allPlayers[bestg,besth].p;
+        ball.q := allPlayers[bestg,besth].q;
       end;
     end;
   end;
@@ -736,9 +733,9 @@ begin
 //  dist := (player[g,f].p - player[g0,f0].p) * (player[g,f].p - player[g0,f0].p)
 //        + (player[g,f].q - player[g0,f0].q) * (player[g,f].q - player[g0,f0].q);
 
-    squaredist := RangeRulerRange(player[g,f].p, player[g,f].q,
-      player[g0,f0].p, player[g0,f0].q);
-  frmPass.lblCatcher.caption := player[g0,f0].GetPlayerName;
+    squaredist := RangeRulerRange(allPlayers[g,f].p, allPlayers[g,f].q,
+      allPlayers[g0,f0].p, allPlayers[g0,f0].q);
+  frmPass.lblCatcher.caption := allPlayers[g0,f0].GetPlayerName;
   frmPass.lblCatcher.font.color := colorarray[g0,0,0];
   ShowPass(g,f);
 end;
@@ -754,7 +751,7 @@ begin
 //  dist := (player[g,f].p - p) * (player[g,f].p - p)
 //        + (player[g,f].q - q) * (player[g,f].q - q);
 
-    squaredist := RangeRulerRange(player[g,f].p, player[g,f].q, p, q);
+    squaredist := RangeRulerRange(allPlayers[g,f].p, allPlayers[g,f].q, p, q);
   frmPass.lblCatcher.caption := 'Field position ' + Chr(65+q) + IntToStr(p+1);
   frmPass.lblCatcher.font.color := clPurple;
   ShowPass(g,f);
@@ -768,8 +765,8 @@ end;
 function BulletThrowCheck: boolean;
 var rollneed, stroll: integer;
 begin
-  rollneed := 7 - player[TeamCatcher,NumberCatcher].st + 1;
-  if player[TeamPasser,NumberPasser].hasSkill('Strong Arm') then
+  rollneed := 7 - allPlayers[TeamCatcher,NumberCatcher].st + 1;
+  if allPlayers[TeamPasser,NumberPasser].hasSkill('Strong Arm') then
     rollneed := rollneed + 1;
   if rollneed > 6 then rollneed := 6;
   if rollneed < 2 then rollneed := 2;
@@ -778,8 +775,8 @@ begin
   Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   stroll := lastroll;
-  if (lastroll<rollneed) and (player[TeamCatcher,NumberCatcher].hasSkill('Pro'))
-    and not(player[TeamCatcher,NumberCatcher].usedSkill('Pro')) then begin
+  if (lastroll<rollneed) and (allPlayers[TeamCatcher,NumberCatcher].hasSkill('Pro'))
+    and not(allPlayers[TeamCatcher,NumberCatcher].usedSkill('Pro')) then begin
       Bloodbowl.comment.text := 'Pro roll to reroll failed Strength roll';
       Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
       Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
@@ -859,28 +856,28 @@ begin
       Hide;
       if TeamCatcher = -1 then begin
 
-        if (player[TeamPasser, NumberPasser].status = 2) and
+        if (allPlayers[TeamPasser, NumberPasser].status = 2) and
           (frmSettings.cbDC.checked) then
           DCCheck := DetermineDivingCatch(FieldP, FieldQ, 1, 1);
-        if player[TeamPasser, NumberPasser].status = 2 then
+        if allPlayers[TeamPasser, NumberPasser].status = 2 then
           ScatterBallFrom(FieldP, FieldQ, 1, 0);
       end else begin
 
           AVBreak := true;
           InjuryPlayer;
           AVBreak := false;
-          ScatterBallFrom((player[TeamCatcher,NumberCatcher].p),
-          (player[TeamCatcher,NumberCatcher].q), 1, 0);
+          ScatterBallFrom((allPlayers[TeamCatcher,NumberCatcher].p),
+          (allPlayers[TeamCatcher,NumberCatcher].q), 1, 0);
       end;
     end;
   end
   else
    begin
     butPassRoll.enabled := false;
-    butPassSkill.enabled := player[TeamPasser,NumberPasser].hasSkill('Pass');
+    butPassSkill.enabled := allPlayers[TeamPasser,NumberPasser].hasSkill('Pass');
     butPro.enabled :=
-       player[TeamPasser, NumberPasser].hasSkill('Pro') and
-       not(player[TeamPasser,NumberPasser].usedSkill('Pro'));
+       allPlayers[TeamPasser, NumberPasser].hasSkill('Pro') and
+       not(allPlayers[TeamPasser,NumberPasser].usedSkill('Pro'));
     butTeamReroll.enabled := CanUseTeamReroll(cbBigGuyAlly.checked);
     frmPass.height := 530;
   end;
@@ -902,16 +899,16 @@ begin
       frmPass.ModalResult := 1;
       frmPass.Hide;
       if TeamCatcher = -1 then begin
-        if (player[TeamPasser, NumberPasser].status = 2) and
+        if (allPlayers[TeamPasser, NumberPasser].status = 2) and
           (frmSettings.cbDC.checked) then
           DCCheck := DetermineDivingCatch(FieldP, FieldQ, 1, 1);
-        if player[TeamPasser, NumberPasser].status = 2 then
+        if allPlayers[TeamPasser, NumberPasser].status = 2 then
           ScatterBallFrom(FieldP, FieldQ, 1, 0);
       end else begin
         BTCheck := true;
 
         if BTCheck then begin
-          if player[TeamPasser, NumberPasser].status = 2 then begin
+          if allPlayers[TeamPasser, NumberPasser].status = 2 then begin
             AccuratePassPlay := true;
             AccurateTeam := TeamPasser;
             AccuratePlayer := NumberPasser;
@@ -922,8 +919,8 @@ begin
           AVBreak := true;
           InjuryPlayer;
           AVBreak := false;
-          ScatterBallFrom((player[TeamCatcher,NumberCatcher].p),
-          (player[TeamCatcher,NumberCatcher].q), 1, 0);
+          ScatterBallFrom((allPlayers[TeamCatcher,NumberCatcher].p),
+          (allPlayers[TeamCatcher,NumberCatcher].q), 1, 0);
         end;
       end;
     end;
@@ -939,7 +936,7 @@ end;
 
 procedure TfrmPass.butPassSkillClick(Sender: TObject);
 begin
-  player[TeamPasser,NumberPasser].UseSkill('Pass');
+  allPlayers[TeamPasser,NumberPasser].UseSkill('Pass');
   MakePassReroll;
 end;
 
@@ -957,7 +954,7 @@ end;
 
 procedure TfrmPass.butProClick(Sender: TObject);
 begin
-  player[TeamPasser,NumberPasser].UseSkill('Pro');
+  allPlayers[TeamPasser,NumberPasser].UseSkill('Pro');
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll <= 3 then TeamRerollPro(TeamPasser,NumberPasser);
   if (lastroll >= 4) then begin
@@ -977,17 +974,17 @@ begin
   frmPass.Hide;
   AccuratePassPlay := false;
   if butFumbleInaccurate.caption = 'Fumble' then begin
-    ScatterBallFrom(player[TeamPasser, NumberPasser].p,
-                    player[TeamPasser, NumberPasser].q, 1, 0);
+    ScatterBallFrom(allPlayers[TeamPasser, NumberPasser].p,
+                    allPlayers[TeamPasser, NumberPasser].q, 1, 0);
   end else begin
     if TeamCatcher = -1 then begin
 
-      if player[TeamPasser, NumberPasser].status = 2 then
+      if allPlayers[TeamPasser, NumberPasser].status = 2 then
           ScatterBallFrom(FieldP, FieldQ, 3, 0);
     end else begin
-      if player[TeamPasser, NumberPasser].status = 2 then
-        ScatterBallFrom(player[TeamCatcher, NumberCatcher].p,
-                      player[TeamCatcher, NumberCatcher].q, 3, 0);
+      if allPlayers[TeamPasser, NumberPasser].status = 2 then
+        ScatterBallFrom(allPlayers[TeamCatcher, NumberCatcher].p,
+                      allPlayers[TeamCatcher, NumberCatcher].q, 3, 0);
     end;
   end;
 end;
@@ -1016,8 +1013,8 @@ begin
         end
     end;
   frmPass.cbHailMaryPass.checked :=
-    ((player[TeamPasser, NumberPasser].hasSkill('Hail Mary Pass')) or
-    (player[TeamPasser, NumberPasser].hasSkill('HMP'))) and
+    ((allPlayers[TeamPasser, NumberPasser].hasSkill('Hail Mary Pass')) or
+    (allPlayers[TeamPasser, NumberPasser].hasSkill('HMP'))) and
     (frmPass.rbHailMaryPass.checked);
   CalculatePassRollNeeded;
 end;

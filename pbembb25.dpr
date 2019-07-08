@@ -42,8 +42,7 @@ uses
   unitMachineID in 'unitMachineID.pas' {MachID},
   unitLanguage in 'unitLanguage.pas',
   unitThrowStuff in 'unitThrowStuff.pas' {frmThrowStuff},
-  unitCatchStuff in 'unitCatchStuff.pas' {frmCatchStuff},
-  Weather in 'Weather.pas';
+  unitCatchStuff in 'unitCatchStuff.pas' {frmCatchStuff};
 
 {$R *.RES}
 

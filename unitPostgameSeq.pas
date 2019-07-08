@@ -204,7 +204,7 @@ end;
 
 procedure MatchWinnings(tm: integer);
 var s, MWT: string;
-    result, r, mw, k, w, t, trgroup, LustrianMod: integer;
+    result, r, mw, k, w, t, trgroup: integer;
     gg: TextFile;
 begin
   {roll die}
@@ -224,17 +224,6 @@ begin
         do ReadLn(gg, s);
   mw := FVal(copy(s, k - 1, 2));
   CloseFile(gg);
-
-  {Lustrian Win Modifier}
-  if (Trim(frmSettings.txtHandicapTable.text)='H5') then begin
-    if team[tm].tr < 100 then trgroup := 0 else
-    if (team[tm].tr >= 100) and (team[tm].tr <= 150) then trgroup := 2 else
-    if (team[tm].tr >= 151) and (team[tm].tr <= 200) then trgroup := 4 else
-    trgroup := 6;
-    LustrianMod := team[tm].bonusMVP - trgroup;
-    if LustrianMod < 0 then LustrianMod := 0;
-    mw := mw + LustrianMod;
-  end;
 
   if team[tm].winmod <> 0 then mw := mw + team[tm].winmod;
 
@@ -346,12 +335,12 @@ begin
     s0 := 'Most Valuable Player for ' + ffcl[tm] + ': ';
     for c := 3 to Length(s) do begin
       f := Ord(s[c]) - 64;
-      player[tm,f].mvp := 1;
+      allPlayers[tm,f].mvp := 1;
       if c > 3 then s0 := s0 + ', ';
-      s0 := s0 + IntToStr(player[tm,f].cnumber);
-      MVPplayer[tm, c-2].Color := player[tm,f].color;
-      MVPplayer[tm, c-2].font.Color := player[tm,f].font.color;
-      MVPplayer[tm, c-2].caption := IntToStr(player[tm,f].cnumber);
+      s0 := s0 + IntToStr(allPlayers[tm,f].cnumber);
+      MVPplayer[tm, c-2].Color := allPlayers[tm,f].color;
+      MVPplayer[tm, c-2].font.Color := allPlayers[tm,f].font.color;
+      MVPplayer[tm, c-2].caption := IntToStr(allPlayers[tm,f].cnumber);
       MVPplayer[tm, c-2].visible := true;
     end;
     DefaultAction(s0);
@@ -367,7 +356,7 @@ begin
               else frmPostgame.ButMVPBlue.enabled := true;
     if tm = 0 then frmPostgame.ButSkillrollRed.enabled := false
               else frmPostgame.ButSkillrollBlue.enabled := false;
-    for f := 1 to team[tm].numplayers do player[tm,f].mvp := 0;
+    for f := 1 to team[tm].numplayers do allPlayers[tm,f].mvp := 0;
     for f := 1 to 10 do MVPplayer[tm,f].visible := false;
     BackLog;
   end;
@@ -383,9 +372,9 @@ begin
   numEligible := 0;
 
   for f := 1 to team[tm].numplayers do
-    if ((player[tm,f].PlayedThisMatch) and not (false)) or
-     ((((player[tm,f].status <> 9) and (player[tm,f].status<>10)
-      and (player[tm,f].status<>11)) or (player[tm,f].PlayedThisMatch)))
+    if ((allPlayers[tm,f].PlayedThisMatch) and not (false)) or
+     ((((allPlayers[tm,f].status <> 9) and (allPlayers[tm,f].status<>10)
+      and (allPlayers[tm,f].status<>11)) or (allPlayers[tm,f].PlayedThisMatch)))
       then numEligible := numEligible + 1;
   for f := 1 to team[tm].numplayers do
     gotMVP[f] := false;
@@ -397,14 +386,14 @@ begin
   begin
     r := Rnd(team[tm].numplayers, 6) + 1;
 
-       if (player[tm,r].status >= 9) and (player[tm,r].status <= 10)
-         and not (player[tm,r].PlayedThisMatch) then
+       if (allPlayers[tm,r].status >= 9) and (allPlayers[tm,r].status <= 10)
+         and not (allPlayers[tm,r].PlayedThisMatch) then
          GoodPlayer := 0
        else
        if (gotMVP[r]) then
           GoodPlayer := 0
        else
-       if (player[tm,r].status = 11) then
+       if (allPlayers[tm,r].status = 11) then
          GoodPlayer := 0
        else
          GoodPlayer := 1;
@@ -412,13 +401,13 @@ begin
    while GoodPlayer = 0          do
    begin
         r := Rnd(team[tm].numplayers, 6) + 1;
-        if (player[tm,r].status >= 9) and (player[tm,r].status <= 10)
-            and not (player[tm,r].PlayedThisMatch) then
+        if (allPlayers[tm,r].status >= 9) and (allPlayers[tm,r].status <= 10)
+            and not (allPlayers[tm,r].PlayedThisMatch) then
             GoodPlayer := 0 else
           if (gotMVP[r]) then
             GoodPlayer := 0
           else
-          if (player[tm,r].status = 11) then
+          if (allPlayers[tm,r].status = 11) then
           GoodPlayer := 0
           else
            GoodPlayer := 1;
@@ -514,7 +503,7 @@ var tm, pl: integer;
 begin
   if (Sender as TLabel).parent = GBPostgameRed then tm := 0 else tm := 1;
   pl := FVal((Sender as TLabel).caption);
-  player[tm,pl].ShowPlayerDetails;
+  allPlayers[tm,pl].ShowPlayerDetails;
 end;
 
 procedure TfrmPostgame.TxtMWModRedExit(Sender: TObject);
