@@ -1631,7 +1631,7 @@ var
     t, z, squaredist: integer;
   tz, tz0: TackleZones;
   s, BlockAnswer, ReRollAnswer: string;
-  b, bx, fa, avd, jam, bga, bnc, SPP4th, HitBlock, VicBlock, HitTackle,
+  b, bx, fa, bga, bnc, SPP4th, HitBlock, VicBlock, HitTackle,
     VicDodge, HitJugger, BlockCount, PowDCount, DownHeGoes, ProSkill, reroll,
     UReroll, NoDumpOff, QuickPass: boolean;
 begin
@@ -1764,13 +1764,12 @@ begin
       ' cannot block a Ball and Chain player!';
     Bloodbowl.EnterButtonClick(Bloodbowl);
   end;
-  if (avd) and (fa) and (jam) and (bnc) and (NoDumpOff) then
+  if (fa) and (bnc) and (NoDumpOff) then
   begin
     { Dauntless }
     if TargetPlayer.st > allPlayers[g, f].st then
     begin
-      if (allPlayers[g, f].hasSkill('Dauntless')) or
-        (allPlayers[g, f].hasSkill('Double Dauntless')) then
+      if (allPlayers[g, f].hasSkill('Dauntless')) then
       begin
         Bloodbowl.comment.text := allPlayers[g, f].GetPlayerName +
           ' Dauntless roll';
@@ -1834,7 +1833,7 @@ begin
     end;
   end;
 
-  if (fa) and (avd) and (jam) and (bnc) and (NoDumpOff) and (dl < 2) then
+  if (fa) and (bnc) and (NoDumpOff) and (dl < 2) then
   begin
     sa := 0;
     horns := 0;
