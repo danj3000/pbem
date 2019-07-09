@@ -110,6 +110,8 @@ public
   procedure SetSkill(s: string); overload;
   function GetSkillString(i: integer): string;
   function hasSkill(s: string): boolean;
+  function hasDumpOff(): boolean;
+
   function Get1Skill(s: string): string;
   function hasNewSkills: boolean;
   procedure RestoreSkills;
@@ -1523,6 +1525,11 @@ begin
     while (f <= 15) and (t <> Uppercase(skill[f])) do f := f + 1;
   end;
   hasSkill := (f <= 15);
+end;
+
+function TPlayer.hasDumpOff(): boolean;
+begin
+  Result := hasSkill('Dump Off') or hasSkill('Dump-Off');
 end;
 
 function TPlayer.Get1Skill(s: string): string;

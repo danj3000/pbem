@@ -6,6 +6,7 @@ uses Windows, Messages, SysUtils, Classes, Controls, Forms, Dialogs, StdCtrls;
 
 type TFieldLabel = class(TLabel)
   private
+    procedure DoThrowInMovementMouseUp(f: Integer; g: Integer);
 
   public
     p, q, cl: integer;
@@ -135,9 +136,7 @@ end;
 procedure TFieldLabel.FieldMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var h, pb, f, g, r, fieldcheck, leap, totspp, p2, NiggleCount, r2,
-    PProll, assa, assd, ascount, targetaction, pplace, qplace,
-    dk1, dk2, dk3, TestP, TestQ, NewP, NewQ, NewP2, NewQ2, NewP3, NewQ3,
-    FinalP, FinalQ, FinalDK, dist1, dist2, finaldist, KickP, KickQ,
+    PProll, assa, assd, ascount, targetaction, dist1, dist2, finaldist, KickP, KickQ,
     v, w, ploc, qloc: integer;
     SPP4th, b, bga, proskill, reroll, Ballscatter, UReroll: boolean;
     s, LeapType, ReRollAnswer, StatTemp: string;
@@ -147,6 +146,7 @@ begin
 
     if Button = mbLeft then begin
       if GameStatus = '' then begin
+        // movement planning numbers
         if caption = '' then begin
           h := GetNextNumOnField;
           if FollowUp <> '' then begin
@@ -258,235 +258,7 @@ begin
         ShowThrowPlayer(ActionTeam, ActionPlayer, ThrownTeam, ThrownPlayer, p, q);
 
       end else if GameStatus='ThrowinMovement' then begin
-        pplace := p - allPlayers[ActionTeam,ActionPlayer].p;
-        qplace := q - allPlayers[ActionTeam,ActionPlayer].q;
-        if ((pplace=0) or (qplace=0))
-          then begin
-          TestP := allPlayers[ActionTeam,ActionPlayer].p;
-          TestQ := allPlayers[ActionTeam,ActionPlayer].q;
-          NewP := TestP + pplace;
-          NewQ := TestQ + qplace;
-          dk1 := 1;
-            if (NewP<0) or (NewP>14) or (NewQ<0) or (NewQ>25) then dk1 := 3;
-            for g := 0 to 1 do begin
-              for f := 1 to team[g].numplayers do begin
-              if (allPlayers[g,f].p = NewP) and (allPlayers[g,f].q = NewQ) then begin
-                dk1 := 2;
-              end;
-            end;
-          end;
-          if (qplace = 0) and (pplace = -1) then begin
-            NewP2 := TestP - 1;
-            NewQ2 := TestQ - 1;
-            NewP3 := TestP - 1;
-            NewQ3 := TestQ + 1;
-          end else if (qplace = 0) and (pplace = 1) then begin
-            NewP2 := TestP + 1;
-            NewQ2 := TestQ + 1;
-            NewP3 := TestP + 1;
-            NewQ3 := TestQ - 1;
-          end else if (qplace = 1) and (pplace = 0) then begin
-            NewP2 := TestP - 1;
-            NewQ2 := TestQ + 1;
-            NewP3 := TestP + 1;
-            NewQ3 := TestQ + 1;
-          end else if (qplace = -1) and (pplace = 0) then begin
-            NewP2 := TestP + 1;
-            NewQ2 := TestQ - 1;
-            NewP3 := TestP - 1;
-            NewQ3 := TestQ - 1;
-          end else if (qplace = 1) and (pplace = -1) then begin
-            NewP2 := TestP - 1;
-            NewQ2 := TestQ + 0;
-            NewP3 := TestP + 0;
-            NewQ3 := TestQ + 1;
-          end else if (qplace = 1) and (pplace = 1) then begin
-            NewP2 := TestP + 0;
-            NewQ2 := TestQ + 1;
-            NewP3 := TestP + 1;
-            NewQ3 := TestQ + 0;
-          end else if (qplace = -1) and (pplace = 1) then begin
-            NewP2 := TestP + 1;
-            NewQ2 := TestQ + 0;
-            NewP3 := TestP + 0;
-            NewQ3 := TestQ - 1;
-          end else if (qplace = -1) and (pplace = -1) then begin
-            NewP2 := TestP + 0;
-            NewQ2 := TestQ - 1;
-            NewP3 := TestP - 1;
-            NewQ3 := TestQ + 0;
-          end;
-          dk2 := 1;
-          dk3 := 1;
-          if (NewP2<0) or (NewP2>14) or (NewQ2<0) or (NewQ2>25) then dk2 := 3;
-          if (NewP3<0) or (NewP3>14) or (NewQ3<0) or (NewQ3>25) then dk3 := 3;
-          for g := 0 to 1 do begin
-            for f := 1 to team[g].numplayers do begin
-              if (allPlayers[g,f].p = NewP2) and (allPlayers[g,f].q = NewQ2) then begin
-                dk2 := 2;
-              end;
-              if (allPlayers[g,f].p = NewP3) and (allPlayers[g,f].q = NewQ3) then begin
-                dk3 := 2;
-             end;
-           end;
-          end;
-          Bloodbowl.comment.text := 'Throw-in Movement roll';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-          if lastroll<3 then begin
-            FinalP := NewP2;
-            FinalQ := NewQ2;
-            FinalDK := dk2;
-          end else if (lastroll>2) and (lastroll<5) then begin
-            FinalP := NewP;
-            FinalQ := NewQ;
-            FinalDK := dk1;
-          end else begin
-            FinalP := NewP3;
-            FinalQ := NewQ3;
-            FinalDK := dk3;
-          end;
-          if FinalDK=1 then PlacePlayer(ActionPlayer, ActionTeam, FinalP, FinalQ) else
-          if FinalDK=3 then begin
-            Bloodbowl.comment.text := 'Player runs out of bounds!  Roll for injury';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end else begin
-            for g := 0 to 1 do begin
-              for f := 1 to team[g].numplayers do begin
-                if (allPlayers[g,f].p = FinalP) and (allPlayers[g,f].q = FinalQ) then begin
-                  BloodBowl.comment.Text := 'You must throw a block at #'
-                    +InttoStr(allPlayers[g,f].cnumber)+'-'+allPlayers[g,f].name;
-                end;
-              end;
-            end;
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-        end else begin
-          Application.Messagebox('Throw-in Movement cannot be aimed '+
-            'diagonally!','Bloodbowl Throw-In Movement Warning', MB_OK);
-        end;
-        GameStatus := '';
-        ActionTeam := 0;
-        ActionPlayer := 0;
-
-      end else if GameStatus='AccurateKick' then begin
-        KickP := p;
-        KickQ := q;
-        if KickField[p, q] = 2 then
-        begin
-          dist1 := abs(allPlayers[ActionTeam,ActionPlayer].p - KickP);
-          dist2 := abs(allPlayers[ActionTeam,ActionPlayer].q - KickQ);
-          if dist1 >= dist2 then finaldist := dist1 else finaldist := dist2;
-          if finaldist<KickDist then begin
-            if (KickP = 0) and (KickQ = 0) then
-              ScatterBallFrom(KickP, KickQ, 1, 1) else
-            if (KickP = 0) and (KickQ = 25) then
-               ScatterBallFrom(KickP, KickQ, 1, 3) else
-            if (KickP = 14) and (KickQ = 0) then
-               ScatterBallFrom(KickP, KickQ, 1, 6) else
-            if (KickP = 14) and (KickQ = 25) then
-               ScatterBallFrom(KickP, KickQ, 1, 8) else
-            if (KickP = 0) then
-               ScatterBallFrom(KickP, KickQ, 1, 2) else
-            if (KickP = 14) then
-               ScatterBallFrom(KickP, KickQ, 1, 7) else
-            if (KickQ = 0) then
-               ScatterBallFrom(KickP, KickQ, 1, 4) else
-            if (KickQ = 25) then
-               ScatterBallFrom(KickP, KickQ, 1, 5);
-          end else
-            ScatterBallFrom(p, q, 1, 0);
-          for g := 0 to 14 do begin
-            for f := 0 to 25 do begin
-              KickField[g,f] := 0;
-              field[g,f].color := clGreen;
-              field[g,f].transparent := true;
-            end;
-          end;
-          GameStatus := '';
-          ActionTeam := 0;
-          ActionPlayer := 0;
-          Bloodbowl.Loglabel.caption := ' ';
-        end;
-
-      end else if GameStatus='PoochKick' then begin
-        KickP := p;
-        KickQ := q;
-        if KickField[p, q] = 2 then
-        begin
-          ScatterBallFrom(p, q, 1, 0);
-          for g := 0 to 14 do begin
-            for f := 0 to 25 do begin
-              KickField[g,f] := 0;
-              field[g,f].color := clGreen;
-              field[g,f].transparent := true;
-            end;
-          end;
-          GameStatus := '';
-          ActionTeam := 0;
-          ActionPlayer := 0;
-          Bloodbowl.Loglabel.caption := ' ';
-        end;
-
-      end else if GameStatus = 'Punt' then begin
-        Bloodbowl.Endofmove1Click(Bloodbowl);
-        {tz := CountTZ(ActionTeam, ActionPlayer);}
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        {if lastroll-tz.num >= 2 then begin}
-
-        if lastroll < 2 then begin
-          bga := (((allPlayers[ActionTeam,ActionPlayer].BigGuy) or
-            (allPlayers[ActionTeam,ActionPlayer].Ally))
-            and (true));   // bigguy
-          proskill := ((allPlayers[ActionTeam,ActionPlayer].HasSkill('Pro')))
-            and (lastroll <= 1) and
-            (not (allPlayers[ActionTeam,ActionPlayer].usedSkill('Pro')))
-            and (ActionTeam = activeTeam);
-          reroll := CanUseTeamReroll(bga);
-          ReRollAnswer := 'Fail Roll';
-          if reroll and proskill then begin
-            ReRollAnswer := FlexMessageBox('Punt roll has failed!'
-              , 'Punt Failure',
-              'Use Pro,Team Reroll,Fail Roll');
-          end else if proskill then begin
-            ReRollAnswer := FlexMessageBox('Punt roll has failed!'
-              , 'Punt Failure',
-              'Use Pro,Fail Roll');
-          end else if reroll then begin
-            ReRollAnswer := FlexMessageBox('Punt roll failed!'
-              , 'Punt Failure', 'Fail Roll,Team Reroll');
-          end;
-          if ReRollAnswer='Team Reroll' then begin
-            UReroll := UseTeamReroll;
-            if UReroll then begin
-              Bloodbowl.comment.text := 'Punt reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            end;
-          end;
-          if ReRollAnswer='Use Pro' then begin
-            allPlayers[ActionTeam,ActionPlayer].UseSkill('Pro');
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
-            if (lastroll <= 3) then lastroll := 1;
-            if (lastroll >= 4) then begin
-              Bloodbowl.comment.text := 'Pro reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            end;
-          end;
-        end;
-
-        if lastroll >= 2 then begin
-          Bloodbowl.comment.text := 'Punt is successful';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          ScatterD8D6(p, q, false, false);
-        end else begin
-          Bloodbowl.comment.text := 'Punt is fumbled!';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          ScatterBallFrom(allPlayers[ActionTeam, ActionPlayer].p,
-            allPlayers[ActionTeam, ActionPlayer].q, 1, 0);
-        end;
+        DoThrowInMovementMouseUp(f, g);
 
       end else if GameStatus = 'Side Step' then begin
         if (ABS((allPlayers[ActionTeam,ActionPlayer].p)-p)<=1) and
@@ -527,227 +299,13 @@ begin
           Application.Messagebox('You must dig under an adjacent square!',
              'Bloodbowl Dig Warning', MB_OK);
 
-      end else if GameStatus = 'Dig2' then begin
-        if (ABS(DigP-p)<=1) and (ABS(DigQ-q)<=1) and
-          ((ABS(DigP-p)<>0) or (ABS(DigQ-q)<>0))
-          then begin
-          tz := CountTZ(ActionTeam, ActionPlayer);
-          Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-
-          if (lastroll - tz.num - DigStrength) < 1 then begin
-            bga := (((allPlayers[ActionTeam,ActionPlayer].BigGuy) or
-              (allPlayers[ActionTeam,ActionPlayer].Ally))
-              and (true));  // bigguy
-            proskill := ((allPlayers[ActionTeam,ActionPlayer].HasSkill('Pro')))
-              and (lastroll <= 1) and
-              (not (allPlayers[ActionTeam,ActionPlayer].usedSkill('Pro')))
-              and (ActionTeam = activeTeam);
-            reroll := CanUseTeamReroll(bga);
-            ReRollAnswer := 'Fail Roll';
-            if reroll and proskill then begin
-              ReRollAnswer := FlexMessageBox('Dig roll has failed!'
-                , 'Dig Failure',
-                'Use Pro,Team Reroll,Fail Roll');
-            end else if proskill then begin
-              ReRollAnswer := FlexMessageBox('Dig roll has failed!'
-                , 'Dig Failure',
-                'Use Pro,Fail Roll');
-            end else if reroll then begin
-              ReRollAnswer := FlexMessageBox('Dig roll failed!'
-                , 'Dig Failure', 'Fail Roll,Team Reroll');
-            end;
-            if ReRollAnswer='Team Reroll' then begin
-              UReroll := UseTeamReroll;
-              if UReroll then begin
-                Bloodbowl.comment.text := 'Dig reroll';
-                Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-              end;
-            end;
-            if ReRollAnswer='Use Pro' then begin
-              allPlayers[ActionTeam,ActionPlayer].UseSkill('Pro');
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-              if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
-              if (lastroll <= 3) then lastroll := 0;
-              if (lastroll >= 4) then begin
-                Bloodbowl.comment.text := 'Pro reroll';
-                Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-              end;
-            end;
-          end;
-
-          if (lastroll - tz.num - DigStrength) >= 1 then begin
-            Bloodbowl.comment.text := 'Dig successful';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            PlacePlayer(ActionPlayer, ActionTeam, p, q);
-          end else begin
-            Bloodbowl.comment.text := 'Dig failed!';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            PlacePlayer(Actionplayer, Actionteam, p, q);
-            allPlayers[ActionTeam,ActionPlayer].SetStatus(3);
-            InjurySettings(ActionTeam, ActionPlayer);
-            allPlayers[ActionTeam,ActionPlayer].SetStatus(InjuryStatus);
-            InjuryStatus := 0;
-          end;
-        end else
-          Application.Messagebox('You must dig to an adjacent square from the'+
-             ' square dug under!',
-             'Bloodbowl Dig Warning', MB_OK);
-
-      end else if GameStatus = 'PitchPlayer2' then begin
-        allPlayers[ActionTeam,ActionPlayer].UseSkill('Pitch Player');
-        PProll := 7 - allPlayers[ActionTeam,ActionPlayer].st;
-        if allPlayers[ThrownTeam,ThrownPlayer].hasSkill('Side Step') then
-          PProll := PProll + 1;
-        if allPlayers[ThrownTeam,ThrownPlayer].hasSkill('Foul Appearance*') then
-          PProll := PProll + 1;
-        if (allPlayers[ThrownTeam,ThrownPlayer].hasSkill('Dodge')) and
-          not (allPlayers[ActionTeam,ActionPlayer].hasSkill('Tackle')) then
-          PProll := PProll + 1;
-        if (allPlayers[ThrownTeam,ThrownPlayer].hasSkill('Block')) and
-          not (allPlayers[ActionTeam,ActionPlayer].hasSkill('Block')) then
-          PProll := PProll + 1;
-        PProll := PProll + allPlayers[ThrownTeam,ThrownPlayer].st;
-        tz := CountTZBlockA(ThrownTeam, ThrownPlayer);
-        assa := 0;
-        for ascount := 1 to tz.num do begin
-          if tz.pl[ascount] <> ActionPlayer then begin
-            if allPlayers[ActionTeam,tz.pl[ascount]].hasSkill('Guard') then b := true
-            else begin
-              tz0 := CountTZBlockCA(ActionTeam, tz.pl[ascount]);
-              b := ((tz0.num = 1) and (allPlayers[ThrownTeam,ThrownPlayer].tz = 0))
-                or ((tz0.num = 0) and (allPlayers[ThrownTeam,ThrownPlayer].tz <> 0));
-            end;
-            if b then begin
-              assa := assa + 1;
-            end;
-          end;
-        end;
-        assd := 0;
-        {count counterassists}
-        tz := CountTZBlockCA2(ActionTeam, ActionPlayer);
-        for ascount := 1 to tz.num do begin
-          if tz.pl[ascount] <> ThrownPlayer then begin
-            if allPlayers[ThrownTeam,tz.pl[ascount]].hasSkill('Guard') then b := true
-            else begin
-              tz0 := CountTZBlockCA(ThrownTeam, tz.pl[ascount]);
-              b := (tz0.num=0);
-              {b := ((tz0.num = 1) and (player[ActionTeam,ActionPlayer].tz = 0))
-                or ((tz0.num = 0) and (player[ActionTeam,ActionPlayer].tz <> 0));}
-            end;
-            if b then begin
-              assd := assd + 1;
-            end;
-          end;
-        end;
-        PProll := PProll + assd;
-        PProll := PProll - assa;
-        {if PProll > 6 then PProll := 6;}
-        if PProll < 2 then PProll := 2;
-        s := allPlayers[ActionTeam, ActionPlayer].GetPlayerName +
-          ' tries to throw ' +
-          allPlayers[ThrownTeam, ThrownPlayer].name + ' (ST ' +
-          InttoStr(allPlayers[ThrownTeam,ThrownPlayer].st) + ', ';
-        if allPlayers[ThrownTeam,ThrownPlayer].hasSkill('Side Step') then
-          s := s + 'Side Step, ';
-        if allPlayers[ThrownTeam,ThrownPlayer].hasSkill('Foul Appearance*') then
-          s := s + 'Foul Appearance, ';
-        if (allPlayers[ThrownTeam,ThrownPlayer].hasSkill('Dodge')) and
-          not (allPlayers[ActionTeam,ActionPlayer].hasSkill('Tackle')) then
-          s := s + 'Dodge, ';
-        if (allPlayers[ThrownTeam,ThrownPlayer].hasSkill('Block')) and
-          not (allPlayers[ActionTeam,ActionPlayer].hasSkill('Block')) then
-          s := s + 'Block, ';
-        s := s + InttoStr(assa) + ' assists and ' + InttoStr(assd) +
-          ' counterassists): ' + InttoStr(PProll) + '+ roll';
-        Bloodbowl.comment.text := s;
-        Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-        r2 := lastroll;
-
-        if lastroll < PProll then begin
-          bga := (((allPlayers[ActionTeam,ActionPlayer].BigGuy) or
-            (allPlayers[ActionTeam,ActionPlayer].Ally))
-            and (true));  // bigguy
-          proskill := ((allPlayers[ActionTeam,ActionPlayer].HasSkill('Pro')))
-            and (lastroll <= 1) and
-            (not (allPlayers[ActionTeam,ActionPlayer].usedSkill('Pro')))
-            and (ActionTeam = activeTeam);
-          reroll := CanUseTeamReroll(bga);
-          ReRollAnswer := 'Fail Roll';
-          if reroll and proskill then begin
-            ReRollAnswer := FlexMessageBox('Pitch Player roll has failed!'
-              , 'Pitch Player Failure',
-              'Use Pro,Team Reroll,Fail Roll');
-          end else if proskill then begin
-            ReRollAnswer := FlexMessageBox('Pitch Player roll has failed!'
-              , 'Pitch Player Failure',
-              'Use Pro,Fail Roll');
-          end else if reroll then begin
-            ReRollAnswer := FlexMessageBox('Pitch Player roll failed!'
-              , 'Pitch Player Failure', 'Fail Roll,Team Reroll');
-          end;
-          if ReRollAnswer='Team Reroll' then begin
-            UReroll := UseTeamReroll;
-            if UReroll then begin
-              Bloodbowl.comment.text := 'Pitch Player reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            end;
-          end;
-          if ReRollAnswer='Use Pro' then begin
-            allPlayers[ActionTeam,ActionPlayer].UseSkill('Pro');
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <= 3 then TeamRerollPro(ActionTeam,ActionPlayer);
-            if (lastroll <= 3) then lastroll := r2;
-            if (lastroll >= 4) then begin
-              Bloodbowl.comment.text := 'Pro reroll';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            end;
-          end;
-        end;
-        if lastroll >= PProll then begin
-           ShowThrowPlayer(ActionTeam, ActionPlayer, ThrownTeam, ThrownPlayer, p, q);
-        end else begin
-          Bloodbowl.comment.text := 'Pitch Player failed';
-          Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-        end;
-        curteam := ActionTeam;
-        curplayer := ActionPlayer;
-        Bloodbowl.Endofmove1Click(Bloodbowl);
-
-      end else if (GameStatus = 'Leap') or (GameStatus = 'Wings')
-        or (GameStatus = 'WingLeap') then begin
+      end else if (GameStatus = 'Leap') then begin
         leap := 0;
         r := 0;
-        if ((GameStatus = 'WingLeap') and (((abs(p-allPlayers[curteam,curplayer].p))>3)
-          or ((abs(q-allPlayers[curteam,curplayer].q))>3))) or
-          ((((abs(p-allPlayers[curteam,curplayer].p))>2) or
-          ((abs(q-allPlayers[curteam,curplayer].q))>2)) and (GameStatus<>'WingLeap'))
-          then begin
-            if GameStatus = 'Leap' then
-             Application.Messagebox('Leap must be no more than 2 squares away!',
-             'Bloodbowl Leap Warning', MB_OK) else
-            if GameStatus = 'Wings' then
-             Application.Messagebox('Wings moves must be no more than 2 squares away!',
-             'Bloodbowl Wings Warning', MB_OK);
-            if GameStatus = 'WingLeap' then
-             Application.Messagebox('Winged Leap moves must be no more than 3 squares away!',
-             'Bloodbowl Winged Leap Warning', MB_OK);
-        end else begin
+        begin
           r := 7 - (allPlayers[curteam,curplayer].ag);
           Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
           r2 := lastroll;
-          if (GameStatus = 'WingLeap') or (GameStatus = 'Wings') then begin
-            if (lastroll<>1) and (lastroll<=4) then lastroll := lastroll+2 else
-            if (lastroll=5) then lastroll := lastroll+1;
-            Bloodbowl.comment.text := '+2 Bonus to leap for using Wings';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-          end;
-          if GameStatus='WingLeap' then LeapType := 'Winged Leap ' else
-          if GameStatus='Wings' then LeapType := 'Wings ' else LeapType := 'Leap ';
 
           if lastroll < r then begin
             bga := (((allPlayers[ActionTeam,ActionPlayer].BigGuy) or
@@ -777,12 +335,7 @@ begin
                 Bloodbowl.comment.text := LeapType + 'reroll';
                 Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                 Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-                if (GameStatus = 'WingLeap') or (GameStatus = 'Wings') then begin
-                  if (lastroll<>1) and (lastroll<=4) then lastroll := lastroll+2 else
-                  if (lastroll=5) then lastroll := lastroll+1;
-                  Bloodbowl.comment.text := '+2 Bonus to leap for using Wings';
-                  Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                end;
+
               end;
             end;
             if ReRollAnswer='Use Pro' then begin
@@ -794,34 +347,28 @@ begin
                 Bloodbowl.comment.text := 'Pro reroll';
                 Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
                 Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-                if (GameStatus = 'WingLeap') or (GameStatus = 'Wings') then begin
-                  if (lastroll<>1) and (lastroll<=4) then lastroll := lastroll+2 else
-                  if (lastroll=5) then lastroll := lastroll+1;
-                  Bloodbowl.comment.text := '+2 Bonus to leap for using Wings';
-                  Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                end;
+
               end;
             end;
           end;
 
           if lastroll>=r then begin
-            if (GameStatus = 'WingLeap') or (GameStatus = 'Leap') then
+            if (GameStatus = 'Leap') then
                allPlayers[curteam,curplayer].UseSkill('Leap');
-            if (GameStatus = 'WingLeap') or (GameStatus = 'Wings') then
-               allPlayers[curteam,curplayer].UseSkill('Wings');
+
             Bloodbowl.comment.text := 'Leap successful';
             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
             Ballscatter := false;
             if (p=ball.p) and (q=ball.q) then BallScatter := true;
             PlacePlayer(curplayer, curteam, p, q);
             if BallScatter then ShowPickUpWindow(curteam, curplayer);
-          end else begin
+          end else
+          begin
             Bloodbowl.comment.text := 'Leap failed';
             Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            if (GameStatus = 'WingLeap') or (GameStatus = 'Leap') then
+            if  (GameStatus = 'Leap') then
               allPlayers[ActionTeam,ActionPlayer].UseSkill('Leap');
-            if (GameStatus = 'WingLeap') or (GameStatus = 'Wings') then
-              allPlayers[ActionTeam,ActionPlayer].UseSkill('Wings');
+
             PlacePlayer(ActionPlayer, ActionTeam, p, q);
             Ballscatter := false;
             if (p=ball.p) and (q=ball.q) then BallScatter := true;
@@ -872,6 +419,180 @@ begin
   if (Source is TImage) then begin
     PlaceBall((Sender as TFieldLabel).p, (Sender as TFieldLabel).q);
   end;
+end;
+
+procedure TFieldLabel.DoThrowInMovementMouseUp(f: Integer; g: Integer);
+var
+  pplace: Integer;
+  qplace: Integer;
+  TestP: Integer;
+  TestQ: Integer;
+  NewP: Integer;
+  NewQ: Integer;
+  dk1: Integer;
+  NewP2: Integer;
+  NewQ2: Integer;
+  NewP3: Integer;
+  NewQ3: Integer;
+  dk2: Integer;
+  dk3: Integer;
+  FinalP: Integer;
+  FinalQ: Integer;
+  FinalDK: Integer;
+  Local_g: Integer;
+  Local_f: Integer;
+  Local_g1: Integer;
+  Local_f1: Integer;
+  Local_g2: Integer;
+  Local_f2: Integer;
+begin
+  pplace := p - allPlayers[ActionTeam, ActionPlayer].p;
+  qplace := q - allPlayers[ActionTeam, ActionPlayer].q;
+  if ((pplace = 0) or (qplace = 0)) then
+  begin
+    TestP := allPlayers[ActionTeam, ActionPlayer].p;
+    TestQ := allPlayers[ActionTeam, ActionPlayer].q;
+    NewP := TestP + pplace;
+    NewQ := TestQ + qplace;
+    dk1 := 1;
+    if (NewP < 0) or (NewP > 14) or (NewQ < 0) or (NewQ > 25) then
+      dk1 := 3;
+    for Local_g := 0 to 1 do
+    begin
+      for Local_f := 1 to team[Local_g].numplayers do
+      begin
+        if (allPlayers[Local_g, Local_f].p = NewP) and (allPlayers[Local_g, Local_f].q = NewQ) then
+        begin
+          dk1 := 2;
+        end;
+      end;
+    end;
+    if (qplace = 0) and (pplace = -1) then
+    begin
+      NewP2 := TestP - 1;
+      NewQ2 := TestQ - 1;
+      NewP3 := TestP - 1;
+      NewQ3 := TestQ + 1;
+    end
+    else if (qplace = 0) and (pplace = 1) then
+    begin
+      NewP2 := TestP + 1;
+      NewQ2 := TestQ + 1;
+      NewP3 := TestP + 1;
+      NewQ3 := TestQ - 1;
+    end
+    else if (qplace = 1) and (pplace = 0) then
+    begin
+      NewP2 := TestP - 1;
+      NewQ2 := TestQ + 1;
+      NewP3 := TestP + 1;
+      NewQ3 := TestQ + 1;
+    end
+    else if (qplace = -1) and (pplace = 0) then
+    begin
+      NewP2 := TestP + 1;
+      NewQ2 := TestQ - 1;
+      NewP3 := TestP - 1;
+      NewQ3 := TestQ - 1;
+    end
+    else if (qplace = 1) and (pplace = -1) then
+    begin
+      NewP2 := TestP - 1;
+      NewQ2 := TestQ + 0;
+      NewP3 := TestP + 0;
+      NewQ3 := TestQ + 1;
+    end
+    else if (qplace = 1) and (pplace = 1) then
+    begin
+      NewP2 := TestP + 0;
+      NewQ2 := TestQ + 1;
+      NewP3 := TestP + 1;
+      NewQ3 := TestQ + 0;
+    end
+    else if (qplace = -1) and (pplace = 1) then
+    begin
+      NewP2 := TestP + 1;
+      NewQ2 := TestQ + 0;
+      NewP3 := TestP + 0;
+      NewQ3 := TestQ - 1;
+    end
+    else if (qplace = -1) and (pplace = -1) then
+    begin
+      NewP2 := TestP + 0;
+      NewQ2 := TestQ - 1;
+      NewP3 := TestP - 1;
+      NewQ3 := TestQ + 0;
+    end;
+    dk2 := 1;
+    dk3 := 1;
+    if (NewP2 < 0) or (NewP2 > 14) or (NewQ2 < 0) or (NewQ2 > 25) then
+      dk2 := 3;
+    if (NewP3 < 0) or (NewP3 > 14) or (NewQ3 < 0) or (NewQ3 > 25) then
+      dk3 := 3;
+    for Local_g1 := 0 to 1 do
+    begin
+      for Local_f1 := 1 to team[Local_g1].numplayers do
+      begin
+        if (allPlayers[Local_g1, Local_f1].p = NewP2) and (allPlayers[Local_g1, Local_f1].q = NewQ2) then
+        begin
+          dk2 := 2;
+        end;
+        if (allPlayers[Local_g1, Local_f1].p = NewP3) and (allPlayers[Local_g1, Local_f1].q = NewQ3) then
+        begin
+          dk3 := 2;
+        end;
+      end;
+    end;
+    Bloodbowl.comment.text := 'Throw-in Movement roll';
+    Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+    Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
+    if lastroll < 3 then
+    begin
+      FinalP := NewP2;
+      FinalQ := NewQ2;
+      FinalDK := dk2;
+    end
+    else if (lastroll > 2) and (lastroll < 5) then
+    begin
+      FinalP := NewP;
+      FinalQ := NewQ;
+      FinalDK := dk1;
+    end
+    else
+    begin
+      FinalP := NewP3;
+      FinalQ := NewQ3;
+      FinalDK := dk3;
+    end;
+    if FinalDK = 1 then
+      PlacePlayer(ActionPlayer, ActionTeam, FinalP, FinalQ)
+    else if FinalDK = 3 then
+    begin
+      Bloodbowl.comment.text := 'Player runs out of bounds!  Roll for injury';
+      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+    end
+    else
+    begin
+      for Local_g2 := 0 to 1 do
+      begin
+        for Local_f2 := 1 to team[Local_g2].numplayers do
+        begin
+          if (allPlayers[Local_g2, Local_f2].p = FinalP) and (allPlayers[Local_g2, Local_f2].q = FinalQ) then
+          begin
+            BloodBowl.comment.Text := 'You must throw a block at #' + InttoStr(allPlayers[Local_g2, Local_f2].cnumber) + '-' + allPlayers[Local_g2, Local_f2].name;
+          end;
+        end;
+      end;
+      Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
+    end;
+  end
+  else
+  begin
+    Application.Messagebox('Throw-in Movement cannot be aimed ' + 'diagonally!', 'Bloodbowl Throw-In Movement Warning', MB_OK);
+  end;
+  GameStatus := '';
+  ActionTeam := 0;
+  ActionPlayer := 0;
 end;
 
 {procedure TFieldLabel.FieldMouseMove(Sender: TObject; Shift: TShiftState;

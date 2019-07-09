@@ -581,7 +581,7 @@ var
 begin
   p := Pos('.', fullWeatherString);
   // assuming table format is 'NICE. Perfect Bloodbowl weather.'
-  weatherTitle := Copy(fullWeatherString, 1, p);
+  weatherTitle := Copy(fullWeatherString, 1, p - 1);
   WeatherLabel.caption := weatherTitle + Chr(13) + Copy(fullWeatherString, p + 1, 100);
 
   // update graphics

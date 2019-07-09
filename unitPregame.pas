@@ -142,15 +142,15 @@ var f, g: integer;
     var s0, sr, sb, s1: string;
 begin
   if CanWriteToLog then begin
-    for g := 0 to 1 do
-     if team[g].ff > 0 then ff[g] := team[g].ff else begin
-       ff[g] := FVal(Inputbox('Unknown Fan Factor', 'Enter the Fan Factor ' +
-         'for the ' + ffcl[g] + ' team.', '1'));
-     end;
+    ff[0] := team[0].ff;
+    ff[1] := team[1].ff;
+
     r[0] := 0;
     r[1] := 0;
     for g := 0 to 1 do
-     for f := 1 to ff[g] do r[g] := r[g] + Rnd(6,6) + 1;
+      for f := 1 to ff[g] do
+        r[g] := r[g] + Rnd(6,6) + 1;
+
     sr := '(Red FF ' + IntToStr(ff[0]) + ': ' +  IntToStr(r[0]);
     sb := '(Blue FF ' + IntToStr(ff[1]) + ': ' +  IntToStr(r[1]);
     case game of

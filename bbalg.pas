@@ -1647,21 +1647,14 @@ begin
   GetCas := false;
   AVBreak := false;
   NoDumpOff := true;
-  QuickPass := false;
   TargetPlayer := allPlayers[g0, f0];
-  if (TargetPlayer.hasSkill('Dump Off')) or (allPlayers[g0, f0].hasSkill('Dump-Off'))
-  then
+  if TargetPlayer.hasDumpOff() then
   begin
     for z := 1 to team[g0].numplayers do
     begin
-      squaredist := RangeRulerRange(allPlayers[g0, z].p,
-                                    allPlayers[g0, z].q,
-                                    TargetPlayer.p,
-                                    TargetPlayer.q);
-      if squaredist = 0 then
-        QuickPass := true
-      else
-        QuickPass := false;
+      squaredist := RangeRulerRange(allPlayers[g0, z].p, allPlayers[g0, z].q,
+                                    TargetPlayer.p, TargetPlayer.q);
+      QuickPass := squaredist = 0;
       if (QuickPass) and (f0 <> z) then
         NoDumpOff := false;
     end;

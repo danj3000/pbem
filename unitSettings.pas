@@ -80,6 +80,9 @@ uses bbunit, bbalg, unitArmourRoll, unitLog, unitCards, unitRoster,
 
 {$R *.DFM}
 
+const
+  SETTINGS_INDEX  = 3;
+
 procedure FixSettings;
 var f: integer;
 begin
@@ -145,113 +148,30 @@ begin
   frmSettings.txtMWTable.text := GetText;
   frmSettings.txtKOTable.text := GetText;
   frmSettings.txtWeatherTable.text := GetText;
-//  frmSettings.cbMB4th.checked := (s[1] = 'M');
-//  frmSettings.cbSF4th.checked := (s[2] = 'S');
-//  frmSettings.rbWA.ItemIndex := Ord(s[3]) - 48;
-//  frmSettings.cbDT4th.checked := (s[4] = 'D');
-//  frmSettings.cbTentacles4th.checked := (s[5] = 'T');
-//  frmSettings.cbBT4th.checked := (s[6] = 'B');
+
   frmSettings.rbPO.ItemIndex := Ord(s[7]) - 48;
-//  frmSettings.rgBGA4th.ItemIndex := Ord(s[8]) - 48;
-//  frmSettings.cbDTAfter.checked := (s[9] = 'A');
+
   GetText;
 
   GetText;
-//  frmSettings.rgSkillRollsAt.ItemIndex := Ord(s[1]) - 48;
-//  frmSettings.cbNoForcedMAandAG.checked := (s[3] = 'F');
-//  frmSettings.cbCheerAC.checked := (s[4] = 'S');
-//  frmSettings.cbNoMVPs.checked := (s[5] = 'M');
-//  frmSettings.cbNiggleUp.checked := (s[6] = 'N');
-//  frmSettings.cbBanishment.checked := (s[7] = 'B');
-//  frmSettings.cbBless.checked := (s[8] = 'L');
-//  frmSettings.cbBrittle.checked := (s[9] = 'R');
-//  frmSettings.cbCrystalSkin.checked := (s[10] = 'C');
-//  frmSettings.cbDaemonicAura.checked := (s[11] = 'D');
-//  frmSettings.cbElephantTrunk.checked := (s[12] = 'E');
-//  frmSettings.cbFragile.checked := (s[13] = 'P');
-//  frmSettings.cbGFIInjury.checked := (s[14] = 'G');
-//  frmSettings.cbHouseFlyHead.checked := (s[15] = 'H');
-//  frmSettings.cbPerfectSpiral.checked := (s[16] = 'I');
-//  frmSettings.cbPulledPunches.checked := (s[17] = 'J');
-//  frmSettings.cbSingleEye.checked := (s[18] = 'K');
-//  frmSettings.cbNullField.checked := (s[19] = 'O');
-//  frmSettings.cbThirdEye.checked := (s[20] = 'T');
-  //frmSettings.rgTitchy.ItemIndex := Ord(s[21]) - 48;
-//  frmSettings.cbWaaaghArmour.checked := (s[22] = 'W');
-//  frmSettings.cbBrightCrusaders.checked := (s[23] = 'X');
-//  frmSettings.cbEvilGits.checked := (s[24] = 'U');
-//  frmSettings.cbVampireNecrarch.checked := (s[25] = 'V');
-//  frmSettings.cbVampireLahmian.checked := (s[26] = 'Y');
-//  frmSettings.cbNurglesRotters.checked := (s[27] = 'Z');
-//  frmSettings.cbHobgoblin.checked := (s[28] = 'A');
-//  frmSettings.cbBiasedReferee.checked := (s[29] = 'C');
-//  frmSettings.cbBearHug.checked := (s[30] = 'D');
-//  frmSettings.cbBulletThrow.checked := (s[31] = 'E');
-//  frmSettings.cbChill.checked := (s[32] = 'F');
-//  frmSettings.cbEthereal.checked := (s[33] = 'G');
-//  frmSettings.cbMaceTail.checked := (s[34] = 'H');
-//  frmSettings.cbPitchPlayer.checked := (s[35] = 'I');
-//  frmSettings.cbThrowBigBomb.checked := (s[36] = 'J');
-//  frmSettings.cbThrowFireball.checked := (s[37] = 'K');
-//  frmSettings.cbThrowNet.checked := (s[38] = 'L');
-//  frmSettings.cbThrowStinkBomb.checked := (s[39] = 'M');
-//  frmSettings.cbWarCry.checked := (s[40] = 'N');
-//  frmSettings.cbWings.checked := (s[41] = 'O');
-//  frmSettings.cbThrowStunty.checked := (s[42] = 'P');
-//  frmSettings.cbFlyer.checked := (s[43] = 'Q');
-//  frmSettings.cbLanding.checked := (s[44] = 'R');
-//  frmSettings.cbKicking.checked := (s[45] = 'S');
-//  frmSettings.cbNiggleHalf.checked := (s[46] = 'T');
-//  frmSettings.cbMVPBench.checked := (s[47] = 'U');
-  //frmSettings.cbWizards.checked := (s[49] = 'W');
-//  frmSettings.rgPassFumble.ItemIndex := Ord(s[50]) - 48;
-//  frmSettings.cbPGFI.checked := (s[51] = 'X');
-//  frmSettings.cbLateInt.checked := (s[52] = 'Y');
-//  frmSettings.cbDig.checked := (s[53] = 'Z');
-//  frmSettings.cbButterfingers.checked := (s[54] = 'A');
-//  frmSettings.cbFoulApp.checked := (s[55] = 'B');
-//  frmSettings.cbFG1PT.checked := (s[56] = 'C');
-//  frmSettings.cbOPTakeRoot.checked := (s[61] = 'F');
+
   frmSettings.cbBlackIce.Checked := (s[62] = 'G');
-//  frmSettings.cbSquarePass.checked := (s[63] = 'H');
-//  frmSettings.cbBHAssist.checked := (s[64] = 'I');
-//  frmSettings.cbHChefNew.checked := (s[65] = 'J');
-//  frmSettings.cbDiagMove.checked := (s[66] = 'K');
-//  frmSettings.cbSWRef.checked := (s[67] = 'L');
-//  frmSettings.cbGoblinWeapons.checked := (s[68] = 'M');
-//  frmSettings.cbNoFieldGoals.checked := (s[69] = 'N');
-//  frmSettings.cbOnPitchSpellcasters.checked := (s[70] = 'O');
-//  frmSettings.cbNegativeWinnings.checked := (s[71] = 'P');
-//  frmSettings.cbNoInjMods.checked := (s[73] = 'R');
-//  frmSettings.cbFirethrower.checked := (s[74] = 'S');
+
   GetText;
-//  frmSettings.rgWonMatchMod.ItemIndex := Ord(s[1]) - 48;
-//  frmSettings.rgTiedMatchMod.ItemIndex := Ord(s[2]) - 48;
-//  frmSettings.cbFFMinus1Per10.checked := (s[3] = 'M');
-//  frmSettings.cbFFTrueDice.checked := (s[4] = 'T');
-//  frmSettings.rgHGaze.ItemIndex := Ord(s[5]) - 48;
-//  frmSettings.cbLOS.checked := (s[6] = 'L');
+
   frmSettings.cbWeatherPitch.checked := (s[7] = 'W');
-//  frmSettings.cbWideZone.checked := (s[8] = 'Z');
-//  frmSettings.cbRuleof11.checked := (s[9] = 'R');
+
   frmSettings.cbLRB4KO.Checked := (s[10] = 'K');
   frmSettings.cbDeStun.checked := (s[11] = 'S');
   frmSettings.cbDC.Checked := (s[12] = 'D');
+
   GetText;
-//  frmSettings.txtRegenRollNeeded.text := s[1];
-//  frmSettings.cbPBJumpUp.checked := (s[2] = 'J');
-//  frmSettings.cbWeakStunty.checked := (s[3] = 'W');
-//  frmSettings.cbNiggleOnFour.checked := (s[4] = 'N');
-//  frmSettings.cbNoTZAssist.checked := (s[5] = 'A');
-//  frmSettings.cbUpApoth.checked := (s[6] = 'U');
   frmSettings.rgCardSystem.ItemIndex := Ord(s[7]) - 48;
+
   GetText;
   frmSettings.txtCardsIniFile.text := GetText;
   frmSettings.txtHandicapIniFile.text := GetText;
   frmSettings.txtFieldImageFile.text := GetText;
-//  frmSettings.cbUseOtherSPP.checked := (s[1] = 'O');
-//  frmSettings.cbSeparateARIR.checked := (s[2] = 'S');
-//  frmSettings.lblLustrian.Caption := s[3];
 
   FixSettings;
 end;
@@ -274,11 +194,13 @@ begin
   st := st + Chr(48 + rbPO.ItemIndex);
   st := st + Chr(48 + 3);
   st := st + 'A';
+  // section
   st := st + '*';
   st := st + '2';
 
   st := st + '5';   // foul rule 5 (always)
   st := st + ' ';
+  // section
   st := st + '*';
   st := st + Chr(48 + 2);
   st := st + Chr(48);
@@ -313,7 +235,6 @@ begin
   st := st + '.';
   st := st + '.';
   st := st + '.';
-    st := st + '.';
   st := st + '.';
   st := st + '.';
   st := st + '.';
@@ -326,7 +247,8 @@ begin
   st := st + '.';
   st := st + '.';
   st := st + '.';
-    st := st + '.';
+  st := st + '.';
+  st := st + '.';
   st := st + '.';
   st := st + '.';
   st := st + '.';    // niggles at half time
@@ -360,6 +282,7 @@ begin
   st := st + '.';
   st := st + '.';
 
+  // section
   st := st + '*';
   st := st + Chr(48 + 0);
   st := st + Chr(48 + 1);
@@ -373,6 +296,7 @@ begin
   if cbLRB4KO.Checked then st := st + 'K' else st := st + '.';
   if cbDeStun.Checked then st := st + 'S' else st := st + '.';
   if cbDC.Checked then st := st + 'D' else st := st + '.';
+  // section
   st := st + '*';
   st := st + bbalg.RegenRollNeeded.ToString();
   st := st + '.';
@@ -381,13 +305,16 @@ begin
   st := st + '.';
   st := st + '.';
   st := st + Chr(48 + rgCardSystem.ItemIndex);
+  // section
   st := st + '*' + Trim(txtCardsIniFile.text);
   st := st + '*' + Trim(txtHandicapIniFile.text);
-  st := st + '*' + Trim(txtFieldImageFile.text) + '*';
+  st := st + '*' + Trim(txtFieldImageFile.text);
+  // section
+  st := st + '*';
   st := st + '.';
   st := st + 'S'; // separate inj/arm rolls
   st := st + '';
-  UpdateLog(3, st);
+  UpdateLog(SETTINGS_INDEX, st);
 
   ModalResult := 1;
   FixSettings;
