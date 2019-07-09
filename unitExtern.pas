@@ -62,7 +62,7 @@ procedure SaveGame(fn: string);
 var gg: textfile;
     c: char;
     cd: CodeTable;
-    l, p, p2, p3, start, step: integer;
+    i, j, p, p2, p3, start, step: integer;
     s: string;
 begin
   if fn<>(curdir + 'autosave.bbm') then begin
@@ -84,23 +84,27 @@ begin
   AssignFile(gg, fn);
   Rewrite(gg);
   WriteLn(gg, PBeMVerText);
-  if WriteLogUncoded then begin
-    l := 0;
-    while l < GameLogLength do begin
-      s := GetGameLog(l);
+  if WriteLogUncoded then
+  begin
+    i := 0;
+    while i < GameLogLength do
+    begin
+      s := GetGameLog(i);
       WriteLn(gg, s);
-      l := l + 1;
+      i := i + 1;
     end;
-  end else begin
+  end else
+  begin
     Write(gg, '&' + Chr(start) + Chr(step));
-    l := 0;
-    while l < GameLogLength do begin
-      s := GetGameLog(l) + Chr(248);
+    j := 0;
+    while j < GameLogLength do
+    begin
+      s := GetGameLog(j) + Chr(248);
       for p := 1 to Length(s) do begin
-        c := Chr(cd[(Ord(s[p]) + p + l - 33) mod 224 + 32]);
+        c := Chr(cd[(Ord(s[p]) + p + j - 33) mod 224 + 32]);
         Write(gg, c);
       end;
-      l := l + 1;
+      j := j + 1;
     end;
   end;
   CloseFile(gg);
@@ -145,7 +149,7 @@ begin
     while lp <= Length(s0) do begin
       s := '';
       lc := DecodeNextChar;
-      while lc <> 248 do begin
+      while (lc <> 248) and (lp <= Length(s0)) do begin
         s := s + Chr(lc);
         lc := DecodeNextChar;
       end;
@@ -584,9 +588,21 @@ begin
           wiz[g].font.color := colorarray[g, 4, 1];
           wiz[g].caption := 'Chef';
         end;
-      end else wiz[g].visible := false;
-      if g = 0 then Bloodbowl.LblRedTeam.caption := ffcl[g]
-               else Bloodbowl.LblBlueTeam.caption := ffcl[g];
+      end
+      else
+        wiz[g].visible := false;
+
+      if g = 0 then
+      begin
+        Bloodbowl.LblRedTeam.caption := ffcl[g];
+        Bloodbowl.lblHomeFF.caption := 'FF: ' + team[g].ff.ToString();
+      end
+      else
+      begin
+        Bloodbowl.LblBlueTeam.caption := ffcl[g];
+        Bloodbowl.lblAwayFF.caption := 'FF: ' + team[g].ff.ToString();
+      end;
+
       if g = 0 then Bloodbowl.ButLoadRed.enabled := false
                else Bloodbowl.ButLoadBlue.enabled := false;
       if not(Bloodbowl.ButLoadRed.enabled)
@@ -645,7 +661,10 @@ begin
         allPlayers[g,f].SetStatusDef(11);
       end;
     end;
-  end else begin
+  end
+  else
+  begin
+    // Dir is back
     if s[3] = '!' then begin
       g := Ord(s[2]) - 48;
       ResetTeam(g);
@@ -1101,6 +1120,7 @@ var Reg: TRegistry;
     found: boolean;
     checkdate: TDateTime;
     DateSeparator: AnsiChar;
+    fmt: TFormatSettings;
 begin
   DateSeparator := '-';
   p := 0;
@@ -1128,7 +1148,11 @@ begin
               {check for cleanup}
               q := Pos('\', t);
               try
-                checkdate := StrToDate(Copy(t, q+1, Length(t) - q));
+                GetLocaleFormatSettings(0, fmt);
+
+                fmt.DateSeparator := '-';
+
+                checkdate := StrToDate(Copy(t, q+1, Length(t) - q), fmt);
               except
                 on EConvertError do begin
                   s := Copy(t, q+1, Length(t) - q);

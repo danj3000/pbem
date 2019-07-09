@@ -48,7 +48,6 @@ type
     dlgPic: TOpenDialog;
     cbPassingRangesColored: TCheckBox;
     cbBlackIce: TCheckBox;
-    rbPO: TRadioGroup;
     cbWeatherPitch: TCheckBox;
     cbLRB4KO: TCheckBox;
     cbDeStun: TCheckBox;
@@ -149,10 +148,6 @@ begin
   frmSettings.txtKOTable.text := GetText;
   frmSettings.txtWeatherTable.text := GetText;
 
-  frmSettings.rbPO.ItemIndex := Ord(s[7]) - 48;
-
-  GetText;
-
   GetText;
 
   frmSettings.cbBlackIce.Checked := (s[62] = 'G');
@@ -191,15 +186,9 @@ begin
   st := st + 'D';
   st := st + 'T';
   st := st + 'B';
-  st := st + Chr(48 + rbPO.ItemIndex);
+  st := st + '2';
   st := st + Chr(48 + 3);
   st := st + 'A';
-  // section
-  st := st + '*';
-  st := st + '2';
-
-  st := st + '5';   // foul rule 5 (always)
-  st := st + ' ';
   // section
   st := st + '*';
   st := st + Chr(48 + 2);
@@ -395,10 +384,6 @@ begin
           cbDC.checked := (Copy(s, 16, 1) = 'Y');
         end;
 
-        if Copy(s, 1, 9) = 'PilingOn=' then begin
-          rbPO.ItemIndex := FVal(copy(s, 10, 1));
-        end;
-//
         if Copy(s, 1, 7) = 'DeStun=' then begin
           cbDeStun.checked := (Copy(s, 8, 1) = 'Y');
         end;

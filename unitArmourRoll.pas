@@ -115,11 +115,7 @@ begin
     if rbDeathRoller.checked then am := am + 5;
     if cbChainsawKD.checked then am := am + 3;
     if rbPilingOn.checked then begin
-      if frmSettings.rbPO.ItemIndex <= 1 then begin
-        Val(Trim(txtPilingOnST.text), v, c);
-        am := v;
-      end;
-      PilingOn := frmSettings.rbPO.ItemIndex;
+      PilingOn := 2;
     end;
     if RollST = 'F' then begin
       Val(Trim(txtAssists.text), v, c);
@@ -233,12 +229,9 @@ begin
           frmArmourRoll.pnlIR.left := frmArmourRoll.pnlAR.width;
           frmArmourRoll.pnlPlayerSize.left := frmArmourRoll.pnlAR.width;
           frmArmourRoll.width :=
-               frmArmourRoll.pnlAR.width + frmArmourRoll.pnlIR.width;
-          if frmSettings.rbPO.ItemIndex=2 then begin
-            frmArmourRoll.lblPilingOnST.visible := false;
-            frmArmourRoll.txtPilingOnST.visible := false;
-          end;
-
+          frmArmourRoll.pnlAR.width + frmArmourRoll.pnlIR.width;
+          frmArmourRoll.lblPilingOnST.visible := false;
+          frmArmourRoll.txtPilingOnST.visible := false;
         end;
    'I': begin
           frmArmourRoll.caption := 'Injury Roll';
@@ -303,9 +296,6 @@ end;
 procedure TfrmArmourRoll.rbPilingOnClick(Sender: TObject);
 begin
   txtPilingOnST.Enabled := rbPilingOn.Checked;
-  if frmSettings.rbPO.ItemIndex <> 2 then rbARNoSkill.Checked := true;
-  {if not(frmSettings.cbSeparateARIR.checked) then
-    rbIRNoSkill.checked := true;   }
 end;
 
 procedure TfrmArmourRoll.rbPDaggerClick(Sender: TObject);

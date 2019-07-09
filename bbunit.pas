@@ -294,6 +294,8 @@ type
     Stab1: TMenuItem;
     AVInjRoll2: TMenuItem;
     PickSideStep1: TMenuItem;
+    lblHomeFF: TLabel;
+    lblAwayFF: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Movetofield1Click(Sender: TObject);
@@ -3692,6 +3694,7 @@ begin
   LoadTeam(0);
   if team[0].name <> '' then begin
     LblRedteam.caption := team[0].name;
+    lblHomeFF.Caption := 'FF: ' + team[0].ff.ToString;
     ButLoadRed.enabled := false;
     LblRedteam.Font.Color := TeamTextColor[0];
     if not(ButLoadBlue.enabled) then ButWeather.Enabled := true;
@@ -3720,6 +3723,7 @@ begin
   LoadTeam(1);
   if team[1].name <> '' then begin
     LblBlueteam.caption := team[1].name;
+    lblAwayFF.Caption := 'FF: ' + team[1].ff.ToString;
     ButLoadBlue.enabled := false;
     LblBlueteam.Font.Color := TeamTextColor[1];
     if not(ButLoadRed.enabled) then ButWeather.Enabled := true;
@@ -3753,6 +3757,7 @@ end;
 
 procedure TBloodbowl.ButGateClick(Sender: TObject);
 begin
+
   case RGGate.Itemindex of
    0: WorkOutGate('G');
    1: WorkOutGate('S');

@@ -46,6 +46,9 @@ begin
 
   Bloodbowl.LblRedTeam.caption := '';
   Bloodbowl.LblBlueTeam.caption := '';
+  Bloodbowl.lblHomeFF.caption := '';
+  Bloodbowl.lblAwayFF.caption := '';
+
   Bloodbowl.LblWeather.caption := '';
   Bloodbowl.LblGate.caption := '';
   Bloodbowl.LblHandicap.caption := '';
