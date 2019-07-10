@@ -21,8 +21,8 @@ type
   PLAYER_STATUS_PRONE = 3);
 
 type
-  TWeather = (Sweltering, Sunny, Nice, Raining, Blizzard);
-  function ParseWeather(s: string): TWeather;
+  TWeatherState = (Sweltering, Sunny, Nice, Raining, Blizzard);
+  function ParseWeather(s: string): TWeatherState;
 
 type
   TmodAlg = class(TDataModule)
@@ -107,7 +107,7 @@ uses unitLog, bbunit, unitNotes, unitBall, unitPlayer, unitTeam,
 
 {$R *.DFM}
 
-function ParseWeather(s: string): TWeather;
+function ParseWeather(s: string): TWeatherState;
 begin
   if s = 'SWELTERING HEAT' then
     Result := Sweltering

@@ -10,7 +10,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Buttons, Menus, ComCtrls, jpeg,
-  bbalg, unitDodgeRoll, unitTeam, unitPlayer, unitMarker, unitCards;
+  bbalg, unitDodgeRoll, unitTeam, unitPlayer, unitMarker, unitCards, weather;
 
 type
   TBloodbowl = class(TForm)
@@ -474,7 +474,7 @@ type
     procedure BPB10Click(Sender: TObject);
     procedure Stab1Click(Sender: TObject);
     procedure PickSideStep1Click(Sender: TObject);
-     function GetWeather(): TWeather;
+     function GetWeather(): TWeatherState;
     //procedure SetWeather(); overload;
     procedure SetWeather(fullWeatherString: string); overload;
   private
@@ -551,7 +551,7 @@ uses unitRoster, unitLog, unitAbout, unitArmourRoll, unitNotes,
 
 {$R *.DFM}
 
-function TBloodbowl.GetWeather(): TWeather;
+function TBloodbowl.GetWeather(): TWeatherState;
 var w: string;
 begin
   w := Copy(Bloodbowl.WeatherLabel.caption, 1, 10);
@@ -1579,7 +1579,7 @@ begin
       'Ç': PlayActionDrawCards(s, 1, true);
       'D': begin
             case s[2] of
-             'W': PlayActionWeatherRoll(s, 1);
+             'W': TWeather.PlayActionWeatherRoll(s, 1);
              'K': PlayActionKickOff(s, 1);
              'G': PlayActionGate(s, 1, 0);
              'S': PlayActionGate(s, 1, 1);
@@ -1704,7 +1704,7 @@ begin
       'Ç': PlayActionDrawCards(s, -1, true);
       'D': begin
             case s[2] of
-             'W': PlayActionWeatherRoll(s, -1);
+             'W': TWeather.PlayActionWeatherRoll(s, -1);
              'K': PlayActionKickOff(s, -1);
              'G': PlayActionGate(s, -1, 0);
              'S': PlayActionGate(s, -1, 1);
@@ -2842,7 +2842,7 @@ begin
       end else if Copy((KickoffTable[r3]),1,14) = 'WEATHER CHANGE' then begin
         if CanWriteToLog then begin
           ScatterD8D6(ballspotp, ballspotq, true, false);
-          DoWeatherRoll();
+          TWeather.DoWeatherRoll();
           if KOCatcherPlayer <> -1 then begin
             ShowCatchWindow(KOCatcherTeam, KOCatcherPlayer, 0, false, false);
             KOCatcherTeam := -1;
@@ -3325,7 +3325,7 @@ end;
 // Weather Menu item
 procedure TBloodbowl.Weathertable1Click(Sender: TObject);
 begin
-  DoWeatherRoll();
+  TWeather.DoWeatherRoll();
 end;
 
 procedure TBloodbowl.ViewRedPB1Click(Sender: TObject);
@@ -4609,7 +4609,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather1.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4625,7 +4625,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather2.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4641,7 +4641,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather3.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4657,7 +4657,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather4.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4673,7 +4673,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather5.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4689,7 +4689,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather6.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4705,7 +4705,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather7.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4721,7 +4721,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather8.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4737,7 +4737,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather9.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4753,7 +4753,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather10.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;
@@ -4769,7 +4769,7 @@ begin
     s0 := WeatherTable[g];
     p := Pos('.', s0);
     if (Bloodbowl.PWeather11.Caption = '&' + Copy(s0,1,p-1)) and not(foundit) then begin
-      DoWeatherPick(g);
+      TWeather.DoWeatherPick(g);
       foundit := true;
     end;
   end;

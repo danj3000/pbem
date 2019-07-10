@@ -153,8 +153,8 @@ begin
 
   CalculateTTMRollNeeded;
 
-  frmTTM.cbVerySunny.checked := Bloodbowl.GetWeather() = TWeather.Sunny;
-  frmTTM.cbBlizzard.checked :=Bloodbowl.GetWeather() = TWeather.Blizzard;
+  frmTTM.cbVerySunny.checked := Bloodbowl.GetWeather() = TWeatherState.Sunny;
+  frmTTM.cbBlizzard.checked :=Bloodbowl.GetWeather() = TWeatherState.Blizzard;
 
   CalculateTTMRollNeeded;
 

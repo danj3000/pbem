@@ -384,8 +384,8 @@ begin
     end;
 
 
-  frmThrowStuff.cbVerySunny.checked := BloodBowl.GetWeather() = TWeather.Sunny;
-  frmThrowStuff.cbBlizzard.checked := BloodBowl.GetWeather() = TWeather.Blizzard;
+  frmThrowStuff.cbVerySunny.checked := BloodBowl.GetWeather() = TWeatherState.Sunny;
+  frmThrowStuff.cbBlizzard.checked := BloodBowl.GetWeather() = TWeatherState.Blizzard;
 
   frmThrowStuff.cbNet.checked := ThrowStuff = 4;
 

@@ -177,8 +177,8 @@ begin
       CalculatePassRollNeeded;
     end;
 
-  frmPass.cbVerySunny.checked := Bloodbowl.GetWeather() = TWeather.Sunny;
-  frmPass.cbBlizzard.checked :=Bloodbowl.GetWeather() = TWeather.Blizzard;
+  frmPass.cbVerySunny.checked := Bloodbowl.GetWeather() = TWeatherState.Sunny;
+  frmPass.cbBlizzard.checked := Bloodbowl.GetWeather() = TWeatherState.Blizzard;
 
   CalculatePassRollNeeded;
 

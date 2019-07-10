@@ -19,6 +19,7 @@ var
   WaitLength: integer;
 const
   DIR_FORWARD = 1;
+
 procedure Wait;
 procedure DefaultAction(s: string);
 
@@ -29,7 +30,7 @@ procedure PlayActionRoll2Dice(s: string; dir: integer);
 procedure PlayActionRollScatter(s: string; dir: integer);
 procedure PlayActionRollBlockDice(s: string; dir, num: integer);
 procedure PlayActionThrowIn(s: string; dir: integer);
-procedure PlayActionWeatherRoll(s: string; dir: integer);
+
 procedure PlayActionKickOff(s: string; dir: integer);
 procedure PlayActionArmourRoll(s: string; dir: integer);
 procedure PlayActionInjuryRoll(s: string; dir: integer);
@@ -163,48 +164,6 @@ begin
   end;
 end;
 
-procedure PlayActionWeatherRoll(s: string; dir: integer);
-var
-  newWeatherCaption, newWeatherCaption2: string;
-  f, g, p: integer;
-  fullWeatherString: string;
-  weather: TWeather;
-begin
-  if dir = DIR_FORWARD then
-  begin
-    f := Ord(s[3]) - 48;
-    g := Ord(s[4]) - 48;
-    fullWeatherString := WeatherTable[f + g];
-    DefaultAction('(' + IntToStr(f) + ',' + IntToStr(g) + ') = ' + IntToStr(f + g) + ' : ' + fullWeatherString);
-
-    p := Pos('.', fullWeatherString);
-    newWeatherCaption := Copy(fullWeatherString, 1, p) + Chr(13) + Copy(fullWeatherString, p + 1, 100);
-    newWeatherCaption2 := Copy(fullWeatherString, 1, p - 1);
-
-    Bloodbowl.WeatherLabel.caption := newWeatherCaption;
-    Bloodbowl.LblWeather.caption := newWeatherCaption2;
-
-    if Bloodbowl.PregamePanel.visible then
-    begin
-      Bloodbowl.ButWeather.enabled := false;
-      Bloodbowl.ButGate.enabled := true;
-      Bloodbowl.RGGate.visible := true;
-    end;
-  end
-  else
-  begin
-    BackLog;
-    if Bloodbowl.PregamePanel.visible then
-    begin
-      Bloodbowl.WeatherLabel.caption := '';
-      Bloodbowl.LblWeather.caption := '';
-      Bloodbowl.ButWeather.enabled := true;
-      Bloodbowl.ButGate.enabled := false;
-      Bloodbowl.RGGate.visible := false;
-    end;
-  end;
-  Bloodbowl.SetWeather(fullWeatherString);
-end;
 
 procedure PlayActionKickOff(s: string; dir: integer);
 var f, g: integer;

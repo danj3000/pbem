@@ -5,10 +5,6 @@ interface
 procedure PregameEnableDisable;
 procedure NigglesOrStart;
 
-procedure DoWeatherRoll;
-procedure DoWeatherPick(r3: integer);
-procedure DoWeather(r1, r2: integer);
-
 procedure PlayActionGate(s: string; dir, ff: integer);
 function TranslateHandicapTable: string;
 procedure PlayActionHandicapTable(s: string; dir: integer);
@@ -182,43 +178,6 @@ begin
     AddLog(s0 + ' ' + sr + ' ' + sb + ' ' + s1);
     LogWrite('D' + game + Chr(ff[0] + 48) + Chr(r[0] + 48) +
                     Chr(ff[1] + 48) + Chr(r[1] + 48));
-  end;
-end;
-
-procedure DoWeatherRoll;
-var r1, r2: integer;
-begin
-  if CanWriteToLog then
-  begin
-    r1 := Rnd(6,6) + 1;
-    r2 := Rnd(6,6) + 1;
-    DoWeather(r1, r2);
-  end;
-end;
-
-procedure DoWeather(r1, r2: integer);
-var weatherString: string;
-begin
-    weatherString := WeatherTable[r1 + r2];
-    AddLog('(' + IntToStr(r1) + ',' + IntToStr(r2) + ') = ' + IntToStr(r1 + r2) + ' : ' + weatherString);
-    LogWrite('DW' + Chr(r1 + 48) + Chr(r2 + 48));
-
-    Bloodbowl.SetWeather(weatherString);
-end;
-
-procedure DoWeatherPick(r3: integer);
-var r1, r2: integer;
-begin
-  if CanWriteToLog then begin
-    // make up dice rolls
-    if r3 >= 7 then
-      r1 := 6
-    else
-      r1 := 1;
-    r2 := r3 - r1;
-
-    // do it
-    DoWeather(r1, r2);
   end;
 end;
 
