@@ -69,3 +69,4 @@ __recovery/
 modules/
 autosave.bbm
 autosave.$bm
+*.bbm
