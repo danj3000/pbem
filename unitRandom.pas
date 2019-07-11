@@ -1,13 +1,38 @@
 unit unitRandom;
-
 interface
+
+
+type
+  TDiceResult = record
+    Dice : array of integer;
+    function Total(): integer;
+    constructor Create(count: integer);
+  end;
 
 procedure UserRandomize;
 function Rnd(r: word; rtype: integer): word;
+function RollD6(): integer;
+function Roll2D6(): TDiceResult;
 
 implementation
 
 uses Windows, bbalg, bbunit, unitSettings, unitMachineID;
+
+constructor TDiceResult.Create(count: integer);
+begin
+  SetLength(Dice, count);
+end;
+
+function TDiceResult.Total(): integer;
+var
+  i, total: Integer;
+begin
+  total := 0;
+  for i in Dice do
+    total := total + i;
+
+  Result := total;
+end;
 
 const R1m = 2147483647;
 const R1q = 127773;
@@ -133,6 +158,21 @@ begin
        end;
   end;
   Rnd := i;
+end;
+
+function RollD6(): integer;
+begin
+  Result := Rnd(6,6);
+end;
+
+function Roll2D6(): TDiceResult;
+var output: TDiceResult;
+begin
+  output := TDiceResult.Create(2);
+  output.Dice[0] := Rnd(6,6) + 1;
+  output.Dice[1] := Rnd(6,6) + 1;
+
+  Result := output;
 end;
 
 end.

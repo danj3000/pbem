@@ -213,6 +213,7 @@
             <Form>frmCatchStuff</Form>
         </DCCReference>
         <DCCReference Include="weather.pas"/>
+        <DCCReference Include="gate.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

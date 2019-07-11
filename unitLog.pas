@@ -287,7 +287,8 @@ begin
   end;
 
   Bloodbowl.Loglabel.caption := s;
-  if ref then Bloodbowl.Loglabel.Refresh;
+  if ref then
+    Bloodbowl.Loglabel.Refresh;
 
   if q = p then begin
     {add to gamelog}

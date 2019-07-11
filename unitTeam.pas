@@ -187,28 +187,28 @@ begin
                           'Away Eff FF ' +  IntToStr(team[1].ff);
   end else begin
     if dir = 1 then begin
-      if s[3] = '1' then begin
-        Gate := Gate + 1;
-        AddLog('Gate increased by 1000 Fans');
-      end;
-      if s[3] = '2' then begin
-        Gate := Gate + 5;
-        AddLog('Gate increased by 5000 Fans');
-      end;
-      if s[3] = '3' then begin
-        Gate := Gate - 1;
-        AddLog('Gate decreased by 1000 Fans');
-      end;
-      if s[3] = '4' then begin
-        Gate := Gate - 5;
-        AddLog('Gate decreased by 5000 Fans');
-      end;
+//      if s[3] = '1' then begin
+//        Gate := Gate + 1;
+//        AddLog('Gate increased by 1000 Fans');
+//      end;
+//      if s[3] = '2' then begin
+//        Gate := Gate + 5;
+//        AddLog('Gate increased by 5000 Fans');
+//      end;
+//      if s[3] = '3' then begin
+//        Gate := Gate - 1;
+//        AddLog('Gate decreased by 1000 Fans');
+//      end;
+//      if s[3] = '4' then begin
+//        Gate := Gate - 5;
+//        AddLog('Gate decreased by 5000 Fans');
+//      end;
     end else begin
       BackLog;
-      if s[3] = '1' then Gate := Gate - 1;
-      if s[3] = '2' then Gate := Gate - 5;
-      if s[3] = '3' then Gate := Gate + 1;
-      if s[3] = '4' then Gate := Gate + 5;
+//      if s[3] = '1' then Gate := Gate - 1;
+//      if s[3] = '2' then Gate := Gate - 5;
+//      if s[3] = '3' then Gate := Gate + 1;
+//      if s[3] = '4' then Gate := Gate + 5;
     end;
     p2 := Pos('fans', Bloodbowl.GateLabel.caption);
     p := Pos(Chr(13),Copy(Bloodbowl.GateLabel.caption, p2-20, 20));

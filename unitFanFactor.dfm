@@ -4,7 +4,7 @@ object frmFanFactor: TfrmFanFactor
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Bloodbowl Fan Factor'
-  ClientHeight = 600
+  ClientHeight = 484
   ClientWidth = 249
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -92,7 +92,7 @@ object frmFanFactor: TfrmFanFactor
   end
   object GroupBox3: TGroupBox
     Left = 8
-    Top = 344
+    Top = 247
     Width = 233
     Height = 65
     Caption = 'Fan Factor modifier'
@@ -146,45 +146,13 @@ object frmFanFactor: TfrmFanFactor
       TabOrder = 2
     end
   end
-  object GroupBox5: TGroupBox
-    Left = 8
-    Top = 248
-    Width = 233
-    Height = 89
-    Caption = 'Match modifier'
-    TabOrder = 4
-    object rbFFRegularSeason: TRadioButton
-      Left = 8
-      Top = 16
-      Width = 113
-      Height = 17
-      Caption = '0 (Regular Season)'
-      TabOrder = 0
-    end
-    object rbFFSemiFinal: TRadioButton
-      Left = 8
-      Top = 40
-      Width = 113
-      Height = 17
-      Caption = '+1 (Semi-final)'
-      TabOrder = 1
-    end
-    object rbFFFinal: TRadioButton
-      Left = 8
-      Top = 64
-      Width = 113
-      Height = 17
-      Caption = '+2 (Final)'
-      TabOrder = 2
-    end
-  end
   object GroupBox6: TGroupBox
     Left = 8
-    Top = 472
+    Top = 375
     Width = 233
     Height = 57
     Caption = 'Before modification setting'
-    TabOrder = 5
+    TabOrder = 4
     object Label1: TLabel
       Left = 25
       Top = 36
@@ -203,11 +171,11 @@ object frmFanFactor: TfrmFanFactor
   end
   object GroupBox7: TGroupBox
     Left = 8
-    Top = 424
+    Top = 327
     Width = 233
     Height = 41
     Caption = 'Card modifier'
-    TabOrder = 6
+    TabOrder = 5
     object cbBigMatch: TCheckBox
       Left = 8
       Top = 16
@@ -219,20 +187,20 @@ object frmFanFactor: TfrmFanFactor
   end
   object butFFUse: TButton
     Left = 8
-    Top = 536
+    Top = 439
     Width = 113
     Height = 33
     Caption = 'Use these modifiers'
-    TabOrder = 7
+    TabOrder = 6
     OnClick = butFFUseClick
   end
   object butFFCancel: TButton
     Left = 128
-    Top = 536
+    Top = 439
     Width = 113
     Height = 33
     Caption = 'Cancel'
-    TabOrder = 8
+    TabOrder = 7
     OnClick = butFFCancelClick
   end
 end

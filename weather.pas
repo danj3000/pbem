@@ -11,7 +11,7 @@ protected
   { protected declarations }
 public
   { public declarations }
-  // todo: make these instance methods as needed
+  // todo: make these instance methods when possible
   class procedure DoWeatherRoll;
   class procedure DoWeather(r1, r2: integer);
   class procedure DoWeatherPick(r3: integer);
@@ -87,7 +87,6 @@ begin
     begin
       Bloodbowl.ButWeather.enabled := false;
       Bloodbowl.ButGate.enabled := true;
-      Bloodbowl.RGGate.visible := true;
     end;
   end
   else
@@ -99,7 +98,6 @@ begin
       Bloodbowl.LblWeather.caption := '';
       Bloodbowl.ButWeather.enabled := true;
       Bloodbowl.ButGate.enabled := false;
-      Bloodbowl.RGGate.visible := false;
     end;
   end;
   Bloodbowl.SetWeather(fullWeatherString);

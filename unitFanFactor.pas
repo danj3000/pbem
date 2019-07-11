@@ -20,10 +20,6 @@ type
     rbWonMatch: TRadioButton;
     rbTiedMatch: TRadioButton;
     rbLostMatch: TRadioButton;
-    GroupBox5: TGroupBox;
-    rbFFRegularSeason: TRadioButton;
-    rbFFSemiFinal: TRadioButton;
-    rbFFFinal: TRadioButton;
     GroupBox6: TGroupBox;
     cbFFPreMod: TCheckBox;
     Label1: TLabel;
@@ -55,7 +51,7 @@ implementation
 uses bbunit, bbalg, unitLog, unitMarker, unitRandom, unitPlayAction,
   unitPostgameSeq, unitSettings;
 
-var ffresult, match: array [0..1] of integer;
+var ffresult: array [0..1] of integer;
     tdmod, eachtd, casmod, eachcas, ffmod, bigmatch,
     premod, specteammod: array [0..1] of boolean;
     curFFteam: integer;
@@ -78,7 +74,6 @@ begin
     eachtd[g] := false;
     casmod[g] := (FVal(marker[g, MT_CasScore].caption) >= 2);
     eachcas[g] := false;
-    match[g] := Bloodbowl.RGGate.Itemindex;
     ffmod[g] := false; // fan factor modifier if > 10
     bigmatch[g] := false;
     premod[g] := false;
@@ -109,7 +104,7 @@ begin
     if eachcas[tm] then
       m := m + FVal(marker[tm, MT_CasScore].caption) div 2 else m := m + 1;
   end;
-  m := m + match[tm];
+
   if ffmod[tm] then m := m - (team[tm].ff) div 10;
   if bigmatch[tm] then m := m + 3;
   if specteammod[tm] then m := m + 1;
@@ -131,9 +126,6 @@ begin
   frmFanFactor.cbEach2TD.checked := eachtd[tm];
   frmFanFactor.cbCasMod.checked := casmod[tm];
   frmFanFactor.cbEach2Cas.checked := eachcas[tm];
-  frmFanFactor.rbFFRegularSeason.checked := (match[tm] = 0);
-  frmFanFactor.rbFFSemiFinal.checked := (match[tm] = 1);
-  frmFanFactor.rbFFFinal.checked := (match[tm] = 2);
   frmFanFactor.cbMinFFEach10.checked := ffmod[tm];
   frmFanFactor.cbBigMatch.checked := bigmatch[tm];
   frmFanFactor.cbFFPreMod.checked := premod[tm];
@@ -241,7 +233,7 @@ begin
        Chr(BoolToInt(eachtd[tm]) + 65) +
        Chr(BoolToInt(casmod[tm]) + 65) +
        Chr(BoolToInt(eachcas[tm]) + 65) +
-       Chr(match[tm] + 65) +
+       Chr(65) +
        Chr(BoolToInt(ffmod[tm]) + 65) +
        Chr(BoolToInt(bigmatch[tm]) + 65) +
        Chr(BoolToInt(premod[tm]) + 65) +
@@ -276,9 +268,6 @@ begin
   eachtd[curFFteam] := cbEach2TD.checked;
   casmod[curFFteam] := cbCasMod.checked;
   eachcas[curFFteam] := cbEach2Cas.checked;
-  if rbFFRegularSeason.checked then match[curFFteam] := 0;
-  if rbFFSemiFinal.checked then match[curFFteam] := 1;
-  if rbFFFinal.checked then match[curFFteam] := 2;
   ffmod[curFFteam] := cbMinFFEach10.checked;
   bigmatch[curFFteam] := cbBigMatch.checked;
   premod[curFFteam] := cbFFPreMod.checked;

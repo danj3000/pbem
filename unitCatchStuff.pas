@@ -254,8 +254,7 @@ begin
 
   frmCatchStuff.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or
       (allPlayers[g,f].Ally)) and (true)); // big guy
-  frmCatchStuff.cbPouringRain.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN');
+  frmCatchStuff.cbPouringRain.checked := Bloodbowl.GetWeather() = TWeatherState.Raining;
 
   CalculateCatchRollNeeded;
 

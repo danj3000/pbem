@@ -42,7 +42,7 @@ implementation
 
 uses bbunit, bbalg, unitLog, unitPlayAction, unitExtern, unitPlayer,
      unitField, unitMarker, unitBall, unitPostGameSeq, unitSettings,
-     unitRandom, unitPregame, unitRoster;
+     unitRandom, unitPregame, unitRoster, weather;
 
 {$R *.DFM}
 
@@ -997,8 +997,8 @@ begin
           PlayActionDeStun(s3, 1);
       end;
       if (allPlayers[g,f].status > 0) and (allPlayers[g,f].status < 5) then begin
-        if ((UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 15)) =
-             'SWELTERING HEAT')) and (allPlayers[g,f].status <= 4) then
+        if (Bloodbowl.GetWeather() = TWeatherState.Sweltering)
+             and (allPlayers[g,f].status <= 4) then
         begin
           s0 := 'KW' + Chr(g + 48) + Chr(f + 64);
           LogWrite(s0);

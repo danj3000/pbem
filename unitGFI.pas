@@ -68,8 +68,7 @@ begin
   frmGFI.lblPlayer.caption := allPlayers[TeamPlayer,NumberPlayer].GetPlayerName;
   frmGFI.lblPlayer.font.color := colorarray[g,0,0];
 
-  frmGFI.cbBlizzard.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 8)) = 'BLIZZARD');
+  frmGFI.cbBlizzard.checked := Bloodbowl.GetWeather() = TWeatherState.Blizzard;
 
   frmGFI.cbSprint.Visible := false;
   frmGFI.cbSprint.Checked := (false);

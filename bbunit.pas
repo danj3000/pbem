@@ -162,7 +162,6 @@ type
     ButNiggles: TBitBtn;
     ButSaveGame: TBitBtn;
     LblNiggles: TLabel;
-    RGGate: TRadioGroup;
     ImRedDie: TImage;
     ImBlueDie: TImage;
     ButStart: TBitBtn;
@@ -228,7 +227,6 @@ type
     RemoveOther1: TMenuItem;
     RemoveMVP1: TMenuItem;
     RemoveCheerleaderAsstCoach1: TMenuItem;
-    ChangeGate1: TMenuItem;
     CrowdRoll1: TMenuItem;
     HideBall1: TMenuItem;
     ShowHidePassBlockRanges1: TMenuItem;
@@ -437,7 +435,6 @@ type
     procedure RemoveMVP1Click(Sender: TObject);
     procedure RemoveEXP1Click(Sender: TObject);
     procedure ArgueCallSBClick(Sender: TObject);
-    procedure ChangeGate1Click(Sender: TObject);
     procedure RemoveCHACClick(Sender: TObject);
     procedure PlayerShowDivingTackle1Click(Sender: TObject);
     procedure SideStep1Click(Sender: TObject);
@@ -547,7 +544,7 @@ uses unitRoster, unitLog, unitAbout, unitArmourRoll, unitNotes,
   unitPlayAction, unitTurnChange, unitExtern, unitBall, unitGFI,
   unitPregame, unitPostgameSeq, unitFanFactor, unitField, unitRandom,
   unitCatch, unitPickUp, unitAddPlayer, unitHandicapTable, unitSkillRoll,
-  unitSettings, unitMessage;
+  unitSettings, unitMessage, gate;
 
 {$R *.DFM}
 
@@ -1581,9 +1578,7 @@ begin
             case s[2] of
              'W': TWeather.PlayActionWeatherRoll(s, 1);
              'K': PlayActionKickOff(s, 1);
-             'G': PlayActionGate(s, 1, 0);
-             'S': PlayActionGate(s, 1, 1);
-             'F': PlayActionGate(s, 1, 2);
+             'G': TGate.PlayActionGate(s, 1);
              '0': PlayActionMVP(s, 1);
              '1': PlayActionMVP(s, 1);
              'H': PlayActionHandicap(s, 1);
@@ -1706,9 +1701,7 @@ begin
             case s[2] of
              'W': TWeather.PlayActionWeatherRoll(s, -1);
              'K': PlayActionKickOff(s, -1);
-             'G': PlayActionGate(s, -1, 0);
-             'S': PlayActionGate(s, -1, 1);
-             'F': PlayActionGate(s, -1, 2);
+             'G': TGate.PlayActionGate(s, -1);
              '0': PlayActionMVP(s, -1);
              '1': PlayActionMVP(s, -1);
              'H': PlayActionHandicap(s, -1);
@@ -3752,19 +3745,12 @@ begin
   LblWeather.caption := Copy(Bloodbowl.WeatherLabel.caption, 1, Pos('.', Bloodbowl.WeatherLabel.caption) - 1);
   ButWeather.enabled := false;
   ButGate.enabled := true;
-  RGGate.visible := true;
 end;
 
 procedure TBloodbowl.ButGateClick(Sender: TObject);
 begin
-
-  case RGGate.Itemindex of
-   0: WorkOutGate('G');
-   1: WorkOutGate('S');
-   2: WorkOutGate('F');
-  end;
-  LblGate.caption := IntToStr(Gate) + '.000 cheering fans!';
-  RGGate.visible := false;
+  TGate.WorkOutGate();
+  LblGate.caption := IntToStr(bbalg.Gate) + ',000 cheering fans!';
   ButGate.enabled := false;
   ButHandicap.enabled := true;
 end;
@@ -4570,7 +4556,7 @@ begin
 end;
 
 procedure TBloodbowl.AVInjRoll1Click(Sender: TObject);
-var p, NiggleCount, totspp, ploc, qloc, v, w: integer;
+var p, NiggleCount, ploc, qloc, v, w: integer;
     BallScatter: boolean;
 begin
   Ballscatter := false;
@@ -4933,23 +4919,6 @@ begin
         PlayActionRemoveACCH(s,1);
       end;
     end;
-  end;
-end;
-
-procedure TBloodbowl.ChangeGate1Click(Sender: TObject);
-var GateAnswer, s: string;
-begin
-  GateAnswer := ' ';
-  GateAnswer := FlexMessageBox('How much should the gate change by: '
-    ,'Change Gate Question','+1000,+5000,-1000,-5000,No Change');
-  if (GateAnswer<>' ') and (GateAnswer<>'No Change') then begin
-    s := 'SS';
-    if GateAnswer='+1000' then S := S + '1';
-    if GateAnswer='+5000' then S := S + '2';
-    if GateAnswer='-1000' then S := S + '3';
-    if GateAnswer='-5000' then S := S + '4';
-    Logwrite(s);
-    PlayActionTeamStatChange(s,1);
   end;
 end;
 

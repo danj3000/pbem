@@ -52,7 +52,7 @@ procedure ShowPickUpWindow(g, f: integer);
 implementation
 
 uses bbunit, bbalg, unitPlayer, unitMarker, unitBall, unitLog, unitPass,
-     unitTeam, unitGFI, unitSettings;
+     unitTeam, unitGFI, unitSettings, weather;
 
 {$R *.DFM}
 
@@ -88,8 +88,7 @@ begin
   frmPickUp.txtPlayerTZ.text := IntToStr(tz.num);
   frmPickUp.cbBigHand.checked := allPlayers[g,f].hasSkill('Big Hand');
 
-  frmPickUp.cbPouringRain.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN');
+  frmPickUp.cbPouringRain.checked := Bloodbowl.GetWeather() = TWeatherState.Raining;
 
   frmPickUp.cbNBH.checked := allPlayers[g,f].hasSkill('Nonball Handler');
   frmPickUp.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or

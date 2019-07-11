@@ -315,8 +315,7 @@ begin
                 (loopPlayer.hasSkill('VLL')) then
                 r := r - 1;
 
-              if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12))
-                = 'POURING RAIN') then
+              if Bloodbowl.GetWeather() = TWeatherState.Raining then
                 r := r + 1;
 
               tz := CountTZ(1 - g, h);
@@ -426,12 +425,9 @@ begin
                 (loopPlayer.hasSkill('VLL')) then
                 r := r - 1;
 
-              if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12))
-                = 'POURING RAIN')        then
+              if Bloodbowl.GetWeather() = TWeatherState.Raining        then
                 r := r + 1;
-              if (Uppercase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10))
-                = 'EERIE MIST') then
-                r := r + 1;
+
               tz := CountTZ(1 - g, h);
               if not(loopPlayer.hasSkill('Nerves of Steel')) then
                 r := r + tz.num;
@@ -561,10 +557,9 @@ begin
                 r := 7 - allPlayers[1-g, h].ag + 0;
                 if allPlayers[1-g, h].hasSkill('Extra Arms') then r := r - 1;
 
-                if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
+                if Bloodbowl.GetWeather() = TWeatherState.Raining
                   then r := r + 1;
-                if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
-                  then r := r + 1;
+
                 tz := CountTZ(1-g, h);
                 if not(allPlayers[1-g, h].hasSkill('Nerves of Steel')) then
                   r := r + tz.num;
@@ -652,10 +647,8 @@ begin
               end else begin
                 r := 7 - allPlayers[1-g, h].ag + 0;
 
-                if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN')
-                   then r := r + 1;
-                if (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 10)) = 'EERIE MIST')
-                   then r := r + 1;
+                if Bloodbowl.GetWeather() = TWeatherState.Raining then
+                   r := r + 1;
                 tz := CountTZ(1-g, h);
                 if not(allPlayers[1-g, h].hasSkill('Nerves of Steel')) then
                    r := r + tz.num;

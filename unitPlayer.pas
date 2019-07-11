@@ -2487,7 +2487,6 @@ var
   UReroll: Boolean;
   k: Integer;
   l: Integer;
-  test6: Boolean;
   r: Integer;
   Shadowroll: Integer;
 begin

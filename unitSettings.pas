@@ -451,7 +451,6 @@ end;
 
 procedure TfrmSettings.butSelectFileClick(Sender: TObject);
 var s: string;
-    LRoll: integer;
 begin
   dlgPic.InitialDir := curdir + 'images\';
   dlgPic.Filename := '';

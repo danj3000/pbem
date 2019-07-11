@@ -47,7 +47,8 @@ var
   DBroll: array [1..6] of string;
   KickoffTable: array [11..66] of string;
   WeatherTable: array [2..12] of string;
-  Gate, diecolor, PlayButtonDelay, NumNiggles: integer;
+  Gate, RedFame, BlueFame: integer;
+  diecolor, PlayButtonDelay, NumNiggles: integer;
   curdir: string;
   ffcl: array [0..1] of string;
   DBrolls: array [1..3] of integer;

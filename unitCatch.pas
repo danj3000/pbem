@@ -118,8 +118,7 @@ begin
   frmCatch.cbVeryLongLegs.checked := (allPlayers[g,f].hasSkill('Very Long Legs'));
   frmCatch.cbBigGuyAlly.checked := (((allPlayers[g,f].BigGuy) or
       (allPlayers[g,f].Ally)) and (true)); // big guy
-  frmCatch.cbPouringRain.checked :=
-    (UpperCase(Copy(Bloodbowl.WeatherLabel.caption, 1, 12)) = 'POURING RAIN');
+  frmCatch.cbPouringRain.checked := Bloodbowl.GetWeather() = TWeatherState.Raining;
 
   CalculateCatchRollNeeded;
 

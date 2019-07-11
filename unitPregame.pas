@@ -5,10 +5,8 @@ interface
 procedure PregameEnableDisable;
 procedure NigglesOrStart;
 
-procedure PlayActionGate(s: string; dir, ff: integer);
 function TranslateHandicapTable: string;
 procedure PlayActionHandicapTable(s: string; dir: integer);
-procedure WorkOutGate(game: char);
 procedure PlayActionHandicap(s: string; dir: integer);
 procedure WorkOutHandicap;
 procedure PlayActionNiggles(s: string; dir: integer);
@@ -36,7 +34,6 @@ begin
   Bloodbowl.ButNiggles.enabled := false;
   Bloodbowl.ButToss.enabled := false;
   Bloodbowl.ButStart.enabled := false;
-  Bloodbowl.RGGate.visible := false;
   Bloodbowl.PregamePanel.visible := true;
   Bloodbowl.PregamePanel.BringToFront;
 
@@ -82,102 +79,6 @@ begin
         Bloodbowl.butToss.Enabled := false;
       end else Bloodbowl.ButToss.enabled := true;
     end;
-  end;
-end;
-
-procedure PlayActionGate(s: string; dir, ff: integer);
-var p, q, p0, q0: integer;
-    s0, sr, sb: string;
-begin
-  if dir = 1 then begin
-    p := Ord(s[3]) - 48;
-    p0 := Ord(s[4]) - 48;
-    q := Ord(s[5]) - 48;
-    q0 := Ord(s[6]) - 48;
-    Gate := p0 + q0 + ff * (team[0].ff + team[1].ff);
-    case ff of
-      0: begin
-           s0 := '';
-           sr := '';
-           sb := '';
-         end;
-      1: begin
-           s0 := ' (semi-final)';
-           sr := ' + ' + IntToStr(team[0].ff);
-           sb := ' + ' + IntToStr(team[1].ff);
-         end;
-      2: begin
-           s0 := ' (final)';
-           sr := ' + ' + IntToStr(2 * team[0].ff);
-           sb := ' + ' + IntToStr(2 * team[1].ff);
-         end;
-    end;
-    Bloodbowl.GateLabel.caption := 'Gate' + s0 + ':' + Chr(13) +
-                       '(Red FF ' + IntToStr(p) + ': ' +
-                       IntToStr(p0) + sr + ')' + Chr(13) + '(Blue FF ' +
-                       IntToStr(q) + ': ' + IntToStr(q0) + sb + ')' + Chr(13) +
-                       IntToStr(Gate) + '.000 cheering fans!';
-    Bloodbowl.LblGate.caption := IntToStr(Gate) + '.000 cheering fans!';
-    DefaultAction('Gate' + s0 + ': (Red FF ' + IntToStr(p) + ': ' +
-                       IntToStr(p0) + sr + ') (Blue FF ' +
-                       IntToStr(q) + ': ' + IntToStr(q0) + sb + ') ' +
-                       IntToStr(Gate) + '.000 cheering fans!');
-    Bloodbowl.RGGate.visible := false;
-    Bloodbowl.ButGate.enabled := false;
-    Bloodbowl.ButHandicap.enabled := true;
-  end else begin
-    BackLog;
-    Bloodbowl.GateLabel.caption := '';
-    Bloodbowl.LblGate.caption := '';
-    Bloodbowl.RGGate.visible := true;
-    Bloodbowl.ButGate.enabled := true;
-    Bloodbowl.ButHandicap.enabled := false;
-  end;
-end;
-
-procedure WorkOutGate(game: char);
-var f, g: integer;
-    ff, r: array [0..1] of integer;
-    var s0, sr, sb, s1: string;
-begin
-  if CanWriteToLog then begin
-    ff[0] := team[0].ff;
-    ff[1] := team[1].ff;
-
-    r[0] := 0;
-    r[1] := 0;
-    for g := 0 to 1 do
-      for f := 1 to ff[g] do
-        r[g] := r[g] + Rnd(6,6) + 1;
-
-    sr := '(Red FF ' + IntToStr(ff[0]) + ': ' +  IntToStr(r[0]);
-    sb := '(Blue FF ' + IntToStr(ff[1]) + ': ' +  IntToStr(r[1]);
-    case game of
-      'G': begin
-             s0 := 'Gate:';
-             Gate := r[0] + r[1];
-           end;
-      'S': begin
-             s0 := 'Gate (semi-final):';
-             sr := sr + ' + ' + IntToStr(ff[0]);
-             sb := sb + ' + ' + IntToStr(ff[1]);
-             Gate := r[0] + r[1] + ff[0] + ff[1];
-           end;
-      'F': begin
-             s0 := 'Gate (final):';
-             sr := sr + ' + ' + IntToStr(2 * ff[0]);
-             sb := sb + ' + ' + IntToStr(2 * ff[1]);
-             Gate := r[0] + r[1] + 2 * (ff[0] + ff[1]);
-           end;
-    end;
-    sr := sr + ')';
-    sb := sb + ')';
-    s1 := IntToStr(Gate) + '.000 cheering fans!';
-    Bloodbowl.Gatelabel.caption := s0 + Chr(13) + sr + Chr(13) + sb +
-           Chr(13) + s1;
-    AddLog(s0 + ' ' + sr + ' ' + sb + ' ' + s1);
-    LogWrite('D' + game + Chr(ff[0] + 48) + Chr(r[0] + 48) +
-                    Chr(ff[1] + 48) + Chr(r[1] + 48));
   end;
 end;
 
