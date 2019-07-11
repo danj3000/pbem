@@ -102,6 +102,9 @@ begin
   gateLabelText := 'Gate: ' + s1 + Chr(13) + sr + Chr(13) + sb + Chr(13);
   // display in main screen
   Bloodbowl.Gatelabel.caption := gateLabelText;
+  // display on pregame
+  Bloodbowl.LblGate.caption := IntToStr(RedFans) + 'k Red Fans - ' +
+    IntToStr(BlueFans) + 'k Blue fans';
   // display in log
   AddLog('Gate: ' + sr + ' ' + sb + ' - ' + s1);
 end;

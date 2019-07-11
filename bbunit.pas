@@ -3750,7 +3750,7 @@ end;
 procedure TBloodbowl.ButGateClick(Sender: TObject);
 begin
   TGate.WorkOutGate();
-  LblGate.caption := IntToStr(bbalg.Gate) + ',000 cheering fans!';
+
   ButGate.enabled := false;
   ButHandicap.enabled := true;
 end;
