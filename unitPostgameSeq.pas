@@ -108,16 +108,6 @@ begin
     frmPostgame.BringToFront;
     DefaultAction('Start of Post-Game Sequence');
     PostgameActive := true;
-    {Disable the MVP button for BribeTheAnnouncers}
-    if BribeTheAnnouncers then begin
-      if team[0].tr < team[1].tr then begin
-        frmPostgame.ButMVPRed.enabled := false;
-        frmPostgame.ButSkillrollRed.enabled := true;
-      end else begin
-        frmPostgame.ButMVPBlue.enabled := false;
-        frmPostgame.ButSkillrollBlue.enabled := true;
-      end;
-    end;
   end else begin
     frmPostgame.Hide;
     BackLog;
@@ -217,8 +207,7 @@ begin
   while Copy(s, 2, length(MWT)) <> MWT do ReadLn(gg, s);
   ReadLn(gg, s);
   k := 12;
-  while (k < length(s)) and (FVal(copy(s, k ,3)) <> 0)
-        and (FVal(copy(s, k, 3)) < team[tm].tr) do k := k + 8;
+
   ReadLn(gg, s);
   while (FVal(copy(s, 5, 3)) < Gate) and (FVal(copy(s, 5, 3)) <> 0)
         do ReadLn(gg, s);

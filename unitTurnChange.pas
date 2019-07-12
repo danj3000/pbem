@@ -1053,8 +1053,6 @@ begin
           jwtest := Pos('JOHNNY WATERBOY',UPPERCASE(jtest));
           stest := CardsData[g,h].font.color;
           if (jwtest <> 0) and (stest = 12632256) then  koroll := 1;
-          if (team[g].tr < team[1-g].tr)
-            and (SmellingSalts) then koroll := 1;
         end;
         if lastroll > koroll then begin
           curteam := g;

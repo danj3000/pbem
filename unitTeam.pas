@@ -20,7 +20,7 @@ public
   name, race, email, coach, treasury, treasury0, logo, homefield: string;
 
   number, ff, ff0, reroll, reroll0, apot, wiz, asstcoaches, cheerleaders,
-  winmod, tr, bonusCards, bonusMVP, rerollcost,
+  winmod, bonusCards, bonusMVP, rerollcost,
   matchwinnings, matchwinningsmod, numplayers: integer;
 
   UsedLeaderReroll, HeadCoach: boolean;
@@ -91,7 +91,6 @@ begin
     team[g].asstcoaches := 0;
     team[g].cheerleaders := 0;
     team[g].winmod := 0;
-    team[g].tr := 0;
     team[g].bonusCards := 0;
     team[g].bonusMVP := 0;
     team[g].rerollcost := 0;
@@ -367,7 +366,6 @@ begin
   PlayerData[number,1].caption := 'Fan factor: ' + IntToStr(ff);
   PlayerData[number,2].caption := 'Asst. coaches: ' + IntToStr(asstcoaches);
   PlayerData[number,3].caption := 'Cheerleaders: ' + IntToStr(cheerleaders);
-  PlayerData[number,4].caption := 'Team Rating: ' + IntToStr(tr);
   PlayerData[number,5].caption := 'Treasury: ' + treasury;
   if ((number=0) and (logo<>HomePic)) or
      ((number<>0) and (logo<>AwayPic)) then begin

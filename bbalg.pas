@@ -82,7 +82,6 @@ function FoulRollToText(s: string): string;
 function InjuryRoll(injmod: integer): string;
 function ArmourRoll(av, armod, injmod: integer): string;
 function FoulRoll(av, armod, injmod: integer; eye: boolean): string;
-function TranslateHandicap: string;
 function CountTZ(g0, f0: integer): TackleZones;
 function CountOpponents(g0, f0: integer): integer;
 function CountTZSlow(g0, f0: integer): TackleZones;
@@ -1262,32 +1261,6 @@ begin
 
   AVBreak := false;
   Result := ' ' + Chr(am + 48) + Chr(r1 + 48) + Chr(r2 + 48) + s;
-end;
-
-function TranslateHandicap: string;
-var s, t: string;
-    bm, bc, m: integer;
-begin
-  if team[0].bonusCards + team[0].bonusMVP > 0 then m := 0 else
-   if team[1].bonusCards + team[1].bonusMVP > 0 then m := 1 else m := 2;
-  bm := team[0].bonusMVP + team[1].bonusMVP;
-  bc := team[0].bonuscards + team[1].bonuscards;
-  if bc > 0 then s := IntToStr(bc) + ' bonus card';
-  if bc > 1 then s := s + 's';
-  if Trim(frmSettings.txtHandicapTable.text) = 'H5' then begin
-    if bm > 0 then s := Trim(s + '   ' + IntToStr(bm) + '0k bonus Gold');
-  end else begin
-    if bm > 0 then s := Trim(s + '   ' + IntToStr(bm) + ' bonus MVP');
-    if bm > 1 then s := s + 's';
-  end;
-  if bc + bm = 0 then s := 'No handicap';
-  Bloodbowl.LblHandicap.caption := s;
-  if m < 2 then Bloodbowl.LblHandicap.font.color := colorarray[m,0,0] else
-    Bloodbowl.LblHandicap.font.color := clPurple;
-  t := 'Handicaps: TR ' + IntToStr(team[0].tr) + ' vs TR ' +
-       IntToStr(team[1].tr) + ' = ';
-  if bc + bm = 0 then s := t + s else s := t + ffcl[m] + ' gets ' + s;
-  TranslateHandicap := s;
 end;
 
 function CountTZ(g0, f0: integer): TackleZones;

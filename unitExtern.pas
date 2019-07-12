@@ -317,9 +317,6 @@ begin
       p := Pos('TEAM WIZARD:', UpperCase(s));
     if p > 0 then
       team[g].wiz := FVal(GetNextCell(copy(s, p+12, length(s))));
-    p := Pos('TEAM RATING:', UpperCase(s));
-    if p > 0 then
-      team[g].tr := FVal(GetNextCell(copy(s, p+12, length(s))));
     p := Pos('TREASURY:', UpperCase(s));
     if p > 0 then begin
       team[g].treasury := GetNextCell(copy(s, p+9, length(s)));
@@ -494,8 +491,8 @@ begin
            Chr(team[g].reroll + 48) + Chr(team[g].asstcoaches + 48) +
            Chr(team[g].winmod + 48) +
            Chr(team[g].cheerleaders + 48) + Chr(team[g].apot + 48) +
-           Chr(team[g].wiz + 48) + Chr(team[g].tr mod 100 + 48) +
-           Chr(team[g].tr div 100 + 48) + Chr(team[g].rerollcost + 48) +
+           Chr(team[g].wiz + 48) + Chr(48) +
+           Chr(48) + Chr(team[g].rerollcost + 48) +
            team[g].logo + Chr(255) + team[g].homefield);
   for f := 1 to team[g].numplayers do begin
     s0 := '(L' + allPlayers[g,f].GetSaveString;
@@ -561,8 +558,6 @@ begin
       team[g].cheerleaders := Ord(s0[5]) - 48;
       team[g].apot := Ord(s0[6]) - 48;
       team[g].wiz := Ord(s0[7]) - 48;
-      team[g].tr := Ord(s0[8]) - 48;
-      team[g].tr := team[g].tr + 100 * (Ord(s0[9]) - 48);
       team[g].rerollcost := Ord(s0[10]) - 48;
       s0 := Copy(s0, 11, length(s0));
       SplitTextAtChr255(s0, team[g].logo);
@@ -866,11 +861,6 @@ begin
       p := GotoNextCell(s, p);
       s := ReplaceNextText(s, Money(team[g].wiz * 150), p);
       totval := totval + team[g].wiz * 150;
-    end;
-    p := Pos('TEAM RATING:', UpperCase(s));
-    if p > 0 then begin
-      p := GotoNextCell(s, p);
-      //s := ReplaceNextText(s, IntToStr(CalculateTeamRating(g)), p);
     end;
     p := Pos('TREASURY:', UpperCase(s));
     if p > 0 then begin

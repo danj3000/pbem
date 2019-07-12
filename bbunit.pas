@@ -501,7 +501,7 @@ var
   ThickSkull,  CrystalSkin,
   DirtyPlayer4th,   bbfullscreen,
    SmellingSalts, IronMan, Decay,
-  TIKSTPK, BribeTheAnnouncers, FixedRand, SaveGameAllowed,
+  TIKSTPK, FixedRand, SaveGameAllowed,
   FirstLoad, Touchback, SettingsLoaded, AccuratePassPlay, PalmedCoin,
   SideStepStop, ProSkill, KickOffNow, DodgeNoStand, GetCAS: boolean;
   AVBreak,
@@ -765,7 +765,6 @@ begin
   CheckFileOpen := false;
   SettingsLoaded := false;
   SmellingSalts := false;
-  BribeTheAnnouncers := false;
   PalmedCoin := false;
   IGMEOY := -1;
   ThickSkull := false;
@@ -4743,7 +4742,7 @@ var ArgueRoll, TotalMods: integer;
 begin
   ArgueRoll := Rnd(6,1) + 1;
   TotalMods := 0;
-  if (ArgueMod<>0) and ((team[activeTeam].tr) < (team[1-activeTeam].tr)) and
+  if (ArgueMod<>0)  and
     (ArgueRoll<>1)
     then begin
       ArgueRoll := ArgueRoll + ArgueMod;
