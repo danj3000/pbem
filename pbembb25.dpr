@@ -33,7 +33,6 @@ uses
   unitPickUp in 'unitPickUp.pas' {frmPickUp},
   unitAddPlayer in 'unitAddPlayer.pas' {frmAddPlayer},
   unitPostgameSeq in 'unitPostgameSeq.pas' {frmPostgame},
-  unitHandicapTable in 'unitHandicapTable.pas' {frmHandicapTable},
   unitSkillRoll in 'unitSkillRoll.pas' {frmSkillRolls},
   unitGFI in 'unitGFI.pas' {frmGFI},
   unitThrowTeamMate in 'unitThrowTeamMate.pas' {frmTTM},
@@ -78,7 +77,6 @@ begin
   Application.CreateForm(TfrmPickUp, frmPickUp);
   Application.CreateForm(TfrmAddPlayer, frmAddPlayer);
   Application.CreateForm(TfrmPostgame, frmPostgame);
-  Application.CreateForm(TfrmHandicapTable, frmHandicapTable);
   Application.CreateForm(TfrmSkillRolls, frmSkillRolls);
   Application.CreateForm(TfrmGFI, frmGFI);
   Application.CreateForm(TfrmTTM, frmTTM);

@@ -179,7 +179,6 @@ type
     lbHalfID: TLabel;
     lbHalftext: TLabel;
     HandicapRolls1: TMenuItem;
-    butMakeHandicapRolls: TBitBtn;
     sbOtherSPP: TSpeedButton;
     OtherSPP1: TMenuItem;
     MakePickuproll1: TMenuItem;
@@ -375,10 +374,8 @@ type
     procedure ButWeatherClick(Sender: TObject);
     procedure ButGateClick(Sender: TObject);
     procedure ButHandicapClick(Sender: TObject);
-    procedure butMakeHandicapRollsClick(Sender: TObject);
     procedure ButCardsRedClick(Sender: TObject);
     procedure ButCardsBlueClick(Sender: TObject);
-
     procedure ButTossClick(Sender: TObject);
     procedure ButSaveGameClick(Sender: TObject);
     procedure ButStartClick(Sender: TObject);
@@ -391,7 +388,6 @@ type
     procedure MissesMatch1Click(Sender: TObject);
     procedure UpdateHalfID(HalfNo: integer);
     procedure PostgameRolls1Click(Sender: TObject);
-    procedure HandicapRolls1Click(Sender: TObject);
     procedure OtherSPP1Click(Sender: TObject);
     procedure EXP1Click(Sender: TObject);
     procedure Settings1Click(Sender: TObject);
@@ -541,7 +537,7 @@ uses unitRoster, unitLog, unitAbout, unitArmourRoll, unitNotes,
   unitLogControl, unitPlayerStatsChange, unitThrowIn, unitWelcome,
   unitPlayAction, unitTurnChange, unitExtern, unitBall, unitGFI,
   unitPregame, unitPostgameSeq, unitFanFactor, unitField, unitRandom,
-  unitCatch, unitPickUp, unitAddPlayer, unitHandicapTable, unitSkillRoll,
+  unitCatch, unitPickUp, unitAddPlayer, unitSkillRoll,
   unitSettings, unitMessage, gate;
 
 {$R *.DFM}
@@ -1579,8 +1575,6 @@ begin
              'G': TGate.PlayActionGate(s, 1);
              '0': PlayActionMVP(s, 1);
              '1': PlayActionMVP(s, 1);
-             'H': PlayActionHandicap(s, 1);
-             'h': PlayActionHandicapTable(s, 1);
              'C': PlayActionCardsRoll(s, 1);
              'T': PlayActionToss(s, 1);
             end;
@@ -1591,7 +1585,7 @@ begin
       'f': PlayActionFanFactor(s, 1);
       'G': PlayActionStartPostGame(s, 1);
       'g': PlayActionColorChange(s, 1);
-      'H': PlayActionHandicapRolls(s, 1);
+      'H': PlayActionInducements(s, 1);
       'h': PlayActionHideBall(s, 1);
       'I': PlayActionComputerID(s, 1);
       'i': PlayActionThrowIn(s, 1);
@@ -1700,8 +1694,6 @@ begin
              'G': TGate.PlayActionGate(s, -1);
              '0': PlayActionMVP(s, -1);
              '1': PlayActionMVP(s, -1);
-             'H': PlayActionHandicap(s, -1);
-             'h': PlayActionHandicapTable(s, -1);
              'C': PlayActionCardsRoll(s, -1);
              'T': PlayActionToss(s, -1);
             end;
@@ -1712,7 +1704,7 @@ begin
       'f': PlayActionFanFactor(s, -1);
       'G': PlayActionStartPostGame(s, -1);
       'g': PlayActionColorChange(s, -1);
-      'H': PlayActionHandicapRolls(s, -1);
+      'H': PlayActionInducements(s, -1);
       'h': PlayActionHideBall(s, -1);
       'I': PlayActionComputerID(s, -1);
       'i': PlayActionThrowIn(s, -1);
@@ -3767,11 +3759,6 @@ begin
   WorkOutHandicap;
 end;
 
-procedure TBloodbowl.butMakeHandicapRollsClick(Sender: TObject);
-begin
-  MakeHandicapRolls;
-end;
-
 procedure TBloodbowl.ButCardsRedClick(Sender: TObject);
 begin
   RollForCards(0);
@@ -3916,11 +3903,6 @@ end;
 procedure TBloodbowl.PostgameRolls1Click(Sender: TObject);
 begin
   PostgameSBClick(Sender);
-end;
-
-procedure TBloodbowl.HandicapRolls1Click(Sender: TObject);
-begin
-  ShowHandicapTablesForm;
 end;
 
 procedure TBloodbowl.Settings1Click(Sender: TObject);

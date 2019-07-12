@@ -184,9 +184,6 @@
         <DCCReference Include="unitPostgameSeq.pas">
             <Form>frmPostgame</Form>
         </DCCReference>
-        <DCCReference Include="unitHandicapTable.pas">
-            <Form>frmHandicapTable</Form>
-        </DCCReference>
         <DCCReference Include="unitSkillRoll.pas">
             <Form>frmSkillRolls</Form>
         </DCCReference>

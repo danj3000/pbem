@@ -393,28 +393,12 @@ var s: string;
     g: integer;
 begin
   g := Ord(cr[3]) - 48;
-  if frmSettings.rgCardSystem.ItemIndex = 0 then
-    begin
-      case cr[4] of
-        '1': s := '1 card';
-        '2', '3', '4', '5': s := '2 cards';
-        '6': s := '3 cards';
-      end;
-    end;
-  if frmSettings.rgCardSystem.ItemIndex = 1 then
-    begin
-      case cr[4] of
-        '1', '2', '3', '4', '5': s := '0 cards';
-        '6': s := '1 card';
-      end;
-    end;
-  if frmSettings.rgCardSystem.ItemIndex = 2 then
-    begin
-      case cr[4] of
-        '1', '2', '3', '4', '5': s := '1 card';
-        '6': s := '2 cards';
-      end;
-    end;
+  case cr[4] of
+    '1': s := '1 card';
+    '2', '3', '4', '5': s := '2 cards';
+    '6': s := '3 cards';
+  end;
+
   if team[g].bonuscards > 0 then
      s := s + ' + ' + IntToStr(team[g].bonuscards) + ' bonus cards';
   TranslateCardsRoll := s;

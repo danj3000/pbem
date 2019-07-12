@@ -63,14 +63,10 @@ object frmSettings: TfrmSettings
     Top = 0
     Width = 713
     Height = 545
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Standard'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label18: TLabel
         Left = 16
         Top = 96
@@ -223,10 +219,6 @@ object frmSettings: TfrmSettings
     object TabSheet2: TTabSheet
       Caption = 'Tables'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label12: TLabel
         Left = 8
         Top = 16
@@ -326,41 +318,18 @@ object frmSettings: TfrmSettings
         TabOrder = 5
         Text = 'bbhandicap.ini'
       end
-      object rgCardSystem: TRadioGroup
-        Left = 8
-        Top = 256
-        Width = 377
-        Height = 129
-        Caption = 'Card System'
-        ItemIndex = 4
-        Items.Strings = (
-          '1 = 1 card, 2-5 = 2 cards, 6 = 3 cards (3rd edition standard)'
-          '1-5 = 0 cards, 6 = 1 card (BB Mag #2 proposed standard)'
-          '1-5 = 1 card, 6 = 2 cards (modified BB Mag #2)'
-          
-            'Single Handicap Table, no cards except for players with certain ' +
-            'skills'
-          
-            'Multiple Handicap Tables, no cards except for players with certa' +
-            'in skills')
-        TabOrder = 6
-      end
       object cbLRB4KO: TCheckBox
         Left = 280
         Top = 112
         Width = 313
         Height = 17
         Caption = 'Use LRB 4.0 kick-off changes'
-        TabOrder = 7
+        TabOrder = 6
       end
     end
     object TabSheet3: TTabSheet
       Caption = 'LRB edition'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label11: TLabel
         Left = 16
         Top = 8
@@ -380,10 +349,6 @@ object frmSettings: TfrmSettings
     object TabSheet9: TTabSheet
       Caption = 'Armour/Injury'
       ImageIndex = 8
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cbDeStun: TCheckBox
         Left = 8
         Top = 64

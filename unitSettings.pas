@@ -43,7 +43,6 @@ type
     txtCardsIniFile: TEdit;
     Label24: TLabel;
     txtHandicapIniFile: TEdit;
-    rgCardSystem: TRadioGroup;
     butSelectFile: TButton;
     dlgPic: TOpenDialog;
     cbPassingRangesColored: TCheckBox;
@@ -75,7 +74,7 @@ procedure RestoreSettings(st: string);
 implementation
 
 uses bbunit, bbalg, unitArmourRoll, unitLog, unitCards, unitRoster,
-     unitRandom, unitHandicapTable;
+     unitRandom;
 
 {$R *.DFM}
 
@@ -111,18 +110,11 @@ begin
   Bloodbowl.RemoveEXP1.visible := false;
 
 
-  if frmSettings.rgCardSystem.ItemIndex >= 3 then begin
     Bloodbowl.butCardsBlue.visible := false;
     Bloodbowl.butCardsRed.visible := false;
-  end else begin
-    Bloodbowl.butMakeHandicapRolls.visible := false;
-  end;
+
 
   ShowFieldImage(frmSettings.txtFieldImageFile.text);
-
-  if (frmSettings.txtHandicapIniFile.text <> 'bbhandicap.ini') and
-   (frmSettings.txtHandicapIniFile.text <> '') then
-     OtherHandicapSetup;
 
   SettingsLoaded := True;
   ApoWizCreate(0);
@@ -161,7 +153,6 @@ begin
   frmSettings.cbDC.Checked := (s[12] = 'D');
 
   GetText;
-  frmSettings.rgCardSystem.ItemIndex := Ord(s[7]) - 48;
 
   GetText;
   frmSettings.txtCardsIniFile.text := GetText;
@@ -293,7 +284,7 @@ begin
   st := st + '.';   // 41-6 niggling injury
   st := st + '.';
   st := st + '.';
-  st := st + Chr(48 + rgCardSystem.ItemIndex);
+  st := st + '.';
   // section
   st := st + '*' + Trim(txtCardsIniFile.text);
   st := st + '*' + Trim(txtHandicapIniFile.text);
@@ -363,10 +354,7 @@ begin
         b := (s = '[' + cmbLeague.Items[cmbLeague.ItemIndex] + ']');
       end;
       if b then begin
-        if Copy(s, 1, 11) = 'CardSystem=' then begin
-          rgCardSystem.ItemIndex := FVal(copy(s, 12, 1)) - 1;
-        end;
-
+        
         if Copy(s, 1, 14) = 'HandicapTable=' then begin
           txtHandicapTable.text := Trim((copy(s, 15, length(s))));
         end;
