@@ -18,14 +18,18 @@ type
 type TTeam = class(TLabel)
 public
   name, race, email, coach, treasury, treasury0, logo, homefield: string;
+
   number, ff, ff0, reroll, reroll0, apot, wiz, asstcoaches, cheerleaders,
   winmod, tr, bonusCards, bonusMVP, rerollcost,
   matchwinnings, matchwinningsmod, numplayers: integer;
+
   UsedLeaderReroll, HeadCoach: boolean;
+
   constructor New(form: TForm; nr: integer);
   procedure ShowTeamDetails;
   procedure TeamMouseMove(Sender: TObject; Shift: TShiftState;
                             X, Y: Integer);
+  function GetTeamValue(): integer;
 end;
 
 var
@@ -144,6 +148,27 @@ begin
       allPlayers[g,f].picture := '';
       allPlayers[g,f].picture0 := '';
     end;
+end;
+
+function TTeam.GetTeamValue(): integer;
+var
+  total: integer;
+  player: TPlayer;
+  f: Integer;
+begin
+  total := 0;
+  for f := 1 to Self.numplayers do
+  begin
+    Player := allPlayers[Self.number, f];
+    total := total + player.value;
+  end;
+  total := total + (Self.reroll * Self.rerollcost);
+  total := total +  (Self.ff * 10);
+  total := total +  (Self.asstcoaches * 10);
+  total := total +  (Self.cheerleaders * 10);
+  total := total +  (Self.apot * 50);
+
+  Result := total;
 end;
 
 function TranslateTeamStatChange(s: string): string;

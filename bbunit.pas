@@ -292,8 +292,8 @@ type
     Stab1: TMenuItem;
     AVInjRoll2: TMenuItem;
     PickSideStep1: TMenuItem;
-    lblHomeFF: TLabel;
-    lblAwayFF: TLabel;
+    lblHomeTV: TLabel;
+    lblAwayTV: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Movetofield1Click(Sender: TObject);
@@ -1974,32 +1974,40 @@ begin
   if g = curteam then
   begin
     currentPlayer := allPlayers[g, f];
-    if currentPlayer.status = Ord(TPlayerStatus.PLAYER_STATUS_BALL_CARRIER) then
+    if currentPlayer.status = Ord(TPlayerStatus.BallCarrier) then
     begin
-      currentPlayer.SetStatus(TPlayerStatus.PLAYER_STATUS_PRONE);
+      currentPlayer.SetStatus(TPlayerStatus.Prone);
       ScatterBallFrom((currentPlayer.p), (currentPlayer.q), 1, 0);
     end
     else
-      currentPlayer.SetStatus(TPlayerStatus.PLAYER_STATUS_PRONE);
+      currentPlayer.SetStatus(TPlayerStatus.Prone);
   end;
 end;
 
 procedure TBloodbowl.Stunned1Click(Sender: TObject);
+var
+  thePlayer: unitPlayer.TPlayer;
 begin
-  if allPlayers[curteam,curplayer].status=2 then begin
-    allPlayers[curteam,curplayer].SetStatus(4);
-    ScatterBallFrom((allPlayers[curteam,curplayer].p), (allPlayers[curteam,curplayer].q), 1, 0);
-  end else allPlayers[curteam,curplayer].SetStatus(4);
+  thePlayer := allPlayers[curteam, curplayer];
+  if thePlayer.status = Ord(TPlayerStatus.BallCarrier) then
+  begin
+    thePlayer.SetStatus(4);
+    ScatterBallFrom(thePlayer.p, thePlayer.q, 1, 0);
+  end
+  else
+    thePlayer.SetStatus(4);
 end;
 
 procedure TBloodbowl.Reserve1Click(Sender: TObject);
 begin
- if allPlayers[curteam,curplayer].status = 12 then begin
+  if allPlayers[curteam,curplayer].status = Ord(TPlayerStatus.SentOff) then begin
     allPlayers[curteam,curplayer].SetStatus(allPlayers[curteam,curplayer].SOstatus);
     if allPlayers[curteam,curplayer].SOstatus = 7 then
        allPlayers[curteam,curplayer].SIstatus :=
          allPlayers[curteam,curplayer].SOSIstatus;
-  end else allPlayers[curteam,curplayer].SetStatus(0);
+  end
+  else
+    allPlayers[curteam,curplayer].SetStatus(0);
 end;
 
 procedure TBloodbowl.KO1Click(Sender: TObject);
@@ -2010,7 +2018,9 @@ begin
     qloc := allPlayers[curteam,curplayer].q;
     allPlayers[curteam,curplayer].SetStatus(5);
     ScatterBallFrom(ploc, qloc, 1, 0);
-  end else allPlayers[curteam,curplayer].SetStatus(5);
+  end
+  else
+    allPlayers[curteam,curplayer].SetStatus(5);
 end;
 
 procedure TBloodbowl.BadlyHurt1Click(Sender: TObject);
@@ -2021,7 +2031,9 @@ begin
     qloc := allPlayers[curteam,curplayer].q;
     allPlayers[curteam,curplayer].SetStatus(6);
     ScatterBallFrom(ploc, qloc, 1, 0);
-  end else allPlayers[curteam,curplayer].SetStatus(6);
+  end
+  else
+    allPlayers[curteam,curplayer].SetStatus(6);
 end;
 
 procedure TBloodbowl.SeriouslyInjured1Click(Sender: TObject);
@@ -2036,12 +2048,13 @@ begin
   if s[3] = 'S' then v := 73; {-1 ST}
   if s[4] = 'G' then v := 74; {-1 AG}
   if s[4] = 'V' then v := 75; {-1 AV}
-  if allPlayers[curteam,curplayer].status=2 then begin
+  if allPlayers[curteam,curplayer].status = 2 then
+  begin
     ploc := allPlayers[curteam,curplayer].p;
     qloc := allPlayers[curteam,curplayer].q;
-    allPlayers[curteam,curplayer].SetStatus(v);
     ScatterBallFrom(ploc, qloc, 1, 0);
-  end else allPlayers[curteam,curplayer].SetStatus(v);
+  end;
+  allPlayers[curteam,curplayer].SetStatus(v);
 end;
 
 procedure TBloodbowl.Dead1Click(Sender: TObject);
@@ -3687,7 +3700,7 @@ begin
   LoadTeam(0);
   if team[0].name <> '' then begin
     LblRedteam.caption := team[0].name;
-    lblHomeFF.Caption := 'FF: ' + team[0].ff.ToString;
+    lblHomeTV.Caption := 'TV: ' + team[0].GetTeamValue().ToString;
     ButLoadRed.enabled := false;
     LblRedteam.Font.Color := TeamTextColor[0];
     if not(ButLoadBlue.enabled) then ButWeather.Enabled := true;
@@ -3716,7 +3729,7 @@ begin
   LoadTeam(1);
   if team[1].name <> '' then begin
     LblBlueteam.caption := team[1].name;
-    lblAwayFF.Caption := 'FF: ' + team[1].ff.ToString;
+    lblAwayTV.Caption := 'FF: ' + team[1].GetTeamValue().ToString;
     ButLoadBlue.enabled := false;
     LblBlueteam.Font.Color := TeamTextColor[1];
     if not(ButLoadRed.enabled) then ButWeather.Enabled := true;
@@ -3844,101 +3857,6 @@ begin
           ' out of '+ InttoStr(KOInjTOTBlue)+' injury rolls.';
         Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
 
-        {Begin Evil Git Rolls}
-        for p := 0 to 1 do begin
-          if (Uppercase(team[p].race) = 'EVIL GITS') then begin
-            UsedPlayers[1] := -1;
-            UsedPlayers[2] := -1;
-            UsedPlayers[3] := -1;
-            UsedPlayers[4] := -1;
-            LossMod := 0;
-            if (marker[p, MT_Score].value <= marker[1-p, MT_Score].value) then
-              LossMod := 1;
-            Bloodbowl.comment.text := 'Post Game Injury rolls for Evil Gits!';
-            Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll <=2 then NoPlayers := 1 else
-            if (lastroll>=3) and (lastroll<=4) then NoPlayers := 2 else
-            NoPlayers := 3;
-            for f := 1 to (NoPlayers + LossMod) do begin
-              done := 0;
-              while done = 0 do begin
-                RandomPlayer(p);
-                if (allPlayers[curteam,curplayer].status <> 8) and
-                   (allPlayers[curteam,curplayer].status <> 10) and
-                   (allPlayers[curteam,curplayer].status <> 11) then done := 1;
-                if (curplayer=UsedPlayers[1]) or (curplayer=UsedPlayers[2]) or
-                  (curplayer=UsedPlayers[3]) or (curplayer=UsedPlayers[4])
-                  then done := 0;
-              end;
-              UsedPlayers[f] := curplayer;
-              r3 := Rnd(6,3) + 1;
-              r1 := Rnd(6,2) + 1;
-              r2 := Rnd(6,1) + 1;
-              if r3 <= 3 then begin
-                InjuryStatus := 6;
-                Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                  allPlayers[curteam, curplayer].name +
-                  ' only Badly Hurt from the Post Game Fight! He will be fine!';
-                Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              end;
-              if (r3>=4) and (r3<=5) then begin
-                if (r1>=1) and (r1<=3) then begin
-                  InjuryStatus := 70;
-                  Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    allPlayers[curteam, curplayer].name +
-                    ' will Miss Next Game from the Post Game Fight!';
-                  Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                end else
-                if (r1>=4) and (r1<=5) then begin
-                  InjuryStatus := 71;
-                  Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    allPlayers[curteam, curplayer].name +
-                    ' will Miss Next Game and suffers a Niggling Injury from the Post Game Fight!';
-                  Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                end else
-                if (r2=1) or (r2=2) then begin
-                  InjuryStatus := 72;
-                  Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    allPlayers[curteam, curplayer].name +
-                    ' will Miss Next Game and suffers -1 MA from the Post Game Fight!';
-                  Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                end else
-                if (r2=3) then begin
-                  InjuryStatus := 73;
-                  Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    allPlayers[curteam, curplayer].name +
-                    ' will Miss Next Game and suffers -1 ST from the Post Game Fight!';
-                  Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                end else
-                if (r2=4) then begin
-                  InjuryStatus := 74;
-                  Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    allPlayers[curteam, curplayer].name +
-                    ' will Miss Next Game and suffers -1 AG from the Post Game Fight!';
-                  Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                end else
-                if (r2=5) or (r2=6) then begin
-                  InjuryStatus := 75;
-                  Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                    allPlayers[curteam, curplayer].name +
-                    ' will Miss Next Game and suffers -1 AV from the Post Game Fight!';
-                  Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-                end;
-              end;
-              if r3 = 6 then begin
-                InjuryStatus := 8;
-                Bloodbowl.comment.text := InttoStr(r1)+InttoStr(r2)+': '+
-                  allPlayers[curteam, curplayer].name +
-                  ' KILLED during the Post Game Fight!  What a fight!';
-                Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-              end;
-              allPlayers[curteam,curplayer].SetStatus(InjuryStatus);
-              InjuryStatus := 0;
-            end;
-          end;
-        end;
-        {End Evil Gits rolls}
         Continuing := false;
         frmPostgame.BringToFront;
       end;
@@ -3951,7 +3869,7 @@ var PassFine, TZone: Boolean;
     g, f: integer;
     ReRollAnswer: string;
 begin
-  if allPlayers[curteam, curplayer].status = Ord(TPlayerStatus.PLAYER_STATUS_BALL_CARRIER) then begin
+  if allPlayers[curteam, curplayer].status = Ord(TPlayerStatus.BallCarrier) then begin
     PassFine := true;
     TZone := true;
     g := curteam;

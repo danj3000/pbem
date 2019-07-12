@@ -595,12 +595,12 @@ begin
       if g = 0 then
       begin
         Bloodbowl.LblRedTeam.caption := ffcl[g];
-        Bloodbowl.lblHomeFF.caption := 'FF: ' + team[g].ff.ToString();
+        Bloodbowl.lblHomeTV.caption := 'TV: ' + team[g].GetTeamValue().ToString();
       end
       else
       begin
         Bloodbowl.LblBlueTeam.caption := ffcl[g];
-        Bloodbowl.lblAwayFF.caption := 'FF: ' + team[g].ff.ToString();
+        Bloodbowl.lblAwayTV.caption := 'TV: ' + team[g].GetTeamValue().ToString();
       end;
 
       if g = 0 then Bloodbowl.ButLoadRed.enabled := false
@@ -651,12 +651,13 @@ begin
       allPlayers[g,f].picture0 := allPlayers[g,f].picture;
       allPlayers[g,f].caption := IntToStr(allPlayers[g,f].cnumber);
       if allPlayers[g,f].ma <> 0 then begin
-        if Pos('M', allPlayers[g,f].inj) > 0
-        then allPlayers[g,f].SetStatusDef(10)
+        if Pos('M', allPlayers[g,f].inj) > 0 then
+          allPlayers[g,f].SetStatusDef(10)
         else
-         if Pos('N', allPlayers[g,f].inj) > 0
-         then allPlayers[g,f].SetStatusDef(9)
-         else allPlayers[g,f].SetStatusDef(0);
+          if Pos('N', allPlayers[g,f].inj) > 0 then
+            allPlayers[g,f].SetStatusDef(9)
+         else
+           allPlayers[g,f].SetStatusDef(0);
       end else begin
         allPlayers[g,f].SetStatusDef(11);
       end;

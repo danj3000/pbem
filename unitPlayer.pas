@@ -1063,11 +1063,16 @@ end;
 procedure TPlayer.SetStatusDef(st: integer);
 begin
   if status <> st then begin
-    if (status = 2) or (st = 2) then ClearBall;
-    if st >= 70 then begin
+    if (status = 2) or (st = 2) then
+      ClearBall;
+
+    if st >= 70 then
+    begin
       status := 7;
       SIstatus := st - 70;
-    end else if st = 12 then begin
+    end
+    else if st = 12 then
+    begin
       SOstatus := status;
       SOSIstatus := SIstatus;
       status := 12;

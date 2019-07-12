@@ -17,8 +17,15 @@ const
 
 type
   TPlayerStatus = (
-  PLAYER_STATUS_BALL_CARRIER = 2,
-  PLAYER_STATUS_PRONE = 3);
+    BallCarrier = 2,
+    Prone = 3,
+    Stunned = 4,
+    KO = 5,
+    BadlyHurt = 6,
+
+    Dead = 8,
+    SentOff = 12
+  );
 
 type
   TWeatherState = (Sweltering, Sunny, Nice, Raining, Blizzard);

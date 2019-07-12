@@ -39,8 +39,8 @@ begin
 
   Bloodbowl.LblRedTeam.caption := '';
   Bloodbowl.LblBlueTeam.caption := '';
-  Bloodbowl.lblHomeFF.caption := '';
-  Bloodbowl.lblAwayFF.caption := '';
+  Bloodbowl.lblHomeTV.caption := '';
+  Bloodbowl.lblAwayTV.caption := '';
 
   Bloodbowl.LblWeather.caption := '';
   Bloodbowl.LblGate.caption := '';

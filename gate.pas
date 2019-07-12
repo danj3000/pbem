@@ -96,8 +96,8 @@ begin
     else
       bbalg.blueFame := 1;
 
-  sr := '(Red:' + IntToStr(redRoll) + ' + ' + IntToStr(redFF) + 'FF = ' + IntToStr(redFans) + ')';
-  sb := '(Blue:' + IntToStr(blueRoll) + ' + ' + IntToStr(blueFF) + 'FF = ' + IntToStr(blueFans) + ')';
+  sr := '(Red:' + IntToStr(redRoll) + ' + ' + IntToStr(redFF) + 'FF = ' + IntToStr(redFans) + 'k)';
+  sb := '(Blue:' + IntToStr(blueRoll) + ' + ' + IntToStr(blueFF) + 'FF = ' + IntToStr(blueFans) + 'k)';
   s1 := IntToStr(bbalg.Gate) + ',000 cheering fans!';
   gateLabelText := 'Gate: ' + s1 + Chr(13) + sr + Chr(13) + sb + Chr(13);
   // display in main screen
