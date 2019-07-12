@@ -41,8 +41,6 @@ type
     TabSheet9: TTabSheet;
     Label17: TLabel;
     txtCardsIniFile: TEdit;
-    Label24: TLabel;
-    txtHandicapIniFile: TEdit;
     butSelectFile: TButton;
     dlgPic: TOpenDialog;
     cbPassingRangesColored: TCheckBox;
@@ -156,7 +154,7 @@ begin
 
   GetText;
   frmSettings.txtCardsIniFile.text := GetText;
-  frmSettings.txtHandicapIniFile.text := GetText;
+  GetText;
   frmSettings.txtFieldImageFile.text := GetText;
 
   FixSettings;
@@ -287,7 +285,7 @@ begin
   st := st + '.';
   // section
   st := st + '*' + Trim(txtCardsIniFile.text);
-  st := st + '*' + Trim(txtHandicapIniFile.text);
+  st := st + '*';
   st := st + '*' + Trim(txtFieldImageFile.text);
   // section
   st := st + '*';
@@ -379,9 +377,7 @@ begin
         if Copy(s, 1, 13) = 'CardsIniFile=' then begin
           txtCardsIniFile.text := Copy(s, 14, Length(s) - 13);
         end;
-        if Copy(s, 1, 16) = 'HandicapIniFile=' then begin
-          txtHandicapIniFile.text := Copy(s, 17, Length(s) - 16);
-        end;
+
         if Copy(s, 1, 15) = 'FieldImageFile=' then begin
           txtFieldImageFile.text := Copy(s, 16, Length(s) - 15);
         end;

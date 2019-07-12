@@ -261,13 +261,6 @@ object frmSettings: TfrmSettings
         Height = 13
         Caption = 'Cards file:'
       end
-      object Label24: TLabel
-        Left = 8
-        Top = 224
-        Width = 65
-        Height = 13
-        Caption = 'Handicap file:'
-      end
       object lblLustrian: TLabel
         Left = 123
         Top = 280
@@ -310,21 +303,13 @@ object frmSettings: TfrmSettings
         TabOrder = 4
         Text = 'bbcards_4E.ini'
       end
-      object txtHandicapIniFile: TEdit
-        Left = 128
-        Top = 216
-        Width = 121
-        Height = 21
-        TabOrder = 5
-        Text = 'bbhandicap.ini'
-      end
       object cbLRB4KO: TCheckBox
         Left = 280
         Top = 112
         Width = 313
         Height = 17
         Caption = 'Use LRB 4.0 kick-off changes'
-        TabOrder = 6
+        TabOrder = 5
       end
     end
     object TabSheet3: TTabSheet
