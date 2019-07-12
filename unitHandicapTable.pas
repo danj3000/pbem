@@ -438,7 +438,6 @@ begin
   end else begin
     BackLog;
     Bloodbowl.butMakeHandicapRolls.enabled := true;
-    Bloodbowl.ButNiggles.enabled := false;
     Bloodbowl.ButToss.enabled := false;
     Bloodbowl.HandicapRolls1.enabled := false;
   end;
@@ -481,7 +480,6 @@ begin
     end else begin
       BackLog;
       Bloodbowl.butMakeHandicapRolls.enabled := true;
-      Bloodbowl.ButNiggles.enabled := false;
       Bloodbowl.ButToss.enabled := false;
       Bloodbowl.HandicapRolls1.enabled := false;
       Handicap4Memo[NumRollsMade].Free;

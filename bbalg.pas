@@ -83,8 +83,6 @@ function InjuryRoll(injmod: integer): string;
 function ArmourRoll(av, armod, injmod: integer): string;
 function FoulRoll(av, armod, injmod: integer; eye: boolean): string;
 function TranslateHandicap: string;
-function TranslateNiggle(nr: string): string;
-function TranslateNiggleResult(nr: string): string;
 function CountTZ(g0, f0: integer): TackleZones;
 function CountOpponents(g0, f0: integer): integer;
 function CountTZSlow(g0, f0: integer): TackleZones;
@@ -1290,42 +1288,6 @@ begin
        IntToStr(team[1].tr) + ' = ';
   if bc + bm = 0 then s := t + s else s := t + ffcl[m] + ' gets ' + s;
   TranslateHandicap := s;
-end;
-
-function TranslateNiggle(nr: string): string;
-var f, g, r: integer;
-    s: string;
-begin
-  g := Ord(nr[3]) - 48;
-  f := Ord(nr[4]) - 64;
-  r := Ord(nr[5]) - 48;
-  s := 'Roll for Niggling Injury for ' +
-                                allPlayers[g,f].GetPlayerName + ': ' + IntToStr(r);
-  TranslateNiggle := s;
-end;
-
-function TranslateNiggleResult(nr: string): string;
-var f, g, r: integer;
-    s: string;
-begin
-  NumNiggles := NumNiggles + 1;
-  if (NumNiggles > 3) and (NumNiggles mod 3 = 1) then begin
-    Bloodbowl.LblNiggles.height := Bloodbowl.LblNiggles.height + 15;
-    Bloodbowl.LblNiggles.top := Bloodbowl.LblNiggles.top - 7;
-  end;
-  g := Ord(nr[3]) - 48;
-  f := Ord(nr[4]) - 64;
-  r := Ord(nr[5]) - 48;
-  s := allPlayers[g,f].GetPlayerName;
-  if (r = 0) or (r = 9) then s := s + ' can play normally.'
-           else s := s + ' must miss the match!';
-  if (r = 0) or (r = 9) then
-     Bloodbowl.LblNiggles.caption := Bloodbowl.LblNiggles.caption +
-                             ffc[g] + IntToStr(f) + ' plays. '
-  else
-     Bloodbowl.LblNiggles.caption := Bloodbowl.LblNiggles.caption +
-                             ffc[g] + IntToStr(f) + ' is OUT! ';
-  TranslateNiggleResult := s;
 end;
 
 function CountTZ(g0, f0: integer): TackleZones;

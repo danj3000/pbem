@@ -9,9 +9,7 @@ function TranslateHandicapTable: string;
 procedure PlayActionHandicapTable(s: string; dir: integer);
 procedure PlayActionHandicap(s: string; dir: integer);
 procedure WorkOutHandicap;
-procedure PlayActionNiggles(s: string; dir: integer);
-procedure PlayActionNiggleResult(s: string; dir: integer);
-procedure WorkOutNiggles;
+
 procedure PlayActionToss(s: string; dir: integer);
 procedure WorkOutToss;
 
@@ -31,7 +29,6 @@ begin
   Bloodbowl.ButCardsRed.enabled := false;
   Bloodbowl.ButCardsBlue.enabled := false;
   Bloodbowl.butMakeHandicapRolls.enabled := false;
-  Bloodbowl.ButNiggles.enabled := false;
   Bloodbowl.ButToss.enabled := false;
   Bloodbowl.ButStart.enabled := false;
   Bloodbowl.PregamePanel.visible := true;
@@ -47,7 +44,6 @@ begin
   Bloodbowl.LblHandicap.caption := '';
   Bloodbowl.LblCardsRed.caption := '';
   Bloodbowl.LblCardsBlue.caption := '';
-  Bloodbowl.LblNiggles.caption := '';
   Bloodbowl.ImRedDie.visible := false;
   Bloodbowl.ImBlueDie.visible := false;
   Bloodbowl.lblToss.caption := '';
@@ -55,30 +51,20 @@ end;
 
 procedure NigglesOrStart;
 var f, g: integer;
-    b: boolean;
 begin
   if ((frmSettings.rgCardSystem.ItemIndex < 3)
       and (not(Bloodbowl.ButCardsRed.enabled)
            and not(Bloodbowl.ButCardsBlue.enabled)))
   or ((frmSettings.rgCardSystem.ItemIndex >= 3) and
            (not(Bloodbowl.butMakeHandicapRolls.enabled)))
-  then begin
-    b := false;
-    for g := 0 to 1 do begin
-      for f := 1 to team[g].numplayers do begin
-        if (allPlayers[g,f].status = 9) then begin
-          b := true;
-        end;
-      end;
-    end;
-    if b then begin
-      Bloodbowl.ButNiggles.enabled := true;
-    end else begin
+  then
+  begin
+
       if PalmedCoin then begin
         Bloodbowl.butStart.enabled := true;
         Bloodbowl.butToss.Enabled := false;
       end else Bloodbowl.ButToss.enabled := true;
-    end;
+
   end;
 end;
 
@@ -138,7 +124,6 @@ begin
     Bloodbowl.lblHandicap.caption := '';
     Bloodbowl.ButHandicap.enabled := true;
     Bloodbowl.butMakeHandicapRolls.enabled := false;
-    Bloodbowl.butNiggles.enabled := false;
     Bloodbowl.butToss.enabled := false;
   end;
 end;
@@ -244,85 +229,6 @@ begin
     Bloodbowl.ButCardsBlue.enabled := true;
   end;
   Bloodbowl.ButHandicap.enabled := false;
-end;
-
-procedure PlayActionNiggles(s: string; dir: integer);
-begin
-  if dir = 1 then begin
-    Bloodbowl.LblNiggles.top := 334;
-    Bloodbowl.LblNiggles.height := 15;
-    DefaultAction(TranslateNiggle(s));
-    Bloodbowl.ButNiggles.enabled := false;
-    if PalmedCoin then Bloodbowl.butStart.enabled := true else
-      Bloodbowl.ButToss.enabled := true;
-  end else begin
-    BackLog;
-  end;
-end;
-
-procedure PlayActionNiggleResult(s: string; dir: integer);
-var f, g: integer;
-begin
-  g := Ord(s[3]) - 48;
-  f := Ord(s[4]) - 64;
-  if dir = 1 then begin
-    DefaultAction(TranslateNiggleResult(s));
-    if s[5] = '0' then allPlayers[g,f].SetStatusDef(0);
-  end else begin
-    allPlayers[g,f].SetStatusDef(9);
-    BackLog;
-    Bloodbowl.LblNiggles.caption := '';
-    Bloodbowl.ButNiggles.enabled := true;
-    Bloodbowl.ButToss.enabled := false;
-  end;
-end;
-
-procedure WorkOutNiggles;
-var f, g, p, r, r2: integer;
-    s, t: string;
-begin
-  NumNiggles := 0;
-  Bloodbowl.LblNiggles.caption := '';
-  Bloodbowl.LblNiggles.top := 334;
-  Bloodbowl.LblNiggles.height := 15;
-  for g := 0 to 1 do begin
-    for f := 1 to team[g].numplayers do begin
-      {look for niggled players}
-      if (allPlayers[g,f].status = 9) then begin
-        s := allPlayers[g,f].inj;
-        p := Pos('N', Uppercase(s));
-        {roll for each N until all done, or 1 rolled}
-        repeat begin
-          r := Rnd(6,6) + 1;
-          r2 := Rnd(6,6) + 1;
-
-          t := 'DN' + Chr(g + 48) + Chr(f + 64) + Chr(r + 48);
-          if CanWriteToLog then begin
-            AddLog(TranslateNiggle(t));
-            LogWrite(t);
-          end;
-          s := Copy(s, p+1, Length(s) - p);
-          p := Pos('N', Uppercase(s));
-          Continuing := true;
-        end until (r = 1) or (p = 0);
-        t := 'Dn' + Chr(g + 48) + Chr(f + 64);
-        if r <> 1 then begin
-          t := t + '0';
-          allPlayers[g,f].SetStatusDef(0);
-        end else begin
-          t := t + '1';
-        end;
-        if CanWriteToLog then begin
-          AddLog(TranslateNiggleResult(t));
-          LogWrite(t);
-        end;
-      end;
-    end;
-  end;
-  Bloodbowl.ButNiggles.enabled := false;
-  if PalmedCoin then Bloodbowl.butStart.enabled := true else
-    Bloodbowl.ButToss.enabled := true;
-  Continuing := false;
 end;
 
 function TranslateToss(s: string): string;

@@ -159,9 +159,7 @@ type
     ButHandicap: TBitBtn;
     ButCardsRed: TBitBtn;
     ButCardsBlue: TBitBtn;
-    ButNiggles: TBitBtn;
     ButSaveGame: TBitBtn;
-    LblNiggles: TLabel;
     ImRedDie: TImage;
     ImBlueDie: TImage;
     ButStart: TBitBtn;
@@ -380,7 +378,7 @@ type
     procedure butMakeHandicapRollsClick(Sender: TObject);
     procedure ButCardsRedClick(Sender: TObject);
     procedure ButCardsBlueClick(Sender: TObject);
-    procedure ButNigglesClick(Sender: TObject);
+
     procedure ButTossClick(Sender: TObject);
     procedure ButSaveGameClick(Sender: TObject);
     procedure ButStartClick(Sender: TObject);
@@ -1584,8 +1582,6 @@ begin
              'H': PlayActionHandicap(s, 1);
              'h': PlayActionHandicapTable(s, 1);
              'C': PlayActionCardsRoll(s, 1);
-             'N': PlayActionNiggles(s, 1);
-             'n': PlayActionNiggleResult(s, 1);
              'T': PlayActionToss(s, 1);
             end;
           end;
@@ -1707,8 +1703,6 @@ begin
              'H': PlayActionHandicap(s, -1);
              'h': PlayActionHandicapTable(s, -1);
              'C': PlayActionCardsRoll(s, -1);
-             'N': PlayActionNiggles(s, -1);
-             'n': PlayActionNiggleResult(s, -1);
              'T': PlayActionToss(s, -1);
             end;
            end;
@@ -3794,11 +3788,6 @@ begin
   frmCards.Show;
   frmCards.BlueRB.checked := true;
   ButCardsBlue.enabled := false;
-end;
-
-procedure TBloodbowl.ButNigglesClick(Sender: TObject);
-begin
-  WorkOutNiggles;
 end;
 
 procedure TBloodbowl.ButTossClick(Sender: TObject);

@@ -533,7 +533,7 @@ begin
     frmCards.Show;
     if g = 0 then frmCards.RedRB.checked := true
              else frmCards.BlueRB.checked := true;
-    Bloodbowl.ButNiggles.enabled := false;
+
     Bloodbowl.ButToss.enabled := false;
   end;
   ShowCards(2);
