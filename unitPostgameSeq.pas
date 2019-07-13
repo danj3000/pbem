@@ -352,7 +352,7 @@ begin
 end;
 
 procedure MVP(tm: integer);
-var c, f, r, numEligible, GoodPlayer, ExtraMVPs: integer;
+var c, f, r, numEligible, GoodPlayer: integer;
     gotMVP: array [1..MaxNumPlayersInTeam] of boolean;
     s: string;
 begin
@@ -368,10 +368,7 @@ begin
   for f := 1 to team[tm].numplayers do
     gotMVP[f] := false;
 
-  if (Trim(frmSettings.txtHandicapTable.text)<>'H5') then
-    ExtraMVPs := 0 else ExtraMVPs := team[tm].bonusMVP;
-
-  while (c <= ExtraMVPs) and (c < numEligible) do
+  while (c <= 0) and (c < numEligible) do
   begin
     r := Rnd(team[tm].numplayers, 6) + 1;
 

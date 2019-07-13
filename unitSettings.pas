@@ -11,24 +11,18 @@ type
     pcSettings: TPageControl;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
-    TabSheet3: TTabSheet;
-    Label11: TLabel;
     Label12: TLabel;
-    Label13: TLabel;
     Label14: TLabel;
     Label15: TLabel;
     Label16: TLabel;
     Label18: TLabel;
     butAccept: TButton;
     lblCantChange: TLabel;
-    txtHandicapTable: TEdit;
     txtMWTable: TEdit;
     txtKOTable: TEdit;
     txtWeatherTable: TEdit;
     txtFieldImageFile: TEdit;
     rgRandomAlgorithm: TRadioGroup;
-    cmbLeague: TComboBox;
-    Label20: TLabel;
     GroupBox2: TGroupBox;
     Label22: TLabel;
     Label23: TLabel;
@@ -38,7 +32,6 @@ type
     butHomeColorChange: TButton;
     butAwayColorChange: TButton;
     cdColorDialog: TColorDialog;
-    TabSheet9: TTabSheet;
     Label17: TLabel;
     txtCardsIniFile: TEdit;
     butSelectFile: TButton;
@@ -47,12 +40,13 @@ type
     cbBlackIce: TCheckBox;
     cbWeatherPitch: TCheckBox;
     cbLRB4KO: TCheckBox;
-    cbDeStun: TCheckBox;
+    Label11: TLabel;
     cbDC: TCheckBox;
+    cbDeStun: TCheckBox;
     procedure butAcceptClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure cmbLeagueChange(Sender: TObject);
+    procedure LoadLeagueSettings();
     procedure butHomeColorChangeClick(Sender: TObject);
     procedure butAwayColorChangeClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -84,7 +78,6 @@ var f: integer;
 begin
   for f := 1 to frmSettings.pcSettings.PageCount - 1 do
                 frmSettings.pcSettings.Pages[f].Enabled := false;
-  frmSettings.cmbLeague.enabled := false;
   frmSettings.butAccept.visible := false;
   frmSettings.lblCantChange.visible := true;
 
@@ -132,8 +125,8 @@ var s: string;
     end;
 begin
   s := st;
-  frmSettings.cmbLeague.text := GetText;
-  frmSettings.txtHandicapTable.text := GetText;
+  GetText;
+  GetText;
   frmSettings.txtMWTable.text := GetText;
   frmSettings.txtKOTable.text := GetText;
   frmSettings.txtWeatherTable.text := GetText;
@@ -166,8 +159,8 @@ var st: string;
 begin
   for i := 1 to pcSettings.PageCount - 1 do
       pcSettings.Pages[i].Enabled := false;
-  st := cmbLeague.Items[cmbLeague.ItemIndex] + '*';
-  st := st + txtHandicapTable.text + '*' + txtMWTable.text + '*' +
+  st := '*';
+  st := st + '*' + txtMWTable.text + '*' +
         txtKOTable.text + '*' + txtWeatherTable.text + '*';
   st := st + 'M';
   st := st + 'S';
@@ -304,25 +297,8 @@ begin
 end;
 
 procedure TfrmSettings.FormCreate(Sender: TObject);
-var ff: TextFile;
-    s: string;
-    leaguesfound: boolean;
 begin
-  leaguesfound := false;
-  AssignFile(ff, curdir + 'ini/pbleague.ini');
-  Reset(ff);
-  cmbLeague.Clear;
-  while not(eof(ff)) do begin
-    ReadLn(ff, s);
-    if (s <> '') and (s[1] = '[') then begin
-      cmbLeague.Items.Add(Copy(s, 2, Pos(']', s) - 2));
-      leaguesfound := true;
-    end;
-  end;
-  if not(leaguesfound) then cmbLeague.Items.Add('<none>');
-  cmbLeague.ItemIndex := 0;
-  cmbLeagueChange(Sender);
-  CloseFile(ff);
+  LoadLeagueSettings();
 end;
 
 procedure TfrmSettings.FormClose(Sender: TObject;
@@ -333,29 +309,19 @@ begin
   end;
 end;
 
-procedure TfrmSettings.cmbLeagueChange(Sender: TObject);
+procedure TfrmSettings.LoadLeagueSettings();
 var ff: TextFile;
     s: string;
-    b: boolean;
     i: integer;
 begin
-  {if cmbLeague.ItemIndex = 0 then begin}
     for i := 1 to pcSettings.PageCount - 1 do
       pcSettings.Pages[i].Enabled := true;
-  {end else begin}
+
     AssignFile(ff, curdir + 'ini/pbleague.ini');
     Reset(ff);
-    b := false;
     while not(eof(ff)) do begin
       ReadLn(ff, s);
-      if (s <> '') and (s[1] = '[') then begin
-        b := (s = '[' + cmbLeague.Items[cmbLeague.ItemIndex] + ']');
-      end;
-      if b then begin
-        
-        if Copy(s, 1, 14) = 'HandicapTable=' then begin
-          txtHandicapTable.text := Trim((copy(s, 15, length(s))));
-        end;
+      begin
         if Copy(s, 1, 19) = 'MatchWinningsTable=' then begin
           txtMWTable.text := Trim((copy(s, 20, length(s))));
         end;
