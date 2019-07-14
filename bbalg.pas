@@ -2348,25 +2348,25 @@ end;
 //todo: remove this
 procedure SetIGMEOY(g: integer);
 begin
-  if IGMEOY = 0 then begin
-    Bloodbowl.ImIGMEOYL.Visible := false;
-    team[0].left := team[0].left - 32;
-    team[0].width := team[0].width + 32;
-  end;
-  if IGMEOY = 1 then begin
-    Bloodbowl.ImIGMEOYR.Visible := false;
-    team[1].width := team[1].width + 32;
-  end;
-  IGMEOY := g;
-  if g = 0 then begin
-    team[0].left := team[0].left + 32;
-    team[0].width := team[0].width - 32;
-    Bloodbowl.ImIGMEOYL.Visible := true;
-  end;
-  if g = 1 then begin
-    team[1].width := team[1].width - 32;
-    Bloodbowl.ImIGMEOYR.Visible := true;
-  end;
+//  if IGMEOY = 0 then begin
+//    Bloodbowl.ImIGMEOYL.Visible := false;
+//    team[0].left := team[0].left - 32;
+//    team[0].width := team[0].width + 32;
+//  end;
+//  if IGMEOY = 1 then begin
+//    Bloodbowl.ImIGMEOYR.Visible := false;
+//    team[1].width := team[1].width + 32;
+//  end;
+//  IGMEOY := g;
+//  if g = 0 then begin
+//    team[0].left := team[0].left + 32;
+//    team[0].width := team[0].width - 32;
+//    Bloodbowl.ImIGMEOYL.Visible := true;
+//  end;
+//  if g = 1 then begin
+//    team[1].width := team[1].width - 32;
+//    Bloodbowl.ImIGMEOYR.Visible := true;
+//  end;
 end;
 
 procedure InjurySettings(g0, f0:integer);

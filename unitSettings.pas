@@ -89,28 +89,18 @@ begin
   frmCards.InitForm;
   frmRoster.InitForm;
 
-  begin
-    Bloodbowl.sbOtherSPP.Visible := false;
-    Bloodbowl.OtherSPP1.visible := false;
-    Bloodbowl.RemoveOther1.Visible := false;
-  end;
+  Bloodbowl.sbOtherSPP.Visible := false;
+  Bloodbowl.OtherSPP1.visible := false;
+  Bloodbowl.RemoveOther1.Visible := false;
 
-
-  Bloodbowl.sbEXP.Visible := false;
-  Bloodbowl.EXP1.visible := false;
-  Bloodbowl.RemoveEXP1.visible := false;
-
-
-    Bloodbowl.butCardsBlue.visible := false;
-    Bloodbowl.butCardsRed.visible := false;
-
+  Bloodbowl.butCardsBlue.visible := false;
+  Bloodbowl.butCardsRed.visible := false;
 
   ShowFieldImage(frmSettings.txtFieldImageFile.text);
 
   SettingsLoaded := True;
   ApoWizCreate(0);
   ApoWizCreate(1);
-
 end;
 
 procedure RestoreSettings(st: string);

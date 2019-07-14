@@ -17,7 +17,7 @@ type
 type TTurn = class(TLabel)
 public
   team, turnnumber: integer;
-  constructor New(form: TForm; tm, nr: integer);
+  constructor New(parentControl: TWinControl; tm, nr: integer);
   procedure TurnClick(Sender: TObject);
 end;
 
@@ -46,16 +46,16 @@ uses bbunit, bbalg, unitLog, unitPlayAction, unitExtern, unitPlayer,
 
 {$R *.DFM}
 
-constructor TTurn.New(form: TForm; tm, nr: integer);
+constructor TTurn.New(parentControl: TWinControl; tm, nr: integer);
 begin
-  inherited Create(form);
+  inherited Create(Bloodbowl.TurnPanel);
 
   {set label properties}
   autosize := false;
   if tm = 0 then left := Bloodbowl.TurnLabel.left - (9 - nr) * 20 - 2
             else left := Bloodbowl.TurnLabel.left + (nr - 1) * 20 +
                                  Bloodbowl.TurnLabel.width + 2;
-  top := Bloodbowl.TurnLabel.top;
+  top := 6;
   height := 19;
   width := 19;
   caption := IntToStr(nr);
@@ -65,7 +65,7 @@ begin
   font.size := 12;
   hint := 'Click to start new turn';
   ShowHint := true;
-  parent := Bloodbowl;
+  parent := parentControl;
   OnClick := TurnClick;
 
   {other properties}

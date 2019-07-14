@@ -24,7 +24,7 @@ public
   team0, value, MarkerType: integer;
   used: boolean;
 
-  constructor New(form: TForm; tm, mt: integer);
+  constructor New(owner: TWinControl; tm, mt: integer);
   procedure MarkerMouseUp(Sender: TObject;
                     Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
   procedure SetValue(newvalue: integer);
@@ -42,9 +42,9 @@ uses bbunit, bbalg, unitLog, unitPlayAction;
 
 {$R *.DFM}
 
-constructor TMarker.New(form: TForm; tm, mt: integer);
+constructor TMarker.New(owner: TWinControl; tm, mt: integer);
 begin
-  inherited Create(form);
+  inherited Create(owner);
 
   {set label properties}
   autosize := false;
@@ -95,7 +95,7 @@ begin
   color := colorarray[tm, 0, 0];
   font.color := clWhite;
   showhint := true;
-  parent := Bloodbowl;
+  parent := owner;
   OnMouseUp := MarkerMouseUp;
 
   {other properties}

@@ -10,7 +10,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, Buttons, Menus, ComCtrls, jpeg,
-  bbalg, unitDodgeRoll, unitTeam, unitPlayer, unitMarker, unitCards, weather;
+  bbalg, unitDodgeRoll, unitTeam, unitPlayer, unitMarker, unitCards, weather, Vcl.ToolWin;
 
 type
   TBloodbowl = class(TForm)
@@ -67,11 +67,6 @@ type
     LogLabel: TLabel;
     Help1: TMenuItem;
     About1: TMenuItem;
-    toolbar: TPanel;
-    savegameSB: TSpeedButton;
-    viewredSB: TSpeedButton;
-    viewblueSB: TSpeedButton;
-    ArgueCallSB: TSpeedButton;
     Log1: TMenuItem;
     ViewLog1: TMenuItem;
     N3: TMenuItem;
@@ -120,27 +115,6 @@ type
     AddCards1: TMenuItem;
     N14: TMenuItem;
     MakeaThrowin1: TMenuItem;
-    StartHalfSB: TSpeedButton;
-    PrepareKickoffSB: TSpeedButton;
-    kickoffSB: TSpeedButton;
-    weatherSB: TSpeedButton;
-    compSB: TSpeedButton;
-    interceptionSB: TSpeedButton;
-    touchdownSB: TSpeedButton;
-    casualtySB: TSpeedButton;
-    armourrollSB: TSpeedButton;
-    injuryrollSB: TSpeedButton;
-    foulrollSB: TSpeedButton;
-    SBThrowIn: TSpeedButton;
-    RandomRedSB: TSpeedButton;
-    RandomBlueSB: TSpeedButton;
-    SBIGMEOYRed: TSpeedButton;
-    SBIGMEOYBlue: TSpeedButton;
-    TurnLabel: TLabel;
-    ScoreLabel: TLabel;
-    RerollLabel: TLabel;
-    ImIGMEOYL: TImage;
-    ImIGMEOYR: TImage;
     BallImage: TImage;
     CurBox: TShape;
     FieldBorder: TShape;
@@ -170,25 +144,19 @@ type
     LblHandicap: TLabel;
     LblCardsBlue: TLabel;
     LblCardsRed: TLabel;
-    PostgameSB: TSpeedButton;
     butToss: TBitBtn;
     lblToss: TLabel;
     MakePass1: TMenuItem;
     MakeCatchroll1: TMenuItem;
     MissesMatch1: TMenuItem;
-    lbHalfID: TLabel;
-    lbHalftext: TLabel;
     HandicapRolls1: TMenuItem;
-    sbOtherSPP: TSpeedButton;
     OtherSPP1: TMenuItem;
     MakePickuproll1: TMenuItem;
     MakeGFIroll1: TMenuItem;
     Settings1: TMenuItem;
     ScatterBall1: TMenuItem;
     ScatterBallfromplayer1: TMenuItem;
-    SBResetIGMEOY: TSpeedButton;
     ResetIGotMyEyeOnYou1: TMenuItem;
-    SBMVP: TSpeedButton;
     MVPAward1: TMenuItem;
     imPlayerImageRed: TImage;
     imPlayerImageBlue: TImage;
@@ -227,9 +195,6 @@ type
     CrowdRoll1: TMenuItem;
     HideBall1: TMenuItem;
     ShowHidePassBlockRanges1: TMenuItem;
-    sbEXP: TSpeedButton;
-    EXP1: TMenuItem;
-    RemoveEXP1: TMenuItem;
     TempOut1: TMenuItem;
     MissDrive1: TMenuItem;
     ResetMove1: TMenuItem;
@@ -291,6 +256,52 @@ type
     PickSideStep1: TMenuItem;
     lblHomeTV: TLabel;
     lblAwayTV: TLabel;
+    ToolBar1: TToolBar;
+    SaveGameSB: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    SpeedButton4: TSpeedButton;
+    PRepareKickOffSB: TSpeedButton;
+    KickOffSB: TSpeedButton;
+    ToolButton4: TToolButton;
+    weatherSB: TSpeedButton;
+    ToolButton5: TToolButton;
+    ToolButton6: TToolButton;
+    ToolButton7: TToolButton;
+    SBmvp: TSpeedButton;
+    casualtySB: TSpeedButton;
+    touchdownSB: TSpeedButton;
+    interceptionSB: TSpeedButton;
+    compSB: TSpeedButton;
+    armourRollSB: TSpeedButton;
+    InjuryRollSB: TSpeedButton;
+    FoulRollSB: TSpeedButton;
+    ToolButton8: TToolButton;
+    ToolButton9: TToolButton;
+    SBThrowIn: TSpeedButton;
+    RandomRedSB: TSpeedButton;
+    RandomBlueSB: TSpeedButton;
+    SBIGMEOYRed: TSpeedButton;
+    SBResetIGMEOY: TSpeedButton;
+    SBIGMEOYBlue: TSpeedButton;
+    ArgueCallSB: TSpeedButton;
+    PostGameSB: TSpeedButton;
+    sbOtherSPP: TSpeedButton;
+    ToolButton10: TToolButton;
+    ToolButton11: TToolButton;
+    ToolButton12: TToolButton;
+    TurnPanel: TPanel;
+    TurnLabel: TLabel;
+    ScoreLabel: TLabel;
+    RerollLabel: TLabel;
+    lbHalftext: TLabel;
+    lbHalfID: TLabel;
+    lblBlueTeamName: TLabel;
+    lblRedTeamName: TLabel;
+    ImIGMEOYL: TImage;
+    ImIGMEOYR: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Movetofield1Click(Sender: TObject);
@@ -389,7 +400,6 @@ type
     procedure UpdateHalfID(HalfNo: integer);
     procedure PostgameRolls1Click(Sender: TObject);
     procedure OtherSPP1Click(Sender: TObject);
-    procedure EXP1Click(Sender: TObject);
     procedure Settings1Click(Sender: TObject);
     procedure ScatterBall1Click(Sender: TObject);
     procedure ScatterPlayerBall1Click(Sender: TObject);
@@ -468,6 +478,8 @@ type
      function GetWeather(): TWeatherState;
     //procedure SetWeather(); overload;
     procedure SetWeather(fullWeatherString: string); overload;
+    procedure lblRedTeamNameMouseEnter(Sender: TObject);
+    procedure lblBlueTeamNameMouseEnter(Sender: TObject);
   private
     { Private declarations }
   public
@@ -726,11 +738,14 @@ begin
       wiz[g].Transparent := false;
     end;
   end;
-  team[g].font.color := TeamTextColor[g];
+
   if g = 0 then begin
     Bloodbowl.LblRedteam.Font.Color := TeamTextColor[g];
+    Bloodbowl.lblRedTeamName.Font.Color := TeamTextColor[g];
+
   end else begin
     Bloodbowl.LblBlueteam.Font.Color := TeamTextColor[g];
+    Bloodbowl.lblBlueTeamName.Font.Color := TeamTextColor[g];
   end;
   lblCardsBox[g].font.color := TeamTextColor[g];
   for f := 1 to 5 do begin
@@ -934,18 +949,10 @@ begin
   {set up field}
   ffc[0] := 'R';
   ffc[1] := 'B';
-  toolbar.left := 0;
-  toolbar.top := 0;
-  toolbar.width := Bloodbowl.width - 8;
-  TurnLabel.top := 8 + toolbar.height;
-  TurnLabel.width := RerollLabel.width;
+
   TurnLabel.left := (Bloodbowl.width - TurnLabel.width - 8) div 2 + 1;
-  ScoreLabel.top := TurnLabel.top + 20;
   ScoreLabel.left := TurnLabel.left;
-  ScoreLabel.width := TurnLabel.width;
-  RerollLabel.top := TurnLabel.top + 40;
   RerollLabel.left := TurnLabel.left;
-  RerollLabel.width := TurnLabel.width;
 
   comment.top := 497;
   comment.left := (Bloodbowl.width - 8) div 2 - 210;
@@ -1006,19 +1013,24 @@ begin
     Bloodbowl.height := LogLabel.top + LogLabel.height + 50;
   end;
   curteam := -1;
+  // Turn markers
   for g := 0 to 1 do begin
-   for f := 1 to 8 do begin
-    turn[g,f] := TTurn.New(Bloodbowl, g, f);
-   end;
-   marker[g, MT_score] := TMarker.New(Bloodbowl, g, MT_Score);
-   marker[g, MT_CasScore] := TMarker.New(Bloodbowl, g, MT_CasScore);
-   marker[g, MT_Reroll] := TMarker.New(Bloodbowl, g, MT_Reroll);
-   marker[g, MT_Leader] := TMarker.New(Bloodbowl, g, MT_Leader);
+    for f := 1 to 8 do begin
+    turn[g,f] := TTurn.New(Bloodbowl.TurnPanel, g, f);
+    end;
+
+    // other markers
+    marker[g, MT_score] := TMarker.New(Bloodbowl.TurnPanel, g, MT_Score);
+    marker[g, MT_CasScore] := TMarker.New(Bloodbowl.TurnPanel, g, MT_CasScore);
+    marker[g, MT_Reroll] := TMarker.New(Bloodbowl.TurnPanel, g, MT_Reroll);
+    marker[g, MT_Leader] := TMarker.New(Bloodbowl.TurnPanel, g, MT_Leader);
   end;
+
+  // pitch
   for f := 0 to 14 do
-   for g := 0 to 25 do begin
-    field[f,g] := TFieldLabel.Create(Bloodbowl, f, g);
-   end;
+    for g := 0 to 25 do begin
+      field[f,g] := TFieldLabel.Create(Bloodbowl, f, g);
+    end;
 
   fieldborder.top := field[0,0].top - 1;
   fieldborder.left := field[0,0].left - 1;
@@ -1091,7 +1103,7 @@ begin
 
   for g := 0 to 1 do begin
    lblCardsBox[g] := TLabel.Create(Bloodbowl);
-   lblCardsBox[g].top := toolbar.height + 4;
+   lblCardsBox[g].top := toolbar1.height + 4;
    lblCardsBox[g].caption := 'Cards for ' + ffcl[g] + ' team';
    lblCardsBox[g].font.color := TeamTextColor[g];
    lblCardsBox[g].parent := Bloodbowl;
@@ -1104,7 +1116,7 @@ begin
    CardsBox[g] := TScrollBox.Create(Bloodbowl);
    CardsBox[g].height := 90;
    CardsBox[g].width := field[0,0].left - 9;
-   CardsBox[g].top := toolbar.height + 20;
+   CardsBox[g].top := toolbar1.height + 20;
    CardsBox[g].left := lblCardsBox[g].left;
    CardsBox[g].HorzScrollBar.visible := false;
    CardsBox[g].parent := Bloodbowl;
@@ -1161,16 +1173,12 @@ begin
   for g := 0 to 1 do begin
     team[g] := TTeam.New(Bloodbowl, g);
   end;
-  team[0].caption := 'Team Red';
-  team[1].caption := 'Team Blue';
+
   lbHalfID.top := turn[0,1].top;
   lbHalfID.left := turn[0,1].left - 30;
   lbHalftext.top := lbHalfID.top + 8;
   lbHalftext.left := lbHalfID.left - 27;
-  ImIGMEOYL.left := team[0].left;
-  ImIGMEOYL.top := team[0].top;
-  ImIGMEOYR.left := team[1].left + team[1].width - 32;
-  ImIGMEOYR.top := team[1].top;
+
   WeatherLabel.left := PlayerData[0,1].left;
   WeatherLabel.top := DiceRoll1.top;
     {/// was: PlayerData[0,5].top + PlayerData[0,5].height + 20;}
@@ -1229,6 +1237,42 @@ begin
 
   end;
 
+end;
+
+procedure ShowTeamDetails(number: integer);
+var tm : TTeam;
+begin
+  tm := team[number];
+  PlayerData[number,1].caption := 'Fan factor: ' + IntToStr(tm.ff);
+  PlayerData[number,2].caption := 'Asst. coaches: ' + IntToStr(tm.asstcoaches);
+  PlayerData[number,3].caption := 'Cheerleaders: ' + IntToStr(tm.cheerleaders);
+  PlayerData[number,5].caption := 'Treasury: ' + tm.treasury;
+  if ((number=0) and (tm.logo<>HomePic)) or
+     ((number<>0) and (tm.logo<>AwayPic)) then begin
+    if tm.logo = '' then begin
+      if number = 0 then Bloodbowl.imPlayerImageRed.visible := false
+                    else Bloodbowl.imPlayerImageBlue.visible := false;
+    end else begin
+      if number = 0 then begin
+        if FileExists(curdir + 'roster\' + tm.logo) then
+          Bloodbowl.imPlayerImageRed.picture.LoadFromFile(curdir +
+                                                         'roster\' + tm.logo)
+        else
+          Bloodbowl.imPlayerImageRed.picture.LoadFromFile(
+                                 curdir + 'images\noteampic.jpg');
+          Bloodbowl.imPlayerImageRed.visible := true;
+      end else begin
+        if FileExists(curdir + 'roster\' + tm.logo) then
+          Bloodbowl.imPlayerImageBlue.picture.LoadFromFile(curdir +
+                                                         'roster\' + tm.logo)
+        else
+          Bloodbowl.imPlayerImageBlue.picture.LoadFromFile(
+                                 curdir + 'images\noteampic.jpg');
+          Bloodbowl.imPlayerImageBlue.visible := true;
+      end;
+    end;
+    if number=0 then HomePic := tm.logo else AwayPic := tm.logo;
+  end;
 end;
 
 procedure ApoWizCreate(g: integer);
@@ -2008,6 +2052,16 @@ begin
     allPlayers[curteam,curplayer].SetStatus(5);
 end;
 
+procedure TBloodbowl.lblBlueTeamNameMouseEnter(Sender: TObject);
+begin
+  ShowTeamDetails(1);
+end;
+
+procedure TBloodbowl.lblRedTeamNameMouseEnter(Sender: TObject);
+begin
+  ShowTeamDetails(0);
+end;
+
 procedure TBloodbowl.BadlyHurt1Click(Sender: TObject);
 var ploc, qloc: integer;
 begin
@@ -2426,16 +2480,6 @@ begin
                     allPlayers[curteam, curplayer].otherSPP + 1;
     LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'O');
     AddLog('1 other SPP for ' + allPlayers[curteam, curplayer].GetPlayerName);
-  end;
-end;
-
-procedure TBloodbowl.EXP1Click(Sender: TObject);
-begin
-  if CanWriteToLog then begin
-    allPlayers[curteam, curplayer].exp :=
-                    allPlayers[curteam, curplayer].exp + 1;
-    LogWrite('p' + Chr(curteam + 48) + chr(curplayer + 65) + 'E');
-    AddLog('EXP point for ' + allPlayers[curteam, curplayer].GetPlayerName);
   end;
 end;
 
@@ -3677,6 +3721,10 @@ begin
     if CanWriteToLog then
       LoadTeamFile(g, Bloodbowl.LoadTeamDialog.Filename);
   end;
+  if g = 0 then
+    Bloodbowl.lblRedTeamName.caption := team[0].name
+  else
+    Bloodbowl.lblBlueTeamName.caption := team[1].name;
 end;
 
 procedure TBloodbowl.ButLoadRedClick(Sender: TObject);

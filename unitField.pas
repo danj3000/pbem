@@ -57,7 +57,7 @@ begin
   {label settings}
   autosize := false;
   left := (Bloodbowl.width - 8) div 2 + (g - 13) * 20 + 1;
-  top := Bloodbowl.TurnLabel.top + 68 + f * 20;
+  top := Bloodbowl.TurnPanel.Height + Bloodbowl.toolbar1.Height + 4 + f * 20;
   height := 19;
   width := 19;
   caption := '';

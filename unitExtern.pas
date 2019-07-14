@@ -500,7 +500,7 @@ begin
   end;
   AddLog('Team ' + ffcl[g] + ' loaded: ' + team[g].name);
   ffcl[g] := team[g].name;
-  team[g].caption := team[g].name;
+
   for f := 1 to team[g].numplayers do begin
     if allPlayers[g,f].ma = 0
     then allPlayers[g,f].SetStatusDef(11)
@@ -540,6 +540,7 @@ var f, g: integer;
 begin
   if dir = 1 then begin
     g := Ord(s[2]) - 48;
+
     if s[3] = '!' then begin
       ResetTeam(g);
       s0 := Copy(s, 4, length(s));
@@ -571,7 +572,6 @@ begin
       end;
       AddLog('Team ' + ffcl[g] + ' loaded: ' + team[g].name);
       ffcl[g] := team[g].name;
-      team[g].caption := team[g].name;
       ApoWizCreate(g);
       if team[g].wiz > 0 then begin
         wiz[g].caption := 'WIZ';
@@ -603,7 +603,11 @@ begin
       if not(Bloodbowl.ButLoadRed.enabled)
       and not(Bloodbowl.ButLoadBlue.enabled) then
         Bloodbowl.ButWeather.enabled := true;
-    end else begin
+
+
+    end
+    else
+    begin
       team[g].numplayers := team[g].numplayers + 1;
       f := Ord(s[3]) - 64;
       allPlayers[g,f].number := f;
@@ -656,7 +660,14 @@ begin
       end else begin
         allPlayers[g,f].SetStatusDef(11);
       end;
+
+
     end;
+          if g = 0 then
+        Bloodbowl.lblRedTeamName.caption := team[0].name
+      else
+        Bloodbowl.lblBlueTeamName.caption := team[1].name;
+
   end
   else
   begin
@@ -671,7 +682,12 @@ begin
                else Bloodbowl.ButLoadBlue.enabled := true;
       Bloodbowl.ButWeather.enabled := false;
       BackLog;
+          if g = 0 then
+        Bloodbowl.lblRedTeamName.caption := ''
+      else
+        Bloodbowl.lblBlueTeamName.caption := '';
     end;
+
   end;
 end;
 

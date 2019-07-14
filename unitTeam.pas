@@ -15,7 +15,7 @@ type
     { Public declarations }
   end;
 
-type TTeam = class(TLabel)
+type TTeam = class(TObject)
 public
   name, race, email, coach, treasury, treasury0, logo, homefield: string;
 
@@ -26,9 +26,6 @@ public
   UsedLeaderReroll, HeadCoach: boolean;
 
   constructor New(form: TForm; nr: integer);
-  procedure ShowTeamDetails;
-  procedure TeamMouseMove(Sender: TObject; Shift: TShiftState;
-                            X, Y: Integer);
   function GetTeamValue(): integer;
 end;
 
@@ -52,25 +49,8 @@ uses bbalg, unitPlayer, bbunit, unitPlayAction, unitLog, unitMarker, unitField,
 
 constructor TTeam.New(form: TForm; nr: integer);
 begin
-  inherited Create(form);
   number := nr;
-  autosize := false;
-  top := Bloodbowl.ScoreLabel.top + 3;
-  height := 40;
-  width := marker[0, MT_Leader].left - field[0,0].left - 4;
-  alignment := taCenter;
-  font.color := TeamTextColor[nr];
-  if nr = 0 then begin
-    left := field[0,0].left;
-  end else begin
-    left := marker[1, MT_Leader].left + marker[1, MT_Leader].width + 3;
-  end;
-  color := Bloodbowl.color;
-  font.size := 12;
-  font.style := [fsBold];
-  wordwrap := true;
-  OnMouseMove := TeamMouseMove;
-  parent := Bloodbowl;
+
 end;
 
 procedure ResetTeam(g: integer);
@@ -359,46 +339,6 @@ begin
       end;
     end;
   end;
-end;
-
-procedure TTeam.ShowTeamDetails;
-begin
-  PlayerData[number,1].caption := 'Fan factor: ' + IntToStr(ff);
-  PlayerData[number,2].caption := 'Asst. coaches: ' + IntToStr(asstcoaches);
-  PlayerData[number,3].caption := 'Cheerleaders: ' + IntToStr(cheerleaders);
-  PlayerData[number,5].caption := 'Treasury: ' + treasury;
-  if ((number=0) and (logo<>HomePic)) or
-     ((number<>0) and (logo<>AwayPic)) then begin
-    if logo = '' then begin
-      if number = 0 then Bloodbowl.imPlayerImageRed.visible := false
-                    else Bloodbowl.imPlayerImageBlue.visible := false;
-    end else begin
-      if number = 0 then begin
-        if FileExists(curdir + 'roster\' + logo) then
-          Bloodbowl.imPlayerImageRed.picture.LoadFromFile(curdir +
-                                                         'roster\' + logo)
-        else
-          Bloodbowl.imPlayerImageRed.picture.LoadFromFile(
-                                 curdir + 'images\noteampic.jpg');
-          Bloodbowl.imPlayerImageRed.visible := true;
-      end else begin
-        if FileExists(curdir + 'roster\' + logo) then
-          Bloodbowl.imPlayerImageBlue.picture.LoadFromFile(curdir +
-                                                         'roster\' + logo)
-        else
-          Bloodbowl.imPlayerImageBlue.picture.LoadFromFile(
-                                 curdir + 'images\noteampic.jpg');
-          Bloodbowl.imPlayerImageBlue.visible := true;
-      end;
-    end;
-    if number=0 then HomePic := logo else AwayPic := logo;
-  end;
-end;
-
-procedure TTeam.TeamMouseMove(Sender: TObject; Shift: TShiftState;
-                            X, Y: Integer);
-begin
-  ShowTeamDetails;
 end;
 
 procedure PlayActionRemoveACCH(s: string; dir: integer);

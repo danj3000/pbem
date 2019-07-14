@@ -232,8 +232,6 @@ object frmSettings: TfrmSettings
     object TabSheet2: TTabSheet
       Caption = 'Tables'
       ImageIndex = 1
-      ExplicitLeft = 8
-      ExplicitTop = 29
       object Label12: TLabel
         Left = 8
         Top = 16

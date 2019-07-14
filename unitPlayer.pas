@@ -1361,7 +1361,6 @@ begin
     Bloodbowl.Casualty1.enabled := true;
     Bloodbowl.OtherSPP1.enabled := true;
     Bloodbowl.MVPAward1.enabled := true;
-    Bloodbowl.sbOtherSPP.enabled := true;
     Bloodbowl.compSB.enabled := true;
     Bloodbowl.interceptionSB.enabled := true;
     Bloodbowl.touchdownSB.enabled := true;
@@ -1407,7 +1406,6 @@ begin
     Bloodbowl.Casualty1.enabled := false;
     Bloodbowl.OtherSPP1.enabled := false;
     Bloodbowl.MVPAward1.enabled := false;
-    Bloodbowl.sbOtherSPP.enabled := false;
     Bloodbowl.compSB.enabled := false;
     Bloodbowl.interceptionSB.enabled := false;
     Bloodbowl.touchdownSB.enabled := false;
