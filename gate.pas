@@ -38,8 +38,7 @@ begin
 end;
 
 class procedure TGate.PlayActionGate(s: string; dir: integer);
-var redRoll, blueRoll, redFF, blueFF, redFans, blueFans: integer;
-    s0, sr, sb: string;
+var redRoll, blueRoll: integer;
 begin
   if dir = DIR_FORWARD then
   begin

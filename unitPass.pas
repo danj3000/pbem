@@ -195,7 +195,7 @@ begin
 end;
 
 procedure InjuryPlayer;
-var Injmod, totspp, NiggleCount, p, t: integer;
+var Injmod, totspp, NiggleCount, p: integer;
   s: string;
 begin
   allPlayers[TeamCatcher,NumberCatcher].SetStatus(3);
@@ -222,9 +222,6 @@ begin
       frmArmourRoll.rbNoStunty.checked := true;
   
   frmArmourRoll.cbDecay.checked := (allPlayers[TeamCatcher,NumberCatcher].hasSkill('Decay'));
-
-  totspp := allPlayers[TeamCatcher,NumberCatcher].GetStartingSPP() +
-            allPlayers[TeamCatcher,NumberCatcher].GetMatchSPP();
 
     s := allPlayers[TeamCatcher,NumberCatcher].inj;
     p := Pos('N', Uppercase(s));

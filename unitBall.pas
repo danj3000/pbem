@@ -6,20 +6,11 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   ExtCtrls;
 
-type
-  TmodBall = class(TDataModule)
-  private
-    { Private declarations }
-  public
-    { Public declarations }
-  end;
-
 type TBall = record
     p, q: integer;
   end;
 
 var
-  modBall: TmodBall;
   ball: TBall;
 
 function ClearBall: string;
@@ -34,8 +25,6 @@ implementation
 
 uses bbunit, bbalg, unitLog, unitPlayAction, unitField, unitCatch, unitRandom,
   unitPass, unitSettings;
-
-{$R *.DFM}
 
 function ClearBall: string;
 var s: string;

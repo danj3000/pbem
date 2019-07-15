@@ -5,17 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs;
 
-type
-  TmodExtern = class(TDataModule)
-  private
-    { Private declarations }
-  public
-    { Public declarations }
-  end;
-
 var
-  modExtern: TmodExtern;
-
   WriteLogUncoded: boolean;
   LoadSaveDir: string;
 
@@ -31,8 +21,6 @@ implementation
 uses registry,
      unitLog, bbalg, bbunit, unitTeam, unitMarker, unitPostgameSeq,
   unitSettings, unitPlayAction, unitRandom;
-
-{$R *.DFM}
 
 type CodeTable = array [32..255] of integer;
 
@@ -1123,7 +1111,7 @@ procedure RecordInRegistry(gameid: string; len: integer);
 var Reg: TRegistry;
     KeyInfo: TRegKeyInfo;
     curval, s, t: string;
-    f, p, p2, p3, q, r, prevlen, curnr, freenr, cnt: integer;
+    f, p, q, r, prevlen, curnr, freenr, cnt: integer;
     found: boolean;
     checkdate: TDateTime;
     DateSeparator: AnsiChar;

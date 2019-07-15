@@ -78,8 +78,6 @@ end;
 
 procedure WorkOutHandicap;
 var s, log, HT: string;
-    diff, gold, m, v, k, bc, bm: integer;
-    gg: TextFile;
 begin
     if CanWriteToLog then
     begin

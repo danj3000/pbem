@@ -5,17 +5,7 @@ interface
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs;
 
-type
-  TmodPlayAction = class(TDataModule)
-  private
-
-  public
-
-  end;
-
 var
-  modPlayAction: TmodPlayAction;
-
   WaitLength: integer;
 const
   DIR_FORWARD = 1;
@@ -30,7 +20,6 @@ procedure PlayActionRoll2Dice(s: string; dir: integer);
 procedure PlayActionRollScatter(s: string; dir: integer);
 procedure PlayActionRollBlockDice(s: string; dir, num: integer);
 procedure PlayActionThrowIn(s: string; dir: integer);
-
 procedure PlayActionKickOff(s: string; dir: integer);
 procedure PlayActionArmourRoll(s: string; dir: integer);
 procedure PlayActionInjuryRoll(s: string; dir: integer);
@@ -51,8 +40,6 @@ implementation
 
 uses bbunit, unitLog, bbalg, unitNotes, unitThrowIn, unitBall, unitPlayer,
      unitField, unitSettings;
-
-{$R *.DFM}
 
 procedure Wait;
 var h, m, s, ms: word;

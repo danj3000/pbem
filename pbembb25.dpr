@@ -4,7 +4,6 @@ uses
   Forms,
   unitSettings in 'unitSettings.pas' {frmSettings},
   bbunit in 'bbunit.pas' {Bloodbowl},
-  bbalg in 'bbalg.pas' {modAlg: TDataModule},
   unitLog in 'unitLog.pas' {frmLog},
   unitRoster in 'unitRoster.pas' {frmRoster},
   unitAbout in 'unitAbout.pas' {frmAbout},
@@ -16,13 +15,6 @@ uses
   unitPlayerStatsChange in 'unitPlayerStatsChange.pas' {frmPlayerStatsChange},
   unitThrowIn in 'unitThrowIn.pas' {frmThrowIn},
   unitWelcome in 'unitWelcome.pas' {frmWelcome},
-  unitPlayer in 'unitPlayer.pas' {modPlayer: TDataModule},
-  unitPlayAction in 'unitPlayAction.pas' {modPlayAction: TDataModule},
-  unitTurnChange in 'unitTurnChange.pas' {modTurnChange: TDataModule},
-  unitExtern in 'unitExtern.pas' {modExtern: TDataModule},
-  unitMarker in 'unitMarker.pas' {modMarker: TDataModule},
-  unitBall in 'unitBall.pas' {modBall: TDataModule},
-  unitTeam in 'unitTeam.pas' {modTeam: TDataModule},
   unitPregame in 'unitPregame.pas',
   unitFanFactor in 'unitFanFactor.pas' {frmFanFactor},
   unitCheckFile in 'unitCheckFile.pas',
@@ -44,7 +36,15 @@ uses
   unitCatchStuff in 'unitCatchStuff.pas' {frmCatchStuff},
   weather in 'weather.pas',
   gate in 'gate.pas',
-  logPlayback in 'logPlayback.pas';
+  logPlayback in 'logPlayback.pas',
+  unitTurnChange in 'unitTurnChange.pas',
+  bbalg in 'bbalg.pas',
+  unitBall in 'unitBall.pas',
+  unitMarker in 'unitMarker.pas',
+  unitPlayAction in 'unitPlayAction.pas',
+  unitPlayer in 'unitPlayer.pas',
+  unitTeam in 'unitTeam.pas',
+  unitExtern in 'unitExtern.pas';
 
 {$R *.RES}
 
@@ -55,7 +55,6 @@ begin
   Application.CreateForm(TfrmSettings, frmSettings);
   Application.CreateForm(TBloodbowl, Bloodbowl);
   Application.CreateForm(TfrmLog, frmLog);
-  Application.CreateForm(TmodAlg, modAlg);
   Application.CreateForm(TfrmRoster, frmRoster);
   Application.CreateForm(TfrmAbout, frmAbout);
   Application.CreateForm(TfrmArmourRoll, frmArmourRoll);
@@ -65,13 +64,6 @@ begin
   Application.CreateForm(TfrmDodgeRoll, frmDodgeRoll);
   Application.CreateForm(TfrmPlayerStatsChange, frmPlayerStatsChange);
   Application.CreateForm(TfrmThrowIn, frmThrowIn);
-  Application.CreateForm(TmodPlayer, modPlayer);
-  Application.CreateForm(TmodPlayAction, modPlayAction);
-  Application.CreateForm(TmodTurnChange, modTurnChange);
-  Application.CreateForm(TmodExtern, modExtern);
-  Application.CreateForm(TmodMarker, modMarker);
-  Application.CreateForm(TmodBall, modBall);
-  Application.CreateForm(TmodTeam, modTeam);
   Application.CreateForm(TfrmFanFactor, frmFanFactor);
   Application.CreateForm(TfrmPass, frmPass);
   Application.CreateForm(TfrmLanding, frmLanding);
@@ -87,6 +79,6 @@ begin
   Application.CreateForm(TfrmThrowStuff, frmThrowStuff);
   Application.CreateForm(TfrmCatchStuff, frmCatchStuff);
   LanguageInit;
-  
+
   Application.Run;
 end.

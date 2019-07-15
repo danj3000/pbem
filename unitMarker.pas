@@ -11,14 +11,6 @@ const MT_CasScore = 2;
 const MT_Reroll = 3;
 const MT_Leader = 4;
 
-type
-  TmodMarker = class(TDataModule)
-  private
-    { Private declarations }
-  public
-    { Public declarations }
-  end;
-
 type TMarker = class(TLabel)
 public
   team0, value, MarkerType: integer;
@@ -30,17 +22,12 @@ public
   procedure SetValue(newvalue: integer);
 end;
 
-var
-  modMarker: TmodMarker;
-
 function TranslateActionMarkerChange(s: string): string;
 procedure PlayActionMarkerChange(s: string; dir: integer);
 
 implementation
 
 uses bbunit, bbalg, unitLog, unitPlayAction;
-
-{$R *.DFM}
 
 constructor TMarker.New(owner: TWinControl; tm, mt: integer);
 begin

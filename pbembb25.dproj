@@ -97,10 +97,6 @@
         <DCCReference Include="bbunit.pas">
             <Form>Bloodbowl</Form>
         </DCCReference>
-        <DCCReference Include="bbalg.pas">
-            <Form>modAlg</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
         <DCCReference Include="unitLog.pas">
             <Form>frmLog</Form>
         </DCCReference>
@@ -133,34 +129,6 @@
         </DCCReference>
         <DCCReference Include="unitWelcome.pas">
             <Form>frmWelcome</Form>
-        </DCCReference>
-        <DCCReference Include="unitPlayer.pas">
-            <Form>modPlayer</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="unitPlayAction.pas">
-            <Form>modPlayAction</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="unitTurnChange.pas">
-            <Form>modTurnChange</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="unitExtern.pas">
-            <Form>modExtern</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="unitMarker.pas">
-            <Form>modMarker</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="unitBall.pas">
-            <Form>modBall</Form>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="unitTeam.pas">
-            <Form>modTeam</Form>
-            <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="unitPregame.pas"/>
         <DCCReference Include="unitFanFactor.pas">
@@ -212,6 +180,14 @@
         <DCCReference Include="weather.pas"/>
         <DCCReference Include="gate.pas"/>
         <DCCReference Include="logPlayback.pas"/>
+        <DCCReference Include="unitTurnChange.pas"/>
+        <DCCReference Include="bbalg.pas"/>
+        <DCCReference Include="unitBall.pas"/>
+        <DCCReference Include="unitMarker.pas"/>
+        <DCCReference Include="unitPlayAction.pas"/>
+        <DCCReference Include="unitPlayer.pas"/>
+        <DCCReference Include="unitTeam.pas"/>
+        <DCCReference Include="unitExtern.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

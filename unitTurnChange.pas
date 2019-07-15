@@ -6,14 +6,6 @@ uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls;
 
-type
-  TmodTurnChange = class(TDataModule)
-  private
-    { Private declarations }
-  public
-    { Public declarations }
-  end;
-
 type TTurn = class(TLabel)
 public
   team, turnnumber: integer;
@@ -22,7 +14,6 @@ public
 end;
 
 var
-  modTurnChange: TmodTurnChange;
   SWSafeRef: integer;
 
 function TurnChange: string;
@@ -31,7 +22,6 @@ procedure PrepareStartHalf;
 procedure PlayActionTurn(s: string; dir: integer);
 procedure PlayActionStartHalf(s: string; dir: integer);
 procedure MakeRegenerationRolls;
-procedure ResetWerePlayers;
 procedure NurgleRotRolls;
 procedure PrepareForKickoff;
 procedure PlayActionPrepareForKickoff(s: string; dir: integer);
@@ -43,8 +33,6 @@ implementation
 uses bbunit, bbalg, unitLog, unitPlayAction, unitExtern, unitPlayer,
      unitField, unitMarker, unitBall, unitPostGameSeq, unitSettings,
      unitRandom, unitPregame, unitRoster, weather;
-
-{$R *.DFM}
 
 constructor TTurn.New(parentControl: TWinControl; tm, nr: integer);
 begin
@@ -633,45 +621,6 @@ begin
           LogWrite(s);
           PlayActionPrepareForKickOff(s, 1);
         end;
-      end;
-    end;
-  end;
-end;
-
-{Reset Were player}
-procedure ResetWerePlayers;
-var f, g: integer;
-    s: string;
-begin
-  for g := 0 to 1 do begin
-    for f := 1 to team[g].numplayers do begin
-      if ((allPlayers[g,f].status <= 5) or (allPlayers[g,f].status = 13))
-        and (allPlayers[g,f].HasSkill('Were*')) then begin
-        s := 'u' + Chr(g + 48) + Chr(f + 64) +
-          Chr(allPlayers[g, f].ma + 48) +
-          Chr(allPlayers[g, f].st + 48) +
-          Chr(allPlayers[g, f].ag + 48) +
-          Chr(allPlayers[g, f].av + 48) +
-             Chr(allPlayers[g,f].cnumber + 64) +
-             Chr(allPlayers[g,f].value div 5 + 48) +
-             allPlayers[g,f].name + '$' +
-             allPlayers[g,f].position + '$' +
-             allPlayers[g,f].picture + '$' +
-             allPlayers[g,f].icon + '$' +
-          allPlayers[g, f].GetSkillString(1) + '|' +
-          Chr(allPlayers[g, f].ma0 + 48) +
-          Chr(allPlayers[g, f].st0 + 48) +
-          Chr(allPlayers[g, f].ag0 + 48) +
-          Chr(allPlayers[g, f].av0 + 48) +
-             Chr(allPlayers[g,f].cnumber + 64) +
-             Chr(allPlayers[g,f].value div 5 + 48) +
-             allPlayers[g,f].name + '$' +
-             allPlayers[g,f].position + '$' +
-             allPlayers[g,f].picture + '$' +
-             allPlayers[g,f].icon + '$' +
-          allPlayers[g, f].GetSkillString(2);
-        LogWrite(s);
-        PlayActionPlayerStatChange(s, 1);
       end;
     end;
   end;

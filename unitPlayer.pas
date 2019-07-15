@@ -7,17 +7,6 @@ uses Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
 
 const STATUS_BALL_CARRIER = 2;
 
-type
-  TmodPlayer = class(TDataModule)
-  private
-    { Private declarations }
-  public
-    { Public declarations }
-  end;
-
-var
-  modPlayer: TmodPlayer;
-
 type TPlayer = class(TLabel)
   private
     function GetPlayerSPP() : Integer;
@@ -150,8 +139,6 @@ uses bbunit, unitLog, unitPlayAction, unitBall, unitField,
      unitMarker, unitPass, unitPickUp, unitSettings, unitRandom,
      unitCatch, unitArmourRoll, unitTeam, unitLanguage, unitThrowTeamMate,
      unitThrowStuff, unitMessage;
-
-{$R *.DFM}
 
 var curbefore: integer;
 

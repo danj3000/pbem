@@ -31,21 +31,12 @@ type
   TWeatherState = (Sweltering, Sunny, Nice, Raining, Blizzard);
   function ParseWeather(s: string): TWeatherState;
 
-type
-  TmodAlg = class(TDataModule)
-  private
-    { Private declarations }
-  public
-    { Public declarations }
-  end;
-
 type TackleZones = record
                      num: integer;
                      pl: array [1..8] of integer;
                    end;
 
 var
-  modAlg: TmodAlg;
   colorarray: array [0..1,0..14,0..1] of TColor;
   RLCoach: array [0..1] of string;
   LoggedCoach: string;
@@ -109,8 +100,6 @@ implementation
 uses unitLog, bbunit, unitNotes, unitBall, unitPlayer, unitTeam,
      unitField, unitMarker, unitRandom, unitArmourRoll, unitSettings,
      unitMessage;
-
-{$R *.DFM}
 
 function ParseWeather(s: string): TWeatherState;
 begin

@@ -7,14 +7,6 @@ uses Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
 
 const MaxNumPlayersInTeam = 40;
 
-type
-  TmodTeam = class(TDataModule)
-  private
-    { Private declarations }
-  public
-    { Public declarations }
-  end;
-
 type TTeam = class(TObject)
 public
   name, race, email, coach, treasury, treasury0, logo, homefield: string;
@@ -29,9 +21,6 @@ public
   function GetTeamValue(): integer;
 end;
 
-var
-  modTeam: TmodTeam;
-
 procedure ResetTeam(g: integer);
 function TranslateTeamStatChange(s: string): string;
 procedure PlayActionTeamStatChange(s: string; dir: integer);
@@ -44,8 +33,6 @@ implementation
 
 uses bbalg, unitPlayer, bbunit, unitPlayAction, unitLog, unitMarker, unitField,
   unitMessage, unitSettings, unitRandom;
-
-{$R *.DFM}
 
 constructor TTeam.New(form: TForm; nr: integer);
 begin

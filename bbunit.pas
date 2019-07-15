@@ -1678,7 +1678,7 @@ end;
 
 procedure TBloodbowl.Standing1Click(Sender: TObject);
 var tz, tz0: TackleZones;
-    p, StandUp, r2, g, f, WATarget: integer;
+    p, StandUp, r2, g, f: integer;
     s, ReRollAnswer: string;
     bga, reroll, proskill, UReroll: boolean;
 begin
@@ -3672,7 +3672,7 @@ begin
 end;
 
 procedure TBloodbowl.PostgameSBClick(Sender: TObject);
-var intAnswer, p, done, f, LossMod, r1, r2, r3, NoPlayers: integer;
+var intAnswer: integer;
     UsedPlayers: array [1..4] of integer;
 begin
   if not(PostgameActive) then begin
@@ -3721,7 +3721,6 @@ end;
 procedure TBloodbowl.MakePass1Click(Sender: TObject);
 var PassFine, TZone: Boolean;
     g, f: integer;
-    ReRollAnswer: string;
 begin
   if allPlayers[curteam, curplayer].status = Ord(TPlayerStatus.BallCarrier) then begin
     PassFine := true;
@@ -4323,7 +4322,7 @@ begin
 end;
 
 procedure TBloodbowl.AVInjRoll1Click(Sender: TObject);
-var p, NiggleCount, ploc, qloc, v, w: integer;
+var ploc, qloc, v, w: integer;
     BallScatter: boolean;
 begin
   Ballscatter := false;

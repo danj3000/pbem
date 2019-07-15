@@ -88,7 +88,6 @@ begin
 end;
 
 function WorkOutGFIResult(i: integer): boolean;
-var s: string;
 begin
   Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
   if lastroll >= GFIRollNeeded then begin

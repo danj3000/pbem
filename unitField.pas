@@ -135,8 +135,8 @@ end;
 
 procedure TFieldLabel.FieldMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var h, pb, f, g, r, fieldcheck, leap, totspp, p2, NiggleCount, r2,
-    PProll, assa, assd, ascount, targetaction, dist1, dist2, finaldist, KickP, KickQ,
+var h, pb, f, g, r, fieldcheck, leap, r2,
+    dist1, dist2, finaldist, KickP, KickQ,
     v, w, ploc, qloc: integer;
     SPP4th, b, bga, proskill, reroll, Ballscatter, UReroll: boolean;
     s, LeapType, ReRollAnswer, StatTemp: string;
