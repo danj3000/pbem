@@ -17,14 +17,21 @@ const
 
 type
   TPlayerStatus = (
+    Reserve = 0,
+    Standing = 1,
     BallCarrier = 2,
     Prone = 3,
     Stunned = 4,
     KO = 5,
     BadlyHurt = 6,
-
+    SeriouslyInjured = 7,
     Dead = 8,
-    SentOff = 12
+    NiggledOut = 9,
+    MissesGame = 10,
+    EmptyRosterSlot = 11, // ??
+    SentOff = 12,
+    TemporarilyOut = 13,  // ??
+    HeatExhaustion = 14
   );
 
 type
@@ -470,7 +477,9 @@ begin
       t := t + ', Iron Man converts to Stunned';
       InjuryStatus := 4;
     end;
-  end else if r < 10 then begin
+  end
+  else if r < 10 then
+  begin
     if TSkull then begin
       if s[8]='A' then Pro_TS := '1' else
       if s[8]='B' then Pro_TS := '2' else
@@ -491,211 +500,208 @@ begin
         t := t + ' Knocked Out, Thick Skull: ' + s[8] + ' fails';
         InjuryStatus := 5;
       end;
-    end else begin
+    end
+    else
+    begin
       t := t + ' Knocked Out';
       InjuryStatus := 5;
     end;
-  end else begin
-      t := t + ' Sigurd''s Roll (' + s[8] + ') ';
-      if s[14] = 'D' then t := t + ' 2nd Sigurd Roll (' + s[11] + ') ';
-      r2 := FVal(s[8]);
-      if s[14] = 'D' then begin
-        r3 := FVal(s[11]);
-        if r3 > 5 then r2 := 6;
-        if r2 < 4 then r2 := r3;
-      end;
-      if r2 < 4 then begin
-        t := t + 'Badly Hurt';
-        InjuryStatus := 6;
-      end else if r2 < 6 then begin
-        if (FVal(s[8]) > 3) then t := t + ' SI Roll (' + s[9] + ',' + s[10] + ') ';
-        if (s[14] = 'D') and (r3>3) then
-          t := t + ' 2nd SI Roll (' + s[12] + ',' + s[13] + ') ';
-        InjuryStatus := 70;
-        if (FVal(s[8]) > 3) then begin
-          case s[9] of
-           '1': begin
-                  if s[10] < '4' then t := t + 'Concussion; Miss Next Game'
-                                else t := t + 'Broken Ribs; Miss Next Game';
+  end
+  else
+  begin
+
+    t := t + ' Sigurd''s Roll (' + s[8] + ') ';
+    if s[14] = 'D' then
+      t := t + ' 2nd Sigurd Roll (' + s[11] + ') ';
+
+    r2 := FVal(s[8]);
+    if s[14] = 'D' then
+    begin
+      r3 := FVal(s[11]);
+      if r3 > 5 then r2 := 6;
+      if r2 < 4 then r2 := r3;
+    end;
+
+    if r2 < 4 then
+    begin
+      t := t + 'Badly Hurt';
+      InjuryStatus := 6;
+    end
+    else if r2 < 6 then
+    begin
+      if (FVal(s[8]) > 3) then t := t + ' SI Roll (' + s[9] + ',' + s[10] + ') ';
+      if (s[14] = 'D') and (r3>3) then
+        t := t + ' 2nd SI Roll (' + s[12] + ',' + s[13] + ') ';
+      InjuryStatus := 70;
+      if (FVal(s[8]) > 3) then begin
+        case s[9] of
+         '1': begin
+                if s[10] < '4' then t := t + 'Concussion; Miss Next Game'
+                              else t := t + 'Broken Ribs; Miss Next Game';
+                InjuryStatus := 70;
+              end;
+         '2': begin
+                if s[10] < '4' then t := t + 'Groin Strain; Miss Next Game'
+                              else t := t + 'Gouged Eye; Miss Next Game';
+                InjuryStatus := 70;
+              end;
+         '3': begin
+                if s[10] < '4' then t := t + 'Broken Jaw; Miss Next Game'
+                              else t := t + 'Fractured Arm; Miss Next Game';
+                InjuryStatus := 70;
+              end;
+         '4': begin
+                if s[10] < '4' then t := t + 'Fractured Leg; '
+                              else t := t + 'Smashed Hand; ';
+                begin
+                  t := t + 'Miss Next Game';
                   InjuryStatus := 70;
                 end;
-           '2': begin
-                  if s[10] < '4' then t := t + 'Groin Strain; Miss Next Game'
-                                else t := t + 'Gouged Eye; Miss Next Game';
-                  InjuryStatus := 70;
+              end;
+         '5': begin
+                case s[10] of
+                  '1', '2': t :=  t + 'Damaged Back; Niggling Injury';
+                  '3', '4': t :=  t + 'Smashed Knee; Niggling Injury';
+                  '5', '6': t :=  t + 'Pinched Nerve; Niggling Injury';
                 end;
-           '3': begin
-                  if s[10] < '4' then t := t + 'Broken Jaw; Miss Next Game'
-                                else t := t + 'Fractured Arm; Miss Next Game';
-                  InjuryStatus := 70;
+                InjuryStatus := 71;
+              end;
+         '6': begin
+                case s[10] of
+                 '1': begin
+                        t :=  t + 'Smashed Hip; -1 MA';
+                        InjuryStatus := 72;
+                      end;
+                 '2': begin
+                        t :=  t + 'Smashed Ankle; -1 MA';
+                        InjuryStatus := 72;
+                      end;
+                 '3': begin
+                        t :=  t + 'Smashed Collar Bone; -1 ST';
+                        InjuryStatus := 73;
+                      end;
+                 '4': begin
+                        t :=  t + 'Broken Neck; -1 AG';
+                        InjuryStatus := 74;
+                      end;
+                 '5': begin
+                        t :=  t + 'Serious Concussion; -1 AV';
+                        InjuryStatus := 75;
+                      end;
+                 '6': begin
+                        t :=  t + 'Fractured Skull; -1 AV';
+                        InjuryStatus := 75;
+                     end;
                 end;
-           '4': begin
-                  if s[10] < '4' then t := t + 'Fractured Leg; '
-                                else t := t + 'Smashed Hand; ';
-                  begin
-                    t := t + 'Miss Next Game';
-                    InjuryStatus := 70;
-                  end;
-                end;
-           '5': begin
-                  case s[10] of
-                    '1', '2': t :=  t + 'Damaged Back; Niggling Injury';
-                    '3', '4': t :=  t + 'Smashed Knee; Niggling Injury';
-                    '5', '6': t :=  t + 'Pinched Nerve; Niggling Injury';
-                  end;
-                  InjuryStatus := 71;
-                end;
-           '6': begin
-                  case s[10] of
-                   '1': begin
-                          t :=  t + 'Smashed Hip; -1 MA';
-                          InjuryStatus := 72;
-                        end;
-                   '2': begin
-                          t :=  t + 'Smashed Ankle; -1 MA';
-                          InjuryStatus := 72;
-                        end;
-                   '3': begin
-                          t :=  t + 'Smashed Collar Bone; -1 ST';
-                          InjuryStatus := 73;
-                        end;
-                   '4': begin
-                          t :=  t + 'Broken Neck; -1 AG';
-                          InjuryStatus := 74;
-                        end;
-                   '5': begin
-                          t :=  t + 'Serious Concussion; -1 AV';
-                          InjuryStatus := 75;
-                        end;
-                   '6': begin
-                          t :=  t + 'Fractured Skull; -1 AV';
-                          InjuryStatus := 75;
-                       end;
-                  end;
-                end;
-          end;
+              end;
         end;
-        if (s[14] = 'D') and (r3 > 3) and (r3 < 6)  then begin
-          case s[12] of
-           '1': begin
-                  if s[13] < '4' then t := t + ' Concussion; Miss Next Game'
-                                else t := t + ' Broken Ribs; Miss Next Game';
-                  InjuryStatus := InjuryStatus;
-                end;
-           '2': begin
-                  if s[13] < '4' then t := t + ' Groin Strain; Miss Next Game'
-                                else t := t + ' Gouged Eye; Miss Next Game';
-                  InjuryStatus := InjuryStatus;
-                end;
-           '3': begin
-                  if s[13] < '4' then t := t + ' Broken Jaw; Miss Next Game'
-                                else t := t + ' Fractured Arm; Miss Next Game';
-                  InjuryStatus := InjuryStatus;
-                end;
-           '4': begin
-                  if s[13] < '4' then t := t + ' Fractured Leg; '
-                                else t := t + ' Smashed Hand; ';
-                  begin
-                    t := t + ' Miss Next Game';
-                    InjuryStatus := InjuryStatus;
-                  end;
-                end;
-           '5': begin
-                  case s[13] of
-                   '1', '2': t :=  t + ' Damaged Back; Niggling Injury';
-                   '3', '4': t :=  t + ' Smashed Knee; Niggling Injury';
-                   '5', '6': t :=  t + ' Pinched Nerve; Niggling Injury';
-                  end;
-                  if InjuryStatus = 71 then InjuryStatus := 80;
-                  if InjuryStatus = 70 then InjuryStatus := 71;
-                  if InjuryStatus = 72 then InjuryStatus := 81;
-                  if InjuryStatus = 73 then InjuryStatus := 82;
-                  if InjuryStatus = 74 then InjuryStatus := 83;
-                  if InjuryStatus = 75 then InjuryStatus := 84;
-                end;
-           '6': begin
-                  case s[13] of
-                   '1': begin
-                          t :=  t + ' Smashed Hip; -1 MA';
-                          if InjuryStatus = 71 then InjuryStatus := 81;
-                          if InjuryStatus = 72 then InjuryStatus := 87;
-                          if InjuryStatus = 70 then InjuryStatus := 72;
-                          if InjuryStatus = 73 then InjuryStatus := 85;
-                          if InjuryStatus = 74 then InjuryStatus := 86;
-                          if InjuryStatus = 75 then InjuryStatus := 88;
-                        end;
-                   '2': begin
-                          t :=  t + ' Smashed Ankle; -1 MA';
-                          if InjuryStatus = 71 then InjuryStatus := 81;
-                          if InjuryStatus = 72 then InjuryStatus := 87;
-                          if InjuryStatus = 70 then InjuryStatus := 72;
-                          if InjuryStatus = 73 then InjuryStatus := 85;
-                          if InjuryStatus = 74 then InjuryStatus := 86;
-                          if InjuryStatus = 75 then InjuryStatus := 88;
-                        end;
-                   '3': begin
-                          t :=  t + ' Smashed Collar Bone; -1 ST';
-                          if InjuryStatus = 71 then InjuryStatus := 82;
-                          if InjuryStatus = 72 then InjuryStatus := 85;
-                          if InjuryStatus = 73 then InjuryStatus := 89;
-                          if InjuryStatus = 70 then InjuryStatus := 73;
-                          if InjuryStatus = 74 then InjuryStatus := 90;
-                          if InjuryStatus = 75 then InjuryStatus := 91;
-                        end;
-                   '4': begin
-                          t :=  t + ' Broken Neck; -1 AG';
-                          if InjuryStatus = 71 then InjuryStatus := 83;
-                          if InjuryStatus = 72 then InjuryStatus := 86;
-                          if InjuryStatus = 73 then InjuryStatus := 90;
-                          if InjuryStatus = 74 then InjuryStatus := 92;
-                          if InjuryStatus = 70 then InjuryStatus := 74;
-                          if InjuryStatus = 75 then InjuryStatus := 93;
-                        end;
-                   '5': begin
-                          t :=  t + ' Serious Concussion; -1 AV';
-                          if InjuryStatus = 71 then InjuryStatus := 84;
-                          if InjuryStatus = 72 then InjuryStatus := 88;
-                          if InjuryStatus = 73 then InjuryStatus := 91;
-                          if InjuryStatus = 74 then InjuryStatus := 93;
-                          if InjuryStatus = 75 then InjuryStatus := 94;
-                          if InjuryStatus = 70 then InjuryStatus := 75;
-                        end;
-                   '6': begin
-                          t :=  t + ' Fractured Skull; -1 AV';
-                          if InjuryStatus = 71 then InjuryStatus := 84;
-                          if InjuryStatus = 72 then InjuryStatus := 88;
-                          if InjuryStatus = 73 then InjuryStatus := 91;
-                          if InjuryStatus = 74 then InjuryStatus := 93;
-                          if InjuryStatus = 75 then InjuryStatus := 94;
-                          if InjuryStatus = 70 then InjuryStatus := 75;
-                        end;
-                  end;
-                end;
-          end;
-        end;
-      end else begin
-        t := t + 'DEAD!';
-        InjuryStatus := 8;
       end;
+      if (s[14] = 'D') and (r3 > 3) and (r3 < 6)  then begin
+        case s[12] of
+         '1': begin
+                if s[13] < '4' then t := t + ' Concussion; Miss Next Game'
+                              else t := t + ' Broken Ribs; Miss Next Game';
+                InjuryStatus := InjuryStatus;
+              end;
+         '2': begin
+                if s[13] < '4' then t := t + ' Groin Strain; Miss Next Game'
+                              else t := t + ' Gouged Eye; Miss Next Game';
+                InjuryStatus := InjuryStatus;
+              end;
+         '3': begin
+                if s[13] < '4' then t := t + ' Broken Jaw; Miss Next Game'
+                              else t := t + ' Fractured Arm; Miss Next Game';
+                InjuryStatus := InjuryStatus;
+              end;
+         '4': begin
+                if s[13] < '4' then t := t + ' Fractured Leg; '
+                              else t := t + ' Smashed Hand; ';
+                begin
+                  t := t + ' Miss Next Game';
+                  InjuryStatus := InjuryStatus;
+                end;
+              end;
+         '5': begin
+                case s[13] of
+                 '1', '2': t :=  t + ' Damaged Back; Niggling Injury';
+                 '3', '4': t :=  t + ' Smashed Knee; Niggling Injury';
+                 '5', '6': t :=  t + ' Pinched Nerve; Niggling Injury';
+                end;
+                if InjuryStatus = 71 then InjuryStatus := 80;
+                if InjuryStatus = 70 then InjuryStatus := 71;
+                if InjuryStatus = 72 then InjuryStatus := 81;
+                if InjuryStatus = 73 then InjuryStatus := 82;
+                if InjuryStatus = 74 then InjuryStatus := 83;
+                if InjuryStatus = 75 then InjuryStatus := 84;
+              end;
+         '6': begin
+                case s[13] of
+                 '1': begin
+                        t :=  t + ' Smashed Hip; -1 MA';
+                        if InjuryStatus = 71 then InjuryStatus := 81;
+                        if InjuryStatus = 72 then InjuryStatus := 87;
+                        if InjuryStatus = 70 then InjuryStatus := 72;
+                        if InjuryStatus = 73 then InjuryStatus := 85;
+                        if InjuryStatus = 74 then InjuryStatus := 86;
+                        if InjuryStatus = 75 then InjuryStatus := 88;
+                      end;
+                 '2': begin
+                        t :=  t + ' Smashed Ankle; -1 MA';
+                        if InjuryStatus = 71 then InjuryStatus := 81;
+                        if InjuryStatus = 72 then InjuryStatus := 87;
+                        if InjuryStatus = 70 then InjuryStatus := 72;
+                        if InjuryStatus = 73 then InjuryStatus := 85;
+                        if InjuryStatus = 74 then InjuryStatus := 86;
+                        if InjuryStatus = 75 then InjuryStatus := 88;
+                      end;
+                 '3': begin
+                        t :=  t + ' Smashed Collar Bone; -1 ST';
+                        if InjuryStatus = 71 then InjuryStatus := 82;
+                        if InjuryStatus = 72 then InjuryStatus := 85;
+                        if InjuryStatus = 73 then InjuryStatus := 89;
+                        if InjuryStatus = 70 then InjuryStatus := 73;
+                        if InjuryStatus = 74 then InjuryStatus := 90;
+                        if InjuryStatus = 75 then InjuryStatus := 91;
+                      end;
+                 '4': begin
+                        t :=  t + ' Broken Neck; -1 AG';
+                        if InjuryStatus = 71 then InjuryStatus := 83;
+                        if InjuryStatus = 72 then InjuryStatus := 86;
+                        if InjuryStatus = 73 then InjuryStatus := 90;
+                        if InjuryStatus = 74 then InjuryStatus := 92;
+                        if InjuryStatus = 70 then InjuryStatus := 74;
+                        if InjuryStatus = 75 then InjuryStatus := 93;
+                      end;
+                 '5': begin
+                        t :=  t + ' Serious Concussion; -1 AV';
+                        if InjuryStatus = 71 then InjuryStatus := 84;
+                        if InjuryStatus = 72 then InjuryStatus := 88;
+                        if InjuryStatus = 73 then InjuryStatus := 91;
+                        if InjuryStatus = 74 then InjuryStatus := 93;
+                        if InjuryStatus = 75 then InjuryStatus := 94;
+                        if InjuryStatus = 70 then InjuryStatus := 75;
+                      end;
+                 '6': begin
+                        t :=  t + ' Fractured Skull; -1 AV';
+                        if InjuryStatus = 71 then InjuryStatus := 84;
+                        if InjuryStatus = 72 then InjuryStatus := 88;
+                        if InjuryStatus = 73 then InjuryStatus := 91;
+                        if InjuryStatus = 74 then InjuryStatus := 93;
+                        if InjuryStatus = 75 then InjuryStatus := 94;
+                        if InjuryStatus = 70 then InjuryStatus := 75;
+                      end;
+                end;
+              end;
+        end;
+      end;
+    end
+    else
+    begin
+      t := t + 'DEAD!';
+      InjuryStatus := 8;
+    end;
   end;
-  if (r >= 8) and (Iman) then begin
-     t := t + ' - Iron Man result is now Stunned';
-     InjuryStatus := 4;
-  end;
-  if (r >= 8) and (PPunches) then begin
-    t := t + ' - Pulled Punches result is now Stunned';
-    InjuryStatus := 4;
-  end;
-  if (r < 8) and (Iman) and (PDag)  then begin
-    t := t + ' - Iron Man result is now Stunned';
-    InjuryStatus := 4;
-  end;
-  if (r < 8) and (PPunches) and (PDag) then begin
-    t := t + ' - Pulled Punches result is now Stunned';
-    InjuryStatus := 4;
-  end;
-  if PDag then t := t +
-    ' - Poison wiped off, stats change player to Normal Dagger';
+
   InjuryRollToText := t;
 end;
 
@@ -1229,7 +1235,7 @@ begin
     s := s + 'S';
 
   if (HitPlayer<> -1) and (HitTeam<> -1) then begin
-    if allPlayers[HitTeam,HitPlayer].status = STATUS_BALL_CARRIER then
+    if allPlayers[HitTeam,HitPlayer].PlayerStatus = TPlayerStatus.BallCarrier then
     begin
       ploc := allPlayers[HitTeam,HitPlayer].p;
       qloc := allPlayers[HitTeam,HitPlayer].q;

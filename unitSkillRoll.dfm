@@ -4,7 +4,7 @@ object frmSkillRolls: TfrmSkillRolls
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSingle
   Caption = 'Bloodbowl Skill Rolls'
-  ClientHeight = 343
+  ClientHeight = 292
   ClientWidth = 326
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -76,20 +76,6 @@ object frmSkillRolls: TfrmSkillRolls
     Height = 33
     Stretch = True
   end
-  object imDieA1: TImage
-    Left = 8
-    Top = 304
-    Width = 33
-    Height = 33
-    Stretch = True
-  end
-  object imDieA2: TImage
-    Left = 48
-    Top = 304
-    Width = 33
-    Height = 33
-    Stretch = True
-  end
   object imDieA3: TImage
     Left = 8
     Top = 352
@@ -103,19 +89,6 @@ object frmSkillRolls: TfrmSkillRolls
     Width = 33
     Height = 33
     Stretch = True
-  end
-  object lblNoAgingEffect: TLabel
-    Left = 104
-    Top = 304
-    Width = 120
-    Height = 20
-    Caption = 'No Aging Effects'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clGreen
-    Font.Height = -16
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
-    ParentFont = False
   end
   object lblAgingEffect: TLabel
     Left = 104

@@ -5,8 +5,6 @@ interface
 uses Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, ExtCtrls, bbalg;
 
-const STATUS_BALL_CARRIER = 2;
-
 type TPlayer = class(TLabel)
   private
     function GetPlayerSPP() : Integer;
@@ -19,6 +17,7 @@ type TPlayer = class(TLabel)
     procedure DoAccurateKickEndDrag(Sender: TObject; var g: Integer; var f: Integer);
     procedure DoStabEndDrag(Sender: TObject; var test1: Integer; var test2: Integer; var test3: Boolean; var test4: Boolean);
     procedure DoPassEndDrag(Sender: TObject; var g: Integer; var f: Integer);
+    procedure DoApothecaryEndDrag(Sender: TObject);
 public
 
   {default things}
@@ -49,11 +48,8 @@ public
   {skill rolls already made... max 3 skill rolls available per player}
   SkillRollsMade: array [1..3, 0..1] of integer;
   SkillsGained: array [1..3] of string;
-  {Level of skill gained and any aging effect from the skill?}
+  {Level of skill gained}
   SkillLevel: array [1..3] of integer;
-  SkillAging: array [1..3] of string;
-  SkillAgingRollsMade: array [1..3, 0..1] of integer;
-  SkillAgingEffectRollsMade: array [1..3, 0..1] of integer;
   {Side Step programming}
   SideStep: array[1..3] of integer;
   {indicator: has player a tacklezone?}
@@ -108,6 +104,8 @@ public
   function usedSkill(s: string): boolean;
   procedure UseSkill(s: string);
   function GetSaveString: string;
+
+  function PlayerStatus(): TPlayerStatus;
 end;
 
 procedure RedrawDugout;
@@ -138,7 +136,7 @@ implementation
 uses bbunit, unitLog, unitPlayAction, unitBall, unitField,
      unitMarker, unitPass, unitPickUp, unitSettings, unitRandom,
      unitCatch, unitArmourRoll, unitTeam, unitLanguage, unitThrowTeamMate,
-     unitThrowStuff, unitMessage;
+     unitThrowStuff, unitMessage, apothecary;
 
 var curbefore: integer;
 
@@ -178,6 +176,11 @@ begin
   UsedRegeneration := false;
   TIKSTPK := 0;
   UsedMA := 0;
+end;
+
+function TPlayer.PlayerStatus(): TPlayerStatus;
+begin
+  Result := TPlayerStatus(Self.status);
 end;
 
 procedure ShowCurrentPlayer(g, f: integer);
@@ -708,8 +711,7 @@ begin
   begin
     Bloodbowl.Endofmove1Click(Bloodbowl);
     if GameStatus = 'Bomb' then
-      ShowStuffPlayerToPlayer(ActionTeam, ActionPlayer,
-        (Sender as TPlayer).teamnr, (Sender as TPlayer).number, 1);
+      ShowStuffPlayerToPlayer(ActionTeam, ActionPlayer, (Sender as TPlayer).teamnr, (Sender as TPlayer).number, 1);
 
     GameStatus := '';
     ActionTeam := 0;
@@ -724,47 +726,9 @@ begin
 
   end else if (GameStatus='Apoth1') then
   begin
-    if CanWriteToLog then begin
-      if not (allPlayers[(Sender as TPlayer).teamnr,
-      (Sender as TPlayer).number].hasSkill('Undead')) then begin
-        begin
-          LogWrite('a' + Chr(ActionTeam + 48));
-          AddLog(ffcl[ActionTeam] + ' uses the Apothecary');
-          apo[ActionTeam].color := colorarray[ActionTeam, 4, 0];
-          apo[ActionTeam].font.color := colorarray[ActionTeam, 4, 1];
-
-          if (allPlayers[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].status = 9)
-          then begin
-            allPlayers[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].SetStatus(0);
-          end else begin
-            Bloodbowl.OneD6ButtonClick(Bloodbowl.OneD6Button);
-            if lastroll = 1 then begin
-              BloodBowl.comment.Text := 'Apothecary FAILS!';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            end else
-            begin
-                if (allPlayers[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].status >= 1)
-                and (allPlayers[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].status <= 4)
-                then begin
-                  allPlayers[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].SetStatus(3);
-                end else begin
-                  allPlayers[(Sender as TPlayer).teamnr,(Sender as TPlayer).number].SetStatus(0);
-                end;
-              BloodBowl.comment.Text := 'Apothecary heals the player!';
-              Bloodbowl.EnterButtonClick(Bloodbowl.EnterButton);
-            end;
-          end;
-          GameStatus := '';
-          ActionTeam := -1;
-        end;
-
-      end else begin
-        Bloodbowl.Loglabel.caption := 'APOTHECARIES CANNOT HEAL THE UNDEAD';
-        GameStatus := '';
-        ActionTeam := -1;
-      end;
-    end;
-
+    DoApothecaryEndDrag(Sender);
+    GameStatus := '';
+    ActionTeam := -1;
   end
   else if GameStatus='ThrowinMovement' then begin
     DoThrowInMovementEndDrag(Sender, g, f, pplace, qplace);
@@ -2123,6 +2087,18 @@ begin
   s0 := s0 + Chr(value div 10 + 48) + Chr(cnumber + 48);
   s0 := s0 + Chr(255) + picture;
   GetSaveString := s0;
+end;
+
+procedure TPlayer.DoApothecaryEndDrag(Sender: TObject);
+var
+  thePlayer: unitPlayer.TPlayer;
+begin
+  if CanWriteToLog then
+  begin
+    thePlayer := allPlayers[(Sender as TPlayer).teamnr, (Sender as TPlayer).number];
+
+    TApothecary.DoUseApo(thePlayer);
+  end;
 end;
 
 procedure TPlayer.DoPassEndDrag(Sender: TObject; var g: Integer;

@@ -44,7 +44,8 @@ uses
   unitPlayAction in 'unitPlayAction.pas',
   unitPlayer in 'unitPlayer.pas',
   unitTeam in 'unitTeam.pas',
-  unitExtern in 'unitExtern.pas';
+  unitExtern in 'unitExtern.pas',
+  apothecary in 'apothecary.pas';
 
 {$R *.RES}
 

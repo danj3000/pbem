@@ -96,8 +96,8 @@ object frmPass: TfrmPass
     WordWrap = True
   end
   object lblPassFailed: TLabel
-    Left = 40
-    Top = 400
+    Left = 47
+    Top = 325
     Width = 90
     Height = 20
     Caption = 'Pass failed!'
@@ -109,8 +109,8 @@ object frmPass: TfrmPass
     ParentFont = False
   end
   object Label7: TLabel
-    Left = 16
-    Top = 328
+    Left = 24
+    Top = 295
     Width = 60
     Height = 13
     Caption = 'Roll needed:'
@@ -135,7 +135,7 @@ object frmPass: TfrmPass
     Left = 176
     Top = 120
     Width = 153
-    Height = 241
+    Height = 153
     Caption = 'using'
     TabOrder = 0
     object cbAccurate: TCheckBox
@@ -242,8 +242,8 @@ object frmPass: TfrmPass
     end
   end
   object butPassRoll: TButton
-    Left = 176
-    Top = 368
+    Left = 177
+    Top = 288
     Width = 153
     Height = 25
     Caption = 'Make Pass Roll'
@@ -251,8 +251,8 @@ object frmPass: TfrmPass
     OnClick = butPassRollClick
   end
   object butPassSkill: TButton
-    Left = 176
-    Top = 400
+    Left = 177
+    Top = 320
     Width = 153
     Height = 25
     Caption = 'Use Pass Skill'
@@ -260,8 +260,8 @@ object frmPass: TfrmPass
     OnClick = butPassSkillClick
   end
   object butTeamReroll: TButton
-    Left = 176
-    Top = 432
+    Left = 177
+    Top = 352
     Width = 89
     Height = 25
     Caption = 'Use Team Reroll'
@@ -269,8 +269,8 @@ object frmPass: TfrmPass
     OnClick = butTeamRerollClick
   end
   object butFumbleInaccurate: TButton
-    Left = 176
-    Top = 464
+    Left = 177
+    Top = 384
     Width = 153
     Height = 25
     Caption = 'Fumble'
@@ -278,8 +278,8 @@ object frmPass: TfrmPass
     OnClick = butFumbleInaccurateClick
   end
   object txtPassRollNeeded: TEdit
-    Left = 88
-    Top = 328
+    Left = 96
+    Top = 295
     Width = 25
     Height = 17
     AutoSize = False
@@ -313,8 +313,8 @@ object frmPass: TfrmPass
     TabOrder = 10
   end
   object cbBigGuyAlly: TCheckBox
-    Left = 8
-    Top = 455
+    Left = 15
+    Top = 380
     Width = 129
     Height = 17
     Caption = 'BigGuy/Ally'
@@ -331,8 +331,8 @@ object frmPass: TfrmPass
     OnClick = PassSkillClick
   end
   object butPro: TButton
-    Left = 272
-    Top = 432
+    Left = 273
+    Top = 352
     Width = 57
     Height = 25
     Caption = 'Use Pro'
@@ -341,8 +341,8 @@ object frmPass: TfrmPass
     OnClick = butProClick
   end
   object cbImpossible: TCheckBox
-    Left = 8
-    Top = 432
+    Left = 15
+    Top = 357
     Width = 129
     Height = 17
     Caption = 'Impossbile'

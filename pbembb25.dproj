@@ -188,6 +188,7 @@
         <DCCReference Include="unitPlayer.pas"/>
         <DCCReference Include="unitTeam.pas"/>
         <DCCReference Include="unitExtern.pas"/>
+        <DCCReference Include="apothecary.pas"/>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

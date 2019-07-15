@@ -750,10 +750,17 @@ begin
     s5 := Copy(s4, 2, length(s4)-1);
     pno := FVal(s3);
     y := FVal(s5)-1;
-    if Ord(s4[1])-65 > 12 then z := 25 - (Ord(s4[1])-65) else z:=Ord(s4[1])-65;
-    if (pno >= 1) and (pno<=32) then begin
-      if (allPlayers[0,pno].status = 0) and (y>=0) and (y<=14) and (z>=0)
-      and (z<=25) then begin
+    if Ord(s4[1])-65 > 12 then
+      z := 25 - (Ord(s4[1])-65)
+    else
+      z:=Ord(s4[1])-65;
+
+    if (pno >= 1) and (pno<=32) then
+    begin
+      if (allPlayers[0,pno].status = 0)
+        and (y>=0) and (y<=14)
+        and (z>=0) and (z<=25) then
+      begin
         playerhere := false;
         for g := 0 to 1 do begin
           for f := 1 to team[g].numplayers do begin

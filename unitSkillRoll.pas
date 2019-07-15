@@ -19,12 +19,7 @@ type
     rbST: TRadioButton;
     txtSkill: TEdit;
     butAccept: TButton;
-    imDieA1: TImage;
-    imDieA2: TImage;
-    imDieA3: TImage;
-    imDieA4: TImage;
-    lblNoAgingEffect: TLabel;
-    lblAgingEffect: TLabel;
+
     procedure lbPlayersClick(Sender: TObject);
     procedure butAcceptClick(Sender: TObject);
   private
@@ -80,14 +75,6 @@ begin
     if s[2] = 'r' then begin
       allPlayers[g,f].SkillRollsMade[num,0] := Ord(s[6]) - 48;
       allPlayers[g,f].SkillRollsMade[num,1] := Ord(s[7]) - 48;
-      if Length(s) > 7 then begin
-        allPlayers[g,f].SkillAgingRollsMade[num, 0] := Ord(s[8]) - 48;
-        allPlayers[g,f].SkillAgingRollsMade[num, 1] := Ord(s[9]) - 48;
-        if Length(s) > 9 then begin
-          allPlayers[g,f].SkillAgingEffectRollsMade[num, 0] := Ord(s[10]) - 48;
-          allPlayers[g,f].SkillAgingEffectRollsMade[num, 1] := Ord(s[11]) - 48;
-        end;
-      end;
     end;
     if s[2] = 'A' then begin
       allPlayers[g,f].SkillsGained[num] := Copy(s, 6, Length(s) - 5);

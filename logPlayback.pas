@@ -7,7 +7,7 @@ procedure PlayOneBack;
 implementation
 uses unitLog, unitPlayAction, bbalg, unitField, unitCards, unitPlayer, unitBall, unitPreGame, weather,
  unitFanFactor, gate, unitPostGameSeq, unitTeam, unitMarker, unitTurnChange, unitExtern, unitAddPlayer,
- unitRoster, unitSkillRoll;
+ unitRoster, unitSkillRoll, apothecary;
 
 function GetNextInLog: string;
 var s: string;
@@ -63,7 +63,7 @@ begin
       '2': PlayActionRoll2Dice(s, 1);
       '8': PlayActionRollScatter(s, 1);
       'A': PlayActionMoveToReserve(s, 1);
-      'a': PlayActionUseApo(s, 1);
+      'a': TApothecary.PlayActionUseApo(s, 1);
       'B': PlayActionPlaceBall(s, 1);
       'b': PlayActionBlockMove(s, 1);
       'C': PlayActionDrawCards(s, 1, false);
@@ -174,7 +174,7 @@ begin
       '2': PlayActionRoll2Dice(s, -1);
       '8': PlayActionRollScatter(s, -1);
       'A': PlayActionMoveToReserve(s, -1);
-      'a': PlayActionUseApo(s, -1);
+      'a': TApothecary.PlayActionUseApo(s, -1);
       'B': PlayActionPlaceBall(s, -1);
       'b': PlayActionBlockMove(s, -1);
       'C': PlayActionDrawCards(s, -1, false);

@@ -841,7 +841,9 @@ begin
       butPro.Enabled := false;
       lblPassFailed.visible := false;
       Height := 530;
-    end else begin
+    end
+    else
+    begin
       ModalResult := 1;
       Hide;
       if TeamCatcher = -1 then begin

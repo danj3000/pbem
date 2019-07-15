@@ -24,7 +24,7 @@ procedure PlayActionKickOff(s: string; dir: integer);
 procedure PlayActionArmourRoll(s: string; dir: integer);
 procedure PlayActionInjuryRoll(s: string; dir: integer);
 procedure PlayActionFoulRoll(s: string; dir: integer);
-procedure PlayActionUseApo(s: string; dir: integer);
+
 procedure PlayActionUseWiz(s: string; dir: integer);
 procedure PlayActionRandomPlayer(s: string; dir: integer);
 procedure PlayActionSetIGMEOY(s: string; dir: integer);
@@ -192,24 +192,6 @@ begin
   end;
 end;
 
-procedure PlayActionUseApo(s: string; dir: integer);
-var g: integer;
-begin
-  g := Ord(s[2]) - 48;
-  if dir = DIR_FORWARD then begin
-    begin
-      apo[g].color := colorarray[g, 4, 0];
-      apo[g].font.color := colorarray[g, 4, 1];
-      DefaultAction(ffcl[g] + ' uses the Apothecary');
-    end ;
-  end else begin
-    BackLog;
-    begin
-      apo[g].color := colorarray[g, 0, 0];
-      apo[g].font.color := colorarray[g, 0, 1];
-    end
-  end;
-end;
 
 procedure PlayActionUseWiz(s: string; dir: integer);
 var g: integer;
