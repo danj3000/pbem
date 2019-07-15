@@ -37,7 +37,7 @@ var
 
 implementation
 
-uses unitLog, bbunit, unitPostgameSeq;
+uses unitLog, bbunit, unitPostgameSeq, logPlayback;
 
 {$R *.DFM}
 

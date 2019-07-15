@@ -176,9 +176,11 @@ procedure TTurn.TurnClick(Sender: TObject);
 type rij = array [0..3] of byte;
 var s: string;
     p: ^rij;
+    tm : integer;
 begin
+  tm := team;
   if CanWriteToLog then begin
-    activeTeam := team;
+    bbunit.activeTeam := tm;
     s := TurnChange;
     color := clYellow;
     {add Randseed to Turn-log; not used anymore
@@ -191,9 +193,10 @@ begin
              Chr(65 + p^[1] mod 16) + Chr(65 + p^[1] div 16) +
              Chr(65 + p^[2] mod 16) + Chr(65 + p^[2] div 16) +
              Chr(65 + p^[3] mod 16) + Chr(65 + p^[3] div 16));
-    AddLog(UPPERCASE('Turn: ' + ffcl[team] + ' ' + IntToStr(turnnumber)));
+    AddLog(UPPERCASE('Turn: ' + ffcl[tm] + ' ' + IntToStr(turnnumber)));
     s := StartTurnNegativeSkills;
-    if RLCoach[0] = RLCoach[1] then SetSpeakLabel(team);
+    if RLCoach[0] = RLCoach[1] then
+      SetSpeakLabel(tm);
     if AutoSave then begin
       Bloodbowl.comment.text := 'A U T O S A V E . . .   One moment please...';
       Bloodbowl.comment.color := clYellow;

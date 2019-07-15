@@ -43,7 +43,8 @@ uses
   unitThrowStuff in 'unitThrowStuff.pas' {frmThrowStuff},
   unitCatchStuff in 'unitCatchStuff.pas' {frmCatchStuff},
   weather in 'weather.pas',
-  gate in 'gate.pas';
+  gate in 'gate.pas',
+  logPlayback in 'logPlayback.pas';
 
 {$R *.RES}
 
